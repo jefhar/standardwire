@@ -22,12 +22,15 @@ class FileCompiler extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $options = array(
-		'includes' => true,	// compile include()'d files too?
-		'namespace' => true, // compile to make compatible with PW namespace when necessary?
-		'modules' => false, // compile using installed FileCompiler modules
-		'skipIfNamespace' => false, // skip compiled file if original declares a namespace? (note: file still compiled, but not used)
-	);
+	protected $options = [
+     'includes' => true,
+     // compile include()'d files too?
+     'namespace' => true,
+     // compile to make compatible with PW namespace when necessary?
+     'modules' => false,
+     // compile using installed FileCompiler modules
+     'skipIfNamespace' => false,
+ ];
 
 	/**
 	 * Options for ALL FileCompiler instances
@@ -37,16 +40,23 @@ class FileCompiler extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $globalOptions = array(
-		'siteOnly' => false,  // only allow compilation of files in /site/ directory
-		'showNotices' => true, // show notices about compiled files to superuser
-		'logNotices' => true, // log notices about compiled files and maintenance to file-compiler.txt log. 
-		'chmodFile' => '', // mode to use for created files, i.e. "0644"
-		'chmodDir' => '',  // mode to use for created directories, i.e. "0755"
-		'exclusions' => array(), // exclude files or paths that start with any of these (gets moved to $this->exclusions array)
-		'extensions' => array('php', 'module', 'inc'), // file extensions we compile (gets moved to $this->extensions array)
-		'cachePath' => '', // path where compiled files are stored (default is /site/assets/cache/FileCompiler/, moved to $this->cachePath)
-	);
+	protected $globalOptions = [
+     'siteOnly' => false,
+     // only allow compilation of files in /site/ directory
+     'showNotices' => true,
+     // show notices about compiled files to superuser
+     'logNotices' => true,
+     // log notices about compiled files and maintenance to file-compiler.txt log.
+     'chmodFile' => '',
+     // mode to use for created files, i.e. "0644"
+     'chmodDir' => '',
+     // mode to use for created directories, i.e. "0755"
+     'exclusions' => [],
+     // exclude files or paths that start with any of these (gets moved to $this->exclusions array)
+     'extensions' => ['php', 'module', 'inc'],
+     // file extensions we compile (gets moved to $this->extensions array)
+     'cachePath' => '',
+ ];
 	
 	/**
 	 * Path to source files directory
@@ -80,7 +90,7 @@ class FileCompiler extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $exclusions = array();
+	protected $exclusions = [];
 
 	/**
 	 * File extensions that we compile and copy
@@ -88,11 +98,7 @@ class FileCompiler extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $extensions = array(
-		'php',
-		'module',
-		'inc',
-	);
+	protected $extensions = ['php', 'module', 'inc'];
 
 	/**
 	 * Detected file namespace (during compileData)
@@ -125,7 +131,7 @@ class FileCompiler extends Wire {
 	 * @param array $options Indicate which compilations should be performed (default='includes' and 'namespace')
 	 * 
 	 */
-	public function __construct($sourcePath, array $options = array()) {
+	public function __construct($sourcePath, array $options = []) {
 		$this->options = array_merge($this->options, $options);
 		if(strpos($sourcePath, '..') !== false) $sourcePath = realpath($sourcePath);
 		if(DIRECTORY_SEPARATOR != '/') $sourcePath = str_replace(DIRECTORY_SEPARATOR, '/', $sourcePath);
@@ -280,7 +286,7 @@ class FileCompiler extends Wire {
 		// $this->rawPHP = preg_replace('!/\*.+?\*/!s', '', $this->rawPHP);
 		
 		// remove escaped quotes
-		$this->rawDequotedPHP = str_replace(array('\\"', "\\'"), '', $this->rawPHP); 
+		$this->rawDequotedPHP = str_replace(['\\"', "\\'"], '', $this->rawPHP); 
 		
 		// remove double quoted blocks
 		$this->rawDequotedPHP = preg_replace('/([\s(.=,])"[^"]*"/s', '$1"string"', $this->rawDequotedPHP);
@@ -403,21 +409,7 @@ class FileCompiler extends Wire {
 				$this->chmod($targetPathname); 
 				$this->touch($targetPathname, filemtime($sourcePathname));
 				$targetHash = md5_file($targetPathname);
-				$cacheData = array(
-					'source' => array(
-						'file' => $sourcePathname,
-						'hash' => $sourceHash,
-						'size' => filesize($sourcePathname), 
-						'time' => filemtime($sourcePathname), 
-						'ns' => $this->ns, 
-					),
-					'target' => array(
-						'file' => $targetPathname,
-						'hash' => $targetHash, 
-						'size' => filesize($targetPathname),
-						'time' => filemtime($targetPathname),
-					)
-				);
+				$cacheData = ['source' => ['file' => $sourcePathname, 'hash' => $sourceHash, 'size' => filesize($sourcePathname), 'time' => filemtime($sourcePathname), 'ns' => $this->ns], 'target' => ['file' => $targetPathname, 'hash' => $targetHash, 'size' => filesize($targetPathname), 'time' => filemtime($targetPathname)]];
 				$this->wire()->cache->saveFor($this, $cacheName, $cacheData, WireCache::expireNever);
 			}
 		}
@@ -485,7 +477,7 @@ class FileCompiler extends Wire {
 
 		if($this->options['modules']) {
 			// FileCompiler modules
-			$compilers = array();
+			$compilers = [];
 			foreach($this->wire()->modules->findByPrefix('FileCompiler', true) as $module) {
 				if(!$module instanceof FileCompilerModule) continue;
 				$runOrder = (int) $module->get('runOrder');
@@ -504,7 +496,7 @@ class FileCompiler extends Wire {
 	
 		if(!strlen(__NAMESPACE__)) {
 			if(strpos($this->rawPHP, "ProcessWire\\")) {
-				$data = str_replace(array("\\ProcessWire\\", "ProcessWire\\"), "\\", $data);
+				$data = str_replace(["\\ProcessWire\\", "ProcessWire\\"], "\\", $data);
 			}
 		}
 		
@@ -603,15 +595,7 @@ class FileCompiler extends Wire {
 		
 		$optionsStr = $this->optionsToString($this->options);
 		
-		$funcs = array(
-			'include_once',
-			'include', 
-			'require_once',
-			'require',
-			'wireIncludeFile',
-			'wireRenderFile',
-			'TemplateFile',
-		);
+		$funcs = ['include_once', 'include', 'require_once', 'require', 'wireIncludeFile', 'wireRenderFile', 'TemplateFile'];
 
 		// main include regex
 		$re = '/^' . 
@@ -717,7 +701,7 @@ class FileCompiler extends Wire {
 		if(!strlen($open)) return true;
 		$skipMatch = false;
 		$test = $open;
-		foreach(array('"', "'") as $quote) {
+		foreach(['"', "'"] as $quote) {
 			// skip when words like "require" are in a string
 			if(strpos($test, $quote) === false) continue;
 			$test = str_replace('\\' . $quote, '', $test); // ignore quotes that are escaped
@@ -824,7 +808,7 @@ class FileCompiler extends Wire {
 		// also add in all core classes, in case the have not yet been autoloaded
 		static $files = null;
 		if(is_null($files)) {
-			$files = array();
+			$files = [];
 			foreach(new \DirectoryIterator($this->wire()->config->paths->core) as $file) {
 				if($file->isDot() || $file->isDir()) continue;
 				$basename = $file->getBasename('.php');
@@ -858,17 +842,23 @@ class FileCompiler extends Wire {
 			if($ns) {}
 			if(stripos($rawDequotedPHP, $class) === false) continue; // quick exit if class name not referenced in data
 			
-			$patterns = array(
-				// 1=open 2=close
-				// all patterns match within 1 line only
-				"new" => '(new\s+)' . $class . '\s*(\(|;|\))',  // 'new Page(' or 'new Page;' or 'new Page)'
-				"function" => '(function\s+[_a-zA-Z0-9]+\s*\([^\\\\)]*?)\b' . $class . '(\s+\$[_a-zA-Z0-9]+)', // 'function(Page $page' or 'function($a, Page $page'
-				"::" => '(^|[^_\\\\a-zA-Z0-9"\'])' . $class . '(::)', // constant ' Page::foo' or '(Page::foo' or '=Page::foo' or bitwise open
-				"extends" => '(\sextends\s+)' . $class . '(\s|\{|$)', // 'extends Page'
-				"implements" => '(\simplements[^{]*?[\s,]+)' . $class . '([^_a-zA-Z0-9]|$)', // 'implements Module' or 'implements Foo, Module'
-				"instanceof" => '(\sinstanceof\s+)' . $class . '([^_a-zA-Z0-9]|$)', // 'instanceof Page'
-				"$class " => '(\(\s*|,\s*)' . $class . '(\s+\$)', // type hinted '(Page $something' or '($foo, Page $something'
-			);
+			$patterns = [
+       // 1=open 2=close
+       // all patterns match within 1 line only
+       "new" => '(new\s+)' . $class . '\s*(\(|;|\))',
+       // 'new Page(' or 'new Page;' or 'new Page)'
+       "function" => '(function\s+[_a-zA-Z0-9]+\s*\([^\\\\)]*?)\b' . $class . '(\s+\$[_a-zA-Z0-9]+)',
+       // 'function(Page $page' or 'function($a, Page $page'
+       "::" => '(^|[^_\\\\a-zA-Z0-9"\'])' . $class . '(::)',
+       // constant ' Page::foo' or '(Page::foo' or '=Page::foo' or bitwise open
+       "extends" => '(\sextends\s+)' . $class . '(\s|\{|$)',
+       // 'extends Page'
+       "implements" => '(\simplements[^{]*?[\s,]+)' . $class . '([^_a-zA-Z0-9]|$)',
+       // 'implements Module' or 'implements Foo, Module'
+       "instanceof" => '(\sinstanceof\s+)' . $class . '([^_a-zA-Z0-9]|$)',
+       // 'instanceof Page'
+       "$class " => '(\(\s*|,\s*)' . $class . '(\s+\$)',
+   ];
 		
 			foreach($patterns as $check => $regex) {
 				

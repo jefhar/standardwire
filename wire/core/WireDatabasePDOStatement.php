@@ -31,7 +31,7 @@ class WireDatabasePDOStatement extends \PDOStatement {
 	 * @var array
 	 * 
 	 */
-	protected $debugParams = array();
+	protected $debugParams = [];
 
 	/**
 	 * Debug params that require PCRE, in format [ "/:param_name\b/" => "param value" ]
@@ -39,7 +39,7 @@ class WireDatabasePDOStatement extends \PDOStatement {
 	 * @var array
 	 * 
 	 */
-	protected $debugParamsPCRE = array();
+	protected $debugParamsPCRE = [];
 
 	/**
 	 * Quantity of debug params

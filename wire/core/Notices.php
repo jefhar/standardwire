@@ -156,13 +156,13 @@ class Notices extends WireArray {
 		}
 		
 		if(is_object($text) || is_array($text)) {
-			$text = Debug::toStr($text, array('html' => true));
+			$text = Debug::toStr($text, ['html' => true]);
 			$item->flags = $item->flags | Notice::allowMarkup;
 			$item->text = $text;
 		}
 		
 		if($item->hasFlag('allowMarkdown')) {
-			$item->text = $this->wire()->sanitizer->entitiesMarkdown($text, array('allowBrackets' => true)); 
+			$item->text = $this->wire()->sanitizer->entitiesMarkdown($text, ['allowBrackets' => true]); 
 			$item->addFlag('allowMarkup');
 			$item->removeFlag('allowMarkdown'); 
 		}
@@ -225,7 +225,7 @@ class Notices extends WireArray {
 		$session = $this->wire()->session;
 		if(!$session) return false;
 		$items = $session->getFor($this, 'items');
-		if(!is_array($items)) $items = array();
+		if(!is_array($items)) $items = [];
 		$str = $this->noticeToStr($item);
 		$idStr = $item->getIdStr();
 		if(isset($items[$idStr])) return false;
@@ -373,7 +373,7 @@ class Notices extends WireArray {
 	 */
 	public function sanitizeArray(array $a) {
 		$sanitizer = $this->wire()->sanitizer; 
-		$b = array();
+		$b = [];
 		foreach($a as $key => $value) {
 			if(is_array($value)) {
 				$value = $this->sanitizeArray($value);
@@ -407,9 +407,9 @@ class Notices extends WireArray {
 	 * @return int Number of notices moved
 	 * 
 	 */
-	public function move(Wire $from, Wire $to, array $options = array()) {
+	public function move(Wire $from, Wire $to, array $options = []) {
 		$n = 0;
-		$types = isset($options['types']) ? $options['types'] : array('errors', 'warnings', 'messages'); 
+		$types = isset($options['types']) ? $options['types'] : ['errors', 'warnings', 'messages']; 
 		foreach($types as $type) {
 			$method = rtrim($type, 's');
 			foreach($from->$type('clear') as $notice) {
@@ -459,14 +459,7 @@ class Notices extends WireArray {
 	 */
 	protected function noticeToStr(Notice $item) {
 		$type = str_replace('Notice', '', $item->className());
-		$a = array(
-			'type' => $type,
-			'flags' => $item->flags,
-			'timestamp' => $item->timestamp,
-			'class' => $item->class,
-			'icon' => $item->icon,
-			'text' => $item->text,
-		);
+		$a = ['type' => $type, 'flags' => $item->flags, 'timestamp' => $item->timestamp, 'class' => $item->class, 'icon' => $item->icon, 'text' => $item->text];
 		return implode(';', $a);
 	}
 
@@ -487,11 +480,7 @@ class Notices extends WireArray {
 		if(!wireClassExists($type)) return null;
 		/** @var Notice $item */
 		$item = new $type($text, (int) $flags);
-		$item->setArray(array(
-			'timestamp' => (int) $timestamp,
-			'class' => $class,
-			'icon' => $icon,
-		));
+		$item->setArray(['timestamp' => (int) $timestamp, 'class' => $class, 'icon' => $icon]);
 		return $item;
 	}
 }

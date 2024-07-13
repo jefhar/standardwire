@@ -67,7 +67,7 @@ class SessionCSRF extends Wire {
 		if(empty($tokenValue)) {
 			// $tokenValue = md5($this->page->path() . mt_rand() . microtime()) . md5($this->page->name . $this->config->userAuthSalt . mt_rand());
 			$rand = new WireRandom();
-			$tokenValue = $rand->base64(32, array('fast' => true));
+			$tokenValue = $rand->base64(32, ['fast' => true]);
 			$session->set($this, $tokenName, $tokenValue); 
 		}
 		return $tokenValue; 
@@ -98,11 +98,7 @@ class SessionCSRF extends Wire {
 	 *
 	 */
 	public function getToken($id = '') {
-		return array(
-			'name' => $this->getTokenName($id), 
-			'value' => $this->getTokenValue($id),
-			'time' => $this->getTokenTime($id)
-		); 
+		return ['name' => $this->getTokenName($id), 'value' => $this->getTokenValue($id), 'time' => $this->getTokenTime($id)]; 
 	}
 
 	/**
@@ -126,12 +122,7 @@ class SessionCSRF extends Wire {
 		$singles = $session->get($this, 'singles'); 
 		$singles[$name] = $value; 
 		$session->set($this, 'singles', $singles); 	
-		return array(
-			'id' => $id, 
-			'name' => $name,
-			'value' => $value,
-			'time' => $time
-		);
+		return ['id' => $id, 'name' => $name, 'value' => $value, 'time' => $time];
 	}
 
 	/**

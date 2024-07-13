@@ -17,7 +17,7 @@ class ModulesConfigs extends ModulesClass {
 	 * Values are an array for modules have have config data and has been loaded.
 	 *
 	 */
-	protected $configData = array();
+	protected $configData = [];
 
 	/**
 	 * Get or set module configuration data
@@ -36,7 +36,7 @@ class ModulesConfigs extends ModulesClass {
 		$moduleID = (int) $moduleID;
 		if($setData) {
 			$this->configData[$moduleID] = $setData;
-			return array();
+			return [];
 		} else if(isset($this->configData[$moduleID])) {
 			return $this->configData[$moduleID];
 		} else {
@@ -94,7 +94,7 @@ class ModulesConfigs extends ModulesClass {
 	 */
 	public function getConfig($class, $property = '') {
 
-		$emptyReturn = $property ? null : array();
+		$emptyReturn = $property ? null : [];
 		$className = $class;
 		
 		if(is_object($className)) $className = wireClassName($className->className(), false);
@@ -118,7 +118,7 @@ class ModulesConfigs extends ModulesClass {
 			$data = $query->fetchColumn();
 			$query->closeCursor();
 			if(strlen($data)) $data = wireDecodeJSON($data);
-			if(empty($data)) $data = array();
+			if(empty($data)) $data = [];
 			$this->configData[(int) $id] = $data;
 		}
 
@@ -246,10 +246,7 @@ class ModulesConfigs extends ModulesClass {
 			// check for separate module configuration file
 			$dir = dirname($this->modules->files->getModuleFile($className));
 			if($dir) {
-				$files = array(
-					"$dir/{$className}Config.php",
-					"$dir/$className.config.php"
-				);
+				$files = ["$dir/{$className}Config.php", "$dir/$className.config.php"];
 				$found = false;
 				foreach($files as $file) {
 					if(!is_file($file)) continue;
@@ -295,7 +292,7 @@ class ModulesConfigs extends ModulesClass {
 
 		$result = false;
 
-		foreach(array('getModuleConfigArray', 'getModuleConfigInputfields') as $method) {
+		foreach(['getModuleConfigArray', 'getModuleConfigInputfields'] as $method) {
 
 			$configurable = false;
 
@@ -583,7 +580,7 @@ class ModulesConfigs extends ModulesClass {
 					$fields = $module->getModuleConfigInputfields();
 				} else if($configurableInterface === 3) {
 					// requires $data array
-					$module = $this->modules->getModule($moduleName, array('noInit' => true, 'noCache' => true));
+					$module = $this->modules->getModule($moduleName, ['noInit' => true, 'noCache' => true]);
 					$this->setModuleConfigData($module);
 					$fields = $module->getModuleConfigInputfields($data);
 				} else if($configurableInterface === 4) {
@@ -605,12 +602,12 @@ class ModulesConfigs extends ModulesClass {
 			} else if($configurableInterface === 20) {
 				// static getModuleConfigArray method
 				$fields = $this->wire(new InputfieldWrapper()); /** @var InputfieldWrapper $fields */
-				$fields->importArray(call_user_func(array(wireClassName($moduleName, true), 'getModuleConfigArray')));
+				$fields->importArray(call_user_func([wireClassName($moduleName, true), 'getModuleConfigArray']));
 				$fields->populateValues($data);
 			} else {
 				// static getModuleConfigInputfields method
 				$nsClassName = $this->modules->info->getModuleNamespace($moduleName) . $moduleName;
-				$fields = call_user_func(array($nsClassName, 'getModuleConfigInputfields'), $data);
+				$fields = call_user_func([$nsClassName, 'getModuleConfigInputfields'], $data);
 			}
 			if($fields instanceof InputfieldWrapper) {
 				foreach($fields as $field) {
@@ -713,9 +710,7 @@ class ModulesConfigs extends ModulesClass {
 	}
 
 	public function getDebugData() {
-		return array(
-			'configData' => $this->configData
-		);
+		return ['configData' => $this->configData];
 	}
 
 }

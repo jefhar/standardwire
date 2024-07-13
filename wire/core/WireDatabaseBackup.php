@@ -74,66 +74,43 @@ class WireDatabaseBackup {
 	 * @var array
 	 * 
 	 */
-	protected $backupOptions = array(
-
-		// filename for backup: default is to make a dated filename, but this can also be used (basename only, no path)
-		'filename' => '',
-		
-		// optional description of this backup
-		'description' => '',
-		
-		// if specified, export will only include these tables
-		'tables' => array(),
-		
-		// username to associate with the backup file (string), optional
-		'user' => '',
-		
-		// exclude creating or inserting into these tables
-		'excludeTables' => array(),
-		
-		// exclude creating these tables, but still export data (not supported by mysqldump)
-		'excludeCreateTables' => array(),
-		
-		// exclude exporting data, but still create tables (not supported by mysqldump)
-		'excludeExportTables' => array(),
-		
-		// SQL conditions for export of individual tables (table => array(SQL conditions))
-		// The 'table' portion (index) may also be a full PCRE regexp, must start with '/' to be recognized as regex
-		'whereSQL' => array(),
-		
-		// max number of seconds allowed for execution 
-		'maxSeconds' => 1200,
-		
-		// use DROP TABLES statements before CREATE TABLE statements?
-		'allowDrop' => true,
-		
-		// use UPDATE ON DUPLICATE KEY so that INSERT statements can UPDATE when rows already present (all tables)
-		'allowUpdate' => false,
-		
-		// table names that will use UPDATE ON DUPLICATE KEY (does NOT require allowUpdate=true)
-		'allowUpdateTables' => array(),
-		
-		// find and replace in row data during backup (not supported by exec/mysql method)
-		'findReplace' => array(
-			// Example: 'databass' => 'database'
-		),
-		
-		// find and replace in create table statements (not supported by exec/mysqldump)
-		'findReplaceCreateTable' => array( 
-			// Example: 'DEFAULT CHARSET=latin1;' => 'DEFAULT CHARSET=utf8;', 
-		),
-	
-		// additional SQL queries to append at the bottom
-		'extraSQL' => array(
-			// Example: UPDATE pages SET CREATED=NOW	
-		),
-		
-		// EXEC MODE IS CURRRENTLY EXPERIMENTAL AND NOT RECOMMEND FOR USE YET
-		// if true, we will try to use mysqldump (exec) first. if false, we won't attempt mysqldump.
-		'exec' => false, 
-		
-		// exec command to use for mysqldump (when in use)
-		'execCommand' => '[dbPath]mysqldump 
+	protected $backupOptions = [
+     // filename for backup: default is to make a dated filename, but this can also be used (basename only, no path)
+     'filename' => '',
+     // optional description of this backup
+     'description' => '',
+     // if specified, export will only include these tables
+     'tables' => [],
+     // username to associate with the backup file (string), optional
+     'user' => '',
+     // exclude creating or inserting into these tables
+     'excludeTables' => [],
+     // exclude creating these tables, but still export data (not supported by mysqldump)
+     'excludeCreateTables' => [],
+     // exclude exporting data, but still create tables (not supported by mysqldump)
+     'excludeExportTables' => [],
+     // SQL conditions for export of individual tables (table => array(SQL conditions))
+     // The 'table' portion (index) may also be a full PCRE regexp, must start with '/' to be recognized as regex
+     'whereSQL' => [],
+     // max number of seconds allowed for execution
+     'maxSeconds' => 1200,
+     // use DROP TABLES statements before CREATE TABLE statements?
+     'allowDrop' => true,
+     // use UPDATE ON DUPLICATE KEY so that INSERT statements can UPDATE when rows already present (all tables)
+     'allowUpdate' => false,
+     // table names that will use UPDATE ON DUPLICATE KEY (does NOT require allowUpdate=true)
+     'allowUpdateTables' => [],
+     // find and replace in row data during backup (not supported by exec/mysql method)
+     'findReplace' => [],
+     // find and replace in create table statements (not supported by exec/mysqldump)
+     'findReplaceCreateTable' => [],
+     // additional SQL queries to append at the bottom
+     'extraSQL' => [],
+     // EXEC MODE IS CURRRENTLY EXPERIMENTAL AND NOT RECOMMEND FOR USE YET
+     // if true, we will try to use mysqldump (exec) first. if false, we won't attempt mysqldump.
+     'exec' => false,
+     // exec command to use for mysqldump (when in use)
+     'execCommand' => '[dbPath]mysqldump 
 			--complete-insert=TRUE 
 			--add-locks=FALSE 
 			--disable-keys=FALSE 
@@ -150,8 +127,8 @@ class WireDatabaseBackup {
 			-p[dbPass] 
 			-h[dbHost] 
 			[dbName]
-			[tables]' 
-		);
+			[tables]',
+ ];
 
 	/**
 	 * Options available for the $options argument to restore() method
@@ -159,45 +136,32 @@ class WireDatabaseBackup {
 	 * @var array
 	 * 
 	 */
-	protected $restoreOptions = array(
-		
-		// table names to restore (empty=all)
-		'tables' => array(),
-		
-		// allow DROP TABLE statements?
-		'allowDrop' => true, 
-	
-		// DROP ALL tables before restore? (requires that 'allowDrop' must also be true)
-		'dropAll' => false, 
-		
-		// halt execution when an error occurs?
-		'haltOnError' => false,
-		
-		// max number of seconds allowed for execution
-		'maxSeconds' => 1200,
-		
-		// find and replace in row data (not supported by exec/mysql method)
-		'findReplace' => array( 
-			// Example: 'databass' => 'database'
-		),
-		
-		// find and replace in create table statements (not supported by exec/mysql)
-		'findReplaceCreateTable' => array( 
-			// Example: 'DEFAULT CHARSET=latin1;' => 'DEFAULT CHARSET=utf8;', 
-		),
-
-		// EXEC MODE IS CURRRENTLY EXPERIMENTAL AND NOT RECOMMEND FOR USE YET
-		// if true, we will try to use mysql via exec first (faster). if false, we won't attempt that.
-		'exec' => false, 
-		
-		// command to use for mysql exec
-		'execCommand' => '[dbPath]mysql 
+	protected $restoreOptions = [
+     // table names to restore (empty=all)
+     'tables' => [],
+     // allow DROP TABLE statements?
+     'allowDrop' => true,
+     // DROP ALL tables before restore? (requires that 'allowDrop' must also be true)
+     'dropAll' => false,
+     // halt execution when an error occurs?
+     'haltOnError' => false,
+     // max number of seconds allowed for execution
+     'maxSeconds' => 1200,
+     // find and replace in row data (not supported by exec/mysql method)
+     'findReplace' => [],
+     // find and replace in create table statements (not supported by exec/mysql)
+     'findReplaceCreateTable' => [],
+     // EXEC MODE IS CURRRENTLY EXPERIMENTAL AND NOT RECOMMEND FOR USE YET
+     // if true, we will try to use mysql via exec first (faster). if false, we won't attempt that.
+     'exec' => false,
+     // command to use for mysql exec
+     'execCommand' => '[dbPath]mysql 
 			--port=[dbPort] 
 			-u[dbUser] 
 			-p[dbPass] 
 			-h[dbHost] 
 			[dbName] < [dbFile]',
-		);
+ ];
 	
 	/**
 	 * @var null|\PDO
@@ -209,16 +173,18 @@ class WireDatabaseBackup {
 	 * @var array
 	 * 
 	 */
-	protected $databaseConfig = array(
-		'dbUser' => '',
-		'dbPass' => '', // optional (if password is blank)
-		'dbHost' => '', 
-		'dbPort' => '', 
-		'dbName' => '', 
-		'dbPath' => '', // optional mysql/mysqldump path on file system
-		'dbSocket' => '', 
-		'dbCharset' => 'utf8',
-	);
+	protected $databaseConfig = [
+     'dbUser' => '',
+     'dbPass' => '',
+     // optional (if password is blank)
+     'dbHost' => '',
+     'dbPort' => '',
+     'dbName' => '',
+     'dbPath' => '',
+     // optional mysql/mysqldump path on file system
+     'dbSocket' => '',
+     'dbCharset' => 'utf8',
+ ];
 
 	/**
 	 * Array of text indicating details about what methods were used (primarily for debugging)
@@ -226,7 +192,7 @@ class WireDatabaseBackup {
 	 * @var array
 	 * 
 	 */
-	protected $notes = array();
+	protected $notes = [];
 	
 	/**
 	 * Array of text error messages
@@ -234,7 +200,7 @@ class WireDatabaseBackup {
 	 * @var array
 	 *
 	 */
-	protected $errors = array();
+	protected $errors = [];
 
 	/**
 	 * Database files path
@@ -250,7 +216,7 @@ class WireDatabaseBackup {
 	 * @var array
 	 * 
 	 */
-	protected $tables = array();
+	protected $tables = [];
 	
 	/**
 	 * Cache for getAllTables()
@@ -258,7 +224,7 @@ class WireDatabaseBackup {
 	 * @var array
 	 *
 	 */
-	protected $counts = array();
+	protected $counts = [];
 
 	/**
 	 * Construct
@@ -321,8 +287,8 @@ class WireDatabaseBackup {
 			$this->databaseConfig[$key] = $value;
 		}
 
-		$missing = array();
-		$optional = array('dbPass', 'dbPath', 'dbSocket', 'dbPort'); 
+		$missing = [];
+		$optional = ['dbPass', 'dbPath', 'dbSocket', 'dbPort']; 
 		foreach($this->databaseConfig as $key => $value) {
 			if(empty($value) && !in_array($key, $optional)) $missing[] = $key;
 		}
@@ -377,10 +343,7 @@ class WireDatabaseBackup {
 			if($config['dbPort']) $dsn .= ";port=$config[dbPort]";
 		}
 		
-		$options = array(
-			\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES '$config[dbCharset]'",
-			\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
-		);
+		$options = [\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES '$config[dbCharset]'", \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
 		
 		$database = new \PDO($dsn, $config['dbUser'], $config['dbPass'], $options);
 		$this->setDatabase($database); 
@@ -412,7 +375,7 @@ class WireDatabaseBackup {
 	 */
 	public function errors($reset = false) {
 		$errors = $this->errors; 	
-		if($reset) $this->errors = array();
+		if($reset) $this->errors = [];
 		return $errors;
 	}
 	
@@ -441,7 +404,7 @@ class WireDatabaseBackup {
 	 */
 	public function notes($reset = false) {
 		$notes = $this->notes;
-		if($reset) $this->notes = array();
+		if($reset) $this->notes = [];
 		return $notes;
 	}
 
@@ -488,7 +451,7 @@ class WireDatabaseBackup {
 	 */
 	public function getFiles($getObjects = false) {
 		$dir = new \DirectoryIterator($this->path);
-		$files = array();
+		$files = [];
 		foreach($dir as $file) {
 			if($file->isDot() || $file->isDir()) continue;
 			$key = $file->getMTime();
@@ -511,34 +474,36 @@ class WireDatabaseBackup {
 	public function getFileInfo($filename) {
 		
 		// all possible info (null values become integers when populated)
-		$info = array(
-			'description' => '',
-			'valid' => false,
-			'time' => '', // ISO-8601
-			'mtime' => null, // timestamp
-			'user' => '',
-			'size' => null,
-			'basename' => '',
-			'pathname' => '',
-			'dbName' => '',
-			'tables' => array(),
-			'excludeTables' => array(),
-			'excludeCreateTables' => array(),
-			'excludeExportTables' => array(),
-			'numTables' => null, 
-			'numCreateTables' => null, 
-			'numInserts' => null, 
-			'numSeconds' => null,
-		);
+		$info = [
+      'description' => '',
+      'valid' => false,
+      'time' => '',
+      // ISO-8601
+      'mtime' => null,
+      // timestamp
+      'user' => '',
+      'size' => null,
+      'basename' => '',
+      'pathname' => '',
+      'dbName' => '',
+      'tables' => [],
+      'excludeTables' => [],
+      'excludeCreateTables' => [],
+      'excludeExportTables' => [],
+      'numTables' => null,
+      'numCreateTables' => null,
+      'numInserts' => null,
+      'numSeconds' => null,
+  ];
 		
 		$filename = $this->sanitizeFilename($filename); 
-		if(!file_exists($filename)) return array();
+		if(!file_exists($filename)) return [];
 
 		$fp = fopen($filename, 'r');
 		
 		if($fp === false) {
 			$this->error('Unable to open file for reading: ' . basename($filename));
-			return array();
+			return [];
 		}
 		
 		$line = fgets($fp);
@@ -547,7 +512,7 @@ class WireDatabaseBackup {
 			if($pos !== false) {
 				$json = substr($line, $pos);
 				$info2 = json_decode($json, true);
-				if(!$info2) $info2 = array();
+				if(!$info2) $info2 = [];
 				foreach($info2 as $key => $value) $info[$key] = $value;
 			}
 		}
@@ -591,8 +556,8 @@ class WireDatabaseBackup {
 			if($count && count($this->counts)) return $this->counts;
 			if(count($this->tables)) return $this->tables;
 		} else {
-			$this->tables = array();
-			$this->counts = array();
+			$this->tables = [];
+			$this->counts = [];
 		}
 
 		$query = $this->database->prepare('SHOW TABLES');
@@ -645,7 +610,7 @@ class WireDatabaseBackup {
 	 * @see WireDatabaseBackup::restore()
 	 * 
 	 */
-	public function backup(array $options = array()) {
+	public function backup(array $options = []) {
 
 		if(!$this->path) throw new \Exception("Please call setPath('/backup/files/path/') first"); 
 		$this->errors(true); 
@@ -736,19 +701,10 @@ class WireDatabaseBackup {
 			return false;
 		}
 		
-		$info = array(
-			'time' => date('Y-m-d H:i:s'), 
-			'user' => $options['user'],
-			'dbName' => $this->databaseConfig['dbName'],
-			'description' => $options['description'], 
-			'tables' => $options['tables'], 
-			'excludeTables' => $options['excludeTables'],
-			'excludeCreateTables' => $options['excludeCreateTables'], 
-			'excludeExportTables' => $options['excludeExportTables'],
-		);
+		$info = ['time' => date('Y-m-d H:i:s'), 'user' => $options['user'], 'dbName' => $this->databaseConfig['dbName'], 'description' => $options['description'], 'tables' => $options['tables'], 'excludeTables' => $options['excludeTables'], 'excludeCreateTables' => $options['excludeCreateTables'], 'excludeExportTables' => $options['excludeExportTables']];
 		
 		$json = json_encode($info); 
-		$json = str_replace(array("\r", "\n"), " ", $json);
+		$json = str_replace(["\r", "\n"], " ", $json);
 		
 		fwrite($fp, "# " . self::fileHeader . " $json\n"); 
 		fclose($fp);
@@ -765,7 +721,7 @@ class WireDatabaseBackup {
 	 * @return bool
 	 *
 	 */
-	protected function backupEndFile($file, array $summary = array(), array $options = array()) {
+	protected function backupEndFile($file, array $summary = [], array $options = []) {
 
 		$fp = is_resource($file) ? $file : fopen($file, 'a+'); 
 		
@@ -781,7 +737,7 @@ class WireDatabaseBackup {
 		$footer = "# " . self::fileFooter;
 		if(count($summary)) {
 			$json = json_encode($summary); 
-			$json = str_replace(array("\r", "\n"), " ", $json); 
+			$json = str_replace(["\r", "\n"], " ", $json); 
 			$footer .= " $json";
 		}
 
@@ -798,7 +754,7 @@ class WireDatabaseBackup {
 	 * @return string|bool Returns the created file on success or false on error
 	 *
 	 */
-	protected function backupPDO($file, array $options = array()) {
+	protected function backupPDO($file, array $options = []) {
 
 		$database = $this->getDatabase();
 		$options = array_merge($this->backupOptions, $options);
@@ -833,7 +789,7 @@ class WireDatabaseBackup {
 			
 			if(in_array($table, $options['excludeExportTables'])) continue; 
 			$numTables++;
-			$columns = array();
+			$columns = [];
 			$query = $database->prepare("SHOW COLUMNS FROM `$table`");
 			$query->execute();
 			/** @noinspection PhpAssignmentInConditionInspection */
@@ -843,7 +799,7 @@ class WireDatabaseBackup {
 
 			$sql = "SELECT $columnsStr FROM `$table` ";
 
-			$conditions = array();
+			$conditions = [];
 			foreach($options['whereSQL'] as $_table => $_conditions) {
 				if($_table === $table || ($_table[0] == '/' && preg_match($_table, $table))) $conditions = array_merge($conditions, $_conditions); 
 			}
@@ -887,12 +843,7 @@ class WireDatabaseBackup {
 			fwrite($fp, "\n");
 		}
 
-		$summary = array(
-			'numTables' => $numTables, 
-			'numCreateTables' => $numCreateTables, 
-			'numInserts' => $numInserts,
-			'numSeconds' => time() - $startTime, 
-		);
+		$summary = ['numTables' => $numTables, 'numCreateTables' => $numCreateTables, 'numInserts' => $numInserts, 'numSeconds' => time() - $startTime];
 		$this->backupEndFile($fp, $summary, $options); // this does the fclose
 		
 		return file_exists($file) ? $file : false;
@@ -911,7 +862,7 @@ class WireDatabaseBackup {
 	protected function backupExec($file, array $options) {
 
 		$cmd = $options['execCommand'];
-		$cmd = str_replace(array("\n", "\t"), ' ', $cmd); 
+		$cmd = str_replace(["\n", "\t"], ' ', $cmd); 
 		$cmd = str_replace('[tables]', implode(' ', $options['tables']), $cmd); 
 		
 		foreach($options['excludeTables'] as $table) {
@@ -965,7 +916,7 @@ class WireDatabaseBackup {
 	 * @see WireDatabaseBackup::backup()
 	 *
 	 */
-	public function restore($filename, array $options = array()) {
+	public function restore($filename, array $options = []) {
 
 		$filename = $this->sanitizeFilename($filename); 
 		if(!file_exists($filename)) throw new \Exception("Restore file does not exist: $filename");
@@ -1012,7 +963,7 @@ class WireDatabaseBackup {
 	 * @return bool true on success, false on failure. Call the errors() method to retrieve errors.
 	 *
 	 */
-	protected function restorePDO($filename, array $options = array()) {
+	protected function restorePDO($filename, array $options = []) {
 
 		$fp = fopen($filename, "rb");
 		if($fp === false) {
@@ -1027,7 +978,7 @@ class WireDatabaseBackup {
 			$this->dropAllTables();
 		}
 	
-		$tables = array(); // selective tables to restore, optional
+		$tables = []; // selective tables to restore, optional
 		foreach($options['tables'] as $table) $tables[$table] = $table; 
 		if(!count($tables)) $tables = null;
 
@@ -1101,17 +1052,17 @@ class WireDatabaseBackup {
 	 * @return bool True on success, false on failure. Call the errors() method to retrieve errors.
 	 *
 	 */
-	protected function restoreExec($filename, array $options = array()) {
+	protected function restoreExec($filename, array $options = []) {
 
 		$cmd = $options['execCommand'];
-		$cmd = str_replace(array("\n", "\t"), ' ', $cmd);
+		$cmd = str_replace(["\n", "\t"], ' ', $cmd);
 		$cmd = str_replace('[dbFile]', $filename, $cmd);
 
 		foreach($this->databaseConfig as $key => $value) {
 			$cmd = str_replace("[$key]", $value, $cmd);
 		}
 
-		$o = array();
+		$o = [];
 		$r = 0;
 		exec($cmd, $o, $r);
 
@@ -1247,7 +1198,7 @@ class WireDatabaseBackup {
 		$filename = $this->sanitizeFilename($filename); 
 		$fp = fopen($filename, 'r');
 		if(!$fp) throw new \Exception("Unable to open: $filename"); 
-		$statements = array();
+		$statements = [];
 		while(!feof($fp)) {
 			$line = trim(fgets($fp));
 			if(!preg_match($regex, $line, $matches)) continue;
@@ -1255,7 +1206,7 @@ class WireDatabaseBackup {
 			$table = $matches[1];
 			while(substr($line, -1) != ';' && !feof($fp)) $line .= " " . rtrim(fgets($fp));
 			if($multi) {
-				if(!isset($statements[$table])) $statements[$table] = array();
+				if(!isset($statements[$table])) $statements[$table] = [];
 				$statements[$table][] = $line;
 			} else {
 				$statements[$table] = $line;
@@ -1316,13 +1267,11 @@ class WireDatabaseBackup {
 	 * @throws \Exception if haltOnError, otherwise it populates $this->errors
 	 * 
 	 */
-	protected function executeQuery($query, $options = array()) {
-		$defaults = array(
-			'haltOnError' => false
-		);
+	protected function executeQuery($query, $options = []) {
+		$defaults = ['haltOnError' => false];
 		if(is_bool($options)) {
 			$defaults['haltOnError'] = $options;
-			$options = array();
+			$options = [];
 		}
 		$options = array_merge($defaults, $options);
 		$result = false;
@@ -1388,7 +1337,7 @@ class WireDatabaseBackup {
 	 * @throws \Exception on unknown exec type
 	 * 
 	 */
-	protected function supportsExec(array $options = array()) {
+	protected function supportsExec(array $options = []) {
 
 		if(!$options['exec']) return false;
 		
@@ -1434,7 +1383,7 @@ class WireDatabaseBackup {
 		}
 	
 		// now check if mysqldump is available
-		$o = array();
+		$o = [];
 		$r = 0; 
 		$path = $this->databaseConfig['dbPath'];
 		exec("{$path}$type --version", $o, $r); 

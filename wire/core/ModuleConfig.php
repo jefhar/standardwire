@@ -24,7 +24,7 @@ class ModuleConfig extends WireData {
 	 * @var array
 	 * 
 	 */
-	protected $inputfieldsArray = array();
+	protected $inputfieldsArray = [];
 
 	/**
 	 * Use the construct method if you are defining your module config fields as an array
@@ -65,7 +65,7 @@ class ModuleConfig extends WireData {
 		if(count($this->inputfieldsArray)) {
 			$defaults = $this->identifyDefaults($this->inputfieldsArray); 
 		} else {
-			$defaults = array();
+			$defaults = [];
 		}
 		return $defaults;
 	}
@@ -122,7 +122,7 @@ class ModuleConfig extends WireData {
 	 *
 	 */
 	private function identifyDefaults($a) {
-		$defaults = array();
+		$defaults = [];
 		foreach($a as $name => $info) {
 			if(isset($info['name'])) $name = $info['name'];
 			$value = isset($info['value']) ? $info['value'] : '';

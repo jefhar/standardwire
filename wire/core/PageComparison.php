@@ -18,7 +18,7 @@ class PageComparison {
 	 * @var string[] 
 	 * 
 	 */
-	protected $matchesIgnores = array('limit', 'start', 'sort', 'include');
+	protected $matchesIgnores = ['limit', 'start', 'sort', 'include'];
 
 	/** 
 	 * Is this page of the given type? (status, template, etc.)
@@ -112,7 +112,7 @@ class PageComparison {
 		$sanitizer = $page->wire()->sanitizer;
 
 		// if only given a key argument, we will be returning a boolean
-		if($yes === '' && $no === '') list($yes, $no) = array(true, false);
+		if($yes === '' && $no === '') list($yes, $no) = [true, false];
 		
 		if(is_string($key)) $key = trim($key);
 
@@ -161,7 +161,7 @@ class PageComparison {
 				$keyIsFieldName = $sanitizer->fieldName($key) === $key;
 				$act = $action;
 				// if value placeholders present, replace them with field name placeholders
-				foreach(array('{value}', '{val}') as $tag) {
+				foreach(['{value}', '{val}'] as $tag) {
 					// string with {val} or {value} has that tag replaced with the {field_name}
 					if(strpos($action, $tag) === false) continue;
 					// if val or value is actually the name of a field in the system, then do not override it
@@ -180,7 +180,7 @@ class PageComparison {
 			
 		} else if(is_callable($action)) {
 			// action is callable
-			$result = call_user_func_array($action, array($val, $key, $page));
+			$result = call_user_func_array($action, [$val, $key, $page]);
 			
 		} else {
 			// action is a number, array or object
@@ -200,9 +200,9 @@ class PageComparison {
 	 * @return bool
 	 *
 	 */
-	public function matches(Page $page, $s, array $options = array()) {
+	public function matches(Page $page, $s, array $options = []) {
 	
-		$selectors = array();
+		$selectors = [];
 
 		if(is_string($s) || is_int($s)) {
 			if(ctype_digit("$s")) $s = (int) $s; 
@@ -291,7 +291,7 @@ class PageComparison {
 	 */
 	protected function getObjectValueArray($object, $property = '') {
 		
-		$value = array();
+		$value = [];
 		$_property = $property; // original
 		$subproperty = '';
 		if(strpos($property, '.')) list($property, $subproperty) = explode('.', $property, 2);
@@ -305,7 +305,7 @@ class PageComparison {
 				if(is_object($v)) {
 					$value = $this->getObjectValueArray($v, $subproperty);
 				} else if(!is_null($v)) {
-					$value = array($v);
+					$value = [$v];
 				}
 			} else {
 				// if no property, get id, name and path as allowed comparison values
@@ -319,7 +319,7 @@ class PageComparison {
 
 			if($property === 'count') {
 				// quick exit for count property
-				return array(count($object));
+				return [count($object)];
 			}
 			
 			// iterate and get value of each item present
@@ -349,7 +349,7 @@ class PageComparison {
 				if(is_object($v)) {
 					$value = $this->getObjectValueArray($v, $subproperty);
 				} else if(!is_null($v)) {
-					$value = array($v);
+					$value = [$v];
 				}
 				
 			} else {
@@ -359,7 +359,7 @@ class PageComparison {
 				// string value that doesn't match class name identifies the object in some way
 				if($v !== wireClassName($object)) $value[] = $v;
 				// if the object uses the common 'id' or 'name' properties, consider those as well
-				foreach(array('id', 'name') as $key) {
+				foreach(['id', 'name'] as $key) {
 					$v = $object->get($key);
 					if(!is_null($v)) $value[] = $v;
 				}
@@ -371,7 +371,7 @@ class PageComparison {
 			if(is_object($v)) {
 				$value = $this->getObjectValueArray($v, $subproperty);
 			} else if(!is_null($v)) {
-				$value = array($v);
+				$value = [$v];
 			}
 				
 		} else if(!$property && method_exists($object, '__toString')) {

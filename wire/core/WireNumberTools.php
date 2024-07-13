@@ -17,7 +17,7 @@ class WireNumberTools extends Wire {
 	 * @var array 
 	 * 
 	 */
-	protected $caches = array();
+	protected $caches = [];
 
 	/**
 	 * Generate and return an installation unique number/ID (integer)
@@ -41,13 +41,9 @@ class WireNumberTools extends Wire {
 	 * @since 3.0.213
 	 *
 	 */
-	public function uniqueNumber($options = array()) {
+	public function uniqueNumber($options = []) {
 
-		$defaults = array(
-			'namespace' => (is_string($options) ? $options : ''),
-			'getLast' => false,
-			'reset' => false,
-		);
+		$defaults = ['namespace' => (is_string($options) ? $options : ''), 'getLast' => false, 'reset' => false];
 
 		$database = $this->wire()->database;
 		$config = $this->wire()->config;
@@ -83,7 +79,7 @@ class WireNumberTools extends Wire {
 		if(!$uniqueNum && !$database->tableExists($table) && empty($options['recursive'])) {
 			$idSchema = "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY";
 			$database->exec("CREATE TABLE $table ($idSchema) ENGINE=$config->dbEngine");
-			return $this->uniqueNumber(array_merge($options, array('recursive' => true)));
+			return $this->uniqueNumber(array_merge($options, ['recursive' => true]));
 		}
 
 		if(!$uniqueNum) throw new WireException('Unable to generate unique number');
@@ -110,7 +106,7 @@ class WireNumberTools extends Wire {
 	 */
 	public function randomInteger($min, $max, $throw = false) {
 		$rand = new WireRandom();
-		return $rand->integer($min, $max, array('cryptoSecure' => $throw));
+		return $rand->integer($min, $max, ['cryptoSecure' => $throw]);
 	}
 
 	/**
@@ -130,7 +126,7 @@ class WireNumberTools extends Wire {
 		
 		if(is_int($value) && $unit === null) return $value;
 	
-		$value = str_replace(array(' ', ','), '', "$value");
+		$value = str_replace([' ', ','], '', "$value");
 		
 		if(ctype_digit("$value")) {
 			$value = (int) $value;
@@ -175,16 +171,9 @@ class WireNumberTools extends Wire {
 	 * @since 3.0.214 All versions can also use the wireBytesStr() function
 	 *
 	 */
-	public function bytesToStr($bytes, $options = array()) {
+	public function bytesToStr($bytes, $options = []) {
 		
-		$defaults = array(
-			'type' => '',
-			'small' => false, 
-			'decimals' => null,
-			'decimal_point' => null,
-			'thousands_sep' => null,
-			'labels' => array(),
-		);
+		$defaults = ['type' => '', 'small' => false, 'decimals' => null, 'decimal_point' => null, 'thousands_sep' => null, 'labels' => []];
 
 		if(is_string($bytes) && !ctype_digit($bytes)) {
 			$bytes = $this->strToBytes($bytes);

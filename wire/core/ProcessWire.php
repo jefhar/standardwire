@@ -183,17 +183,7 @@ class ProcessWire extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $statusNames = array(
-		self::statusNone => '',
-		self::statusBoot => 'boot',
-		self::statusInit => 'init',
-		self::statusReady => 'ready',
-		self::statusRender => 'render',
-		self::statusDownload => 'download',
-		self::statusFinished => 'finished',
-		self::statusExited => 'exited',
-		self::statusFailed => 'failed',
-	);
+	protected $statusNames = [self::statusNone => '', self::statusBoot => 'boot', self::statusInit => 'init', self::statusReady => 'ready', self::statusRender => 'render', self::statusDownload => 'download', self::statusFinished => 'finished', self::statusExited => 'exited', self::statusFailed => 'failed'];
 
 	/**
 	 * Whether debug mode is on or off
@@ -330,10 +320,7 @@ class ProcessWire extends Wire {
 		if($this->status < self::statusFinished) {
 			// call finished hook if it wasn’t already
 			$this->status = self::statusExited;
-			$this->finished(array(
-				'prevStatus' => $this->status,
-				'exited' => true, 
-			));
+			$this->finished(['prevStatus' => $this->status, 'exited' => true]);
 		}
 	}
 
@@ -395,7 +382,7 @@ class ProcessWire extends Wire {
 		if($config->noHTTPS && $config->noHTTPS !== true) {
 			$noHTTPS = $config->noHTTPS;
 			$httpHost = $config->httpHost;
-			if(is_string($noHTTPS)) $noHTTPS = array($noHTTPS);
+			if(is_string($noHTTPS)) $noHTTPS = [$noHTTPS];
 			if(is_array($noHTTPS)) {
 				$config->noHTTPS = false;
 				foreach($noHTTPS as $host) {
@@ -635,7 +622,7 @@ class ProcessWire extends Wire {
 	 * @param array $data Associative array of any extra data to pass along to include files as locally scoped vars (3.0.142+)
 	 * 
 	 */
-	public function setStatus($status, array $data = array()) {
+	public function setStatus($status, array $data = []) {
 		
 		/** @var Config $config */
 		$config = $this->fuel->get('config');
@@ -706,14 +693,7 @@ class ProcessWire extends Wire {
 		if($lastThrowable === $e) return;
 		$isException = $e instanceof \Exception;
 		if(!$page instanceof Page) $page = new NullPage();
-		$this->setStatus(ProcessWire::statusFailed, array(
-			'throwable' => $e, 
-			'exception' => $isException ? $e : null,
-			'error' => $isException ? null : $e, 
-			'failPage' => $page,
-			'reason' => $reason,
-			'url' => $url,
-		));
+		$this->setStatus(ProcessWire::statusFailed, ['throwable' => $e, 'exception' => $isException ? $e : null, 'error' => $isException ? null : $e, 'failPage' => $page, 'reason' => $reason, 'url' => $url]);
 		$lastThrowable = $e;
 	}
 
@@ -803,7 +783,7 @@ class ProcessWire extends Wire {
 	 * #pw-hooker
 	 *
 	 */
-	protected function ___finished(array $data = array()) {
+	protected function ___finished(array $data = []) {
 		
 		$config = $this->fuel->get('config'); /** @var Config $config */
 		$session = $this->fuel->get('session'); /** @var Session $session */
@@ -876,13 +856,13 @@ class ProcessWire extends Wire {
 	 * @return bool True if file existed and was included, false if not.
 	 * 
 	 */
-	protected function includeFile($file, array $data = array()) {
+	protected function includeFile($file, array $data = []) {
 		if(!file_exists($file)) return false;
 		$this->fileSave = $file; // to prevent any possibility of extract() vars from overwriting
 		$config = $this->fuel->get('config'); /** @var Config $config */
 		if($this->status > self::statusBoot && $config->templateCompile) {
 			$files = $this->fuel->get('files'); /** @var WireFileTools $files */
-			if($files) $this->fileSave = $files->compile($file, array('skipIfNamespace' => true));
+			if($files) $this->fileSave = $files->compile($file, ['skipIfNamespace' => true]);
 		}
 		$this->pathSave = getcwd();
 		chdir(dirname($this->fileSave));
@@ -908,7 +888,7 @@ class ProcessWire extends Wire {
 	public function __call($method, $arguments) {
 		if(method_exists($this, "___$method")) return parent::__call($method, $arguments); 
 		$value = $this->__get($method);
-		if(is_object($value)) return call_user_func_array(array($value, '__invoke'), $arguments); 
+		if(is_object($value)) return call_user_func_array([$value, '__invoke'], $arguments); 
 		return parent::__call($method, $arguments);
 	}
 
@@ -963,7 +943,7 @@ class ProcessWire extends Wire {
 	 * @var array
 	 *
 	 */
-	static protected $instances = array();
+	static protected $instances = [];
 
 	/**
 	 * Current ProcessWire instance
@@ -1132,13 +1112,13 @@ class ProcessWire extends Wire {
 	 * @return Config
 	 * 
 	 */
-	public static function buildConfig($rootPath = '', $rootURL = null, array $options = array()) {
+	public static function buildConfig($rootPath = '', $rootURL = null, array $options = []) {
 	
 		$rootPath = self::getRootPath($rootPath);
 		$httpHost = '';
 		$scheme = '';
 		$siteDir = isset($options['siteDir']) ? $options['siteDir'] : 'site';
-		$cfg = array('dbName' => '');
+		$cfg = ['dbName' => ''];
 		
 		if($rootURL && strpos($rootURL, '://')) {
 			// rootURL is specifying scheme and hostname
@@ -1201,7 +1181,7 @@ class ProcessWire extends Wire {
 			&& !function_exists("\\ProcessWire\\ProcessWireHostSiteConfig")
 			&& !function_exists("\\ProcessWireHostSiteConfig")) {
 			// optional config file is present in root
-			$hostConfig = array();
+			$hostConfig = [];
 			/** @noinspection PhpIncludeInspection */
 			@include($indexConfigFile);
 			if(function_exists("\\ProcessWire\\ProcessWireHostSiteConfig")) {
@@ -1225,21 +1205,7 @@ class ProcessWire extends Wire {
 	
 		// create new Config instance
 		$cfg['urls'] = new Paths($rootURL);
-		$cfg['urls']->data(array(
-			'wire' => "$wireDir/",
-			'site' => "$siteDir/",
-			'modules' => "$wireDir/modules/",
-			'siteModules' => "$siteDir/modules/",
-			'core' => "$coreDir/",
-			'assets' => "$assetsDir/",
-			'cache' => "$assetsDir/cache/",
-			'logs' => "$assetsDir/logs/",
-			'files' => "$assetsDir/files/",
-			'tmp' => "$assetsDir/tmp/",
-			'templates' => "$siteDir/templates/",
-			'fieldTemplates' => "$siteDir/templates/fields/",
-			'adminTemplates' => "$wireDir/$adminTplDir/",
-		), true);
+		$cfg['urls']->data(['wire' => "$wireDir/", 'site' => "$siteDir/", 'modules' => "$wireDir/modules/", 'siteModules' => "$siteDir/modules/", 'core' => "$coreDir/", 'assets' => "$assetsDir/", 'cache' => "$assetsDir/cache/", 'logs' => "$assetsDir/logs/", 'files' => "$assetsDir/files/", 'tmp' => "$assetsDir/tmp/", 'templates' => "$siteDir/templates/", 'fieldTemplates' => "$siteDir/templates/fields/", 'adminTemplates' => "$wireDir/$adminTplDir/"], true);
 		
 		$cfg['paths'] = clone $cfg['urls'];
 		$cfg['paths']->set('root', $rootPath . '/');

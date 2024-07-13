@@ -93,16 +93,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @var array
 	 * 
 	 */
-	protected $defaultOptions = array(
-		'age' => 0, 
-		'expire' => null, 
-		'path' => null,
-		'domain' => null,
-		'secure' => null,
-		'httponly' => false, 
-		'samesite' => 'Lax',
-		'fallback' => true,
-	);
+	protected $defaultOptions = ['age' => 0, 'expire' => null, 'path' => null, 'domain' => null, 'secure' => null, 'httponly' => false, 'samesite' => 'Lax', 'fallback' => true];
 
 	/**
 	 * Cookie options specifically set at runtime
@@ -110,7 +101,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @var array
 	 * 
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Cookie names not allowed to be set or removed (i.e. session cookies)
@@ -118,7 +109,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @var array
 	 * 
 	 */
-	protected $skipCookies = array();
+	protected $skipCookies = [];
 	
 	/**
 	 * Construct
@@ -127,7 +118,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @param bool $lazy Use lazy loading?
 	 *
 	 */
-	public function __construct(&$input = array(), $lazy = false) {
+	public function __construct(&$input = [], $lazy = false) {
 		if($lazy) {} // lazy option not used by cookie
 		parent::__construct($input, false);
 	}
@@ -215,7 +206,7 @@ class WireInputDataCookie extends WireInputData {
 			return;
 		}
 		
-		$this->setCookie($key, $value, array()); 
+		$this->setCookie($key, $value, []); 
 	}
 	
 	/**
@@ -235,7 +226,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @return string|int|float|array|null $value
 	 *
 	 */
-	public function get($key, $options = array()) {
+	public function get($key, $options = []) {
 		return parent::get($key, $options); 
 	}
 	
@@ -275,7 +266,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @since 3.0.141 
 	 *
 	 */
-	public function set($key, $value, $options = array()) {
+	public function set($key, $value, $options = []) {
 		
 		if(!$this->init) {
 			parent::__set($key, $value);
@@ -285,12 +276,12 @@ class WireInputDataCookie extends WireInputData {
 		if(!is_array($options)) { 
 			if(is_int($options) || ctype_digit("$options")) {
 				$age = (int) $options;
-				$options = array('age' => $age);
+				$options = ['age' => $age];
 			} else if(!empty($options) && is_string($options)) {
 				$expire = $options;
-				$options = array('expire' => $expire);
+				$options = ['expire' => $expire];
 			} else {
-				$options = array();
+				$options = [];
 			}
 		}
 		
@@ -370,7 +361,7 @@ class WireInputDataCookie extends WireInputData {
 		
 		if($samesite === 'None') {
 			$secure = true;
-		} else if(!in_array($samesite, array('Lax', 'Strict', 'None'), true)) {
+		} else if(!in_array($samesite, ['Lax', 'Strict', 'None'], true)) {
 			$samesite = 'Lax';
 		}
 		
@@ -404,20 +395,13 @@ class WireInputDataCookie extends WireInputData {
 		if(strpos($domain, ':') !== false) list($domain,) = explode(':', $domain, 2);
 
 		// check if cookie should be deleted
-		if($remove) list($value, $expires) = array('', 1); 
+		if($remove) list($value, $expires) = ['', 1]; 
 
 		// set the cookie
 		if(PHP_VERSION_ID < 70300) {
 			$result = setcookie($key, $value, $expires, "$path; SameSite=$samesite", $domain, $secure, $httponly);
 		} else {
-			$result = setcookie($key, $value, array(
-				'expires' => $expires,
-				'path' => $path,
-				'domain' => $domain,
-				'secure' => $secure,
-				'httponly' => $httponly,
-				'samesite' => $samesite,
-			));
+			$result = setcookie($key, $value, ['expires' => $expires, 'path' => $path, 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly, 'samesite' => $samesite]);
 		}
 
 		if($result === false && $options['fallback']) {
@@ -448,7 +432,7 @@ class WireInputDataCookie extends WireInputData {
 	public function offsetUnset($key) {
 		if(!$this->allowSetCookie($key)) return;
 		parent::offsetUnset($key);
-		$this->setCookie($key, null, array());
+		$this->setCookie($key, null, []);
 		unset($_COOKIE[$key]);
 	}
 

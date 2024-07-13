@@ -25,7 +25,7 @@ abstract class PageProperties {
 	 * @var array
 	 *
 	 */
-	public static $helpers = array();
+	public static $helpers = [];
 
 	/**
 	 * Status string shortcuts, so that status can be specified as a word
@@ -35,25 +35,7 @@ abstract class PageProperties {
 	 * @var array
 	 *
 	 */
-	public static $statuses = array(
-		'reserved' => Page::statusReserved,
-		'locked' => Page::statusLocked,
-		'systemID' => Page::statusSystemID,
-		'system' => Page::statusSystem,
-		'unique' => Page::statusUnique,
-		'draft' => Page::statusDraft,
-		'flagged' => Page::statusFlagged,
-		'internal' => Page::statusInternal,
-		'temp' => Page::statusTemp,
-		'hidden' => Page::statusHidden,
-		'unpublished' => Page::statusUnpublished,
-		'trash' => Page::statusTrash,
-		'deleted' => Page::statusDeleted,
-		'systemOverride' => Page::statusSystemOverride,
-		'corrupted' => Page::statusCorrupted,
-		'max' => Page::statusMax,
-		'on' => Page::statusOn,
-	);
+	public static $statuses = ['reserved' => Page::statusReserved, 'locked' => Page::statusLocked, 'systemID' => Page::statusSystemID, 'system' => Page::statusSystem, 'unique' => Page::statusUnique, 'draft' => Page::statusDraft, 'flagged' => Page::statusFlagged, 'internal' => Page::statusInternal, 'temp' => Page::statusTemp, 'hidden' => Page::statusHidden, 'unpublished' => Page::statusUnpublished, 'trash' => Page::statusTrash, 'deleted' => Page::statusDeleted, 'systemOverride' => Page::statusSystemOverride, 'corrupted' => Page::statusCorrupted, 'max' => Page::statusMax, 'on' => Page::statusOn];
 
 	/**
 	 * Properties that can be accessed, mapped to method of access (excluding custom fields of course)
@@ -70,86 +52,7 @@ abstract class PageProperties {
 	 * @var array
 	 *
 	 */
-	public static $baseProperties = array(
-		'accessTemplate' => 'getAccessTemplate',
-		'addable' => 'm',
-		'child' => 'm',
-		'children' => 'm',
-		'created' => 's',
-		'createdStr' => '',
-		'createdUser' => '',
-		'created_users_id' => 's',
-		'deletable' => 'm',
-		'deleteable' => 'm',
-		'editable' => 'm',
-		'editUrl' => 'm',
-		'fieldgroup' => '',
-		'filesManager' => 'm',
-		'filesPath' => 'm',
-		'filesUrl' => 'm',
-		'hasChildren' => 'm',
-		'hasFiles' => 'm',
-		'hasFilesPath' => 'm',
-		'hasLinks' => 't',
-		'hasParent' => 'parents',
-		'hasReferences' => 't',
-		'httpUrl' => 'm',
-		'id' => 's',
-		'index' => 'n',
-		'instanceID' => 'p',
-		'isHidden' => 'm',
-		'isLoaded' => 'm',
-		'isLocked' => 'm',
-		'isNew' => 'm',
-		'isPublic' => 'm',
-		'isTrash' => 'm',
-		'isUnpublished' => 'm',
-		'links' => 'n',
-		'listable' => 'm',
-		'modified' => 's',
-		'modifiedStr' => '',
-		'modifiedUser' => '',
-		'modified_users_id' => 's',
-		'moveable' => 'm',
-		'name' => 's',
-		'namePrevious' => 'p',
-		'next' => 'm',
-		'numChildren' => 's',
-		'numParents' => 'm',
-		'numDescendants' => 'm',
-		'numLinks' => 't',
-		'numReferences' => 't',
-		'output' => 'm',
-		'outputFormatting' => 'p',
-		'parent' => 'm',
-		'parent_id' => '',
-		'parentPrevious' => 'p',
-		'parents' => 'm',
-		'path' => 'm',
-		'prev' => 'm',
-		'publishable' => 'm',
-		'published' => 's',
-		'publishedStr' => '',
-		'quietMode' => 'p',
-		'references' => 'n',
-		'referencing' => 't',
-		'render' => '',
-		'rootParent' => 'm',
-		'siblings' => 'm',
-		'sort' => 's',
-		'sortable' => 'm',
-		'sortfield' => 's',
-		'status' => 's',
-		'statusPrevious' => 'p',
-		'statusStr' => '',
-		'template' => 'p',
-		'templates_id' => '',
-		'templatePrevious' => 'p',
-		'trashable' => 'm',
-		'url' => 'm',
-		'urls' => 'm',
-		'viewable' => 'm'
-	);
+	public static $baseProperties = ['accessTemplate' => 'getAccessTemplate', 'addable' => 'm', 'child' => 'm', 'children' => 'm', 'created' => 's', 'createdStr' => '', 'createdUser' => '', 'created_users_id' => 's', 'deletable' => 'm', 'deleteable' => 'm', 'editable' => 'm', 'editUrl' => 'm', 'fieldgroup' => '', 'filesManager' => 'm', 'filesPath' => 'm', 'filesUrl' => 'm', 'hasChildren' => 'm', 'hasFiles' => 'm', 'hasFilesPath' => 'm', 'hasLinks' => 't', 'hasParent' => 'parents', 'hasReferences' => 't', 'httpUrl' => 'm', 'id' => 's', 'index' => 'n', 'instanceID' => 'p', 'isHidden' => 'm', 'isLoaded' => 'm', 'isLocked' => 'm', 'isNew' => 'm', 'isPublic' => 'm', 'isTrash' => 'm', 'isUnpublished' => 'm', 'links' => 'n', 'listable' => 'm', 'modified' => 's', 'modifiedStr' => '', 'modifiedUser' => '', 'modified_users_id' => 's', 'moveable' => 'm', 'name' => 's', 'namePrevious' => 'p', 'next' => 'm', 'numChildren' => 's', 'numParents' => 'm', 'numDescendants' => 'm', 'numLinks' => 't', 'numReferences' => 't', 'output' => 'm', 'outputFormatting' => 'p', 'parent' => 'm', 'parent_id' => '', 'parentPrevious' => 'p', 'parents' => 'm', 'path' => 'm', 'prev' => 'm', 'publishable' => 'm', 'published' => 's', 'publishedStr' => '', 'quietMode' => 'p', 'references' => 'n', 'referencing' => 't', 'render' => '', 'rootParent' => 'm', 'siblings' => 'm', 'sort' => 's', 'sortable' => 'm', 'sortfield' => 's', 'status' => 's', 'statusPrevious' => 'p', 'statusStr' => '', 'template' => 'p', 'templates_id' => '', 'templatePrevious' => 'p', 'trashable' => 'm', 'url' => 'm', 'urls' => 'm', 'viewable' => 'm'];
 
 	/**
 	 * Alternate names accepted for base properties
@@ -159,28 +62,7 @@ abstract class PageProperties {
 	 * @var array
 	 *
 	 */
-	public static $basePropertiesAlternates = array(
-		'createdUserID' => 'created_users_id',
-		'createdUsersID' => 'created_users_id',
-		'created_user_id' => 'created_users_id',
-		'editURL' => 'editUrl',
-		'fields' => 'fieldgroup',
-		'has_parent' => 'hasParent',
-		'httpURL' => 'httpUrl',
-		'modifiedUserID' => 'modified_users_id',
-		'modifiedUsersID' => 'modified_users_id',
-		'modified_user_id' => 'modified_users_id',
-		'num_children' => 'numChildren',
-		'numChildrenVisible' => 'hasChildren',
-		'numVisibleChildren' => 'hasChildren',
-		'of' => 'outputFormatting',
-		'out' => 'output',
-		'parentID' => 'parent_id',
-		'subpages' => 'children',
-		'template_id' => 'templates_id',
-		'templateID' => 'templates_id',
-		'templatesID' => 'templates_id',
-	);
+	public static $basePropertiesAlternates = ['createdUserID' => 'created_users_id', 'createdUsersID' => 'created_users_id', 'created_user_id' => 'created_users_id', 'editURL' => 'editUrl', 'fields' => 'fieldgroup', 'has_parent' => 'hasParent', 'httpURL' => 'httpUrl', 'modifiedUserID' => 'modified_users_id', 'modifiedUsersID' => 'modified_users_id', 'modified_user_id' => 'modified_users_id', 'num_children' => 'numChildren', 'numChildrenVisible' => 'hasChildren', 'numVisibleChildren' => 'hasChildren', 'of' => 'outputFormatting', 'out' => 'output', 'parentID' => 'parent_id', 'subpages' => 'children', 'template_id' => 'templates_id', 'templateID' => 'templates_id', 'templatesID' => 'templates_id'];
 
 	/**
 	 * Method alternates/aliases (alias => actual)
@@ -188,10 +70,7 @@ abstract class PageProperties {
 	 * @var array
 	 *
 	 */
-	public static $baseMethodAlternates = array(
-		'descendants' => 'find',
-		'descendant' => 'findOne',
-	);
+	public static $baseMethodAlternates = ['descendants' => 'find', 'descendant' => 'findOne'];
 
 	/**
 	 * Method/property return types
@@ -200,16 +79,7 @@ abstract class PageProperties {
 	 * @since 3.0.175
 	 * 
 	 */
-	public static $traversalReturnTypes = array(
-		'parent' => self::typePage,
-		'rootParent' => self::typePage,
-		'child' => self::typePage,
-		'next' => self::typePage,
-		'prev' => self::typePage,
-		'children' => self::typePageArray,
-		'parents' => self::typePageArray,
-		'siblings' => self::typePageArray,
-	);
+	public static $traversalReturnTypes = ['parent' => self::typePage, 'rootParent' => self::typePage, 'child' => self::typePage, 'next' => self::typePage, 'prev' => self::typePage, 'children' => self::typePageArray, 'parents' => self::typePageArray, 'siblings' => self::typePageArray];
 
 	/**
 	 * Name and status language properties (populated by LanguagesSupport module when applicable)
@@ -226,7 +96,7 @@ abstract class PageProperties {
 	 * @var array|null
 	 * 
 	 */
-	public static $languageProperties = array();
+	public static $languageProperties = [];
 
 	/**
 	 * Given a status (flags int) return array of status names
@@ -236,7 +106,7 @@ abstract class PageProperties {
 	 * 
 	 */
 	public static function statusToNames($status) {
-		$names = array();
+		$names = [];
 		$remainder = $status;
 		foreach(self::$statuses as $name => $value) {
 			if($value <= Page::statusOn || $value >= Page::statusMax) continue;

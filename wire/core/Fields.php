@@ -47,57 +47,7 @@ class Fields extends WireSaveableItems {
 	 * For example, a Field can't be given one of these names. 
 	 *
 	 */
-	static protected $nativeNamesSystem = array(
-		'child',
-		'children',
-		'count',
-		'check_access',
-		'created_users_id',
-		'created',
-		'createdUser',
-		'createdUserID',
-		'createdUsersID',
-		'data',
-		'description',
-		'editUrl',
-		'end',
-		'fieldgroup',
-		'fields',
-		'find',
-		'flags',
-		'get',
-		'has_parent',
-		'hasParent',
-		'httpUrl',
-		'id',
-		'include',
-		'isNew',
-		'limit',
-		'modified_users_id',
-		'modified',
-		'modifiedUser',
-		'modifiedUserID',
-		'modifiedUsersID',
-		'name',
-		'num_children',
-		'numChildren',
-		'parent_id',
-		'parent', 
-		'parents',
-		'path',
-		'published',
-		'rootParent',
-		'siblings',
-		'sort',
-		'sortfield',
-		'start',
-		'status',
-		'template',
-		'templatePrevious',
-		'templates_id',
-		'url',
-		'_custom',
-	);
+	static protected $nativeNamesSystem = ['child', 'children', 'count', 'check_access', 'created_users_id', 'created', 'createdUser', 'createdUserID', 'createdUsersID', 'data', 'description', 'editUrl', 'end', 'fieldgroup', 'fields', 'find', 'flags', 'get', 'has_parent', 'hasParent', 'httpUrl', 'id', 'include', 'isNew', 'limit', 'modified_users_id', 'modified', 'modifiedUser', 'modifiedUserID', 'modifiedUsersID', 'name', 'num_children', 'numChildren', 'parent_id', 'parent', 'parents', 'path', 'published', 'rootParent', 'siblings', 'sort', 'sortfield', 'start', 'status', 'template', 'templatePrevious', 'templates_id', 'url', '_custom'];
 
 	/**
 	 * Flag names in format [ flagInt => 'flagName' ]
@@ -105,7 +55,7 @@ class Fields extends WireSaveableItems {
 	 * @var array
 	 * 
 	 */
-	protected $flagNames = array();
+	protected $flagNames = [];
 
 	/**
 	 * Field names that are native/permanent to this instance of ProcessWire (configurable at runtime)
@@ -113,7 +63,7 @@ class Fields extends WireSaveableItems {
 	 * Array indexes are the names and values are all boolean true. 
 	 *
 	 */
-	protected $nativeNamesLocal = array();
+	protected $nativeNamesLocal = [];
 
 	/**
 	 * Cache of all tags for all fields, populated to array when asked for the first time
@@ -141,17 +91,7 @@ class Fields extends WireSaveableItems {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->flagNames = array(
-			Field::flagAutojoin => 'autojoin',
-			Field::flagGlobal => 'global',
-			Field::flagSystem => 'system',
-			Field::flagPermanent => 'permanent',
-			Field::flagAccess => 'access',
-			Field::flagAccessAPI => 'access-api',
-			Field::flagAccessEditor => 'access-editor',
-			Field::flagFieldgroupContext => 'fieldgroup-context',
-			Field::flagSystemOverride => 'system-override',
-		);
+		$this->flagNames = [Field::flagAutojoin => 'autojoin', Field::flagGlobal => 'global', Field::flagSystem => 'system', Field::flagPermanent => 'permanent', Field::flagAccess => 'access', Field::flagAccessAPI => 'access-api', Field::flagAccessEditor => 'access-editor', Field::flagFieldgroupContext => 'fieldgroup-context', Field::flagSystemOverride => 'system-override'];
 		// convert so that keys are names so that isset() can be used rather than in_array()
 		if(isset(self::$nativeNamesSystem[0])) {
 			self::$nativeNamesSystem = array_flip(self::$nativeNamesSystem);
@@ -159,7 +99,7 @@ class Fields extends WireSaveableItems {
 	}
 	
 	public function getCacheItemName() {
-		return array('roles', 'permissions', 'title', 'process'); 
+		return ['roles', 'permissions', 'title', 'process']; 
 	}
 
 	/**
@@ -193,7 +133,7 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.146
 	 *
 	 */
-	public function makeItem(array $a = array()) {
+	public function makeItem(array $a = []) {
 		
 		if(empty($a['type'])) return parent::makeItem($a);
 		if($this->fieldtypes === null) $this->fieldtypes = $this->wire()->fieldtypes;
@@ -337,7 +277,7 @@ class Fields extends WireSaveableItems {
 			// even if only the case has changed. 
 			$schema = $item->type->getDatabaseSchema($item);
 			if(!empty($schema)) {
-				foreach(array($table, "tmp_$table") as $t) {
+				foreach([$table, "tmp_$table"] as $t) {
 					if(!$database->tableExists($t)) continue;
 					throw new WireException("Cannot rename to '$item->name' because table `$table` already exists");
 				}
@@ -519,7 +459,7 @@ class Fields extends WireSaveableItems {
 
 		// get field without context
 		$fieldOriginal = $this->get($field->name);
-		$data = array();
+		$data = [];
 
 		// make sure given field and fieldgroup are valid
 		if(!($field->flags & Field::flagFieldgroupContext)) {
@@ -541,7 +481,7 @@ class Fields extends WireSaveableItems {
 		if(!isset($oldValues['columnWidth'])) $oldValues['columnWidth'] = 100;
 
 		// add the built-in fields
-		foreach(array('label', 'description', 'notes', 'viewRoles', 'editRoles') as $key) {
+		foreach(['label', 'description', 'notes', 'viewRoles', 'editRoles'] as $key) {
 			$newValues[$key] = $field->$key;
 			$oldValues[$key] = $fieldOriginal->$key;
 		}
@@ -552,11 +492,7 @@ class Fields extends WireSaveableItems {
 			$flagsAdd = 0;
 			$flagsDel = 0;
 			// flags that are allowed to be set via context
-			$contextFlags = array(
-				Field::flagAccess, 
-				Field::flagAccessAPI, 
-				Field::flagAccessEditor
-			);
+			$contextFlags = [Field::flagAccess, Field::flagAccessAPI, Field::flagAccessEditor];
 			foreach($contextFlags as $flag) {
 				if($fieldOriginal->hasFlag($flag) && !$field->hasFlag($flag)) $flagsDel = $flagsDel | $flag;
 				if(!$fieldOriginal->hasFlag($flag) && $field->hasFlag($flag)) $flagsAdd = $flagsAdd | $flag;
@@ -594,8 +530,8 @@ class Fields extends WireSaveableItems {
 			$query->bindValue(':fieldgroup_id', $fieldgroup_id, \PDO::PARAM_INT);
 			$query->execute();
 			list($existingData) = $query->fetch(\PDO::FETCH_NUM);
-			$existingData = strlen($existingData) ? json_decode($existingData, true) : array();
-			if(!is_array($existingData)) $existingData = array();
+			$existingData = strlen($existingData) ? json_decode($existingData, true) : [];
+			if(!is_array($existingData)) $existingData = [];
 			foreach($data as $k => $v) {
 				// disallow namespace within namespace
 				if(strpos($k, Fieldgroup::contextNamespacePrefix) === 0) unset($data[$k]);
@@ -662,8 +598,8 @@ class Fields extends WireSaveableItems {
 		$field2->type->createField($field2); 
 		$field1->type = $field1->prevFieldtype;
 
-		$schema1 = array();
-		$schema2 = array();
+		$schema1 = [];
+		$schema2 = [];
 
 		$database = $this->wire()->database; 
 		$table1 = $database->escapeTable($field1->table); 
@@ -720,7 +656,7 @@ class Fields extends WireSaveableItems {
 			// clear out the custom data, which contains settings specific to the Inputfield and Fieldtype
 			foreach($field1->getArray() as $key => $value) {
 				// skip fields that may be shared among any fieldtype
-				if(in_array($key, array('description', 'required', 'collapsed', 'notes'))) continue; 
+				if(in_array($key, ['description', 'required', 'collapsed', 'notes'])) continue; 
 				// skip over language labels/descriptions
 				if(preg_match('/^(description|label|notes)\d+/', $key)) continue; 
 				// remove the custom field
@@ -763,11 +699,7 @@ class Fields extends WireSaveableItems {
 			if(strpos($methodName, '___deletePageField') === false) continue;
 			try {
 				new \ReflectionMethod($reflector->getParentClass()->getName(), $methodName);
-				if(!in_array($method->getDeclaringClass()->getName(), array(
-					'Fieldtype', 
-					'FieldtypeMulti', 
-					__NAMESPACE__ . "\\Fieldtype", 
-					__NAMESPACE__ . "\\FieldtypeMulti"))) {
+				if(!in_array($method->getDeclaringClass()->getName(), ['Fieldtype', 'FieldtypeMulti', __NAMESPACE__ . "\\Fieldtype", __NAMESPACE__ . "\\FieldtypeMulti"])) {
 					$hasDeletePageField = true;
 				}
 
@@ -777,8 +709,8 @@ class Fields extends WireSaveableItems {
 			break;
 		}
 
-		$numPages = $this->getNumPages($field, array('template' => $template)); 
-		$numRows = $this->getNumRows($field, array('template' => $template)); 
+		$numPages = $this->getNumPages($field, ['template' => $template]); 
+		$numRows = $this->getNumRows($field, ['template' => $template]); 
 		$success = true;
 
 		if($numPages <= 200 || $hasDeletePageField) {
@@ -787,7 +719,7 @@ class Fields extends WireSaveableItems {
 			// not many pages to operate on, OR fieldtype has a custom deletePageField method, 
 			// so use verbose/slow method to delete the field from pages
 			
-			$ids = $this->getNumPages($field, array('template' => $template, 'getPageIDs' => true)); 
+			$ids = $this->getNumPages($field, ['template' => $template, 'getPageIDs' => true]); 
 			$items = $this->wire()->pages->getById($ids, $template); 
 			
 			foreach($items as $page) {
@@ -851,7 +783,7 @@ class Fields extends WireSaveableItems {
 	 * @throws WireException If given option for page or template doesn't resolve to actual page/template.
 	 *
 	 */
-	public function getNumPages(Field $field, array $options = array()) {
+	public function getNumPages(Field $field, array $options = []) {
 		$options['countPages'] = true; 
 		return $this->getNumRows($field, $options); 
 	}
@@ -870,14 +802,9 @@ class Fields extends WireSaveableItems {
 	 * @throws WireException If given option for page or template doesn't resolve to actual page/template.
 	 *
 	 */
-	public function getNumRows(Field $field, array $options = array()) {
+	public function getNumRows(Field $field, array $options = []) {
 
-		$defaults = array(
-			'template' => 0,
-			'page' => 0,
-			'countPages' => false,
-			'getPageIDs' => false, 
-		);
+		$defaults = ['template' => 0, 'page' => 0, 'countPages' => false, 'getPageIDs' => false];
 		
 		if(!$field->type) return 0;
 
@@ -889,7 +816,7 @@ class Fields extends WireSaveableItems {
 		
 		if(empty($schema)) {
 			// field has no schema or table (example: FieldtypeConcat)
-			if($options['getPageIDs']) return array();
+			if($options['getPageIDs']) return [];
 			return 0; 
 		}
 
@@ -955,7 +882,7 @@ class Fields extends WireSaveableItems {
 			$query = $database->prepare($sql);
 		}
 
-		$return = $options['getPageIDs'] ? array() : 0;	
+		$return = $options['getPageIDs'] ? [] : 0;	
 		
 		try {
 			$query->execute();
@@ -1043,16 +970,16 @@ class Fields extends WireSaveableItems {
 		
 		if($getFieldNames === 'reset') {
 			$this->tagList = null;
-			return array();
+			return [];
 		}
 		
 		if($this->tagList === null) {
-			$tagList = array();
+			$tagList = [];
 			foreach($this as $field) {
 				/** @var Field $field */
 				$fieldTags = $field->getTags();
 				foreach($fieldTags as $tag) {
-					if(!isset($tagList[$tag])) $tagList[$tag] = array();
+					if(!isset($tagList[$tag])) $tagList[$tag] = [];
 					$tagList[$tag][] = $field->name;
 				}
 			}
@@ -1062,7 +989,7 @@ class Fields extends WireSaveableItems {
 		
 		if($getFieldNames) return $this->tagList;
 		
-		$tagList = array();
+		$tagList = [];
 		foreach($this->tagList as $tag => $fieldNames) {
 			$tagList[$tag] = $tag;
 		}
@@ -1084,7 +1011,7 @@ class Fields extends WireSaveableItems {
 	 */
 	public function findByTag($tag, $getFieldNames = false) {
 		$tags = $this->getTags(true);
-		$items = array();
+		$items = [];
 		if(!isset($tags[$tag])) return $items;
 		foreach($tags[$tag] as $fieldName) {
 			$items[$fieldName] = ($getFieldNames ? $fieldName : $this->get($fieldName));
@@ -1105,20 +1032,22 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.194
 	 * 
 	 */
-	public function findByType($type, array $options = array()) {
+	public function findByType($type, array $options = []) {
 		
-		$defaults = array(
-			'inherit' => true, // also find fields using type inherited from given type or interface?
-			'valueType' => 'field', // one of 'field', 'id', or 'name'
-			'indexType' => 'name', // one of 'name', 'id', or '' blank for non associative array
-		);
+		$defaults = [
+      'inherit' => true,
+      // also find fields using type inherited from given type or interface?
+      'valueType' => 'field',
+      // one of 'field', 'id', or 'name'
+      'indexType' => 'name',
+  ];
 		
 		$options = array_merge($defaults, $options);
 		$valueType = $options['valueType'];
 		$indexType = $options['indexType'];
 		$inherit = $options['inherit'];
-		$matchTypes = array();
-		$matches = array();
+		$matchTypes = [];
+		$matches = [];
 		
 		if($inherit) {
 			$typeName = wireClassName($type, true);
@@ -1204,7 +1133,7 @@ class Fields extends WireSaveableItems {
 		if($flags === null) {
 			$a = $this->flagNames;
 		} else {
-			$a = array();
+			$a = [];
 			if($flags instanceof Field) $flags = $flags->flags;
 			foreach($this->flagNames as $flag => $name) {
 				if($flags & $flag) $a[$flag] = $name;
@@ -1362,7 +1291,7 @@ class Fields extends WireSaveableItems {
 		$fieldgroups = $this->wire()->fieldgroups;
 		/** @var FieldgroupsArray $items */
 		$items = $getCount ? null : $this->wire(new FieldgroupsArray()); 
-		$ids = array();
+		$ids = [];
 		$count = 0;
 
 		$sql = "SELECT fieldgroups_id FROM fieldgroups_fields WHERE fields_id=:fields_id";
@@ -1404,7 +1333,7 @@ class Fields extends WireSaveableItems {
 		$templates = $this->wire()->templates;
 		$items = $getCount ? null : $this->wire(new TemplatesArray()); /** @var TemplatesArray $items */
 		$count = 0;
-		$ids = array();
+		$ids = [];
 		
 		if(!$fieldId) return $items;
 

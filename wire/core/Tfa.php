@@ -114,39 +114,39 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @var array
 	 * 
 	 */
-	protected $defaults = array(
-		// settings
-		'codeExpire' => 180, 
-		'startUrl' => './', 
-		'rememberDays' => 0, 
-		'rememberFingerprints' => array('agentVL', 'accept', 'scheme', 'host'),
-		'autoType' => '', 
-		'autoRoleIDs' => array(),
-		'formAttrs' => array('id' => 'ProcessLoginForm', 'class' => 'pw-tfa'),
-		'inputAttrs' => array('id' => 'login_name', 'autofocus' => 'autofocus'),
-		'submitAttrs' => array('id' => 'Inputfield_login_submit'),
-		'submitLabel' => '',
-		'showCancel' => true, 
-		'cancelMarkup' => "<p><a href='{url}'>{label}</a></p>",
-		// labels
-		'cancelLabel' => 'Cancel',
-		'configureLabel' => 'Please configure',
-		'enabledLabel' => 'ENABLED',
-		'enabledDescLabel' => 'To disable or change settings, select the “None” option above and save.',
-		'expiredCodeLabel' => 'Expired code',
-		'fieldTfaTypeLabel' => '2-factor authentication type',
-		'fieldTfaTypeDescLabel' => 'After making or changing a selection, submit the form and return here to configure it.',
-		'inputLabel' => 'Authentication Code',
-		'invalidCodeLabel' => 'Invalid code',
-		'maxAttemptsLabel' => 'Max attempts reached',
-		'sendCodeErrorLabel' => 'Error creating or sending authentication code',
-		'timeLimitLabel' => 'Time limit reached',
-		'rememberClearLabel' => 'Clear remembered browsers that skip entering authentication code',
-		'rememberClearedLabel' => 'Cleared remembered browsers',
-		'rememberLabel' => 'Remember this computer?',
-		'rememberSuccessLabel' => 'This computer/browser is now remembered for up to %d days.',
-		'rememberSkipLabel' => 'Code was not required because the browser was recognized from a previous login.',
-	);
+	protected $defaults = [
+     // settings
+     'codeExpire' => 180,
+     'startUrl' => './',
+     'rememberDays' => 0,
+     'rememberFingerprints' => ['agentVL', 'accept', 'scheme', 'host'],
+     'autoType' => '',
+     'autoRoleIDs' => [],
+     'formAttrs' => ['id' => 'ProcessLoginForm', 'class' => 'pw-tfa'],
+     'inputAttrs' => ['id' => 'login_name', 'autofocus' => 'autofocus'],
+     'submitAttrs' => ['id' => 'Inputfield_login_submit'],
+     'submitLabel' => '',
+     'showCancel' => true,
+     'cancelMarkup' => "<p><a href='{url}'>{label}</a></p>",
+     // labels
+     'cancelLabel' => 'Cancel',
+     'configureLabel' => 'Please configure',
+     'enabledLabel' => 'ENABLED',
+     'enabledDescLabel' => 'To disable or change settings, select the “None” option above and save.',
+     'expiredCodeLabel' => 'Expired code',
+     'fieldTfaTypeLabel' => '2-factor authentication type',
+     'fieldTfaTypeDescLabel' => 'After making or changing a selection, submit the form and return here to configure it.',
+     'inputLabel' => 'Authentication Code',
+     'invalidCodeLabel' => 'Invalid code',
+     'maxAttemptsLabel' => 'Max attempts reached',
+     'sendCodeErrorLabel' => 'Error creating or sending authentication code',
+     'timeLimitLabel' => 'Time limit reached',
+     'rememberClearLabel' => 'Clear remembered browsers that skip entering authentication code',
+     'rememberClearedLabel' => 'Cleared remembered browsers',
+     'rememberLabel' => 'Remember this computer?',
+     'rememberSuccessLabel' => 'This computer/browser is now remembered for up to %d days.',
+     'rememberSkipLabel' => 'Code was not required because the browser was recognized from a previous login.',
+ ];
 	
 	/**
 	 * Construct
@@ -163,44 +163,26 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 */
 	public function wired() {
 		// @todo convert to getLabel() switch and make defaults (above) blank
-		$this->setArray(array(
-			'cancelLabel' =>
-				$this->_('Cancel'),
-			'configureLabel' =>
-				$this->_('Please configure'),
-			'enabledLabel' =>
-				$this->_('ENABLED'),
-			'enabledDescLabel' =>
+		$this->setArray(['cancelLabel' =>
+				$this->_('Cancel'), 'configureLabel' =>
+				$this->_('Please configure'), 'enabledLabel' =>
+				$this->_('ENABLED'), 'enabledDescLabel' =>
 				$this->_('Two factor authentication enabled!') . ' ' .
-				$this->_('To disable or change settings, select the “None” option above and save.'),
-			'expiredCodeLabel' =>
-				$this->_('Expired code'),
-			'fieldTfaTypeLabel' =>
-				$this->_('2-factor authentication type'),
-			'fieldTfaTypeDescLabel' => 
-				$this->_('After making or changing a selection, submit the form and return here to configure it.'),
-			'inputLabel' => 
-				$this->_('Authentication Code'),
-			'invalidCodeLabel' =>
-				$this->_('Invalid code'), 
-			'maxAttemptsLabel' =>
-				$this->_('Max attempts reached'),
-			'rememberClearLabel' =>
-				$this->_('Clear remembered browsers that skip entering authentication code'),
-			'rememberClearedLabel' =>
-				$this->_('Cleared remembered browsers'),
-			'rememberLabel' => 
-				$this->_('Remember this computer?'),
-			'rememberSuccessLabel' => 
+				$this->_('To disable or change settings, select the “None” option above and save.'), 'expiredCodeLabel' =>
+				$this->_('Expired code'), 'fieldTfaTypeLabel' =>
+				$this->_('2-factor authentication type'), 'fieldTfaTypeDescLabel' => 
+				$this->_('After making or changing a selection, submit the form and return here to configure it.'), 'inputLabel' => 
+				$this->_('Authentication Code'), 'invalidCodeLabel' =>
+				$this->_('Invalid code'), 'maxAttemptsLabel' =>
+				$this->_('Max attempts reached'), 'rememberClearLabel' =>
+				$this->_('Clear remembered browsers that skip entering authentication code'), 'rememberClearedLabel' =>
+				$this->_('Cleared remembered browsers'), 'rememberLabel' => 
+				$this->_('Remember this computer?'), 'rememberSuccessLabel' => 
 				$this->_('This computer/browser is now remembered for up to %d days.') . ' ' .
-				$this->_('Changes to browser and/or location may require a new code.'),
-			'rememberSkipLabel' =>
-				$this->_('Code was not required because the browser was recognized from a previous login.'),
-			'sendCodeErrorLabel' =>
-				$this->_('Error creating or sending authentication code'),
-			'timeLimitLabel' =>
-				$this->_('Time limit reached'),
-		));
+				$this->_('Changes to browser and/or location may require a new code.'), 'rememberSkipLabel' =>
+				$this->_('Code was not required because the browser was recognized from a previous login.'), 'sendCodeErrorLabel' =>
+				$this->_('Error creating or sending authentication code'), 'timeLimitLabel' =>
+				$this->_('Time limit reached')]);
 		if(!$this->wire()->fields->get($this->userFieldName)) $this->install();
 		parent::wired();
 	}
@@ -399,13 +381,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 */
 	public function startUser(User $user, array $settings) {
 		if($settings) {} // ignore
-		$this->sessionSet(array(
-			'id' => $user->id,
-			'name' => $user->name,
-			'pash' => $this->getUserPash($user), 
-			'type' => $this->className(),
-			'time' => time(),
-		));
+		$this->sessionSet(['id' => $user->id, 'name' => $user->name, 'pash' => $this->getUserPash($user), 'type' => $this->className(), 'time' => time()]);
 		return true; 
 	}
 	
@@ -625,8 +601,8 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 			$cancelUrl = $this->url();
 			$cancelLabel = $this->wire()->sanitizer->entities1($this->cancelLabel);
 			$form->appendMarkup .= str_replace(
-				array('{url}', '{label}'), 
-				array($cancelUrl, $cancelLabel), 
+				['{url}', '{label}'], 
+				[$cancelUrl, $cancelLabel], 
 				$this->cancelMarkup
 			);
 		}
@@ -881,7 +857,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 */
 	protected function sessionSet($key, $value = null) {
 		$session = $this->wire()->session;
-		$values = is_array($key) ? $key : array($key => $value);
+		$values = is_array($key) ? $key : [$key => $value];
 		foreach($values as $k => $v) {
 			$session->setFor($this->keyName, $k, $v);
 		}
@@ -947,7 +923,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @since 3.0.160
 	 *
 	 */
-	public function autoEnableUser(User $user, array $settings = array()) {
+	public function autoEnableUser(User $user, array $settings = []) {
 
 		$moduleName = $this->className();
 		$userModule = $user->get($this->userFieldName);
@@ -973,7 +949,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 			throw new WireException("Unable to save user.$this->userFieldName = '$moduleName'");
 		}
 
-		if(!$this->saveUserSettings($user, array_merge($settings, array('enabled' => true)))) {
+		if(!$this->saveUserSettings($user, array_merge($settings, ['enabled' => true]))) {
 			throw new WireException("Uneable to save user Tfa settings");
 		}
 	}
@@ -990,9 +966,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * 
 	 */
 	protected function getDefaultUserSettings(User $user) {
-		return array(
-			'enabled' => false, // whether user has this auth method enabled
-		);
+		return ['enabled' => false];
 	}
 	
 	/**
@@ -1030,10 +1004,10 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		$query->closeCursor();
 		
 		if(empty($data)) {
-			$tfaSettings = array($className => $defaults);
+			$tfaSettings = [$className => $defaults];
 		} else {
 			$tfaSettings = json_decode($data, true);
-			if(!is_array($tfaSettings)) $tfaSettings = array();
+			if(!is_array($tfaSettings)) $tfaSettings = [];
 			if(isset($tfaSettings[$className])) {
 				$tfaSettings[$className] = array_merge($defaults, $tfaSettings[$className]);
 			} else {
@@ -1062,7 +1036,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		$className = $this->className();
 		if($className === 'Tfa') throw new WireException('Method may only be called from module');
 		if(!empty($settings[$className])) $settings = $settings[$className]; // just in case it is $tfaSettings
-		$tfaSettings = array($className => $settings);
+		$tfaSettings = [$className => $settings];
 		$user->setQuietly('_tfa_settings', $tfaSettings);
 		$field = $this->wire()->fields->get($this->userFieldName);
 		if(!$field) return false;
@@ -1160,7 +1134,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 			if(is_object($module)) {
 				$moduleName = $module->className();
 			} else {
-				list($moduleName, $module) = array($module, null);
+				list($moduleName, $module) = [$module, null];
 			}
 		}
 		
@@ -1174,10 +1148,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		}
 		
 		if(!$module) {
-			$module = $user->wire()->modules->getModule($moduleName, array(
-				'noInit' => true,
-				'noCache' => true,
-			));
+			$module = $user->wire()->modules->getModule($moduleName, ['noInit' => true, 'noCache' => true]);
 		}
 		
 		if(!$module instanceof Tfa) return false;
@@ -1318,7 +1289,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		
 		$settingsPrev = $this->getUserSettings($user);
 		$settings = $settingsPrev;
-		$changes = array();
+		$changes = [];
 		
 		foreach($fieldset->getAll() as $f) {
 			/** @var Inputfield $f */
@@ -1382,10 +1353,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		// update Tfa type labels of options
 		foreach($inputfield->getOptions() as $value => $label) {
 			if(empty($value)) continue;
-			$module = $this->wire()->modules->getModule($value, array(
-				'noInit' => true, 
-				'noCache' => true, 
-			));
+			$module = $this->wire()->modules->getModule($value, ['noInit' => true, 'noCache' => true]);
 			if(!$module instanceof Tfa) continue;
 			if($inputfield instanceof InputfieldRadios) {
 				$label = $module->getTfaTypeName() . ' - ' . $module->getTfaTypeSummary();
@@ -1467,7 +1435,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 			$field->flags = Field::flagSystem;
 			$field->description = $this->defaults['fieldTfaTypeDescLabel'];
 			$field->icon = 'user-secret';
-			$field->set('moduleTypes', array('Tfa'));
+			$field->set('moduleTypes', ['Tfa']);
 			$field->set('instantiateModule', 1);
 			$field->set('showNoneOption', 1);
 			$field->set('labelField', 'title-summary');
@@ -1491,7 +1459,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	
 		// add user_tfa as field editable in user profile
 		$data = $this->wire()->modules->getConfig('ProcessProfile');
-		if(!isset($data['profileFields'])) $data['profileFields'] = array();
+		if(!isset($data['profileFields'])) $data['profileFields'] = [];
 		if(!in_array($fieldName, $data['profileFields'])) {
 			$data['profileFields'][] = $fieldName;
 			$this->wire()->modules->saveConfig('ProcessProfile', $data);

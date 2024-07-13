@@ -29,7 +29,7 @@ class Debug {
 	 * @var array
 	 * 
 	 */
-	static protected $timers = array();
+	static protected $timers = [];
 
 	/**
 	 * Timers that have been saved
@@ -37,7 +37,7 @@ class Debug {
 	 * @var array
 	 * 
 	 */
-	static protected $savedTimers = array();
+	static protected $savedTimers = [];
 
 	/**
 	 * Notes for saved timers
@@ -45,7 +45,7 @@ class Debug {
 	 * @var array
 	 * 
 	 */
-	static protected $savedTimerNotes = array();
+	static protected $savedTimerNotes = [];
 
 	/**
 	 * Use hrtime()?
@@ -69,14 +69,15 @@ class Debug {
 	 * @var int
 	 * 
 	 */
-	static protected $timerSettings = array(
-		'useMS' => false, // use milliseconds?
-		'precision' => 4, 
-		'precisionMS' => 1,
-		'useHrtime' => null,
-		'suffix' => '',
-		'suffixMS' => 'ms',
-	);
+	static protected $timerSettings = [
+     'useMS' => false,
+     // use milliseconds?
+     'precision' => 4,
+     'precisionMS' => 1,
+     'useHrtime' => null,
+     'suffix' => '',
+     'suffixMS' => 'ms',
+ ];
 
 	/**
 	 * Measure time between two events
@@ -269,8 +270,8 @@ class Debug {
 	 * 
 	 */
 	static public function removeSavedTimers() {
-		self::$savedTimers = array();
-		self::$savedTimerNotes = array();
+		self::$savedTimers = [];
+		self::$savedTimerNotes = [];
 	}
 
 	/**
@@ -300,7 +301,7 @@ class Debug {
 	 *
 	 */
 	static public function removeAll() {
-		self::$timers = array();
+		self::$timers = [];
 	}
 	
 	/**
@@ -333,21 +334,31 @@ class Debug {
 	 * @since 3.0.136
 	 * 
 	 */
-	static public function backtrace(array $options = array()) {
+	static public function backtrace(array $options = []) {
 		
-		$defaults = array(
-			'limit' => 0, // the limit argument for the debug_backtrace call
-			'flags' => DEBUG_BACKTRACE_PROVIDE_OBJECT, // flags for PHP debug_backtrace function
-			'showHooks' => false, // show internal methods for hook calls?
-			'getString' => false, // get newline separated string rather than array?
-			'getCnt' => true, // get index number count (for getString only)
-			'getFile' => true,  // get filename? true, false or 'basename'
-			'maxCount' => 10, // max size for arrays
-			'maxStrlen' => 100, // max length for strings
-			'maxDepth' => 5, // max allowed recursion depth when converting variables to strings
-			'ellipsis' => ' …', // show this ellipsis when a long value is truncated
-			'skipCalls' => array(), // method/function calls to skip
-		);
+		$defaults = [
+      'limit' => 0,
+      // the limit argument for the debug_backtrace call
+      'flags' => DEBUG_BACKTRACE_PROVIDE_OBJECT,
+      // flags for PHP debug_backtrace function
+      'showHooks' => false,
+      // show internal methods for hook calls?
+      'getString' => false,
+      // get newline separated string rather than array?
+      'getCnt' => true,
+      // get index number count (for getString only)
+      'getFile' => true,
+      // get filename? true, false or 'basename'
+      'maxCount' => 10,
+      // max size for arrays
+      'maxStrlen' => 100,
+      // max length for strings
+      'maxDepth' => 5,
+      // max allowed recursion depth when converting variables to strings
+      'ellipsis' => ' …',
+      // show this ellipsis when a long value is truncated
+      'skipCalls' => [],
+  ];
 		
 		$options = array_merge($defaults, $options);
 		if($options['limit']) $options['limit']++;
@@ -356,8 +367,8 @@ class Debug {
 		$rootPath = ProcessWire::getRootPath(true);
 		$rootPath2 = $config && $config->paths ? $config->paths->root : $rootPath;
 		array_shift($traces); // shift of the simpleBacktrace call, which is not needed
-		$apiVars = array();
-		$result = array();
+		$apiVars = [];
+		$result = [];
 		$cnt = 0;
 		
 		foreach(wire('all') as $name => $value) {
@@ -432,7 +443,7 @@ class Debug {
 			}
 			
 			if(!empty($args)) {
-				$newArgs = array();
+				$newArgs = [];
 				if($isHookableCall && count($args) === 1 && is_array($args[0])) {
 					$newArgs = $args[0];
 				}
@@ -442,7 +453,7 @@ class Debug {
 					} else if(is_array($arg)) { 
 						$count = count($arg); 
 						if($count < 4) {
-							$arg = $count ? self::traceStr($arg, array('maxDepth' => 2)) : '[]';
+							$arg = $count ? self::traceStr($arg, ['maxDepth' => 2]) : '[]';
 						} else {
 							$arg = 'array(' . count($arg) . ')';
 						}
@@ -473,10 +484,7 @@ class Debug {
 				$str .= "$file » $call";
 				$result[] = $str;
 			} else {
-				$result[] = array(
-					'file' => $file,
-					'call' => $call,
-				);
+				$result[] = ['file' => $file, 'call' => $call];
 			}
 			
 			$cnt++;
@@ -495,14 +503,16 @@ class Debug {
 	 * @return null|string
 	 * 
 	 */
-	static protected function traceStr($value, array $options = array()) {
+	static protected function traceStr($value, array $options = []) {
 		
-		$defaults = array(
-			'maxCount' => 10, // max size for arrays
-			'maxStrlen' => 100, // max length for strings
-			'maxDepth' => 5,
-			'ellipsis' => ' …'
-		);
+		$defaults = [
+      'maxCount' => 10,
+      // max size for arrays
+      'maxStrlen' => 100,
+      // max length for strings
+      'maxDepth' => 5,
+      'ellipsis' => ' …',
+  ];
 
 		static $depth = 0;
 		$options = count($options) ? array_merge($defaults, $options) : $defaults; 
@@ -580,12 +590,9 @@ class Debug {
 	 * @since 3.0.208
 	 * 
 	 */
-	static public function toStr($value, array $options = array()) {
+	static public function toStr($value, array $options = []) {
 		
-		$defaults = array(
-			'method' => 'json_encode',
-			'html' => false,
-		);
+		$defaults = ['method' => 'json_encode', 'html' => false];
 		
 		$options = array_merge($defaults, $options);
 		$method = $options['method'];

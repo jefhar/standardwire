@@ -21,7 +21,7 @@ class ModulesDuplicates extends Wire {
 	 * @var array
 	 *
 	 */
-	protected $duplicates = array();
+	protected $duplicates = [];
 
 	/**
 	 * Specifies which module file to use in cases where there is more than one
@@ -31,7 +31,7 @@ class ModulesDuplicates extends Wire {
 	 * @var array
 	 *
 	 */
-	protected $duplicatesUse = array();
+	protected $duplicatesUse = [];
 
 	/**
 	 * Number of new duplicates found while loading modules
@@ -90,7 +90,7 @@ class ModulesDuplicates extends Wire {
 	 *
 	 */
 	public function addDuplicate($className, $pathname, $current = false) {
-		if(!isset($this->duplicates[$className])) $this->duplicates[$className] = array();
+		if(!isset($this->duplicates[$className])) $this->duplicates[$className] = [];
 		$rootPath = $this->wire()->config->paths->root;
 		if(strpos($pathname, $rootPath) === 0) $pathname = str_replace($rootPath, '/', $pathname);
 		if(!in_array($pathname, $this->duplicates[$className])) {
@@ -122,7 +122,7 @@ class ModulesDuplicates extends Wire {
 	 * 
 	 */
 	public function addFromConfigData($className, array $data) {
-		$files = isset($data['-dups']) ? $data['-dups'] : array();
+		$files = isset($data['-dups']) ? $data['-dups'] : [];
 		$using = isset($data['-dups-use']) ? $data['-dups-use'] : '';
 		if(count($files)) $this->addDuplicates($className, $files);
 		if($using) $this->addDuplicate($className, $using, true); // set current, in-use
@@ -157,7 +157,7 @@ class ModulesDuplicates extends Wire {
 		
 		$modules = $this->wire()->modules;
 		$className = $modules->getModuleClass($className);
-		$files = isset($this->duplicates[$className]) ? $this->duplicates[$className] : array();
+		$files = isset($this->duplicates[$className]) ? $this->duplicates[$className] : [];
 		$using = isset($this->duplicatesUse[$className]) ? $this->duplicatesUse[$className] : '';
 		$rootPath = $this->wire()->config->paths->root;
 
@@ -176,11 +176,11 @@ class ModulesDuplicates extends Wire {
 		if(count($files) < 2) {
 			// no need to store duplicate info if only 0 or 1
 			//unset($this->duplicates[$className], $this->duplicatesUse[$className]); 
-			$files = array();
+			$files = [];
 			$using = '';
 		}
 
-		return array('files' => $files, 'using' => $using);
+		return ['files' => $files, 'using' => $using];
 	}
 
 	/**
@@ -246,7 +246,7 @@ class ModulesDuplicates extends Wire {
 		}
 
 		// update any modules that no longer have duplicates
-		$removals = array();
+		$removals = [];
 		$query = $this->wire()->database->prepare("SELECT `class`, `flags` FROM modules WHERE `flags` & :flag");
 		$query->bindValue(':flag', Modules::flagsDuplicate, \PDO::PARAM_INT);
 		$query->execute();
@@ -287,7 +287,7 @@ class ModulesDuplicates extends Wire {
 		if(strpos($pathname2, $rootPath) === 0) $pathname2 = str_replace($rootPath, '/', $pathname2);
 		// there are two copies of the module on the file system (likely one in /site/modules/ and another in /wire/modules/)
 		if(!isset($this->duplicates[$basename])) {
-			$this->duplicates[$basename] = array($pathname, $pathname2); // array(str_replace($rootPath, '/', $this->getModuleFile($basename)));
+			$this->duplicates[$basename] = [$pathname, $pathname2]; // array(str_replace($rootPath, '/', $this->getModuleFile($basename)));
 			$this->numNewDuplicates++;
 		}
 		if(!in_array($pathname, $this->duplicates[$basename])) {
@@ -332,7 +332,7 @@ class ModulesDuplicates extends Wire {
 	 * @return array Updated configData
 	 *
 	 */
-	public function getDuplicatesConfigData($className, array $configData = array()) {
+	public function getDuplicatesConfigData($className, array $configData = []) {
 		$config = $this->wire()->config;
 		// ensure original duplicates info is retained and validate that it is still current
 		if(isset($this->duplicates[$className])) {
@@ -363,9 +363,6 @@ class ModulesDuplicates extends Wire {
 	}
 	
 	public function getDebugData() {
-		return array(
-			'duplicates' => $this->duplicates,
-			'duplicatesUse' => $this->duplicatesUse
-		);
+		return ['duplicates' => $this->duplicates, 'duplicatesUse' => $this->duplicatesUse];
 	}
 }

@@ -480,7 +480,7 @@ class Config extends WireData {
 	 * List of config keys that are also exported in javascript
 	 *
 	 */
-	protected $jsFields = array();
+	protected $jsFields = [];
 	
 	/**
 	 * Values $config->jsConfig()
@@ -488,7 +488,7 @@ class Config extends WireData {
 	 * @var array
 	 *
 	 */
-	protected $jsData = array();
+	protected $jsData = [];
 
 	/**
 	 * Set or retrieve a config value to be shared with javascript
@@ -539,7 +539,7 @@ class Config extends WireData {
 
 		if(is_null($key)) {
 			// return array of all keys and values
-			$data = array();
+			$data = [];
 			foreach($this->jsFields as $field) {
 				$data[$field] = $this->get($field); 
 			}
@@ -550,7 +550,7 @@ class Config extends WireData {
 			// return a value or values
 			if(is_array($key)) {
 				// return values for multiple keys
-				$a = array();
+				$a = [];
 				foreach($key as $k) {
 					$a[$k] = $this->js($k);
 				}
@@ -800,7 +800,7 @@ class Config extends WireData {
 	 * 
 	 */
 	protected function serverProtocol() {
-		$protos = array('HTTP/1.1', 'HTTP/1.0', 'HTTP/2', 'HTTP/2.0');
+		$protos = ['HTTP/1.1', 'HTTP/1.0', 'HTTP/2', 'HTTP/2.0'];
 		$proto = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
 		return $protos[(int) array_search($proto, $protos, true)];
 	}
@@ -923,7 +923,7 @@ class Config extends WireData {
 	 * 
 	 */
 	public function requestMethod($match = '') {
-		$methods = array('GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'PATCH');
+		$methods = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'];
 		$method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : '';
 		$key = array_search($method, $methods);
 		$method = $key === false ? 'OTHER' : $methods[$key];
@@ -949,7 +949,7 @@ class Config extends WireData {
 	 */
 	public function setWire(ProcessWire $wire) {
 		parent::setWire($wire);
-		foreach(array('paths', 'urls', 'styles', 'scripts') as $key) {
+		foreach(['paths', 'urls', 'styles', 'scripts'] as $key) {
 			$value = $this->get($key);
 			if($value instanceof Wire) $value->setWire($wire);
 		}
@@ -997,7 +997,7 @@ class Config extends WireData {
 	 */
 	public function versionUrls($urls, $useVersion = null) {
 
-		$a = array();
+		$a = [];
 		$rootUrl = $this->urls->root;
 		$rootPath = $this->paths->root;
 		$coreVersionStr = "?v=$this->version";
@@ -1013,7 +1013,7 @@ class Config extends WireData {
 		
 		if(is_string($useVersion)) {
 			// custom version string specified 
-			if(!ctype_alnum(str_replace(array('.', '-', '_', '?', '='), '', $useVersion))) {
+			if(!ctype_alnum(str_replace(['.', '-', '_', '?', '='], '', $useVersion))) {
 				// if it fails sanitization then fallback to core version
 				$useVersion = false;
 				$versionStr = $coreVersionStr;
@@ -1075,7 +1075,7 @@ class Config extends WireData {
 	 *
 	 */
 	public function versionUrl($url, $useVersion = null) {
-		$a = $this->versionUrls(array($url), $useVersion);
+		$a = $this->versionUrls([$url], $useVersion);
 		return isset($a[0]) ? $a[0] : $url;
 	}
 

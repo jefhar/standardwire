@@ -72,14 +72,9 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return array
 	 *
 	 */
-	public function ___getSelectorInfo(Field $field, array $data = array()) {
+	public function ___getSelectorInfo(Field $field, array $data = []) {
 		$info = parent::___getSelectorInfo($field, $data); 
-		$info['subfields']['count'] = array(
-			'name' => 'count',
-			'label' => $this->_('count'), 
-			'operators' => array('=', '!=', '<', '>', '<=', '>='), 
-			'input' => 'number'
-		);
+		$info['subfields']['count'] = ['name' => 'count', 'label' => $this->_('count'), 'operators' => ['=', '!=', '<', '>', '<=', '>='], 'input' => 'number'];
 		return $info; 
 	}
 
@@ -139,7 +134,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 		$target = $this->getBlankValue($page, $field);
 		$targetIsObject = is_object($target); 
 		
-		if(!is_array($value)) $value = array($value);
+		if(!is_array($value)) $value = [$value];
 	
 		// if pagination information was passed in, populate it to the WirePaginatable value
 		if(isset($value['_pagination_limit'])) {
@@ -189,7 +184,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 *
 	 */
 	public function ___sleepValue(Page $page, Field $field, $value) {
-		$values = array();
+		$values = [];
 		if(!$value instanceof WireArray) {
 			if(is_array($value)) return $value; 
 			return $values;
@@ -270,16 +265,16 @@ abstract class FieldtypeMulti extends Fieldtype {
 			$keys = array_keys($value);
 			foreach($keys as $k => $v) $keys[$k] = $database->escapeTableCol($v);
 		} else {
-			$keys = array('data');
+			$keys = ['data'];
 		}
 	
 		// $keys is just the columns unique to the Fieldtype
 		// whereas $cols is same as keys except it also has pages_id and sort
 
-		$cols = array('pages_id');
+		$cols = ['pages_id'];
 		if($useSort) $cols[] = 'sort';
 		foreach($keys as $col) $cols[] = $col;
-		$intCols = $this->trimDatabaseSchema($schema, array('findType' => '*int', 'trimDefault' => false)); 
+		$intCols = $this->trimDatabaseSchema($schema, ['findType' => '*int', 'trimDefault' => false]); 
 		$nullers = false;
 
 		$sql = "INSERT INTO `$table` (`" . implode('`, `', $cols) . "`) VALUES(:" . implode(', :', $cols) . ")";
@@ -298,7 +293,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 
 			// if the value is not an associative array, then force it to be one
 			if(!is_array($value)) {
-				$value = array('data' => $value);
+				$value = ['data' => $value];
 			}
 
 			// cycle through the keys, which represent DB fields (i.e. data, description, etc.) and generate the insert query
@@ -309,8 +304,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 					// null column
 					// some SQL modes require NULL for auto_increment primary key (rather than blank)
 					if(isset($schema[$key]) && $nullers === false) $nullers = array_merge(
-						$this->trimDatabaseSchema($schema, array('findDefaultNULL' => true)),
-						$this->trimDatabaseSchema($schema, array('findAutoIncrement' => true))
+						$this->trimDatabaseSchema($schema, ['findDefaultNULL' => true]),
+						$this->trimDatabaseSchema($schema, ['findAutoIncrement' => true])
 					);
 					if($nullers && isset($nullers[$key])) {
 						$query->bindValue(":$key", null, \PDO::PARAM_NULL); 
@@ -401,11 +396,11 @@ abstract class FieldtypeMulti extends Fieldtype {
 
 		$fieldName = $database->escapeCol($field->name);
 		$schema = $this->trimDatabaseSchema($schema);
-		$values = array();
+		$values = [];
 
 		/** @noinspection PhpAssignmentInConditionInspection */
 		while($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$value = array();
+			$value = [];
 			foreach($schema as $k => $unused) {
 				$key = $fieldName . '__' . $k;
 				$value[$k] = $row[$key];
@@ -422,9 +417,9 @@ abstract class FieldtypeMulti extends Fieldtype {
 		if((int) $query->data('_limit') > 0) {
 			// accommodate paginated value by collecting and passing in pagination details from $query
 			// determine total number of results
-			$query->set('select', array('COUNT(*) as _total'));
-			$query->set('limit', array()); // clear
-			$query->set('orderby', array()); // clear
+			$query->set('select', ['COUNT(*) as _total']);
+			$query->set('limit', []); // clear
+			$query->set('orderby', []); // clear
 			$stmt = $query->prepare();
 			$stmt->execute();
 			$row = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -459,7 +454,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 		$schemaAll = $this->getDatabaseSchema($field);
 		$schema = $this->trimDatabaseSchema($schemaAll);
 		$fieldName = $database->escapeCol($field->name);
-		$orderByCols = array();
+		$orderByCols = [];
 		$start = null;
 		$limit = null;
 		
@@ -517,7 +512,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 		}
 	
 		if(empty($orderByCols)) {
-			$orderByCols = $this->get('useOrderByCols') ? $field->get('orderByCols') : array();
+			$orderByCols = $this->get('useOrderByCols') ? $field->get('orderByCols') : [];
 		}
 		
 		if(empty($orderByCols)) {
@@ -527,12 +522,12 @@ abstract class FieldtypeMulti extends Fieldtype {
 
 		} else {
 			// one or more orderByCols is defined, enabling sorting and potential pagination
-			$sorts = array();
+			$sorts = [];
 			foreach($orderByCols as $key => $col) {
 				$desc = strpos($col, '-') === 0 ? ' DESC' : '';
 				$col = $sanitizer->fieldName(ltrim($col, '-'));
 				if($col === 'random') {
-					$sorts = array('RAND()');
+					$sorts = ['RAND()'];
 					break;
 				} else {
 					if(!array_key_exists($col, $schema)) continue;
@@ -692,8 +687,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 		foreach($sleepValue as $item) {
 
 			$keys = array_keys($item);
-			$binds = array(':pages_id' => (int) $page->id);
-			$sqls = array('pages_id=:pages_id');
+			$binds = [':pages_id' => (int) $page->id];
+			$sqls = ['pages_id=:pages_id'];
 			$id = isset($item[$primaryKey]) ? $item[$primaryKey] : 0;
 			
 			foreach($keys as $key) {
@@ -843,7 +838,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 		$value = $this->setupPageFieldRows($page, $field, $value);
 		$table = $database->escapeTable($info['table']);
 		$primaryKey = $database->escapeCol(reset($primaryKeys));
-		$ids = array();
+		$ids = [];
 
 		foreach($this->sleepValue($page, $field, $value) as $item) {
 			$id = $item[$primaryKey];
@@ -922,9 +917,9 @@ abstract class FieldtypeMulti extends Fieldtype {
 				") $t ON $t.pages_id=pages.id"
 			);
 
-			if( (in_array($operator, array('<', '<=', '!=')) && $value) || 
-				(in_array($operator, array('>', '>=')) && $value < 0) ||
-				(in_array($operator, array('=', '>=')) && !$value)) {
+			if( (in_array($operator, ['<', '<=', '!=']) && $value) || 
+				(in_array($operator, ['>', '>=']) && $value < 0) ||
+				(in_array($operator, ['=', '>=']) && !$value)) {
 				// allow for possible zero values	
 				$bindKey = $query->bindValueGetKey($value);
 				$query->where("(num_$t{$operator}$bindKey OR num_$t IS NULL)"); // QA
@@ -937,7 +932,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 			// only allow matches using templates with the requested field
 			$templates = $field->getTemplates();
 			if(count($templates)) {
-				$ids = array();
+				$ids = [];
 				foreach($templates as $template) {
 					/** @var Template $template */
 					$ids[] = (int) $template->id;
@@ -983,8 +978,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 				$primaryKeys = $info['primaryKeys'];
 				$schema = $info['schema'];
 			} catch(\Exception $e) {
-				$schema = array();
-				$primaryKeys = array();
+				$schema = [];
+				$primaryKeys = [];
 			}
 			
 			if(!empty($schema)) {
@@ -999,8 +994,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 				$fieldset->icon = 'sliders';
 				$inputfields->add($fieldset);
 
-				$sorts = array();
-				$sortsReverse = array();
+				$sorts = [];
+				$sortsReverse = [];
 				foreach(array_keys($this->trimDatabaseSchema($schema)) as $sort) {
 					$sorts[$sort] = $sort;
 					$sortsReverse["-$sort"] = "-$sort " . $this->_('(reverse)');

@@ -16,18 +16,7 @@ class ModulesFiles extends ModulesClass {
 	 * @var array
 	 *
 	 */
-	protected $coreTypes = array(
-		'AdminTheme',
-		'Fieldtype',
-		'Inputfield',
-		'Jquery',
-		'LanguageSupport',
-		'Markup',
-		'Process',
-		'Session',
-		'System',
-		'Textformatter',
-	);
+	protected $coreTypes = ['AdminTheme', 'Fieldtype', 'Inputfield', 'Jquery', 'LanguageSupport', 'Markup', 'Process', 'Session', 'System', 'Textformatter'];
 	
 	/**
 	 * Module file extensions indexed by module name where value 1=.module, and 2=.module.php
@@ -35,7 +24,7 @@ class ModulesFiles extends ModulesClass {
 	 * @var array
 	 *
 	 */
-	protected $moduleFileExts = array();
+	protected $moduleFileExts = [];
 
 	/**
 	 * Get or set module file extension type (1 or 2)
@@ -67,7 +56,7 @@ class ModulesFiles extends ModulesClass {
 	public function findModuleFiles($path, $readCache = false, $level = 0) {
 
 		static $startPath;
-		static $prependFiles = array();
+		static $prependFiles = [];
 
 		$config = $this->wire()->config;
 		$cacheName = '';
@@ -81,7 +70,7 @@ class ModulesFiles extends ModulesClass {
 			}
 		}
 
-		$files = array();
+		$files = [];
 		$autoloadOrders = $this->modules->loader->getAutoloadOrders();
 
 		if(count($autoloadOrders) && $path !== $config->paths->modules) {
@@ -138,7 +127,7 @@ class ModulesFiles extends ModulesClass {
 				// one or more non-core modules must be loaded first in a specific order
 				arsort($prependFiles);
 				$files = array_merge(array_keys($prependFiles), $files);
-				$prependFiles = array();
+				$prependFiles = [];
 			}
 			if($cacheName) {
 				$this->modules->saveCache($cacheName, implode("\n", $files));
@@ -160,12 +149,12 @@ class ModulesFiles extends ModulesClass {
 	 * @return bool|string Returns string of module file, or false on failure.
 	 *
 	 */
-	public function getModuleFile($class, $options = array()) {
+	public function getModuleFile($class, $options = []) {
 
 		$config = $this->wire()->config;
 		$className = $class;
 		
-		if(is_bool($options)) $options = array('getURL' => $options);
+		if(is_bool($options)) $options = ['getURL' => $options];
 		if(!isset($options['getURL'])) $options['getURL'] = false;
 		if(!isset($options['fast'])) $options['fast'] = false;
 
@@ -224,12 +213,7 @@ class ModulesFiles extends ModulesClass {
 			// this should only come into play if module has moved or had a load error
 			foreach($this->coreTypes as $typeName) {
 				if(strpos($moduleName, $typeName) !== 0) continue;
-				$checkFiles = array(
-					"$typeName/$moduleName/$moduleName.module",
-					"$typeName/$moduleName/$moduleName.module.php",
-					"$typeName/$moduleName.module",
-					"$typeName/$moduleName.module.php",
-				);
+				$checkFiles = ["$typeName/$moduleName/$moduleName.module", "$typeName/$moduleName/$moduleName.module.php", "$typeName/$moduleName.module", "$typeName/$moduleName.module.php"];
 				$path1 = $config->paths->modules;
 				foreach($checkFiles as $checkFile) {
 					$file1 = $path1 . $checkFile;
@@ -240,12 +224,7 @@ class ModulesFiles extends ModulesClass {
 			}
 			if(!$file) {
 				// check site modules
-				$checkFiles = array(
-					"$moduleName/$moduleName.module",
-					"$moduleName/$moduleName.module.php",
-					"$moduleName.module",
-					"$moduleName.module.php",
-				);
+				$checkFiles = ["$moduleName/$moduleName.module", "$moduleName/$moduleName.module.php", "$moduleName.module", "$moduleName.module.php"];
 				$path1 = $config->paths->siteModules;
 				foreach($checkFiles as $checkFile) {
 					$file1 = $path1 . $checkFile;
@@ -308,7 +287,7 @@ class ModulesFiles extends ModulesClass {
 			// first do a fast check, which should catch any core modules 
 			if(class_exists(__NAMESPACE__ . "\\$moduleName", false)) return true;
 			// next do a slower check, figuring out namespace
-			$ns = $this->modules->info->getModuleNamespace($moduleName, array('file' => $file));
+			$ns = $this->modules->info->getModuleNamespace($moduleName, ['file' => $file]);
 			$className = trim($ns, "\\") . "\\$moduleName";
 			if(class_exists($className, false)) return true;
 			// if this point is reached, module is not yet in memory in either instance
@@ -372,7 +351,7 @@ class ModulesFiles extends ModulesClass {
 			} else if(is_string($moduleName) && strpos($moduleName, "\\") !== false) {
 				$namespace = wireClassName($moduleName, 1);
 			} else {
-				$namespace = $this->modules->info->getModuleNamespace($moduleName, array('file' => $file));
+				$namespace = $this->modules->info->getModuleNamespace($moduleName, ['file' => $file]);
 			}
 		}
 
@@ -419,8 +398,8 @@ class ModulesFiles extends ModulesClass {
 	 */
 	public function findMissingModules() {
 
-		$missing = array();
-		$unflags = array();
+		$missing = [];
+		$unflags = [];
 
 		$sql = "SELECT id, class FROM modules WHERE flags & :flagsNoFile ORDER BY class";
 		$query = $this->wire()->database->prepare($sql);
@@ -431,14 +410,14 @@ class ModulesFiles extends ModulesClass {
 
 			$class = $row['class'];
 
-			$file = $this->getModuleFile($class, array('fast' => true));
+			$file = $this->getModuleFile($class, ['fast' => true]);
 
 			if($file && file_exists($file)) {
 				$unflags[] = $class;
 				continue;
 			}
 
-			$fileAlt = $this->getModuleFile($class, array('fast' => false));
+			$fileAlt = $this->getModuleFile($class, ['fast' => false]);
 
 			if($fileAlt) {
 				$file = $fileAlt;
@@ -446,14 +425,10 @@ class ModulesFiles extends ModulesClass {
 			}
 
 			if(!$file) {
-				$file = $this->getModuleFile($class, array('fast' => true, 'guess' => true));
+				$file = $this->getModuleFile($class, ['fast' => true, 'guess' => true]);
 			}
 
-			$missing[$class] = array(
-				'id' => $row['id'],
-				'name' => $class,
-				'file' => $file,
-			);
+			$missing[$class] = ['id' => $row['id'], 'name' => $class, 'file' => $file];
 		}
 
 		foreach($unflags as $name) {
@@ -478,7 +453,7 @@ class ModulesFiles extends ModulesClass {
 	public function loadModuleFileAssets($module) {
 
 		$class = $this->modules->getModuleClass($module);
-		static $classes = array();
+		static $classes = [];
 		if(isset($classes[$class])) return 0; // already loaded
 		$config = $this->wire()->config;
 		$path = $config->paths($class);
@@ -488,7 +463,7 @@ class ModulesFiles extends ModulesClass {
 		$moduleVersion = 0;
 		$cnt = 0;
 
-		foreach(array('styles' => 'css', 'scripts' => 'js') as $type => $ext) {
+		foreach(['styles' => 'css', 'scripts' => 'js'] as $type => $ext) {
 			$fileURL = '';
 			$file = "$path$class.$ext";
 			$fileVersion = $coreVersion;
@@ -501,7 +476,7 @@ class ModulesFiles extends ModulesClass {
 			}
 			if($fileURL) {
 				if(!$moduleVersion) {
-					$info = $this->modules->info->getModuleInfo($module, array('verbose' => false));
+					$info = $this->modules->info->getModuleInfo($module, ['verbose' => false]);
 					$moduleVersion = (int) isset($info['version']) ? $info['version'] : 0;
 				}
 				$config->$type->add("$fileURL?v=$moduleVersion-$fileVersion");
@@ -525,10 +500,10 @@ class ModulesFiles extends ModulesClass {
 	public function getModuleLanguageFiles($module) {
 
 		$module = $this->modules->getModuleClass($module);
-		if(empty($module)) return array();
+		if(empty($module)) return [];
 
 		$path = $this->wire()->config->paths($module);
-		if(empty($path)) return array();
+		if(empty($path)) return [];
 
 		$pathHidden = $path . '.languages/';
 		$pathVisible = $path . 'languages/';
@@ -538,15 +513,11 @@ class ModulesFiles extends ModulesClass {
 		} else if(is_dir($pathHidden)) {
 			$path = $pathHidden;
 		} else {
-			return array();
+			return [];
 		}
 
-		$items = array();
-		$options = array(
-			'extensions' => array('csv'),
-			'recursive' => false,
-			'excludeHidden' => true,
-		);
+		$items = [];
+		$options = ['extensions' => ['csv'], 'recursive' => false, 'excludeHidden' => true];
 
 		foreach($this->wire()->files->find($path, $options) as $file) {
 			$basename = basename($file, '.csv');
@@ -606,13 +577,7 @@ class ModulesFiles extends ModulesClass {
 	 */
 	public function getFileClassInfo($file) {
 
-		$value = array(
-			'class' => '',
-			'className' => '',
-			'extends' => '',
-			'namespace' => '',
-			'implements' => array()
-		);
+		$value = ['class' => '', 'className' => '', 'extends' => '', 'namespace' => '', 'implements' => []];
 
 		if(!is_file($file)) return $value;
 		$data = file_get_contents($file);
@@ -656,9 +621,7 @@ class ModulesFiles extends ModulesClass {
 	}
 
 	public function getDebugData() {
-		return array(
-			'moduleFileExts' => $this->moduleFileExts
-		);
+		return ['moduleFileExts' => $this->moduleFileExts];
 	}
 
 }

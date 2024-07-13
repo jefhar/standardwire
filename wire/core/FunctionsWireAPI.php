@@ -492,7 +492,7 @@ function wireLog($logName = '', $message = '') {
  * @return null|array|object
  *
  */
-function wireProfiler($name = null, $source = null, $data = array()) {
+function wireProfiler($name = null, $source = null, $data = []) {
 	$profiler = wire()->profiler;
 	if(is_null($name)) return $profiler;
 	if(!$profiler) return null;
@@ -564,7 +564,7 @@ function wirePaths($key = '') {
  *
  */
 function wireSetting($name = '', $value = null) {
-	static $settings = array();
+	static $settings = [];
 	if($name === '') return $settings;
 	if(is_array($name)) return $settings = array_merge($settings, $name);
 	if($name === false) { unset($settings[(string) $value]); return null; }
@@ -581,33 +581,6 @@ function wireSetting($name = '', $value = null) {
  * 
  */
 function _wireFunctionsAPI() {
-	$names = array(
-		'cache' => 'wireCache',
-		'config' => 'wireConfig',
-		'database' => 'wireDatabase', 
-		'datetime' => 'wireDatetime',
-		'fields' => 'wireFields',
-		'files' => 'wireFiles',
-		'input' => 'wireInput',
-		'inputGet' => 'wireInputGet',
-		'inputPost' => 'wireInputPost',
-		'inputCookie' => 'wireInputCookie',
-		'languages' => 'wireLanguages', 
-		'modules' => 'wireModules', 
-		'page' => 'wirePage',
-		'pages' => 'wirePages', 
-		'paths' => 'wirePaths',
-		'permissions' => 'wirePermissions',
-		'profiler' => 'wireProfiler',
-		'region' => 'wireRegion', 
-		'roles' => 'wireRoles',
-		'sanitizer' => 'wireSanitizer', 
-		'setting' => 'wireSetting',
-		'session' => 'wireSession', 
-		'templates' => 'wireTemplates',
-		'urls' => 'wireUrls', 
-		'user' => 'wireUser', 
-		'users' => 'wireUsers', 
-	);
+	$names = ['cache' => 'wireCache', 'config' => 'wireConfig', 'database' => 'wireDatabase', 'datetime' => 'wireDatetime', 'fields' => 'wireFields', 'files' => 'wireFiles', 'input' => 'wireInput', 'inputGet' => 'wireInputGet', 'inputPost' => 'wireInputPost', 'inputCookie' => 'wireInputCookie', 'languages' => 'wireLanguages', 'modules' => 'wireModules', 'page' => 'wirePage', 'pages' => 'wirePages', 'paths' => 'wirePaths', 'permissions' => 'wirePermissions', 'profiler' => 'wireProfiler', 'region' => 'wireRegion', 'roles' => 'wireRoles', 'sanitizer' => 'wireSanitizer', 'setting' => 'wireSetting', 'session' => 'wireSession', 'templates' => 'wireTemplates', 'urls' => 'wireUrls', 'user' => 'wireUser', 'users' => 'wireUsers'];
 	return $names;
 }

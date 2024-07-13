@@ -89,5 +89,5 @@ interface SearchableModule {
 	 * @return array
 	 *
 	 */
-	public function search($text, array $options = array()); 
+	public function search($text, array $options = []); 
 }

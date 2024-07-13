@@ -166,13 +166,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * - global: Is this field required by all Fieldgroups?
 	 *
 	 */
-	protected $settings = array(
-		'id'    => 0,
-		'name'  => '',
-		'label' => '',
-		'flags' => 0,
-		'type'  => null,
-	);
+	protected $settings = ['id'    => 0, 'name'  => '', 'label' => '', 'flags' => 0, 'type'  => null];
 
 	/**
 	 * If the field name changed, this is the name of the previous table so that it can be renamed at save time
@@ -221,7 +215,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @var array
 	 *
 	 */
-	protected $viewRoles = array();
+	protected $viewRoles = [];
 
 	/**
 	 * Array of Role IDs referring to roles that are allowed to edit contents of this field (on pages)
@@ -231,7 +225,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @var array
 	 *
 	 */
-	protected $editRoles = array();
+	protected $editRoles = [];
 
 	/**
 	 * Optional key=value runtime settings to provide to Inputfield (see: inputfieldSetting method)
@@ -241,7 +235,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @var array
 	 * 
 	 */
-	protected $inputfieldSettings = array();
+	protected $inputfieldSettings = [];
 
 	/**
 	 * Tags assigned to this field, keys are lowercase version of tag, values can possibly contain mixed case
@@ -442,7 +436,7 @@ class Field extends WireData implements Saveable, Exportable {
 		if(isset($this->settings[$key])) return $this->settings[$key];
 		$value = parent::get($key);
 		
-		if($key === 'allowContexts' && !is_array($value)) $value = array();
+		if($key === 'allowContexts' && !is_array($value)) $value = [];
 		if($this->trackGets && is_array($this->trackGets)) $this->trackGets($key);
 		
 		return $value;
@@ -469,7 +463,7 @@ class Field extends WireData implements Saveable, Exportable {
 			return array_keys($this->trackGets);
 		} else if($key === true) {
 			// enable tracking
-			if(!is_array($this->trackGets)) $this->trackGets = array();
+			if(!is_array($this->trackGets)) $this->trackGets = [];
 		} else if($key === false) {
 			// disable tracking
 			$this->trackGets = null;
@@ -536,7 +530,7 @@ class Field extends WireData implements Saveable, Exportable {
 		}
 
 		// remove named flags from data since the 'flags' property already covers them
-		$flagOptions = array('autojoin', 'global', 'system', 'permanent');
+		$flagOptions = ['autojoin', 'global', 'system', 'permanent'];
 		foreach($flagOptions as $name) unset($data[$name]);
 
 		$data['flags'] = $this->flags;
@@ -549,9 +543,9 @@ class Field extends WireData implements Saveable, Exportable {
 		// convert access roles from IDs to names
 		if($this->useRoles) {
 			$roles = $this->wire()->roles;
-			foreach(array('viewRoles', 'editRoles') as $roleType) {
-				if(!is_array($data[$roleType])) $data[$roleType] = array();
-				$roleNames = array();
+			foreach(['viewRoles', 'editRoles'] as $roleType) {
+				if(!is_array($data[$roleType])) $data[$roleType] = [];
+				$roleNames = [];
 				foreach($data[$roleType] as $roleID) {
 					$role = $roles->get($roleID);
 					if(!$role || !$role->id) continue;
@@ -586,8 +580,8 @@ class Field extends WireData implements Saveable, Exportable {
 	 */
 	public function setImportData(array $data) {
 
-		$changes = array();
-		$data['errors'] = array();
+		$changes = [];
+		$data['errors'] = [];
 		$_data = $this->getExportData();
 
 		// compare old data to new data to determine what's changed
@@ -598,11 +592,7 @@ class Field extends WireData implements Saveable, Exportable {
 			if(is_array($old)) $old = wireEncodeJSON($old, true);
 			$new = is_array($value) ? wireEncodeJSON($value, true) : $value;
 			if($old === $new || (empty($old) && empty($new)) || (((string) $old) === ((string) $new))) continue;
-			$changes[$key] = array(
-				'old'   => $old,
-				'new'   => $new,
-				'error' => '', // to be populated by Fieldtype::importConfigData when applicable
-			);
+			$changes[$key] = ['old'   => $old, 'new'   => $new, 'error' => ''];
 		}
 
 		// prep data for actual import
@@ -802,7 +792,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * 
 	 */
 	public function getContexts() {
-		$contexts = array();
+		$contexts = [];
 		foreach($this->wire()->fieldgroups as $fieldgroup) {
 			/** @var Fieldgroup $fieldgroup */
 			$context = $fieldgroup->getFieldContextArray($this->id);
@@ -825,11 +815,11 @@ class Field extends WireData implements Saveable, Exportable {
 	 *
 	 */
 	public function setRoles($type, $roles) {
-		if(empty($roles)) $roles = array();
+		if(empty($roles)) $roles = [];
 		if(!WireArray::iterable($roles)) {
 			throw new WireException("setRoles expects PageArray or array of Role IDs");
 		}
-		$ids = array();
+		$ids = [];
 		foreach($roles as $role) {
 			if(is_int($role) || (is_string($role) && ctype_digit("$role"))) {
 				$ids[] = (int) $role;
@@ -849,7 +839,7 @@ class Field extends WireData implements Saveable, Exportable {
 		if($type == 'view') {
 			$guestID = $this->wire()->config->guestUserRolePageID;
 			// if guest is present, then that's inclusive of all, no need to store others in viewRoles
-			if(in_array($guestID, $ids)) $ids = array($guestID); 
+			if(in_array($guestID, $ids)) $ids = [$guestID]; 
 			if($this->viewRoles != $ids) {
 				$this->viewRoles = $ids;
 				$this->trackChange('viewRoles');
@@ -1032,12 +1022,7 @@ class Field extends WireData implements Saveable, Exportable {
 		} else if($locked) {
 			// Inputfield is locked as a result of access control
 			$collapsed = $inputfield->getSetting('collapsed'); 
-			$ignoreCollapsed = array(
-				Inputfield::collapsedNoLocked, 
-				Inputfield::collapsedBlankLocked, 
-				Inputfield::collapsedYesLocked, 
-				Inputfield::collapsedHidden
-			);
+			$ignoreCollapsed = [Inputfield::collapsedNoLocked, Inputfield::collapsedBlankLocked, Inputfield::collapsedYesLocked, Inputfield::collapsedHidden];
 			if(!in_array($collapsed, $ignoreCollapsed)) {
 				// Inputfield is not already locked or hidden, convert to locked equivalent
 				if($collapsed == Inputfield::collapsedYes) {
@@ -1062,7 +1047,7 @@ class Field extends WireData implements Saveable, Exportable {
 		
 		if($contextStr) {
 			// update dependency strings for the context 
-			foreach(array('showIf', 'requiredIf') as $depType) {
+			foreach(['showIf', 'requiredIf'] as $depType) {
 				$theIf = $inputfield->getSetting($depType);
 				if(empty($theIf)) continue;
 				$inputfield->set($depType, preg_replace('/([_.|a-zA-Z0-9]+)([=!%*<>]+)/', '$1' . $contextStr . '$2', $theIf));
@@ -1086,7 +1071,7 @@ class Field extends WireData implements Saveable, Exportable {
 		if($name === '*') {
 			// get or clear ALL settings
 			if($value === 'clear') {
-				$this->inputfieldSettings = array();
+				$this->inputfieldSettings = [];
 				return true;
 			} else {
 				return $this->inputfieldSettings;
@@ -1120,10 +1105,10 @@ class Field extends WireData implements Saveable, Exportable {
 		
 		if($fieldgroupContext) {
 			$allowContext = $this->type->getConfigAllowContext($this); 
-			if(!is_array($allowContext)) $allowContext = array();
+			if(!is_array($allowContext)) $allowContext = [];
 			$allowContext = array_merge($allowContext, $this->allowContexts); 
 		} else {
-			$allowContext = array();
+			$allowContext = [];
 		}
 
 		if(!$fieldgroupContext || count($allowContext)) {
@@ -1133,7 +1118,7 @@ class Field extends WireData implements Saveable, Exportable {
 			if(!$fieldgroupContext) $inputfields->head = $this->_('Field type details');
 			$inputfields->attr('title', $this->_('Details'));
 			$inputfields->attr('id+name', 'fieldtypeConfig');
-			$remainingNames = array();
+			$remainingNames = [];
 			foreach($allowContext as $name) $remainingNames[$name] = $name;
 
 			try {
@@ -1178,13 +1163,13 @@ class Field extends WireData implements Saveable, Exportable {
 		$inputfield = $this->getInputfield($dummyPage);
 		if($inputfield) {
 			if($fieldgroupContext) {
-				$allowContext = array('visibility', 'collapsed', 'columnWidth', 'required', 'requiredIf', 'showIf');
+				$allowContext = ['visibility', 'collapsed', 'columnWidth', 'required', 'requiredIf', 'showIf'];
 				$allowContext = array_merge($allowContext, $this->allowContexts, $inputfield->getConfigAllowContext($this)); 
 			} else {
-				$allowContext = array();
+				$allowContext = [];
 				$inputfields->head = $this->_('Input field settings');
 			}
-			$remainingNames = array();
+			$remainingNames = [];
 			foreach($allowContext as $name) {
 				$remainingNames[$name] = $name;
 			}
@@ -1483,12 +1468,12 @@ class Field extends WireData implements Saveable, Exportable {
 	public function setTags($tagList, $reindex = true) {
 		$textTools = $this->wire()->sanitizer->getTextTools();
 		if($tagList === null || $tagList === '') {
-			$tagList = array();
+			$tagList = [];
 		} else if(!is_array($tagList)) {
 			$tagList = explode(' ', $tagList);
 		}
 		if($reindex && count($tagList)) {
-			$tags = array();
+			$tags = [];
 			foreach($tagList as $tag) {
 				$tag = trim($tag);
 				if(strlen($tag)) $tags[$textTools->strtolower($tag)] = $tag;
@@ -1560,10 +1545,10 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @since 3.0.151
 	 * 
 	 */
-	public function editUrl($options = array()) {
-		if(is_string($options)) $options = array('find' => $options);
-		if(is_bool($options)) $options = array('http' => $options);
-		if(!is_array($options)) $options = array();
+	public function editUrl($options = []) {
+		if(is_string($options)) $options = ['find' => $options];
+		if(is_bool($options)) $options = ['http' => $options];
+		if(!is_array($options)) $options = [];
 		$url = $this->wire()->config->urls(empty($options['http']) ? 'admin' : 'httpAdmin');
 		$url .= "setup/field/edit?id=$this->id";
 		if(!empty($options['find'])) $url .= '#find-' . $this->wire()->sanitizer->fieldName($options['find']);
@@ -1606,12 +1591,7 @@ class Field extends WireData implements Saveable, Exportable {
 	}
 	
 	public function debugInfoSmall() {
-		return array(
-			'id' => $this->id, 
-			'name' => $this->name,
-			'label' => $this->getLabel(), 
-			'type' => $this->type ? wireClassName($this->type) : '',
-		);
+		return ['id' => $this->id, 'name' => $this->name, 'label' => $this->getLabel(), 'type' => $this->type ? wireClassName($this->type) : ''];
 	}
 	
 }

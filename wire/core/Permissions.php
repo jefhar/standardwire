@@ -28,7 +28,7 @@ class Permissions extends PagesType {
 	 * @var array
 	 * 
 	 */
-	protected $permissionNames = array();
+	protected $permissionNames = [];
 
 	/**
 	 * Optional permission names that when not installed, are delegated to another
@@ -38,16 +38,7 @@ class Permissions extends PagesType {
 	 * @var array of permission name => delegated permission name
 	 * 
 	 */
-	protected $delegatedPermissions = array(
-		'page-publish' => 'page-edit',
-		'page-hide' => 'page-edit',
-		'page-lock' => 'page-edit',
-		'page-edit-created' => 'page-edit',
-		'page-edit-trash-created' => 'page-delete',
-		'page-edit-images' => 'page-edit',
-		'page-rename' => 'page-edit',
-		'user-admin-all' => 'user-admin',
-	);
+	protected $delegatedPermissions = ['page-publish' => 'page-edit', 'page-hide' => 'page-edit', 'page-lock' => 'page-edit', 'page-edit-created' => 'page-edit', 'page-edit-trash-created' => 'page-delete', 'page-edit-images' => 'page-edit', 'page-rename' => 'page-edit', 'user-admin-all' => 'user-admin'];
 
 	/**
 	 * Permissions that can reduce existing access upon installation
@@ -55,18 +46,7 @@ class Permissions extends PagesType {
 	 * @var array
 	 * 
 	 */
-	protected $reducerPermissions = array(
-		'page-hide',
-		'page-publish',
-		'page-edit-created',
-		'page-edit-images',
-		'page-rename',
-		'page-edit-lang-',
-		'page-edit-lang-none',
-		'user-admin-',
-		'user-admin-all',
-		'page-lister-',
-	);
+	protected $reducerPermissions = ['page-hide', 'page-publish', 'page-edit-created', 'page-edit-images', 'page-rename', 'page-edit-lang-', 'page-edit-lang-none', 'user-admin-', 'user-admin-all', 'page-lister-'];
 
 	/**
 	 * Does the system have a permission with the given name?
@@ -108,7 +88,7 @@ class Permissions extends PagesType {
 			$names = $cache->get(self::cacheName);
 
 			if(empty($names)) {
-				$names = array();
+				$names = [];
 				foreach($this as $permission) {
 					$names[$permission->name] = $permission->id;
 				}
@@ -185,17 +165,7 @@ class Permissions extends PagesType {
 	 */
 	public function ___getOptionalPermissions($omitInstalled = true) {
 
-		$a = array(
-			'page-hide' => $this->_('Hide/unhide pages'),
-			'page-publish' => $this->_('Publish/unpublish pages or edit already published pages'),
-			'page-edit-created' => $this->_('Edit only pages user has created'),
-			'page-edit-trash-created' => $this->_('User can trash pages they created (without page-delete permission).'), 
-			'page-edit-images' => $this->_('Use the image editor to manipulate (crop, resize, etc.) images'),
-			'page-rename' => $this->_('Change the name of published pages they are allowed to edit'),
-			'user-admin-all' => $this->_('Administer users in any role (except superuser)'),
-			'user-view-all' => $this->_('User can view users in any role (including superuser)'),
-			'user-view-self' => $this->_('User can view themself (when not already by other permission)')
-		);
+		$a = ['page-hide' => $this->_('Hide/unhide pages'), 'page-publish' => $this->_('Publish/unpublish pages or edit already published pages'), 'page-edit-created' => $this->_('Edit only pages user has created'), 'page-edit-trash-created' => $this->_('User can trash pages they created (without page-delete permission).'), 'page-edit-images' => $this->_('Use the image editor to manipulate (crop, resize, etc.) images'), 'page-rename' => $this->_('Change the name of published pages they are allowed to edit'), 'user-admin-all' => $this->_('Administer users in any role (except superuser)'), 'user-view-all' => $this->_('User can view users in any role (including superuser)'), 'user-view-self' => $this->_('User can view themself (when not already by other permission)')];
 
 		foreach($this->wire()->roles as $role) {
 			if($role->name === 'guest') continue;
@@ -345,7 +315,7 @@ class Permissions extends PagesType {
 	 * 
 	 */
 
-	public function ___saved(Page $page, array $changes = array(), $values = array()) {
+	public function ___saved(Page $page, array $changes = [], $values = []) {
 		$this->wire()->cache->delete(self::cacheName);
 		parent::___saved($page, $changes, $values);
 	}

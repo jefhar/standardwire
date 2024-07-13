@@ -51,7 +51,7 @@ class WireUpload extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $completedFilenames = array();
+	protected $completedFilenames = [];
 
 	/**
 	 * Original unsanitized file basenames indexed by completed basenames
@@ -59,7 +59,7 @@ class WireUpload extends Wire {
 	 * @var array 
 	 * 
 	 */
-	protected $originalFilenames = array();
+	protected $originalFilenames = [];
 
 	/**
 	 * Allow files to be overwritten?
@@ -107,7 +107,7 @@ class WireUpload extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $validExtensions = array();
+	protected $validExtensions = [];
 
 	/**
 	 * Disallowed extensions for uploaded filenames
@@ -115,7 +115,7 @@ class WireUpload extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $badExtensions = array('php', 'php3', 'phtml', 'exe', 'cfm', 'shtml', 'asp', 'pl', 'cgi', 'sh');
+	protected $badExtensions = ['php', 'php3', 'phtml', 'exe', 'cfm', 'shtml', 'asp', 'pl', 'cgi', 'sh'];
 
 	/**
 	 * Errors that occurred
@@ -123,7 +123,7 @@ class WireUpload extends Wire {
 	 * @var array of strings
 	 * 
 	 */
-	protected $errors = array();
+	protected $errors = [];
 
 	/**
 	 * Allow AJAX uploads?
@@ -139,7 +139,7 @@ class WireUpload extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $overwrittenFiles = array();
+	protected $overwrittenFiles = [];
 
 	/**
 	 * Predefined error message strings indexed by PHP UPLOAD_ERR_* defines
@@ -147,7 +147,7 @@ class WireUpload extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $errorInfo = array();
+	protected $errorInfo = [];
 
 	/**
 	 * @var bool 
@@ -186,16 +186,7 @@ class WireUpload extends Wire {
 	protected function init() {
 		$this->initialized = true;
 		
-		$this->errorInfo = array(
-			UPLOAD_ERR_OK => $this->_('Successful Upload'),
-			UPLOAD_ERR_INI_SIZE => $this->_('The uploaded file exceeds the upload_max_filesize directive in php.ini.'),
-			UPLOAD_ERR_FORM_SIZE => $this->_('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.'),
-			UPLOAD_ERR_PARTIAL => $this->_('The uploaded file was only partially uploaded.'),
-			UPLOAD_ERR_NO_FILE => $this->_('No file was uploaded.'),
-			UPLOAD_ERR_NO_TMP_DIR => $this->_('Missing a temporary folder.'),
-			UPLOAD_ERR_CANT_WRITE => $this->_('Failed to write file to disk.'),
-			UPLOAD_ERR_EXTENSION => $this->_('File upload stopped by extension.')
-		);
+		$this->errorInfo = [UPLOAD_ERR_OK => $this->_('Successful Upload'), UPLOAD_ERR_INI_SIZE => $this->_('The uploaded file exceeds the upload_max_filesize directive in php.ini.'), UPLOAD_ERR_FORM_SIZE => $this->_('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.'), UPLOAD_ERR_PARTIAL => $this->_('The uploaded file was only partially uploaded.'), UPLOAD_ERR_NO_FILE => $this->_('No file was uploaded.'), UPLOAD_ERR_NO_TMP_DIR => $this->_('Missing a temporary folder.'), UPLOAD_ERR_CANT_WRITE => $this->_('Failed to write file to disk.'), UPLOAD_ERR_EXTENSION => $this->_('File upload stopped by extension.')];
 	
 		$config = $this->wire()->config;
 		
@@ -230,7 +221,7 @@ class WireUpload extends Wire {
 		if(!$this->name) throw new WireException("You must set the name for WireUpload before executing it"); 
 		if(!$this->destinationPath) throw new WireException("You must set the destination path for WireUpload before executing it");
 
-		$uploadFiles = array();
+		$uploadFiles = [];
 
 		$f = $this->getPhpFiles();
 		if(!$f) return $uploadFiles;
@@ -341,13 +332,7 @@ class WireUpload extends Wire {
 		$filesize = is_file($tmpName) ? filesize($tmpName) : 0;
 		$error = $filesize ? UPLOAD_ERR_OK : UPLOAD_ERR_NO_FILE;
 
-		$file = array(
-			'name' => $filename, 
-			'tmp_name' => $tmpName,
-			'size' => $filesize,
-			'error' => $error,
-			'ajax' => true,
-		);
+		$file = ['name' => $filename, 'tmp_name' => $tmpName, 'size' => $filesize, 'error' => $error, 'ajax' => true];
 
 		return $file;
 	}
@@ -454,7 +439,7 @@ class WireUpload extends Wire {
 	 * @return bool|string Returns boolean false if invalid or string of potentially modified filename if valid
 	 * 
 	 */
-	public function validateFilename($value, $extensions = array()) {
+	public function validateFilename($value, $extensions = []) {
 		
 		$value = basename($value);
 		if($value[0] == '.') return false; // no hidden files
@@ -579,7 +564,7 @@ class WireUpload extends Wire {
 		// unzip with command line utility
 
 		$fileTools = $this->wire()->files;
-		$files = array(); 
+		$files = []; 
 		$dir = dirname($zipFile) . '/';
 		$tmpDir = $dir . '.zip_tmp/';
 	
@@ -859,7 +844,7 @@ class WireUpload extends Wire {
 	 */
 	public function getErrors($clear = false) {
 		$errors = $this->errors; 
-		if($clear) $this->errors = array();
+		if($clear) $this->errors = [];
 		return $errors;
 	}
 

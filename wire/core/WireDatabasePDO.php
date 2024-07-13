@@ -60,7 +60,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @var array
 	 *
 	 */
-	protected $queryLog = array();
+	protected $queryLog = [];
 
 	/**
 	 * Max queries allowedin the query log (set from $config->dbQueryLogMax)
@@ -82,7 +82,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @var array
 	 *
 	 */
-	protected $tablesCache = array();
+	protected $tablesCache = [];
 
 	/**
 	 * Data for read-write PDO connection
@@ -90,32 +90,28 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @var array
 	 *
 	 */
-	protected $writer = array(
-		'pdo' => null,
-		'init' => false,
-		'commands' => array( 
-			// commands that rewrite a writable connection
-			'alter',
-			'call',
-			'comment',
-			'commit',
-			'create',
-			'delete',
-			'drop',
-			'insert',
-			'lock',
-			'merge',
-			'rename',
-			'replace',
-			'rollback',
-			'savepoint',
-			'set',
-			'start',
-			'truncate',
-			'unlock',
-			'update',
-		)
-	);
+	protected $writer = ['pdo' => null, 'init' => false, 'commands' => [
+     // commands that rewrite a writable connection
+     'alter',
+     'call',
+     'comment',
+     'commit',
+     'create',
+     'delete',
+     'drop',
+     'insert',
+     'lock',
+     'merge',
+     'rename',
+     'replace',
+     'rollback',
+     'savepoint',
+     'set',
+     'start',
+     'truncate',
+     'unlock',
+     'update',
+ ]];
 
 	/**
 	 * Data for read-only PDO connection
@@ -123,12 +119,14 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @var array
 	 *
 	 */
-	protected $reader = array(
-		'pdo' => null,
-		'has' => false,  // is reader available? 
-		'init' => false, // is reader initalized?
-		'allow' => true, // is reader allowed? (false when in transaction, etc.)
-	);
+	protected $reader = [
+     'pdo' => null,
+     'has' => false,
+     // is reader available?
+     'init' => false,
+     // is reader initalized?
+     'allow' => true,
+ ];
 
 	/**
 	 * Last used PDO connection
@@ -176,7 +174,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @var array
 	 *
 	 */
-	protected $comparisonOperators = array('=', '<', '>', '>=', '<=', '<>', '!=');
+	protected $comparisonOperators = ['=', '<', '>', '>=', '<=', '<>', '!='];
 
 	/**
 	 * Bitwise comparison operators
@@ -184,7 +182,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @var array
 	 *
 	 */
-	protected $bitwiseOperators = array('&', '~', '&~', '|', '^', '<<', '>>');
+	protected $bitwiseOperators = ['&', '~', '&~', '|', '^', '<<', '>>'];
 
 	/**
 	 * Substitute variable names according to engine as used by getVariable() method
@@ -192,30 +190,13 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @var array
 	 *
 	 */
-	protected $subVars = array(
-		'myisam' => array(),
-		'innodb' => array(
-			'ft_min_word_len' => 'innodb_ft_min_token_size',
-			'ft_max_word_len' => 'innodb_ft_max_token_size',
-		),
-	);
+	protected $subVars = ['myisam' => [], 'innodb' => ['ft_min_word_len' => 'innodb_ft_min_token_size', 'ft_max_word_len' => 'innodb_ft_max_token_size']];
 
 	/**
 	 * PDO connection settings
 	 *
 	 */
-	private $pdoConfig = array(
-		'dsn' => '',
-		'user' => '',
-		'pass' => '',
-		'options' => '',
-		'reader' => array(
-			'dsn' => '',
-			'user' => '',
-			'pass' => '',
-			'options' => '',
-		),
-	);
+	private $pdoConfig = ['dsn' => '', 'user' => '', 'pass' => '', 'options' => '', 'reader' => ['dsn' => '', 'user' => '', 'pass' => '', 'options' => '']];
 
 	/**
 	 * Cached values from getVariable method
@@ -223,7 +204,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @var array associative of name => value
 	 *
 	 */
-	protected $variableCache = array();
+	protected $variableCache = [];
 
 	/**
 	 * Cached InnoDB stopwords (keys are the stopwords and values are irrelevant)
@@ -273,7 +254,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		$reader = $config->dbReader;
 		$initCommand = str_replace('{charset}', $charset, $config->dbInitCommand);
 
-		if(!is_array($options)) $options = array();
+		if(!is_array($options)) $options = [];
 
 		if(!isset($options[\PDO::ATTR_ERRMODE])) {
 			$options[\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
@@ -283,19 +264,9 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			$options[\PDO::MYSQL_ATTR_INIT_COMMAND] = $initCommand;
 		}
 
-		$dsnArray = array(
-			'socket' => $config->dbSocket,
-			'name' => $config->dbName,
-			'host' => $config->dbHost,
-			'port' => $config->dbPort,
-		);
+		$dsnArray = ['socket' => $config->dbSocket, 'name' => $config->dbName, 'host' => $config->dbHost, 'port' => $config->dbPort];
 
-		$data = array(
-			'dsn' => self::dsn($dsnArray),
-			'user' => $username,
-			'pass' => $password,
-			'options' => $options,
-		);
+		$data = ['dsn' => self::dsn($dsnArray), 'user' => $username, 'pass' => $password, 'options' => $options];
 
 		if(!empty($reader)) { 
 			if(isset($reader['host']) || isset($reader['socket'])) {
@@ -305,7 +276,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 				$data['reader'] = $reader;
 			} else {
 				// multiple readers
-				$readers = array();
+				$readers = [];
 				foreach($reader as $r) {
 					if(empty($r['host']) && empty($r['socket'])) continue;
 					$r['dsn'] = self::dsn(array_merge($dsnArray, $r));
@@ -335,13 +306,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 *
 	 */
 	static public function dsn(array $options) {
-		$defaults = array(
-			'type' => 'mysql',
-			'socket' => '',
-			'name' => '',
-			'host' => '',
-			'port' => '',
-		);
+		$defaults = ['type' => 'mysql', 'socket' => '', 'name' => '', 'host' => '', 'port' => ''];
 		$options = array_merge($defaults, $options);
 		if($options['socket']) {
 			// if socket is provided ignore $host and $port and use socket instead
@@ -388,7 +353,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @param array $driver_options
 	 *
 	 */
-	public function __construct($dsn, $username = null, $password = null, array $driver_options = array()) {
+	public function __construct($dsn, $username = null, $password = null, array $driver_options = []) {
 		parent::__construct();
 		if(is_array($dsn) && isset($dsn['dsn'])) {
 			// configuration data provided in $dsn argument array
@@ -450,7 +415,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			$this->debugMode = true;
 			$pdo->setAttribute(
 				\PDO::ATTR_STATEMENT_CLASS,
-				array(__NAMESPACE__ . "\\WireDatabasePDOStatement", array($this))
+				[__NAMESPACE__ . "\\WireDatabasePDOStatement", [$this]]
 			);
 		}
 
@@ -462,7 +427,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 				if(strpos($commands, '/') !== false) {
 					$commands = explode('/', $commands);
 				} else {
-					$commands = array($commands);
+					$commands = [$commands];
 				}
 				foreach($commands as $modes) {
 					$modes = trim($modes);
@@ -538,7 +503,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		
 		if(isset($this->pdoConfig['reader']['dsn'])) {
 			// just one reader
-			$readers = array($this->pdoConfig['reader']);
+			$readers = [$this->pdoConfig['reader']];
 		} else {
 			// randomly select a reader
 			$readers = $this->pdoConfig['reader'];
@@ -585,7 +550,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		}
 		
 		// statement is just first 40 characters of query
-		$statement = trim(str_replace(array("\n", "\t", "\r"), " ", substr($query, 0, 40)));
+		$statement = trim(str_replace(["\n", "\t", "\r"], " ", substr($query, 0, 40)));
 
 		if($statement === $writer || $statement === $reader) {
 			// reader or writer requested by name
@@ -860,14 +825,12 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @link http://php.net/manual/en/pdo.prepare.php
 	 * 
 	 */
-	public function prepare($statement, $driver_options = array(), $note = '') {
+	public function prepare($statement, $driver_options = [], $note = '') {
 		if(is_string($driver_options)) {
 			$note = $driver_options; 
-			$driver_options = array();
+			$driver_options = [];
 		} else if($driver_options === true) {
-			$driver_options = array(
-				\PDO::ATTR_STATEMENT_CLASS => array(__NAMESPACE__ . "\\WireDatabasePDOStatement", array($this))
-			);
+			$driver_options = [\PDO::ATTR_STATEMENT_CLASS => [__NAMESPACE__ . "\\WireDatabasePDOStatement", [$this]]];
 		}
 		$pdo = $this->reader['has'] ? $this->pdoType($statement) : $this->pdoWriter();
 		$pdoStatement = $pdo->prepare($statement, $driver_options);
@@ -984,7 +947,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		if($sql === '') return $this->queryLog;
 		if($sql === true) {
 			$this->debugMode = true; 
-			$this->queryLog = array();
+			$this->queryLog = [];
 			return true;
 		} else if($sql === false) {
 			$this->debugMode = false; 
@@ -1023,7 +986,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 */
 	public function getTables($allowCache = true) {
 		if($allowCache && count($this->tablesCache)) return $this->tablesCache;
-		$tables = array();
+		$tables = [];
 		$query = $this->query("SHOW TABLES");
 		/** @noinspection PhpAssignmentInConditionInspection */
 		while($col = $query->fetchColumn()) $tables[] = $col;
@@ -1054,14 +1017,14 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * 
 	 */
 	public function getColumns($table, $verbose = false) {
-		$columns = array();
+		$columns = [];
 		$table = $this->escapeTable($table);
 		if($verbose === 3) {
 			$query = $this->query("SHOW CREATE TABLE $table");
-			if(!$query->rowCount()) return array();
+			if(!$query->rowCount()) return [];
 			$row = $query->fetch(\PDO::FETCH_NUM);
 			$query->closeCursor();
-			if(!preg_match_all('/`([_a-z0-9]+)`\s+([a-z][^\r\n]+)/i', $row[1], $matches)) return array();
+			if(!preg_match_all('/`([_a-z0-9]+)`\s+([a-z][^\r\n]+)/i', $row[1], $matches)) return [];
 			foreach($matches[1] as $key => $name) {
 				$columns[$name] = trim(rtrim($matches[2][$key], ','));
 			}
@@ -1078,19 +1041,13 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			if($verbose === 2) {
 				$columns[$name] = $col;
 			} else if($verbose) {
-				$columns[$name] = array(
-					'name' => $name,
-					'type' => $col['Type'],
-					'null' => (strtoupper($col['Null']) === 'YES' ? true : false),
-					'default' => $col['Default'],
-					'extra' => $col['Extra'],
-				);
+				$columns[$name] = ['name' => $name, 'type' => $col['Type'], 'null' => (strtoupper($col['Null']) === 'YES' ? true : false), 'default' => $col['Default'], 'extra' => $col['Extra']];
 			} else {
 				$columns[] = $name;
 			}
 		}
 		$query->closeCursor();
-		if($getColumn) return isset($columns[$getColumn]) ? $columns[$getColumn] : array();
+		if($getColumn) return isset($columns[$getColumn]) ? $columns[$getColumn] : [];
 		return $columns;	
 	}
 
@@ -1113,7 +1070,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 *
 	 */
 	public function getIndexes($table, $verbose = false) {
-		$indexes = array();
+		$indexes = [];
 		$getIndex = $verbose && is_string($verbose) ? $verbose : '';
 		if($verbose === 'primary') $verbose = 'PRIMARY';
 		if(strpos($table, '.')) list($table, $getIndex) = explode('.', $table, 2);
@@ -1127,12 +1084,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			if($verbose === 2) {
 				$indexes[] = $row;
 			} else if($verbose) {
-				if(!isset($indexes[$name])) $indexes[$name] = array(
-					'name' => $name,
-					'type' => $row['Index_type'],
-					'unique' => (((int) $row['Non_unique']) ? false : true), 
-					'columns' => array(),
-				);
+				if(!isset($indexes[$name])) $indexes[$name] = ['name' => $name, 'type' => $row['Index_type'], 'unique' => (((int) $row['Non_unique']) ? false : true), 'columns' => []];
 				$seq = ((int) $row['Seq_in_index']) - 1;
 				$indexes[$name]['columns'][$seq] = $row['Column_name']; 
 			} else {
@@ -1140,7 +1092,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			}
 		}
 		$query->closeCursor();
-		if($getIndex) return isset($indexes[$getIndex]) ? $indexes[$getIndex] : array();
+		if($getIndex) return isset($indexes[$getIndex]) ? $indexes[$getIndex] : [];
 		return $indexes;	
 	}
 
@@ -1186,7 +1138,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 */
 	public function tableExists($table) {
 		$query = $this->prepare('SHOW TABLES LIKE ?');
-		$query->execute(array($table));
+		$query->execute([$table]);
 		$result = $query->fetchColumn();
 		return !empty($result);
 	}
@@ -1285,7 +1237,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			$query->execute();
 			$numRows = (int) $query->rowCount();
 			if($numRows && $getInfo) {
-				$exists = array();
+				$exists = [];
 				while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
 					$exists[] = $row;
 				}
@@ -1323,7 +1275,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		}
 	
 		$table = $this->escapeTable($table);
-		$colTypes = $mysql8 ? array() : $this->getColumns($table, 3);
+		$colTypes = $mysql8 ? [] : $this->getColumns($table, 3);
 		
 		foreach($columns as $oldName => $newName) {
 			$oldName = $this->escapeCol($oldName);
@@ -1357,7 +1309,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * 
 	 */
 	public function renameColumn($table, $oldName, $newName) {
-		$columns = array($oldName => $newName);
+		$columns = [$oldName => $newName];
 		return $this->renameColumns($table, $columns) > 0;
 	}
 
@@ -1687,8 +1639,8 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 */
 	public function getServerType() {
 		$serverType = '';
-		$serverTypes = array('MariaDB', 'Percona', 'OurDelta', 'Drizzle', 'MySQL');
-		foreach(array('version', 'version_comment') as $name) {
+		$serverTypes = ['MariaDB', 'Percona', 'OurDelta', 'Drizzle', 'MySQL'];
+		foreach(['version', 'version_comment'] as $name) {
 			$value = $this->getVariable($name);
 			if($value === null) continue;
 			foreach($serverTypes as $type) {
@@ -1772,7 +1724,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		$backups->setWire($this->wire());
 		$backups->setDatabase($this);
 		$backups->setDatabaseConfig($this->wire()->config);
-		$backups->setBackupOptions(array('user' => $this->wire()->user->name)); 
+		$backups->setBackupOptions(['user' => $this->wire()->user->name]); 
 	
 		return $backups; 
 	}
@@ -1841,7 +1793,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	public function sqlMode($action = 'get', $mode = '', $minVersion = '', $pdo = null) {
 
 		$result = true;
-		$modes = array();
+		$modes = [];
 		
 		if($pdo === null) {
 			$pdo = $this->pdoLast();

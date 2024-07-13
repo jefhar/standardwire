@@ -28,7 +28,7 @@ class SelectorContains extends Selector {
 	 * 
 	 */
 	public static function buildDescription($keys) {
-		$a = array();
+		$a = [];
 		if(!is_array($keys)) $keys = explode(' ', $keys);
 		foreach($keys as $key) {
 			switch($key) {

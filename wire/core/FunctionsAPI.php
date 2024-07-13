@@ -598,7 +598,7 @@ function paths($key = '') {
  * @return null|array|object
  *
  */
-function profiler($name = null, $source = null, $data = array()) {
+function profiler($name = null, $source = null, $data = []) {
 	return wireProfiler($name, $source, $data);
 }
 

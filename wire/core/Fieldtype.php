@@ -209,7 +209,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * 
 	 */
 	public function ___getFieldSetups() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -260,7 +260,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * 
 	 */
 	public function ___getConfigArray(Field $field) {
-		return array();
+		return [];
 	}
 
 	/**
@@ -279,7 +279,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 *
 	 */
 	public function ___getConfigAllowContext(Field $field) {
-		return array(); 
+		return []; 
 	}
 
 	/**
@@ -383,10 +383,7 @@ abstract class Fieldtype extends WireData implements Module {
 		$this->set('_exportMode', true);
 		
 		// make sure all potential values are accounted for in the export data
-		$sets = array(
-			$this->getConfigInputfields($field), 
-			$this->getConfigAdvancedInputfields($field)
-		);
+		$sets = [$this->getConfigInputfields($field), $this->getConfigAdvancedInputfields($field)];
 		foreach($sets as $inputfields) {
 			if(!$inputfields || !count($inputfields)) continue; 
 			/** @var InputfieldWrapper $inputfields */
@@ -640,7 +637,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * @see Fieldtype::exportValue()
 	 *
 	 */
-	public function ___importValue(Page $page, Field $field, $value, array $options = array()) {
+	public function ___importValue(Page $page, Field $field, $value, array $options = []) {
 		$value = $this->wakeupValue($page, $field, $value); 
 		return $value; 
 	}
@@ -672,13 +669,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 */
 	public function getImportValueOptions(Field $field) {
 		$schema = $this->getDatabaseSchema($field); 
-		$options = array(
-			'importable' => (!isset($schema['xtra']['all']) || $schema['xtra']['all'] !== true) ? false : true,
-			'test' => false,
-			'returnsPageValue' => true,
-			'requiresExportValue' => false,
-			'restoreOnException' => false,
-		);
+		$options = ['importable' => (!isset($schema['xtra']['all']) || $schema['xtra']['all'] !== true) ? false : true, 'test' => false, 'returnsPageValue' => true, 'requiresExportValue' => false, 'restoreOnException' => false];
 		return $options; 
 	}
 
@@ -704,7 +695,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * @return string|float|int|array
 	 *
 	 */
-	public function ___exportValue(Page $page, Field $field, $value, array $options = array()) {
+	public function ___exportValue(Page $page, Field $field, $value, array $options = []) {
 		$value = $this->sleepValue($page, $field, $value); 
 		return $value; 
 	}
@@ -774,7 +765,7 @@ abstract class Fieldtype extends WireData implements Module {
 		$operator = $database->escapeOperator($operator, WireDatabasePDO::operatorTypeComparison); 
 		
 		if(is_array($value)) {
-			$a = array();
+			$a = [];
 			foreach($value as $v) {
 				$bindKey = $query->bindValueGetKey($v);
 				$a[] = "{$table}.{$subfield}{$operator}{$bindKey}";
@@ -856,8 +847,8 @@ abstract class Fieldtype extends WireData implements Module {
 			$sql .= "$v, ";
 		}
 		
-		$xtra = isset($schema['xtra']) ? $schema['xtra'] : array();
-		if(is_string($xtra)) $xtra = array('append' => $xtra); // backwards compat: xtra used to be a string, what 'append' is now. 
+		$xtra = isset($schema['xtra']) ? $schema['xtra'] : [];
+		if(is_string($xtra)) $xtra = ['append' => $xtra]; // backwards compat: xtra used to be a string, what 'append' is now. 
 		$append = isset($xtra['append']) ? $xtra['append'] : '';
 
 		$sql = rtrim($sql, ", ") . ') ' . $append;
@@ -915,23 +906,20 @@ abstract class Fieldtype extends WireData implements Module {
 		$config = $this->wire()->config;
 		$engine = $config->dbEngine; 
 		$charset = $config->dbCharset;
-		$schema = array(
-			'pages_id' => 'int UNSIGNED NOT NULL', 
-			'data' => "int NOT NULL", // each Fieldtype should override this in particular
-			'keys' => array(
-				'primary' => 'PRIMARY KEY (`pages_id`)', 
-				'data' => 'KEY data (`data`)',
-			),
-			// additional data 
-			'xtra' => array(
-				// any optional statements that should follow after the closing paren (i.e. engine, default charset, etc)
-				'append' => "ENGINE=$engine DEFAULT CHARSET=$charset", 
-				
-				// true (default) if this schema provides all storage for this fieldtype.
-				// false if other storage is involved with this fieldtype, beyond this schema (like repeaters, PageTable, etc.)
-				'all' => true, 
-			)
-		); 
+		$schema = [
+      'pages_id' => 'int UNSIGNED NOT NULL',
+      'data' => "int NOT NULL",
+      // each Fieldtype should override this in particular
+      'keys' => ['primary' => 'PRIMARY KEY (`pages_id`)', 'data' => 'KEY data (`data`)'],
+      // additional data
+      'xtra' => [
+          // any optional statements that should follow after the closing paren (i.e. engine, default charset, etc)
+          'append' => "ENGINE=$engine DEFAULT CHARSET=$charset",
+          // true (default) if this schema provides all storage for this fieldtype.
+          // false if other storage is involved with this fieldtype, beyond this schema (like repeaters, PageTable, etc.)
+          'all' => true,
+      ],
+  ]; 
 		return $schema; 
 	}
 
@@ -945,7 +933,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * @since 3.0.146
 	 * 
 	 */
-	public function getFieldClass(array $a = array()) {
+	public function getFieldClass(array $a = []) {
 		return '';
 	}
 
@@ -982,19 +970,7 @@ abstract class Fieldtype extends WireData implements Module {
 	public function getDatabaseSchemaVerbose(Field $field, $property = '') {
 	
 		$schema = $this->getDatabaseSchema($field);
-		$info = array(
-			'table' => $field->getTable(),
-			'schema' => $schema,
-			'all' => isset($schema['xtra']['all']) ? $schema['xtra']['all'] : true,
-			'cols' => array(),
-			'columns' => array(),
-			'engine' => '',
-			'charset' => '',
-			'otherKeys' => $schema['keys'], 
-			'primaryKey' => '',
-			'primaryKeys' => array(),
-			'transactions' => false,
-		);
+		$info = ['table' => $field->getTable(), 'schema' => $schema, 'all' => isset($schema['xtra']['all']) ? $schema['xtra']['all'] : true, 'cols' => [], 'columns' => [], 'engine' => '', 'charset' => '', 'otherKeys' => $schema['keys'], 'primaryKey' => '', 'primaryKeys' => [], 'transactions' => false];
 		
 		unset($info['otherKeys']['primary']);
 	
@@ -1018,9 +994,9 @@ abstract class Fieldtype extends WireData implements Module {
 			}
 		}
 	
-		if(!$property || in_array($property, array('engine', 'charset', 'transactions'))) {
+		if(!$property || in_array($property, ['engine', 'charset', 'transactions'])) {
 			if(isset($schema['xtra']['append'])) {
-				$append = str_replace(array(' =', '= '), '=', strtoupper($schema['xtra']['append']));
+				$append = str_replace([' =', '= '], '=', strtoupper($schema['xtra']['append']));
 				foreach(explode(' ', $append) as $x) {
 					if(strpos($x, '=') === false) continue;
 					list($a, $b) = explode('=', $x);
@@ -1031,7 +1007,7 @@ abstract class Fieldtype extends WireData implements Module {
 			$config = $this->wire()->config;
 			if(!$info['engine']) $info['engine'] = $config->dbEngine;
 			if(!$info['charset']) $info['charset'] = $config->dbCharset;
-			if($info['engine']) $info['engine'] = str_replace(array('MYISAM', 'INNODB'), array('MyISAM', 'InnoDB'), $info['engine']);
+			if($info['engine']) $info['engine'] = str_replace(['MYISAM', 'INNODB'], ['MyISAM', 'InnoDB'], $info['engine']);
 			$info['transactions'] = $info['engine'] == 'InnoDB';
 		}
 		
@@ -1059,15 +1035,16 @@ abstract class Fieldtype extends WireData implements Module {
 	 * @return array
 	 *
 	 */
-	public function trimDatabaseSchema(array $schema, array $options = array()) {
+	public function trimDatabaseSchema(array $schema, array $options = []) {
 		
-		$defaults = array(
-			'trimMeta' => true, 
-			'trimDefault' => true, // trim default columns (like pages_id and sort) from result?
-			'findType' => '',
-			'findAutoIncrement' => false,
-			'findDefaultNULL' => false,
-		);
+		$defaults = [
+      'trimMeta' => true,
+      'trimDefault' => true,
+      // trim default columns (like pages_id and sort) from result?
+      'findType' => '',
+      'findAutoIncrement' => false,
+      'findDefaultNULL' => false,
+  ];
 		
 		$options = array_merge($defaults, $options);
 
@@ -1120,7 +1097,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * @return array See `FieldSelectorInfo` class for details.
 	 *
 	 */
-	public function ___getSelectorInfo(Field $field, array $data = array()) {
+	public function ___getSelectorInfo(Field $field, array $data = []) {
 		if($data) {}
 		$selectorInfo = $this->wire(new FieldSelectorInfo()); /** @var FieldSelectorInfo $selectorInfo */
 		return $selectorInfo->getSelectorInfo($field); 
@@ -1175,7 +1152,7 @@ abstract class Fieldtype extends WireData implements Module {
 		
 		if(!$row) return null;
 		
-		$value = array();
+		$value = [];
 		
 		foreach($schema as $k => $unused) {
 			// properties from DB are always as "fieldName__column", example "title__data" (see getLoadQuery)
@@ -1321,8 +1298,8 @@ abstract class Fieldtype extends WireData implements Module {
 
 		$page_id = (int) $page->id; 
 		$table = $database->escapeTable($field->table); 
-		$schema = array();
-		$bindValues = array(':page_id' => $page_id);
+		$schema = [];
+		$bindValues = [':page_id' => $page_id];
 
 		if(is_array($value)) { 
 
@@ -1634,7 +1611,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 */
 	public function ___uninstall() {
 
-		$names = array();
+		$names = [];
 		$fields = $this->wire()->fields; 
 
 		foreach($fields as $field) {

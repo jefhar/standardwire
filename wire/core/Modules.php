@@ -114,19 +114,19 @@ class Modules extends WireArray {
 	 * Array of modules that are not currently installed, indexed by className => filename
 	 *
 	 */
-	protected $installableFiles = array(); 
+	protected $installableFiles = []; 
 
 	/**
 	 * An array of module database IDs indexed by module name/class
 	 *
 	 */
-	protected $moduleIDs = array();
+	protected $moduleIDs = [];
 
 	/**
 	 * Array of module names/classes indexed by module ID
 	 * 
 	 */
-	protected $moduleNames = array();
+	protected $moduleNames = [];
 
 	/**
 	 * Full system paths where modules are stored
@@ -134,7 +134,7 @@ class Modules extends WireArray {
 	 * index 0 must be the core modules path (/i.e. /wire/modules/)
 	 * 
 	 */
-	protected $paths = array();
+	protected $paths = [];
 
 	/**
 	 * Have the modules been init'd() ?
@@ -146,7 +146,7 @@ class Modules extends WireArray {
 	 * Becomes an array if debug mode is on
 	 *
 	 */
-	protected $debugLog = array();
+	protected $debugLog = [];
 
 	/**
 	 * Array of moduleName => substituteModuleName to be used when moduleName doesn't exist
@@ -157,7 +157,7 @@ class Modules extends WireArray {
 	 * see setSubstitutes() method
 	 *
 	 */
-	protected $substitutes = array();
+	protected $substitutes = [];
 
 	/**
 	 * Instance of ModulesDuplicates
@@ -190,7 +190,7 @@ class Modules extends WireArray {
 	 * @since 3.0.218
 	 * 
 	 */
-	protected $caches = array();
+	protected $caches = [];
 
 	/**
 	 * @var ModulesInfo
@@ -477,11 +477,11 @@ class Modules extends WireArray {
 	 * @see Modules::get()
 	 *
 	 */
-	public function getModule($key, array $options = array()) {
+	public function getModule($key, array $options = []) {
 	
 		$needsInit = false;
 		$noInit = !empty($options['noInit']); // force cancel of Module::init() call?
-		$initOptions = array(); // options for initModule() call
+		$initOptions = []; // options for initModule() call
 		$find = false; // try to find new location of module file?
 		$error = '';
 		
@@ -779,7 +779,7 @@ class Modules extends WireArray {
 	 * 
 	 */
 	public function findByPrefix($prefix, $load = false) {
-		$results = array();
+		$results = [];
 		foreach($this as $moduleName => $value) {
 			if(stripos($moduleName, $prefix) !== 0) continue;
 			if($load === false) {
@@ -819,9 +819,9 @@ class Modules extends WireArray {
 		
 		$selectors = null;
 		$keys = null;
-		$results = array();
+		$results = [];
 		$verbose = $load === 2;
-		$properties = array();
+		$properties = [];
 		$has = '';
 		
 		if(is_array($selector)) {
@@ -851,10 +851,7 @@ class Modules extends WireArray {
 			}
 		}
 		
-		$moduleInfoOptions = array(
-			'verbose' => $verbose,
-			'minify' => false
-		);
+		$moduleInfoOptions = ['verbose' => $verbose, 'minify' => false];
 		
 		foreach($this->getModuleInfo('*', $moduleInfoOptions) as $info) {
 			$isMatch = false;
@@ -869,7 +866,7 @@ class Modules extends WireArray {
 				$n = 0;
 				foreach($selectors as $selector) {
 					$total++;
-					$values = array();
+					$values = [];
 					foreach($selector->fields() as $property) {
 						if(isset($info[$property])) $values[] = $info[$property];
 					}
@@ -1044,7 +1041,7 @@ class Modules extends WireArray {
 	 * @throws WireException
 	 *
 	 */
-	public function ___install($class, $options = array()) {
+	public function ___install($class, $options = []) {
 		return $this->installer()->install($class, $options);
 	}
 
@@ -1458,7 +1455,7 @@ class Modules extends WireArray {
 	 * @todo move all getModuleInfo methods to their own ModuleInfo class and break this method down further.
 	 *	
 	 */
-	public function getModuleInfo($class, array $options = array()) {
+	public function getModuleInfo($class, array $options = []) {
 		return $this->info->getModuleInfo($class, $options);
 	}
 
@@ -1484,7 +1481,7 @@ class Modules extends WireArray {
 	 * @see Modules::getModuleInfo()
 	 *
 	 */
-	public function getModuleInfoVerbose($class, array $options = array()) {
+	public function getModuleInfoVerbose($class, array $options = []) {
 		return $this->info->getModuleInfoVerbose($class, $options);
 	}
 
@@ -1498,7 +1495,7 @@ class Modules extends WireArray {
 	 * @since 3.0.107
 	 * 
 	 */
-	public function getModuleInfoProperty($class, $property, array $options = array()) {
+	public function getModuleInfoProperty($class, $property, array $options = []) {
 		return $this->info->getModuleInfoProperty($class, $property, $options);
 	}
 	
@@ -1527,7 +1524,7 @@ class Modules extends WireArray {
 	 * @return null|string Returns namespace, or NULL if unable to determine. Namespace is ready to use in a string (i.e. has trailing slashes)
 	 *
 	 */
-	public function getModuleNamespace($moduleName, $options = array()) {
+	public function getModuleNamespace($moduleName, $options = []) {
 		return $this->info->getModuleNamespace($moduleName, $options);
 	}
 	
@@ -2238,7 +2235,7 @@ class Modules extends WireArray {
 	 * @return Module|null
 	 *
 	 */
-	protected function getSubstituteModule($moduleName, array $options = array()) {
+	protected function getSubstituteModule($moduleName, array $options = []) {
 
 		$module = null;
 		$options['noSubstitute'] = true; // prevent recursion
@@ -2269,7 +2266,7 @@ class Modules extends WireArray {
 	 * @return bool|string Returns string of module file, or false on failure.
 	 *
 	 */
-	public function getModuleFile($class, $options = array()) {
+	public function getModuleFile($class, $options = []) {
 		return $this->files->getModuleFile($class, $options);
 	}
 
@@ -2341,9 +2338,9 @@ class Modules extends WireArray {
 	 * @return WireLog
 	 * 
 	 */	
-	public function log($str, $options = array()) {
+	public function log($str, $options = []) {
 		$moduleName = is_string($options) ? $options : '';
-		if(!is_array($options)) $options = array();
+		if(!is_array($options)) $options = [];
 		if(!in_array('modules', $this->wire()->config->logs)) return $this->___log();
 		if(!is_string($moduleName)) $moduleName = (string) $moduleName; 
 		if($moduleName && strpos($str, $moduleName) === false) $str .= " (Module: $moduleName)";
@@ -2379,10 +2376,7 @@ class Modules extends WireArray {
 		if(!$this->debug) return null;
 		$key = count($this->debugLog);
 		while(isset($this->debugLog[$key])) $key++;
-		$this->debugLog[$key] = array(
-			0 => Debug::timer("Modules$key"),
-			1 => $note
-		);
+		$this->debugLog[$key] = [0 => Debug::timer("Modules$key"), 1 => $note];
 		return $key;
 	}
 
@@ -2416,21 +2410,7 @@ class Modules extends WireArray {
 	}
 	
 	public function getDebugData() {
-		return array(
-			'installableFiles' => $this->installableFiles,
-			'moduleIDs' => $this->moduleIDs,
-			'moduleNames' => $this->moduleNames,
-			'paths' => $this->paths,
-			'substitutes' => $this->substitutes,
-			'caches' => $this->caches,
-			'loader' => $this->loader->getDebugData(),
-			'configs' => $this->configs->getDebugData(),
-			'installer' => $this->installer()->getDebugData(),
-			'files' => $this->files->getDebugData(),
-			'flags' => $this->flags->getDebugData(),
-			'info' => $this->info->getDebugData(),
-			'duplicates' => $this->duplicates()->getDebugData()
-		);
+		return ['installableFiles' => $this->installableFiles, 'moduleIDs' => $this->moduleIDs, 'moduleNames' => $this->moduleNames, 'paths' => $this->paths, 'substitutes' => $this->substitutes, 'caches' => $this->caches, 'loader' => $this->loader->getDebugData(), 'configs' => $this->configs->getDebugData(), 'installer' => $this->installer()->getDebugData(), 'files' => $this->files->getDebugData(), 'flags' => $this->flags->getDebugData(), 'info' => $this->info->getDebugData(), 'duplicates' => $this->duplicates()->getDebugData()];
 	}
 
 

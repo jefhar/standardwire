@@ -30,16 +30,19 @@ abstract class AdminTheme extends WireData implements Module {
 	 *
 	 */
 	public static function getModuleInfo() {
-		return array(
-			'title'    => '',        // printable name/title of module
-			'version'  => 1,    // version number of module
-			'summary'  => '',    // 1 sentence summary of module
-			'href'     => '',        // URL to more information (optional)
-
-			// all admin themes should have this as their autoload selector:
-			'autoload' => 'template=admin',
-			'singular' => true
-		);
+		return [
+      'title'    => '',
+      // printable name/title of module
+      'version'  => 1,
+      // version number of module
+      'summary'  => '',
+      // 1 sentence summary of module
+      'href'     => '',
+      // URL to more information (optional)
+      // all admin themes should have this as their autoload selector:
+      'autoload' => 'template=admin',
+      'singular' => true,
+  ];
 	}
 
 	/**
@@ -62,7 +65,7 @@ abstract class AdminTheme extends WireData implements Module {
 	 * @var array
 	 *
 	 */
-	protected $bodyClasses = array();
+	protected $bodyClasses = [];
 
 	/**
 	 * General purpose classes indexed by name
@@ -70,7 +73,7 @@ abstract class AdminTheme extends WireData implements Module {
 	 * @var array
 	 *
 	 */
-	protected $classes = array();
+	protected $classes = [];
 
 	/**
 	 * Extra markup regions
@@ -78,15 +81,7 @@ abstract class AdminTheme extends WireData implements Module {
 	 * @var array
 	 * 
 	 */
-	protected $extraMarkup = array(
-		'head' => '',
-		'notices' => '',
-		'body' => '',
-		'masthead' => '',
-		'content' => '',
-		'footer' => '',
-		'sidebar' => '', // sidebar not used in all admin themes
-	);
+	protected $extraMarkup = ['head' => '', 'notices' => '', 'body' => '', 'masthead' => '', 'content' => '', 'footer' => '', 'sidebar' => ''];
 	
 	/**
 	 * URLs to place in link prerender tags
@@ -94,7 +89,7 @@ abstract class AdminTheme extends WireData implements Module {
 	 * @var array
 	 * 
 	 */
-	protected $preRenderURLs = array();
+	protected $preRenderURLs = [];
 
 	/**
 	 * Construct
@@ -173,25 +168,13 @@ abstract class AdminTheme extends WireData implements Module {
 			$config->adminThumbOptions = $o;
 		}
 
-		$config->jsConfig('urls', array(
-			'root' => $urls->root,
-			'admin' => $urls->admin,
-			'modules' => $urls->modules,
-			'core' => $urls->core,
-			'files' => $urls->files,
-			'templates' => $urls->templates,
-			'adminTemplates' => $urls->adminTemplates,
-		));
+		$config->jsConfig('urls', ['root' => $urls->root, 'admin' => $urls->admin, 'modules' => $urls->modules, 'core' => $urls->core, 'files' => $urls->files, 'templates' => $urls->templates, 'adminTemplates' => $urls->adminTemplates]);
 
 		$config->js('modals', true); // share at render time
 		$config->jsConfig('debug', $config->debug); 
 		
 		if($user) {
-			$userInfo = array(
-				'id' => $user->id,
-				'name' => $user->name,
-				'roles' => array(),
-			);
+			$userInfo = ['id' => $user->id, 'name' => $user->name, 'roles' => []];
 			$roles = $user->isLoggedin() ? $user->roles : null;
 			$guestRoleID = $config->guestUserRolePageID;
 			if($roles) foreach($roles as $role) {
@@ -201,11 +184,7 @@ abstract class AdminTheme extends WireData implements Module {
 		}
 		
 		if($page) {
-			$config->jsConfig('page', array(
-				'id' => $page->id,
-				'name' => $page->name,
-				'process' => (string) $page->process,
-			));
+			$config->jsConfig('page', ['id' => $page->id, 'name' => $page->name, 'process' => (string) $page->process]);
 		}
 		
 		if($session->get('hidpi')) $this->addBodyClass('hidpi-device');
@@ -387,7 +366,7 @@ abstract class AdminTheme extends WireData implements Module {
 		} else if(isset($this->classes[$name])) {
 			return $getArray ? explode(' ', $this->classes[$name]) : $this->classes[$name];
 		} else {
-			return $getArray ? array() : '';
+			return $getArray ? [] : '';
 		}
 	}
 
@@ -467,7 +446,7 @@ abstract class AdminTheme extends WireData implements Module {
 			$field = $this->wire(new Field());
 			$field->name = 'admin_theme';
 			$field->type = $modules->get('FieldtypeModule');
-			$field->set('moduleTypes', array('AdminTheme'));
+			$field->set('moduleTypes', ['AdminTheme']);
 			$field->set('labelField', 'title');
 			$field->set('inputfieldClass', 'InputfieldRadios');
 			$field->label = 'Admin Theme';

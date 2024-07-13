@@ -49,8 +49,8 @@ class PagesRaw extends Wire {
 	 * @since 3.0.172
 	 *
 	 */
-	public function find($selector, $field = '', $options = array()) {
-		if(!is_array($options)) $options = array('indexed' => (bool) $options);
+	public function find($selector, $field = '', $options = []) {
+		if(!is_array($options)) $options = ['indexed' => (bool) $options];
 		$finder = new PagesRawFinder($this->pages);
 		$this->wire($finder);
 		return $finder->find($selector, $field, $options);
@@ -71,8 +71,8 @@ class PagesRaw extends Wire {
 	 * @since 3.0.172
 	 *
 	 */
-	public function get($selector, $field = '', $options = array()) {
-		if(!is_array($options)) $options = array('indexed' => (bool) $options);
+	public function get($selector, $field = '', $options = []) {
+		if(!is_array($options)) $options = ['indexed' => (bool) $options];
 		$options['findOne'] = true;
 		if(!isset($options['findAll'])) $options['findAll'] = true;
 		$values = $this->find($selector, $field, $options);
@@ -97,11 +97,9 @@ class PagesRaw extends Wire {
 	 *
 	 *
 	 */
-	public function col($pageId, $col, array $options = array()) {
+	public function col($pageId, $col, array $options = []) {
 
-		$defaults = array(
-			'cache' => true
-		);
+		$defaults = ['cache' => true];
 
 		$options = array_merge($defaults, $options);
 
@@ -109,7 +107,7 @@ class PagesRaw extends Wire {
 		if(is_array($col)) {
 			return $this->cols($pageId, $col, $options);
 		} else if(is_array($pageId)) {
-			$value = array();
+			$value = [];
 			foreach($this->cols($pageId, $col) as $id => $a) {
 				$value[$id] = $a[$col];
 			}
@@ -161,11 +159,9 @@ class PagesRaw extends Wire {
 	 * @since 3.0.190
 	 *
 	 */
-	public function cols($pageId, $cols = array(), array $options = array()) {
+	public function cols($pageId, $cols = [], array $options = []) {
 
-		$defaults = array(
-			'cache' => true,
-		);
+		$defaults = ['cache' => true];
 
 		$options = array_merge($defaults, $options);
 		$sanitizer = $this->wire()->sanitizer;
@@ -173,7 +169,7 @@ class PagesRaw extends Wire {
 		$query = null;
 		$removeIdInReturn = false;
 
-		if(!is_array($cols)) $cols = empty($cols) ? array() : array($cols);
+		if(!is_array($cols)) $cols = empty($cols) ? [] : [$cols];
 
 		foreach($cols as $key => $col) {
 			if(!ctype_alnum($col) && $sanitizer->fieldName($col) !== $col) {
@@ -195,7 +191,7 @@ class PagesRaw extends Wire {
 
 		if(is_array($pageId)) {
 			// multi page
-			$ids = array();
+			$ids = [];
 			foreach($pageId as $id) {
 				$id = (int) $id;
 				if($id > 0) $ids[$id] = $id;
@@ -203,7 +199,7 @@ class PagesRaw extends Wire {
 			$ids = implode(',', $ids);
 			$query = $database->prepare("SELECT $colStr FROM pages WHERE id IN($ids)");
 			$query->execute();
-			$value = array();
+			$value = [];
 			while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
 				$id = (int) $row['id'];
 				if($removeIdInReturn) unset($row['id']);
@@ -218,7 +214,7 @@ class PagesRaw extends Wire {
 			$pageId = (int) $pageId;
 			$page = ($options['cache'] ? $this->pages->cacher()->getCache($pageId) : null);
 			if($page) {
-				$value = array();
+				$value = [];
 				foreach($cols as $col) {
 					$value[$col] = $page->get($col);
 				}
@@ -226,7 +222,7 @@ class PagesRaw extends Wire {
 				$query = $database->prepare("SELECT $colStr FROM pages WHERE id=:id");
 				$query->bindValue(':id', $pageId, (int) \PDO::PARAM_INT);
 				$query->execute();
-				$value = $query->rowCount() ? $query->fetch(\PDO::FETCH_ASSOC) : array();
+				$value = $query->rowCount() ? $query->fetch(\PDO::FETCH_ASSOC) : [];
 			}
 		}
 

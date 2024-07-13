@@ -62,27 +62,25 @@ class WireHttp extends Wire {
 	 * Default value for request $headers, when reset
 	 *
 	 */
-	protected $defaultHeaders = array(
-		'charset' => 'utf-8',
-	);
+	protected $defaultHeaders = ['charset' => 'utf-8'];
 
 	/**
 	 * Schemes we are allowed to use
 	 *
 	 */
-	protected $allowSchemes = array('http', 'https');
+	protected $allowSchemes = ['http', 'https'];
 
 	/**
 	 * HTTP methods we are allowed to use
 	 *
 	 */
-	protected $allowHttpMethods = array('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'PATCH'); 
+	protected $allowHttpMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'PATCH']; 
 
 	/**
 	 * Headers to include in the request
 	 *
 	 */
-	protected $headers = array();
+	protected $headers = [];
 
 	/**
 	 * HTTP codes
@@ -90,87 +88,7 @@ class WireHttp extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $httpCodes = array(
-		100 => 'Continue',
-		101 => 'Switching Protocols',
-		102 => 'Processing (WebDAV; RFC 2518)', 
-		200 => 'OK',
-		201 => 'Created',
-		202 => 'Accepted',
-		203 => 'Non-Authoritative Information',
-		204 => 'No Content',
-		205 => 'Reset Content',
-		206 => 'Partial Content',
-		207 => 'Multi-Status (WebDAV; RFC 4918)',
-		208 => 'Already Reported (WebDAV; RFC 5842)',
-		226 => 'IM Used (RFC 3229)',
-		300 => 'Multiple Choices',
-		301 => 'Moved Permanently',
-		302 => 'Found',
-		303 => 'See Other',
-		304 => 'Not Modified',
-		305 => 'Use Proxy',
-		306 => 'Switch Proxy',
-		307 => 'Temporary Redirect',
-		308 => 'Permanent Redirect',
-		400 => 'Bad Request',
-		401 => 'Unauthorized',
-		402 => 'Payment Required',
-		403 => 'Forbidden',
-		404 => 'Not Found',
-		405 => 'Method Not Allowed',
-		406 => 'Not Acceptable',
-		407 => 'Proxy Authentication Required',
-		408 => 'Request Timeout',
-		409 => 'Conflict',
-		410 => 'Gone',
-		411 => 'Length Required',
-		412 => 'Precondition Failed',
-		413 => 'Request Entity Too Large',
-		414 => 'Request-URI Too Long',
-		415 => 'Unsupported Media Type',
-		416 => 'Requested Range Not Satisfiable',
-		417 => 'Expectation Failed',
-		419 => 'Authentication Timeout (not in RFC 2616)',
-		420 => 'Enhance Your Calm ',
-		422 => 'Unprocessable Entity (WebDAV; RFC 4918)',
-		423 => 'Locked (WebDAV; RFC 4918)',
-		424 => 'Failed Dependency (WebDAV; RFC 4918)',
-		426 => 'Upgrade Required',
-		428 => 'Precondition Required (RFC 6585)',
-		429 => 'Too Many Requests (RFC 6585)',
-		431 => 'Request Header Fields Too Large (RFC 6585)',
-		440 => 'Login Timeout (Microsoft)',
-		444 => 'No Response (Nginx)',
-		449 => 'Retry With (Microsoft)',
-		450 => 'Blocked by Windows Parental Controls (Microsoft)',
-		451 => 'Unavailable For Legal Reasons (Internet draft)',
-		494 => 'Request Header Too Large (Nginx)',
-		495 => 'Cert Error (Nginx)',
-		496 => 'No Cert (Nginx)',
-		497 => 'HTTP to HTTPS (Nginx)',
-		498 => 'Token expired/invalid (Esri)',
-		499 => 'Client Closed Request (Nginx)',
-		500 => 'Internal Server Error',
-		501 => 'Not Implemented',
-		502 => 'Bad Gateway',
-		503 => 'Service Unavailable',
-		504 => 'Gateway Timeout',
-		505 => 'HTTP Version Not Supported',
-		506 => 'Variant Also Negotiates (RFC 2295)',
-		507 => 'Insufficient Storage (WebDAV; RFC 4918)',
-		508 => 'Loop Detected (WebDAV; RFC 5842)',
-		509 => 'Bandwidth Limit Exceeded (Apache bw/limited extension)[25]',
-		510 => 'Not Extended (RFC 2774)',
-		511 => 'Network Authentication Required (RFC 6585)',
-		520 => 'Origin Error (Cloudflare)',
-		521 => 'Web server is down (Cloudflare)',
-		522 => 'Connection timed out (Cloudflare)',
-		523 => 'Proxy Declined Request (Cloudflare)',
-		524 => 'A timeout occurred (Cloudflare)',
-		598 => 'Network read timeout error (Unknown)',
-		599 => 'Network connect timeout error (Unknown)',
-	);
+	protected $httpCodes = [100 => 'Continue', 101 => 'Switching Protocols', 102 => 'Processing (WebDAV; RFC 2518)', 200 => 'OK', 201 => 'Created', 202 => 'Accepted', 203 => 'Non-Authoritative Information', 204 => 'No Content', 205 => 'Reset Content', 206 => 'Partial Content', 207 => 'Multi-Status (WebDAV; RFC 4918)', 208 => 'Already Reported (WebDAV; RFC 5842)', 226 => 'IM Used (RFC 3229)', 300 => 'Multiple Choices', 301 => 'Moved Permanently', 302 => 'Found', 303 => 'See Other', 304 => 'Not Modified', 305 => 'Use Proxy', 306 => 'Switch Proxy', 307 => 'Temporary Redirect', 308 => 'Permanent Redirect', 400 => 'Bad Request', 401 => 'Unauthorized', 402 => 'Payment Required', 403 => 'Forbidden', 404 => 'Not Found', 405 => 'Method Not Allowed', 406 => 'Not Acceptable', 407 => 'Proxy Authentication Required', 408 => 'Request Timeout', 409 => 'Conflict', 410 => 'Gone', 411 => 'Length Required', 412 => 'Precondition Failed', 413 => 'Request Entity Too Large', 414 => 'Request-URI Too Long', 415 => 'Unsupported Media Type', 416 => 'Requested Range Not Satisfiable', 417 => 'Expectation Failed', 419 => 'Authentication Timeout (not in RFC 2616)', 420 => 'Enhance Your Calm ', 422 => 'Unprocessable Entity (WebDAV; RFC 4918)', 423 => 'Locked (WebDAV; RFC 4918)', 424 => 'Failed Dependency (WebDAV; RFC 4918)', 426 => 'Upgrade Required', 428 => 'Precondition Required (RFC 6585)', 429 => 'Too Many Requests (RFC 6585)', 431 => 'Request Header Fields Too Large (RFC 6585)', 440 => 'Login Timeout (Microsoft)', 444 => 'No Response (Nginx)', 449 => 'Retry With (Microsoft)', 450 => 'Blocked by Windows Parental Controls (Microsoft)', 451 => 'Unavailable For Legal Reasons (Internet draft)', 494 => 'Request Header Too Large (Nginx)', 495 => 'Cert Error (Nginx)', 496 => 'No Cert (Nginx)', 497 => 'HTTP to HTTPS (Nginx)', 498 => 'Token expired/invalid (Esri)', 499 => 'Client Closed Request (Nginx)', 500 => 'Internal Server Error', 501 => 'Not Implemented', 502 => 'Bad Gateway', 503 => 'Service Unavailable', 504 => 'Gateway Timeout', 505 => 'HTTP Version Not Supported', 506 => 'Variant Also Negotiates (RFC 2295)', 507 => 'Insufficient Storage (WebDAV; RFC 4918)', 508 => 'Loop Detected (WebDAV; RFC 5842)', 509 => 'Bandwidth Limit Exceeded (Apache bw/limited extension)[25]', 510 => 'Not Extended (RFC 2774)', 511 => 'Network Authentication Required (RFC 6585)', 520 => 'Origin Error (Cloudflare)', 521 => 'Web server is down (Cloudflare)', 522 => 'Connection timed out (Cloudflare)', 523 => 'Proxy Declined Request (Cloudflare)', 524 => 'A timeout occurred (Cloudflare)', 598 => 'Network read timeout error (Unknown)', 599 => 'Network connect timeout error (Unknown)'];
 
 	/**
 	 * Seconds till timing out on a connection
@@ -200,7 +118,7 @@ class WireHttp extends Wire {
 	 * Data to send in the request
 	 *
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Raw data, when data is not an array
@@ -212,7 +130,7 @@ class WireHttp extends Wire {
 	 * Last response header
 	 *
 	 */
-	protected $responseHeader = array();
+	protected $responseHeader = [];
 
 	/**
 	 * Last response headers parsed into key => value properties
@@ -220,7 +138,7 @@ class WireHttp extends Wire {
 	 * Note that keys are always lowercase
 	 *
 	 */
-	protected $responseHeaders = array();
+	protected $responseHeaders = [];
 	
 	/**
 	 * Last response headers parsed into key => value properties, where value is always array
@@ -228,7 +146,7 @@ class WireHttp extends Wire {
 	 * Note that keys are always lowercase
 	 *
 	 */
-	protected $responseHeaderArrays = array();
+	protected $responseHeaderArrays = [];
 
 	/**
 	 * Cookies to set for next curl get/post request
@@ -236,13 +154,13 @@ class WireHttp extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $setCookies = array();
+	protected $setCookies = [];
 	
 	/**
 	 * Error messages
 	 *
 	 */
-	protected $error = array();
+	protected $error = [];
 
 	/**
 	 * Whether the system supports CURL
@@ -276,13 +194,7 @@ class WireHttp extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $validateURLOptions = array(
-		'allowRelative' => false,
-		'requireScheme' => true,
-		'stripQuotes' => false,
-		'encodeSpace' => true,
-		'throw' => true,
-	);
+	protected $validateURLOptions = ['allowRelative' => false, 'requireScheme' => true, 'stripQuotes' => false, 'encodeSpace' => true, 'throw' => true];
 
 	/**
 	 * Construct/initialize
@@ -321,7 +233,7 @@ class WireHttp extends Wire {
 	 * @see WireHttp::send(), WireHttp::get(), WireHttp::head()
 	 *
 	 */
-	public function post($url, $data = array(), array $options = array()) {
+	public function post($url, $data = [], array $options = []) {
 		if(!isset($this->headers['content-type'])) $this->setHeader('content-type', self::defaultPostContentType);
 		return $this->send($url, $data, 'POST', $options);
 	}
@@ -351,7 +263,7 @@ class WireHttp extends Wire {
 	 * @see WireHttp::send(), WireHttp::post(), WireHttp::head(), WireHttp::getJSON()
 	 *
 	 */
-	public function get($url, $data = array(), array $options = array()) {
+	public function get($url, $data = [], array $options = []) {
 		return $this->send($url, $data, 'GET', $options);
 	}
 
@@ -370,7 +282,7 @@ class WireHttp extends Wire {
 	 * @see WireHttp::send(), WireHttp::get()
 	 *
 	 */
-	public function getJSON($url, $assoc = true, $data = array(), array $options = array()) {
+	public function getJSON($url, $assoc = true, $data = [], array $options = []) {
 		return json_decode($this->get($url, $data, $options), $assoc); 
 	}
 
@@ -387,7 +299,7 @@ class WireHttp extends Wire {
 	 * @see WireHttp::send(), WireHttp::post(), WireHttp::get()
 	 *
 	 */
-	public function head($url, $data = array(), array $options = array()) {
+	public function head($url, $data = [], array $options = []) {
 		$this->send($url, $data, 'HEAD', $options);
 		$responseHeaders = $this->getResponseHeaders();
 		return is_array($responseHeaders) ? $responseHeaders : false;
@@ -406,7 +318,7 @@ class WireHttp extends Wire {
 	 * @see WireHttp::send(), WireHttp::statusText()
 	 *
 	 */
-	 public function status($url, $data = array(), $textMode = false, array $options = array()) {
+	 public function status($url, $data = [], $textMode = false, array $options = []) {
 		$this->send($url, $data, 'HEAD', $options);
 		return $this->getHttpCode($textMode); 
 	}
@@ -424,7 +336,7 @@ class WireHttp extends Wire {
 	 * @see WireHttp::send(), WireHttp::status()
 	 *
 	 */
-	public function statusText($url, $data = array(), array $options = array()) {
+	public function statusText($url, $data = [], array $options = []) {
 		return $this->status($url, $data, true, $options); 
 	}
 
@@ -444,7 +356,7 @@ class WireHttp extends Wire {
 	 * @since 3.0.222
 	 *
 	 */
-	public function delete($url, $data = array(), array $options = array()) {
+	public function delete($url, $data = [], array $options = []) {
 		return $this->send($url, $data, 'DELETE', $options);
 	}
 	
@@ -464,7 +376,7 @@ class WireHttp extends Wire {
 	 * @since 3.0.222
 	 *
 	 */
-	public function patch($url, $data = array(), array $options = array()) {
+	public function patch($url, $data = [], array $options = []) {
 		return $this->send($url, $data, 'PATCH', $options);
 	}
 	
@@ -485,7 +397,7 @@ class WireHttp extends Wire {
 	 * @since 3.0.222
 	 *
 	 */
-	public function put($url, $data = array(), array $options = array()) {
+	public function put($url, $data = [], array $options = []) {
 		return $this->send($url, $data, 'PUT', $options);
 	}
 
@@ -508,12 +420,12 @@ class WireHttp extends Wire {
 	 * @return bool|string False on failure or string of contents received on success.
 	 *
 	 */
-	public function ___send($url, $data = array(), $method = 'POST', array $options = array()) {
+	public function ___send($url, $data = [], $method = 'POST', array $options = []) {
 	
 		$options = $this->sendOptions($url, $options);
 		$url = $this->validateURL($url, false);
 		$result = false;
-		$error = array();
+		$error = [];
 		
 		if(empty($url)) return false;
 		
@@ -559,70 +471,27 @@ class WireHttp extends Wire {
 	 */
 	protected function sendOptions($url, array $options) {
 
-		$defaults = array(
-			'use' => array('curl', 'fopen', 'socket'),
-			'proxy' => '',
-			'_url' => $url, // original unmodified URL
-			'allowFopen' => true,
-			'allowCURL' => true,
-
-			// Options specific to fopen:
-			// -----------------------------------------------------------
-			/*
-			'fopen' => array(
-			   'http' => array(
-					'method' => '',
-					'timeout' => 0,
-					'content' => '',
-					'header' => '',
-					'proxy' => '',
-			   ), 
-			)
-			*/
-		
-			// Options specific to CURL:
-			// -----------------------------------------------------------
-			/*
-			'curl' => array(
-				'http' => array(
-					'proxy' => '',
-				),
-				'setopt' => array(
-					CURLOPT_OPTION => 'option value',
-				),
-			),
-			'curl_setopt' => array(
-				// recognized alias of options[curl][setopt]
-				CURLOPT_OPTION => 'option value',
-			),
-			*/
-		
-			// http option recognized by some types for legacy purposes
-			// -----------------------------------------------------------
-			/*
-			'http' => array(
-				'proxy' => '',
-			),
-			*/
-			
-			// Legacy options that have been replaced
-			// -----------------------------------------------------------
-			// 'fallback' => true, // 'auto', 'socket' or 'curl' 
-			// 'timeout' => 30, 
-		);
+		$defaults = [
+      'use' => ['curl', 'fopen', 'socket'],
+      'proxy' => '',
+      '_url' => $url,
+      // original unmodified URL
+      'allowFopen' => true,
+      'allowCURL' => true,
+  ];
 
 		// if legacy 'fallback' option used then migrate it to 'use' option
 		if(!empty($options['fallback']) && is_string($options['fallback'])) {
 			if(empty($options['use']) || $options['use'] === 'auto') {
 				// duplicate behavior in versions prior to 3.0.192
-				$options['use'] = array('fopen', $options['fallback']);
+				$options['use'] = ['fopen', $options['fallback']];
 			}
 		}
 
 		$options = array_merge($defaults, $options);
 
 		if($options['use'] === 'auto') $options['use'] = $defaults['use']; // auto forces default
-		if(!is_array($options['use'])) $options['use'] = array($options['use']);
+		if(!is_array($options['use'])) $options['use'] = [$options['use']];
 		if(empty($options['use'])) $options['use'] = $defaults['use'];
 
 		$allowFopen = $this->hasFopen;
@@ -645,7 +514,7 @@ class WireHttp extends Wire {
 	 * @return bool|string
 	 * 
 	 */
-	protected function sendFopen($url, $method = 'POST', array $options = array()) {
+	protected function sendFopen($url, $method = 'POST', array $options = []) {
 		
 		$this->resetResponse();
 		$this->lastSendType = 'fopen';
@@ -671,12 +540,7 @@ class WireHttp extends Wire {
 		
 		$header .= "Connection: close\r\n";
 	
-		$http = array(
-			'method' => $method,
-			'timeout' => $this->getTimeout(),
-			'content' => $content,
-			'header' => $header,
-		);
+		$http = ['method' => $method, 'timeout' => $this->getTimeout(), 'content' => $content, 'header' => $header];
 		if(!empty($options['proxy'])) $http['proxy'] = $options['proxy'];
 	
 		// merge fopen http options array if present, as well as any other options specified to fopen stream_context_create
@@ -687,10 +551,10 @@ class WireHttp extends Wire {
 			// if http array specified outside fopen index
 			$http = array_merge($options['http'], $http);
 		}
-		$fopenOptions = array('http' => $http); 
+		$fopenOptions = ['http' => $http]; 
 		if(isset($options['fopen'])) $fopenOptions = array_merge($options['fopen'], $fopenOptions);
 
-		set_error_handler(array($this, '_errorHandler'));
+		set_error_handler([$this, '_errorHandler']);
 		$context = stream_context_create($fopenOptions);
 		$fp = fopen($url, 'rb', false, $context);
 		restore_error_handler();
@@ -725,13 +589,13 @@ class WireHttp extends Wire {
 	 * @return bool|string
 	 *
 	 */
-	protected function sendCURL($url, $method = 'POST', $options = array()) {
+	protected function sendCURL($url, $method = 'POST', $options = []) {
 
 		$this->resetResponse();
 		$this->lastSendType = 'curl';
 		$timeout = isset($options['timeout']) ? (float) $options['timeout'] : $this->getTimeout();
 		$timeoutMS = (int) ($timeout * 1000);
-		$postMethods = array('POST', 'PUT', 'DELETE', 'PATCH'); // methods for CURLOPT_POSTFIELDS
+		$postMethods = ['POST', 'PUT', 'DELETE', 'PATCH']; // methods for CURLOPT_POSTFIELDS
 		$isPost = in_array($method, $postMethods);
 		
 		if(!empty($options['proxy'])) {
@@ -776,7 +640,7 @@ class WireHttp extends Wire {
 				$this->headers['content-type'] = 'multipart/form-data; charset=utf-8';
 			}
 			*/
-			$headers = array();
+			$headers = [];
 			foreach($this->headers as $name => $value) {
 				$headers[] = "$name: $value";
 			}
@@ -814,7 +678,7 @@ class WireHttp extends Wire {
 		}
 
 		// called by CURL for each header and populates the $responseHeaders var
-		$responseHeaders = array();
+		$responseHeaders = [];
 		curl_setopt($curl, CURLOPT_HEADERFUNCTION, function($curl, $header) use(&$responseHeaders) {
 			if($curl) { /* ignore */ }
 			$length = strlen($header);
@@ -823,7 +687,7 @@ class WireHttp extends Wire {
 			$name = strtolower(trim($header[0]));
 			$value = trim($header[1]);
 			if(!array_key_exists($name, $responseHeaders)) {
-				$responseHeaders[$name] = array($value);
+				$responseHeaders[$name] = [$value];
 			} else {
 				$responseHeaders[$name][] = $value;
 			}
@@ -883,7 +747,7 @@ class WireHttp extends Wire {
 	 * @return bool|string
 	 *
 	 */
-	protected function sendSocket($url, $method = 'POST', $options = array()) {
+	protected function sendSocket($url, $method = 'POST', $options = []) {
 		
 		static $level = 0; // recursion level
 
@@ -932,7 +796,7 @@ class WireHttp extends Wire {
 		$errno = '';
 		$errstr = '';
 
-		set_error_handler(array($this, '_errorHandler'));
+		set_error_handler([$this, '_errorHandler']);
 		if(false !== ($fs = fsockopen($scheme . $host, $port, $errno, $errstr, $timeout))) {
 			fwrite($fs, "$request\r\n$content");
 			while(!feof($fs)) {
@@ -986,13 +850,13 @@ class WireHttp extends Wire {
 	 * @todo update the use option to support array like the send() method
 	 * 
 	 */
-	public function ___download($fromURL, $toFile, array $options = array()) {
+	public function ___download($fromURL, $toFile, array $options = []) {
 
 		$fromURL = $this->validateURL($fromURL, true); 
 		$http = stripos($fromURL, 'http://') === 0; 
 		$https = stripos($fromURL, 'https://') === 0;
-		$allowMethods = array('curl', 'fopen', 'socket');
-		$triedMethods = array();
+		$allowMethods = ['curl', 'fopen', 'socket'];
+		$triedMethods = [];
 		$fp = false;
 
 		if(!$http && !$https) {
@@ -1143,23 +1007,18 @@ class WireHttp extends Wire {
 		$this->resetResponse();
 
 		// Define the options
-		$defaultOptions = array(
-			'max_redirects' => 3,
-			'fopen_bufferSize' => 1024 * 1024, // 1 megabyte default buffer size
-		);
+		$defaultOptions = ['max_redirects' => 3, 'fopen_bufferSize' => 1024 * 1024];
 		
 		$options = array_merge($defaultOptions, $options);
 		$bufferSize = $options['fopen_bufferSize'];
 		unset($options['fopen_bufferSize']);
 		
 		$context = stream_context_create(
-			array(
-				'http' => $options
-			)
+			['http' => $options]
 		);
 
 		// download the file
-		set_error_handler(array($this, '_errorHandler'));
+		set_error_handler([$this, '_errorHandler']);
 		$result = false;
 		
 		if($bufferSize > 0) {
@@ -1248,13 +1107,10 @@ class WireHttp extends Wire {
 	 * @return $this
 	 *
 	 */
-	public function setHeaders(array $headers, array $options = array()) {
-		$defaults = array(
-			'reset' => false,
-			'replacements' => array()
-		);
+	public function setHeaders(array $headers, array $options = []) {
+		$defaults = ['reset' => false, 'replacements' => []];
 		$options = array_merge($defaults, $options);
-		if($options['reset']) $this->headers = array();
+		if($options['reset']) $this->headers = [];
 		$replacements = count($options['replacements']) ? $options['replacements'] : false;
 		foreach($headers as $key => $value) {
 			if(is_array($replacements)) $value = str_replace(array_keys($replacements), array_values($replacements), $value);
@@ -1486,8 +1342,8 @@ class WireHttp extends Wire {
 		}
 
 		// parsed version
-		$this->responseHeaders = array();
-		$this->responseHeaderArrays = array();
+		$this->responseHeaders = [];
+		$this->responseHeaderArrays = [];
 
 		foreach($responseHeader as $header) {
 			$pos = strpos($header, ':');
@@ -1500,7 +1356,7 @@ class WireHttp extends Wire {
 			}
 			if(!isset($this->responseHeaders[$key])) {
 				$this->responseHeaders[$key] = $value;
-				$this->responseHeaderArrays[$key] = array($value); 
+				$this->responseHeaderArrays[$key] = [$value]; 
 			} else {
 				$this->responseHeaderArrays[$key][] = $value;
 			}
@@ -1521,8 +1377,8 @@ class WireHttp extends Wire {
 	 * 
 	 */
 	protected function setResponseHeaderValues(array $responseHeader) {
-		$this->responseHeaders = array();
-		$this->responseHeaderArrays = array();
+		$this->responseHeaders = [];
+		$this->responseHeaderArrays = [];
 
 		foreach($responseHeader as $key => $value) {
 			$key = strtolower($key);
@@ -1531,7 +1387,7 @@ class WireHttp extends Wire {
 					$valueArray = $value;
 					$valueStr = count($value) ? reset($value) : '';
 				} else {
-					$valueArray = strlen($value) ? array($value) : array();
+					$valueArray = strlen($value) ? [$value] : [];
 					$valueStr = $value;
 				}
 				$this->responseHeaders[$key] = $valueStr;
@@ -1578,31 +1434,24 @@ class WireHttp extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	public function ___sendFile($filename, array $options = array(), array $headers = array()) {
+	public function ___sendFile($filename, array $options = [], array $headers = []) {
 
-		$defaultOptions = array(
-			// boolean: halt program execution after file send
-			'exit' => true,
-			// allow use of partial downloads with HTTP_RANGE headers?
-			'partial' => true, 
-			// boolean|null: whether file should force download (null=let content-type header decide)
-			'forceDownload' => null,
-			// string: filename you want the download to show on the user's computer, or blank to use existing.
-			'downloadFilename' => '',
-			// optionally specify headers here rather than as 3rd argument
-			'headers' => array(), 
-			// string of data to send rather than $filename, applicable only if $filename is boolean false
-			'data' => null, 
-		);
+		$defaultOptions = [
+      // boolean: halt program execution after file send
+      'exit' => true,
+      // allow use of partial downloads with HTTP_RANGE headers?
+      'partial' => true,
+      // boolean|null: whether file should force download (null=let content-type header decide)
+      'forceDownload' => null,
+      // string: filename you want the download to show on the user's computer, or blank to use existing.
+      'downloadFilename' => '',
+      // optionally specify headers here rather than as 3rd argument
+      'headers' => [],
+      // string of data to send rather than $filename, applicable only if $filename is boolean false
+      'data' => null,
+  ];
 
-		$defaultHeaders = array(
-			"pragma" => "public",
-			"expires" =>  "0",
-			"cache-control" => "must-revalidate, post-check=0, pre-check=0",
-			"content-type" => "{content-type}",
-			"content-transfer-encoding" => "binary",
-			"content-length" => "{filesize}",
-		);
+		$defaultHeaders = ["pragma" => "public", "expires" =>  "0", "cache-control" => "must-revalidate, post-check=0, pre-check=0", "content-type" => "{content-type}", "content-transfer-encoding" => "binary", "content-length" => "{filesize}"];
 
 		$options = array_merge($defaultOptions, $options);
 		$headers = array_merge($defaultHeaders, $options['headers'], $headers);
@@ -1638,10 +1487,7 @@ class WireHttp extends Wire {
 			$headers['content-disposition'] = "attachment; filename=\"$downloadFilename\"";
 		}
 
-		$this->setHeaders($headers, array('replacements' => array(
-			'{content-type}' => $contentType,
-			'{filesize}' => $filesize
-		))); 
+		$this->setHeaders($headers, ['replacements' => ['{content-type}' => $contentType, '{filesize}' => $filesize]]); 
 		
 		if($options['partial']) {
 			//$this->setHeader('accept-ranges', "0-$filesize");
@@ -1764,15 +1610,9 @@ class WireHttp extends Wire {
 	 * @since 3.0.131
 	 * 
 	 */
-	public function sendHeaders(array $options = array()) {
+	public function sendHeaders(array $options = []) {
 		
-		$defaults = array(
-			'reset' => false, 
-			'headers' => array(), 
-			'httpCode' => 0, 
-			'httpVersion' => '',
-			'replacements' => array(),
-		);
+		$defaults = ['reset' => false, 'headers' => [], 'httpCode' => 0, 'httpVersion' => '', 'replacements' => []];
 		
 		$options = array_merge($defaults, $options);
 		$headers = empty($options['headers']) ? $this->headers : $options['headers'];
@@ -1789,7 +1629,7 @@ class WireHttp extends Wire {
 			$this->sendHeader("$proto $httpCode " . $this->httpCodes[$httpCode]);
 		}
 		
-		$a = array();
+		$a = [];
 		foreach($headers as $key => $value) {
 			$key = strtolower($key);
 			if($value === null || $key === 'httpcode') continue;
@@ -1803,7 +1643,7 @@ class WireHttp extends Wire {
 			$this->sendHeader($key, $value); 
 		}
 		
-		if($options['reset'] && $headers === $this->headers) $this->headers = array();
+		if($options['reset'] && $headers === $this->headers) $this->headers = [];
 		
 		return $a;
 	}
@@ -1877,11 +1717,11 @@ class WireHttp extends Wire {
 	 *
 	 */
 	protected function resetResponse() {
-		$this->responseHeader = array();
-		$this->responseHeaders = array();
+		$this->responseHeader = [];
+		$this->responseHeaders = [];
 		$this->httpCode = 0;
 		$this->httpCodeText = '';
-		$this->error = array();
+		$this->error = [];
 	}
 
 	/**
@@ -1889,7 +1729,7 @@ class WireHttp extends Wire {
 	 *
 	 */
 	protected function resetRequest() {
-		$this->data = array();
+		$this->data = [];
 		$this->rawData = null;
 		$this->headers = $this->defaultHeaders;
 	}
@@ -1968,7 +1808,7 @@ class WireHttp extends Wire {
 	 *
 	 */
 	public function getSuccessCodes() {
-		$codes = array();
+		$codes = [];
 		foreach($this->httpCodes as $code => $text) {
 			if($code < 400) $codes[$code] = $text;
 		}
@@ -1984,7 +1824,7 @@ class WireHttp extends Wire {
 	 * 
 	 */
 	public function getErrorCodes() {
-		$errorCodes = array();
+		$errorCodes = [];
 		foreach($this->httpCodes as $code => $text) {
 			if($code >= 400) $errorCodes[$code] = $text;
 		}
@@ -2004,7 +1844,7 @@ class WireHttp extends Wire {
 	public function setAllowSchemes($schemes, $replace = false) {
 		if(is_string($schemes)) {
 			$str = strtolower($schemes); 
-			$schemes = array();
+			$schemes = [];
 			$str = str_replace(',', ' ', $str); 
 			foreach(explode(' ', $str) as $scheme) {
 				if($scheme) $schemes[] = $scheme;
@@ -2047,7 +1887,7 @@ class WireHttp extends Wire {
 	 * @return array Always returns current options 
 	 * 
 	 */
-	public function setValidateURLOptions(array $options = array()) {
+	public function setValidateURLOptions(array $options = []) {
 		if(!empty($options)) $this->validateURLOptions = array_merge($this->validateURLOptions, $options);
 		return $this->validateURLOptions;
 	}
@@ -2136,7 +1976,7 @@ class WireHttp extends Wire {
 	 * @param $errcontext
 	 * 
 	 */
-	public function _errorHandler($errno, $errstr, $errfile = '', $errline = 0, $errcontext = array()) {
+	public function _errorHandler($errno, $errstr, $errfile = '', $errline = 0, $errcontext = []) {
 		if($errfile || $errline || $errcontext) {} // ignore
 		$this->error[] = "$errno: $errstr";
 	}

@@ -18,7 +18,7 @@ class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
 	 * @var array
 	 * 
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Add a file
@@ -56,7 +56,7 @@ class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
 	 */
 	public function prepend($filename) {
 		$key = $this->getKey($filename);	
-		$data = array($key => $filename); 
+		$data = [$key => $filename]; 
 		foreach($this->data as $k => $v) {
 			if($k == $key) continue; 
 			$data[$k] = $v; 
@@ -137,7 +137,7 @@ class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
 	 * 
 	 */
 	public function removeAll() {
-		$this->data = array();
+		$this->data = [];
 		return $this; 
 	}
 

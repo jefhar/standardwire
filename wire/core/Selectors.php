@@ -52,13 +52,13 @@ class Selectors extends WireArray {
 	 * Static array of Selector types of $operator => $className
 	 *
 	 */
-	static $selectorTypes = array();
+	static $selectorTypes = [];
 
 	/**
 	 * Array of all individual characters used by operators
 	 *
 	 */
-	static $operatorChars = array();
+	static $operatorChars = [];
 
 	/**
 	 * Original saved selector string, used for debugging purposes
@@ -82,24 +82,20 @@ class Selectors extends WireArray {
 	 * @var array
 	 * 
 	 */
-	protected $allowedParseVars = array(
-		'session', 
-		'page', 
-		'user',
-	);
+	protected $allowedParseVars = ['session', 'page', 'user'];
 
 	/**
 	 * Types of quotes selector values may be surrounded in
 	 *
 	 */
-	protected $quotes = array(
-		// opening => closing
-		'"' => '"',
-		"'" => "'",
-		'[' => ']',
-		'{' => '}',
-		'(' => ')',
-	);
+	protected $quotes = [
+     // opening => closing
+     '"' => '"',
+     "'" => "'",
+     '[' => ']',
+     '{' => '}',
+     '(' => ')',
+ ];
 	
 	/**
 	 * Given a selector string, extract it into one or more corresponding Selector objects, iterable in this object.
@@ -366,7 +362,7 @@ class Selectors extends WireArray {
 		$not = false;
 		$operator = '';
 		$lastOperator = '';
-		$operators = array();
+		$operators = [];
 		$operatorChars = self::getOperatorChars();
 	
 		while(isset($str[$n]) && isset($operatorChars[$str[$n]])) {
@@ -578,7 +574,7 @@ class Selectors extends WireArray {
 						$inDoubleQuote = false;
 					} else {
 						// potentially applicable double quote
-						list($on, $op) = array($n, '', '');
+						list($on, $op) = [$n, '', ''];
 						// check if an operator came before the quote
 						while($on > 0 && isset(self::$operatorChars[$str[--$on]])) {
 							$op = self::$operatorChars[$str[$on]] . $op;
@@ -636,7 +632,7 @@ class Selectors extends WireArray {
 			// perform a recursive extract to account for all OR values
 			$v = $this->extractValue($str, $quote); 
 			$quote = ''; // we don't support separately quoted OR values
-			$value = array($value); 
+			$value = [$value]; 
 			if(is_array($v)) $value = array_merge($value, $v); 
 				else $value[] = $v; 
 		}
@@ -732,10 +728,10 @@ class Selectors extends WireArray {
 	 * 
 	 */
 	public function getAllFields($subfields = true) {
-		$fields = array();
+		$fields = [];
 		foreach($this as $selector) {
 			$field = $selector->field;
-			if(!is_array($field)) $field = array($field);
+			if(!is_array($field)) $field = [$field];
 			foreach($field as $f) {
 				if(!$subfields && strpos($f, '.')) {
 					list($f, $subfield) = explode('.', $f, 2);
@@ -754,10 +750,10 @@ class Selectors extends WireArray {
 	 * 
 	 */
 	public function getAllValues() {
-		$values = array();
+		$values = [];
 		foreach($this as $selector) {
 			$value = $selector->value;
-			if(!is_array($value)) $value = array($value);
+			if(!is_array($value)) $value = [$value];
 			foreach($value as $v) {
 				$values[$v] = $v;
 			}
@@ -779,7 +775,7 @@ class Selectors extends WireArray {
 	
 		$matches = true;
 		foreach($this as $selector) {
-			$value = array();
+			$value = [];
 			foreach($selector->fields as $property) {
 				if(strpos($property, '.') && $item instanceof WireData) {
 					$value[] =  $item->getDot($property);
@@ -838,7 +834,7 @@ class Selectors extends WireArray {
 		$operators = array_keys(self::$selectorTypes);
 		$operatorsStr = implode('', $operators);
 		$c = substr($field, -1);
-		if(ctype_alnum($c)) return array('=');
+		if(ctype_alnum($c)) return ['='];
 
 		$op = '';
 		while(strpos($operatorsStr, $c) !== false && strlen($field)) {
@@ -847,7 +843,7 @@ class Selectors extends WireArray {
 			$c = substr($field, -1); 
 		}
 		
-		if(empty($op)) return array('='); 
+		if(empty($op)) return ['=']; 
 		
 		$operators = $this->extractOperators($op);
 		
@@ -868,11 +864,7 @@ class Selectors extends WireArray {
 		$groupCnt = 0;
 		
 		// fields that may only appear once in a selector
-		$singles = array(
-			'start' => '',
-			'limit' => '',
-			'end' => '',
-		);
+		$singles = ['start' => '', 'limit' => '', 'end' => ''];
 		
 		foreach($a as $key => $data) {
 			
@@ -933,9 +925,9 @@ class Selectors extends WireArray {
 		
 		$sanitizer = $this->wire()->sanitizer;
 		$sanitize = 'selectorValue';
-		$fields = array();
-		$values = array();
-		$operators = array('=');
+		$fields = [];
+		$values = [];
+		$operators = ['='];
 		$whitelist = null;
 		$not = false;
 		$group = '';
@@ -986,21 +978,21 @@ class Selectors extends WireArray {
 				if(isset($data['value'])) throw new WireException("You may not specify both 'value' and 'find' at the same time");
 				// if(!is_array($data['find'])) throw new WireException("Selector 'find' property must be specified as array"); 
 				$find = $data['find'];
-				$data['value'] = array();
+				$data['value'] = [];
 			}
 
 			if(isset($data['whitelist'])) {
 				$whitelist = $data['whitelist'];
 				if($whitelist instanceof WireArray) $whitelist = explode('|', (string) $whitelist);
-				if(!is_array($whitelist)) $whitelist = array($whitelist);
+				if(!is_array($whitelist)) $whitelist = [$whitelist];
 			}
 
 			if($sanitize && $sanitize != 'selectorValue' && !method_exists($sanitizer, $sanitize)) {
 				throw new WireException("Unrecognized sanitize method: " . $sanitizer->name($sanitize));
 			}
 
-			$_fields = is_array($data['field']) ? $data['field'] : array($data['field']);
-			$_values = is_array($data['value']) ? $data['value'] : array($data['value']);
+			$_fields = is_array($data['field']) ? $data['field'] : [$data['field']];
+			$_values = is_array($data['value']) ? $data['value'] : [$data['value']];
 			
 		} else if(is_string($key)) {
 			
@@ -1008,8 +1000,8 @@ class Selectors extends WireArray {
 			// The $key field name may have an optional operator appended to it
 		
 			$operators = $this->getOperatorsFromField($key);
-			$_fields = strpos($key, '|') ? explode('|', $key) : array($key);
-			$_values = is_array($data) ? $data : array($data);
+			$_fields = strpos($key, '|') ? explode('|', $key) : [$key];
+			$_values = is_array($data) ? $data : [$data];
 			
 		} else if($dataType == 'array') {
 			
@@ -1018,7 +1010,7 @@ class Selectors extends WireArray {
 			// or array('field', 'operator', 'value')
 			// or array('field', 'value') where '=' is assumed operator
 			$field = '';
-			$value = array();
+			$value = [];
 			
 			if(count($data) == 4) {
 				list($field, $operator, $value, $_sanitize) = $data;
@@ -1041,10 +1033,10 @@ class Selectors extends WireArray {
 			if(is_array($field)) {
 				$_fields = $field;
 			} else {
-				$_fields = strpos($field, '|') ? explode('|', $field) : array($field);
+				$_fields = strpos($field, '|') ? explode('|', $field) : [$field];
 			}
 			
-			$_values = is_array($value) ? $value : array($value);
+			$_values = is_array($value) ? $value : [$value];
 			
 		} else {
 			throw new WireException("Unable to resolve selector array");	
@@ -1097,7 +1089,7 @@ class Selectors extends WireArray {
 				throw new WireException("Value given for '$fieldsStr' is not in provided whitelist");
 			}
 			if($_sanitize === 'selectorValue') {
-				$value = $sanitizer->selectorValue($value, array('useQuotes' => false)); 
+				$value = $sanitizer->selectorValue($value, ['useQuotes' => false]); 
 			} else if($_sanitize) {
 				$value = $sanitizer->$_sanitize($value);
 			}
@@ -1114,15 +1106,7 @@ class Selectors extends WireArray {
 			$quote = '(';
 		}
 		
-		return array(
-			'field' => count($fields) > 1 ? $fields : reset($fields), 
-			'value' => count($values) > 1 ? $values : reset($values), 
-			'operator' => array_shift($operators), 
-			'altOperators' => $operators,
-			'not' => $not,
-			'group' => $group,
-			'quote' => $quote, 
-		);
+		return ['field' => count($fields) > 1 ? $fields : reset($fields), 'value' => count($values) > 1 ? $values : reset($values), 'operator' => array_shift($operators), 'altOperators' => $operators, 'not' => $not, 'group' => $group, 'quote' => $quote];
 	}
 
 	/**
@@ -1147,7 +1131,7 @@ class Selectors extends WireArray {
 	public function getSelectorByField($fieldName, $or = false, $all = false) {
 		
 		$selector = null;
-		$matches = array();
+		$matches = [];
 		
 		foreach($this as $sel) {
 			if($or) {
@@ -1188,7 +1172,7 @@ class Selectors extends WireArray {
 	public function getSelectorByFieldValue($fieldName, $value, $or = false, $all = false) {
 		
 		$selectors = $this->getSelectorByField($fieldName, $or, true); 
-		$matches = array();
+		$matches = [];
 		
 		foreach($selectors as $sel) {
 			/** @var Selector $sel */
@@ -1281,17 +1265,12 @@ class Selectors extends WireArray {
 	 * @since 3.0.154
 	 *
 	 */
-	static public function getOperators(array $options = array()) {
+	static public function getOperators(array $options = []) {
 
-		$defaults = array(
-			'operator' => '',
-			'getIndexType' => 'class',
-			'getValueType' => 'operator',
-			'compareType' => 0,
-		);
+		$defaults = ['operator' => '', 'getIndexType' => 'class', 'getValueType' => 'operator', 'compareType' => 0];
 
 		$options = array_merge($defaults, $options);
-		$operators = array();
+		$operators = [];
 		$compareType = (int) $options['compareType'];
 		$indexType = $options['getIndexType'];
 		$valueType = $options['getValueType'];
@@ -1306,9 +1285,9 @@ class Selectors extends WireArray {
 			if(!isset($selectorTypes[$operator])) {
 				// operator does not exist
 				if($valueType === 'compareType') return 0;
-				return $valueType === 'verbose' ? array() : '';
+				return $valueType === 'verbose' ? [] : '';
 			}
-			$selectorTypes = array($operator => $selectorTypes[$operator]);
+			$selectorTypes = [$operator => $selectorTypes[$operator]];
 		}
 
 		foreach($selectorTypes as $operator => $typeName) {
@@ -1328,14 +1307,7 @@ class Selectors extends WireArray {
 			} else if($valueType === 'compareType') {
 				$value = $className::getCompareType();
 			} else if($valueType === 'verbose') {
-				$value = array(
-					'operator' => $operator,
-					'class' => $typeName,
-					'className' => $className,
-					'compareType' => $className::getCompareType(),
-					'label' => $className::getLabel(),
-					'description' => $className::getDescription(), 
-				);
+				$value = ['operator' => $operator, 'class' => $typeName, 'className' => $className, 'compareType' => $className::getCompareType(), 'label' => $className::getLabel(), 'description' => $className::getDescription()];
 			} else {
 				$value = $operator;
 			}
@@ -1382,19 +1354,27 @@ class Selectors extends WireArray {
 	 *
 	 */
 	static public function getReservedChars() {
-		return array(
-			'or' => '|', // title|body=foo, summary=bar|baz
-			'not' => '!', // !body*=suchi tobiko
-			'separator' => ',', // foo=bar, bar=baz
-			'match-same-1' => '@', // @foo.bar=123, @foo.baz=456
-			'quote-value' => '"', // foo="bar"
-			'or-group-open' => '(', // id>0, (title=foo), (body=bar)
-			'or-group-close' => ')',
-			'sub-selector-open' => '[', // foo=[bar>0, baz%=text]
-			'sub-selector-close' => ']',
-			'api-var-open' => '[', // [page], [page.id], [user.id], etc. 
-			'api-var-close' => ']',
-		);
+		return [
+      'or' => '|',
+      // title|body=foo, summary=bar|baz
+      'not' => '!',
+      // !body*=suchi tobiko
+      'separator' => ',',
+      // foo=bar, bar=baz
+      'match-same-1' => '@',
+      // @foo.bar=123, @foo.baz=456
+      'quote-value' => '"',
+      // foo="bar"
+      'or-group-open' => '(',
+      // id>0, (title=foo), (body=bar)
+      'or-group-close' => ')',
+      'sub-selector-open' => '[',
+      // foo=[bar>0, baz%=text]
+      'sub-selector-close' => ']',
+      'api-var-open' => '[',
+      // [page], [page.id], [user.id], etc.
+      'api-var-close' => ']',
+  ];
 	}
 
 	/**
@@ -1550,12 +1530,12 @@ class Selectors extends WireArray {
 
 		// replace characters that are allowed but aren't useful here
 		if(strpos($str, '=(') !== false) $str = str_replace('=(', '=1,', $str);
-		$str = str_replace(array('!', '(', ')', '@', '.', '|', '_'), '', trim(strtolower($str)));
+		$str = str_replace(['!', '(', ')', '@', '.', '|', '_'], '', trim(strtolower($str)));
 
 		// flatten sub-selectors
 		$pos = strpos($str, '[');
 		if($pos && strrpos($str, ']') > $pos) {
-			$str = str_replace(array(']', '=[', '<[', '>['), array('', '=1,', '<2,', '>3,'), $str);
+			$str = str_replace([']', '=[', '<[', '>['], ['', '=1,', '<2,', '>3,'], $str);
 		}
 		$str = rtrim($str, ", ");
 
@@ -1586,7 +1566,7 @@ class Selectors extends WireArray {
 			$parts = explode(',', $str);
 		} else {
 			// outside of verbose mode, only the first apparent selector is checked
-			$parts = array($str);
+			$parts = [$str];
 		}
 
 		// check each key=value component
@@ -1630,23 +1610,31 @@ class Selectors extends WireArray {
 	 * @since 3.0.174
 	 * 
 	 */
-	static public function selectorHasField($selectors, $fieldName, array $options = array()) { 
+	static public function selectorHasField($selectors, $fieldName, array $options = []) { 
 		
-		$defaults = array(
-			'operator' => '', // require this operator
-			'value' => null, // require this value
-			'verbose' => false, // return verbose information?
-			'remove' => false, // remove matched Selector from Selectors (when/if applicable)
-		);
+		$defaults = [
+      'operator' => '',
+      // require this operator
+      'value' => null,
+      // require this value
+      'verbose' => false,
+      // return verbose information?
+      'remove' => false,
+  ];
 		
-		$result = array(
-			'result' => false, // true if field found, false if not
-			'selectors' => null,  // Selectors object when used
-			'selector' => null, // first Selector that matched
-			'field' => '', // field name that matched
-			'operator' => '', // operator that matched
-			'value' => null, // value that matched or null if not applicable
-		);
+		$result = [
+      'result' => false,
+      // true if field found, false if not
+      'selectors' => null,
+      // Selectors object when used
+      'selector' => null,
+      // first Selector that matched
+      'field' => '',
+      // field name that matched
+      'operator' => '',
+      // operator that matched
+      'value' => null,
+  ];
 
 		$options = count($options) ? array_merge($defaults, $options) : $defaults;
 		$fail = false;
@@ -1736,13 +1724,7 @@ class Selectors extends WireArray {
 			
 			if($options['remove']) $selectors->remove($selector);
 			
-			$result = array_merge($result, array(
-				'result' => true, 
-				'selectors' => $selectors, 
-				'selector' => $selector, 
-				'field' => $field, 
-				'operator' => $selector->operator(), 
-			));
+			$result = array_merge($result, ['result' => true, 'selectors' => $selectors, 'selector' => $selector, 'field' => $field, 'operator' => $selector->operator()]);
 			
 			break;
 		}
@@ -1781,12 +1763,12 @@ class Selectors extends WireArray {
 			$hasEscaped = true;
 		}
 
-		$a = array();
+		$a = [];
 		$parts = explode(',', $s);
 		foreach($parts as $part) {
 			if(!strpos($part, '=')) continue;
 			list($key, $value) = explode('=', $part);
-			if($hasEscaped) $value = str_replace(array('~~COMMA', '~~EQUAL'), array(',', '='), $value);
+			if($hasEscaped) $value = str_replace(['~~COMMA', '~~EQUAL'], [',', '='], $value);
 			$a[trim($key)] = trim($value);
 		}
 
@@ -1805,7 +1787,7 @@ class Selectors extends WireArray {
 	static public function arrayToKeyValueString($a) {
 		$s = '';
 		foreach($a as $key => $value) {
-			if(strpos($value, ',') !== false) $value = str_replace(array(',,', ','), ',,', $value);
+			if(strpos($value, ',') !== false) $value = str_replace([',,', ','], ',,', $value);
 			if(strpos($value, '=') !== false) $value = str_replace('=', '==', $value);
 			$s .= "$key=$value, ";
 		}

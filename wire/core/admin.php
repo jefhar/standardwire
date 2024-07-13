@@ -214,7 +214,7 @@ if($ajax) {
 }
 
 // config properties that should be mirrored to ProcessWire.config.property in JS
-$config->js(array('httpHost', 'httpHosts', 'https'), true); 
+$config->js(['httpHost', 'httpHosts', 'https'], true); 
 
 if($controller && $controller->isAjax()) {
 	if(empty($content) && count($notices)) {

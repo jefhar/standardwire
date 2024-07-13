@@ -140,7 +140,7 @@ function wireEncodeJSON(array $data, $allowEmpty = false, $beautify = false) {
  *
  */
 function wireDecodeJSON($json) {
-	if(empty($json) || $json == '[]') return array();
+	if(empty($json) || $json == '[]') return [];
 	return json_decode($json, true);
 }
 
@@ -248,7 +248,7 @@ function wireChmod($path, $recursive = false, $chmod = null) {
  * @see WireFileTools::copy()
  * 
  */
-function wireCopy($src, $dst, $options = array()) {
+function wireCopy($src, $dst, $options = []) {
 	/** @var WireFileTools $files */
 	$files = wire('files');
 	return $files->copy($src, $dst, $options);
@@ -298,7 +298,7 @@ function wireUnzipFile($file, $dst) {
  * @see WireFileTools::zip()
  * 
  */
-function wireZipFile($zipfile, $files, array $options = array()) {
+function wireZipFile($zipfile, $files, array $options = []) {
 	/** @var WireFileTools $fileTools */
 	$fileTools = wire('files');
 	return $fileTools->zip($zipfile, $files, $options);
@@ -323,7 +323,7 @@ function wireZipFile($zipfile, $files, array $options = array()) {
  * @see WireHttp::sendFile(), WireFileTools::send()
  *
  */
-function wireSendFile($filename, array $options = array(), array $headers = array()) {
+function wireSendFile($filename, array $options = [], array $headers = []) {
 	/** @var WireFileTools $fileTools */
 	$files = wire('files');
 	$files->send($filename, $options, $headers);
@@ -405,7 +405,7 @@ function wireRelativeTimeStr($ts, $abbreviate = false, $useTense = true) {
  * @return int|WireMail Returns number of messages sent or WireMail object if no arguments specified. 
  *
  */
-function wireMail($to = '', $from = '', $subject = '', $body = '', $options = array()) { 
+function wireMail($to = '', $from = '', $subject = '', $body = '', $options = []) { 
 	/** @var WireMailTools $mail */
 	$mail = wire('mail');
 	return $mail->send($to, $from, $subject, $body, $options);
@@ -445,7 +445,7 @@ function wireMail($to = '', $from = '', $subject = '', $body = '', $options = ar
  * @return string String with tags populated. 
  *
  */
-function wirePopulateStringTags($str, $vars, array $options = array()) {
+function wirePopulateStringTags($str, $vars, array $options = []) {
 	return wire('sanitizer')->getTextTools()->populatePlaceholders($str, $vars, $options);
 }
 
@@ -473,7 +473,7 @@ function wirePopulateStringTags($str, $vars, array $options = array()) {
  * @see WireFileTools::tempDir(), WireTempDir
  * 
  */
-function wireTempDir($name, $options = array()) {
+function wireTempDir($name, $options = []) {
 	/** @var WireFileTools $files */
 	$files = wire('files');
 	return $files->tempDir($name, $options);
@@ -511,7 +511,7 @@ function wireTempDir($name, $options = array()) {
  * @see wireIncludeFile(), WireFileTools::render(), WireFileTools::include()
  * 
  */
-function wireRenderFile($filename, array $vars = array(), array $options = array()) {
+function wireRenderFile($filename, array $vars = [], array $options = []) {
 	/** @var WireFileTools $files */
 	$files = wire('files');
 	return $files->render($filename, $vars, $options);
@@ -546,7 +546,7 @@ function wireRenderFile($filename, array $vars = array(), array $options = array
  *
  * 
  */
-function wireIncludeFile($filename, array $vars = array(), array $options = array()) {
+function wireIncludeFile($filename, array $vars = [], array $options = []) {
 	/** @var WireFileTools $files */
 	$files = wire('files');
 	return $files->___include($filename, $vars, $options);
@@ -612,11 +612,7 @@ function wireIconMarkup($icon, $class = '') {
 	if(strpos($icon, 'icon-') === 0) $icon = str_replace('icon-', 'fa-', $icon); 
 	if(strpos($icon, 'fa-') !== 0) $icon = "fa-$icon";
 	if($class) {
-		$modifiers = array(
-			'lg', 'fw', '2x', '3x', '4x', '5x', 'spin', 'spinner', 'li', 'border',
-			'rotate-90', 'rotate-180', 'rotate-270', 'flip-horizontal', 'flip-vertical',
-			'stack', 'stack-1x', 'stack-2x', 'inverse',
-		);
+		$modifiers = ['lg', 'fw', '2x', '3x', '4x', '5x', 'spin', 'spinner', 'li', 'border', 'rotate-90', 'rotate-180', 'rotate-270', 'flip-horizontal', 'flip-vertical', 'stack', 'stack-1x', 'stack-2x', 'inverse'];
 		$classes = explode(' ', $class); 
 		foreach($classes as $key => $modifier) {
 			if(in_array($modifier, $modifiers)) $classes[$key] = "fa-$modifier";	
@@ -646,33 +642,7 @@ function wireIconMarkup($icon, $class = '') {
  */
 function wireIconMarkupFile($filename, $class = '') {
 	$icon = 'file-o';
-	$icons = array(
-		'pdf' => 'file-pdf-o',
-		'doc' => 'file-word-o',
-		'docx' => 'file-word-o',
-		'xls' => 'file-excel-o',
-		'xlsx' => 'file-excel-o',
-		'xlsb' => 'file-excel-o',
-		'csv' => 'file-excel-o',
-		'zip' => 'file-archive-o',
-		'txt' => 'file-text-o',
-		'rtf' => 'file-text-o',
-		'mp3' => 'file-sound-o',
-		'wav' => 'file-sound-o',
-		'ogg' => 'file-sound-o',
-		'jpg' => 'file-image-o',
-		'jpeg' => 'file-image-o',
-		'png' => 'file-image-o',
-		'gif' => 'file-image-o',
-		'svg' => 'file-image-o',
-		'ppt' => 'file-powerpoint-o',
-		'pptx' => 'file-powerpoint-o',
-		'mov' => 'file-video-o',
-		'mp4' => 'file-video-o',
-		'wmv' => 'file-video-o',
-		'js' => 'file-code-o',
-		'css' => 'file-code-o',
-	);
+	$icons = ['pdf' => 'file-pdf-o', 'doc' => 'file-word-o', 'docx' => 'file-word-o', 'xls' => 'file-excel-o', 'xlsx' => 'file-excel-o', 'xlsb' => 'file-excel-o', 'csv' => 'file-excel-o', 'zip' => 'file-archive-o', 'txt' => 'file-text-o', 'rtf' => 'file-text-o', 'mp3' => 'file-sound-o', 'wav' => 'file-sound-o', 'ogg' => 'file-sound-o', 'jpg' => 'file-image-o', 'jpeg' => 'file-image-o', 'png' => 'file-image-o', 'gif' => 'file-image-o', 'svg' => 'file-image-o', 'ppt' => 'file-powerpoint-o', 'pptx' => 'file-powerpoint-o', 'mov' => 'file-video-o', 'mp4' => 'file-video-o', 'wmv' => 'file-video-o', 'js' => 'file-code-o', 'css' => 'file-code-o'];
 	$pos = strrpos($filename, '.'); 
 	$ext = $pos !== false ? substr($filename, $pos+1) : '';
 	if($ext && isset($icons[$ext])) $icon = $icons[$ext];
@@ -700,13 +670,13 @@ function wireIconMarkupFile($filename, $class = '') {
  * @return string
  * 
  */
-function wireBytesStr($bytes, $small = false, $options = array()) {
+function wireBytesStr($bytes, $small = false, $options = []) {
 	if(is_array($small)) $options = $small;
 	if(!is_array($options)) {
 		if(ctype_digit("$options")) {
-			$options = array('decimals' => (int) $options);
+			$options = ['decimals' => (int) $options];
 		} else {
-			$options = array();
+			$options = [];
 		}
 	}
 	if(is_int($small) && !isset($options['decimals'])) {
@@ -860,7 +830,7 @@ function wireClassNamespace($className, $withClass = false, $strict = false) {
 	
 	if(empty($ns) || $strict) {
 		// hunt down namespace from declared classes
-		$nsa = array();
+		$nsa = [];
 		$name = strtolower($className); 
 		foreach(get_declared_classes() as $class) {
 			if(strpos($class, $bs) === false) {
@@ -958,7 +928,7 @@ function wireClassImplements($className, $autoload = true) {
 		}
 		$implements = @class_implements(ltrim($className, "\\"), $autoload);
 	}
-	$a = array();
+	$a = [];
 	if(is_array($implements)) foreach($implements as $k => $v) {
 		$v = wireClassName($k, false);
 		$a[$k] = $v; // values have no namespace
@@ -997,7 +967,7 @@ function wireClassParents($className, $autoload = true) {
 		}
 		$parents = @class_parents(ltrim($className, "\\"), $autoload);
 	}
-	$a = array();
+	$a = [];
 	if(is_array($parents)) foreach($parents as $k => $v) {
 		$v = wireClassName($k, false);
 		$a[$k] = $v; // values have no namespace
@@ -1030,7 +1000,7 @@ function wireInstanceOf($instance, $className, $autoload = true) {
 		$classNames = $className;
 	} else {
 		$returnClass = false;
-		$classNames = array($className);
+		$classNames = [$className];
 	}
 
 	$matchClass = null;
@@ -1258,12 +1228,12 @@ function wireEmpty($value) {
  */
 function wireRegion($key, $value = null) {
 	
-	static $regions = array();
-	static $locked = array();
+	static $regions = [];
+	static $locked = [];
 
 	if(empty($key) || $key === '*') {
 		// all regions
-		if($value === '') $regions = array(); // clear
+		if($value === '') $regions = []; // clear
 		return $regions;
 	}
 
@@ -1339,7 +1309,7 @@ function wire404($message = '') {
  * @since 3.0.123
  * 
  */
-function WireArray($items = array()) {
+function WireArray($items = []) {
 	return WireArray::newInstance($items);
 }
 
@@ -1357,7 +1327,7 @@ function WireArray($items = array()) {
  * @since 3.0.126
  * 
  */
-function WireData($data = array()) {
+function WireData($data = []) {
 	$wireData = new WireData();
 	if(is_array($data)) {
 		if(!empty($data)) $wireData->setArray($data);
@@ -1387,7 +1357,7 @@ function WireData($data = array()) {
  * @since 3.0.123
  *
  */
-function PageArray($items = array()) {
+function PageArray($items = []) {
 	/** @var PageArray $pa */
 	$pa = PageArray::newInstance($items);
 	return $pa;

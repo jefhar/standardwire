@@ -17,7 +17,7 @@ interface WireProfilerInterface {
 	 * @return mixed Event to be used for stop call
 	 * 
 	 */
-	public function start($name, $source = null, $data = array()); 
+	public function start($name, $source = null, $data = []); 
 
 	/**
 	 * Stop profiling an event

@@ -48,7 +48,7 @@ class NullPage extends Page implements WireNull {
 	 * @return string
 	 * 
 	 */
-	public function url($options = array()) { return ''; }
+	public function url($options = []) { return ''; }
 
 	/**
 	 * #pw-internal
@@ -146,7 +146,7 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	public function children($selector = '', $options = array()) { 
+	public function children($selector = '', $options = []) { 
 		return $this->wire()->pages->newPageArray(); 
 	}
 

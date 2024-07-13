@@ -33,7 +33,7 @@ class PageArrayIterator extends Wire implements \Iterator {
 	 * @var array
 	 * 
 	 */ 
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Current position
@@ -116,11 +116,11 @@ class PageArrayIterator extends Wire implements \Iterator {
 		} else {
 			
 			// Check if the user gave options for the loading
-			$options = isset($this->options['loadOptions']) ? $this->options['loadOptions'] : array();
+			$options = isset($this->options['loadOptions']) ? $this->options['loadOptions'] : [];
 
 			// Here we retrieve a chunk of Page objects and loop over them to retrieve the IDs of the Pages.
 			$lazypages = array_slice($this->lazypages, $start, $this->chunkSize);
-			$ids = array();
+			$ids = [];
 			
 			foreach($lazypages as $page) {
 				// Grab the ID from the placeholder object. We are using the internal method here which does

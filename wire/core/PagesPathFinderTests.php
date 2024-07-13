@@ -30,16 +30,10 @@ class PagesPathFinderTests extends Wire {
 	 *
 	 */
 	public function testPath($path, $expectResponse = 0) {
-		$tests = array();
-		$testResults = array();
-		$results = array();
-		$optionSets = array(
-			'defaults' => $this->pathFinder()->getDefaultOptions(),
-			'noPagePaths' => array('usePagePaths' => false),
-			'noGlobalUnique' => array('useGlobalUnique' => false),
-			'noHistory' => array('useHistory' => false),
-			'excludeRoot' => array('useExcludeRoot' => true),
-		);
+		$tests = [];
+		$testResults = [];
+		$results = [];
+		$optionSets = ['defaults' => $this->pathFinder()->getDefaultOptions(), 'noPagePaths' => ['usePagePaths' => false], 'noGlobalUnique' => ['useGlobalUnique' => false], 'noHistory' => ['useHistory' => false], 'excludeRoot' => ['useExcludeRoot' => true]];
 		foreach($optionSets as $name => $options) {
 			$options['test'] = true;
 			$result = $this->pathFinder()->get($path, $options);
@@ -56,11 +50,7 @@ class PagesPathFinderTests extends Wire {
 			} else {
 				$status = ($test === $defaultTest ? 'OK' : 'FAIL');
 			}
-			$testResults[] = array(
-				'name' => $name,
-				'status' => $status,
-				'test' => $test
-			);
+			$testResults[] = ['name' => $name, 'status' => $status, 'test' => $test];
 		}
 
 		return $testResults;
@@ -73,7 +63,7 @@ class PagesPathFinderTests extends Wire {
 	 */
 	public function testPage(Page $item) {
 		$languages = $this->languages();
-		$testResults = array();
+		$testResults = [];
 		$defaultPath = $item->path();
 		if($languages) {
 			foreach($languages as $language) {
@@ -104,7 +94,7 @@ class PagesPathFinderTests extends Wire {
 		} else {
 			$items = $this->pages->find($selector);
 		}
-		$testResults = array();
+		$testResults = [];
 		foreach($items as $item) {
 			$testResults = array_merge($testResults, $this->testPage($item));
 		}

@@ -175,7 +175,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * 
 	 */
 	public function getFieldNames($fieldgroup) {
-		$fieldNames = array();
+		$fieldNames = [];
 		$useLazy = $this->useLazy();
 		if(!$useLazy && !is_object($fieldgroup)) $fieldgroup = $this->get($fieldgroup);
 		if($fieldgroup instanceof Fieldgroup) {
@@ -185,7 +185,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 			}
 			return $fieldNames;
 		}
-		$fieldIds = array();
+		$fieldIds = [];
 		if(ctype_digit("$fieldgroup") && $useLazy) {
 			foreach(array_keys($this->lazyItems) as $key) {
 				$row = &$this->lazyItems[$key];
@@ -223,9 +223,9 @@ class Fieldgroups extends WireSaveableItemsLookup {
 
 		/** @var Fieldgroup $fieldgroup */
 		$fieldgroup = $item;
-		$datas = array();
-		$fieldsAdded = array();
-		$fieldsRemoved = array();
+		$datas = [];
+		$fieldsAdded = [];
+		$fieldsRemoved = [];
 		
 		if($fieldgroup->id && $fieldgroup->removedFields) {
 
@@ -311,7 +311,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 */
 	public function ___delete(Saveable $item) {
 
-		$templates = array();
+		$templates = [];
 		foreach($this->wire()->templates as $template) {
 			/** @var Template $template */
 			if($template->fieldgroup->id == $item->id) $templates[] = $template->name; 
@@ -418,8 +418,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 */
 	public function ___getExportData(Fieldgroup $fieldgroup) {
 		$data = $fieldgroup->getTableData();
-		$fields = array();
-		$contexts = array();
+		$fields = [];
+		$contexts = [];
 		foreach($fieldgroup as $field) {
 			/** @var Field $field */
 			$fields[] = $field->name;
@@ -427,7 +427,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 			if(isset($fieldContexts[$field->id])) {
 				$contexts[$field->name] = $fieldContexts[$field->id];
 			} else {
-				$contexts[$field->name] = array();
+				$contexts[$field->name] = [];
 			}
 		}
 		$data['fields'] = $fields;
@@ -453,23 +453,12 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 */
 	public function ___setImportData(Fieldgroup $fieldgroup, array $data) {
 
-		$return = array(
-			'fields' => array(
-				'old' => '',
-				'new' => '',
-				'error' => array()
-			),
-			'contexts' => array(
-				'old' => '',
-				'new' => '',
-				'error' => array()
-			),
-		);
+		$return = ['fields' => ['old' => '', 'new' => '', 'error' => []], 'contexts' => ['old' => '', 'new' => '', 'error' => []]];
 
 		$fieldgroup->setTrackChanges(true);
 		$fieldgroup->errors("clear");
 		$_data = $this->getExportData($fieldgroup);
-		$rmFields = array();
+		$rmFields = [];
 
 		if(isset($data['fields'])) {
 			// field data
@@ -571,11 +560,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 			if($old == $new) continue;
 			$fieldgroup->set($key, $value);
 			$error = (string) $fieldgroup->errors("first clear");
-			$return[$key] = array(
-				'old' => $old,
-				'new' => $value,
-				'error' => $error,
-			);
+			$return[$key] = ['old' => $old, 'new' => $value, 'error' => $error];
 		}
 		
 		if(count($rmFields)) {

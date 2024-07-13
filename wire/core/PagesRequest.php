@@ -61,7 +61,7 @@ class PagesRequest extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $pageInfo = array();
+	protected $pageInfo = [];
 
 	/**
 	 * Sanitized path that generated this request
@@ -111,21 +111,7 @@ class PagesRequest extends Wire {
 	 * @var array
 	 *
 	 */
-	protected $responseCodeNames = array(
-		0 => 'unknown',
-		200 => 'ok',
-		300 => 'maybeRedirect',
-		301 => 'permRedirect',
-		302 => 'tempRedirect',
-		307 => 'tempRedo',
-		308 => 'permRedo',
-		400 => 'badRequest',
-		401 => 'unauthorized',
-		403 => 'forbidden',
-		404 => 'pageNotFound',
-		405 => 'methodNotAllowed',
-		414 => 'pathTooLong',
-	);
+	protected $responseCodeNames = [0 => 'unknown', 200 => 'ok', 300 => 'maybeRedirect', 301 => 'permRedirect', 302 => 'tempRedirect', 307 => 'tempRedo', 308 => 'permRedo', 400 => 'badRequest', 401 => 'unauthorized', 403 => 'forbidden', 404 => 'pageNotFound', 405 => 'methodNotAllowed', 414 => 'pathTooLong'];
 
 	/**
 	 * Response http code
@@ -260,13 +246,14 @@ class PagesRequest extends Wire {
 	 * @return Page|NullPage
 	 *
 	 */
-	public function ___getPage(array $options = array()) {
+	public function ___getPage(array $options = []) {
 		
-		$defaults = array(
-			'verbose' => false,
-			'useHistory' => false, // disabled because redundant with hook in PagePathHistory module
-			'useExcludeRoot' => false,
-		);
+		$defaults = [
+      'verbose' => false,
+      'useHistory' => false,
+      // disabled because redundant with hook in PagePathHistory module
+      'useExcludeRoot' => false,
+  ];
 		
 		$options = empty($options) ? $defaults : array_merge($defaults, $options);
 
@@ -334,10 +321,7 @@ class PagesRequest extends Wire {
 		
 		// check if we have matched a page
 		if($pageId) {
-			$page = $this->pages->getOneById($pageId, array(
-				'template' => $info['page']['templates_id'],
-				'parent_id' => $info['page']['parent_id'],
-			));
+			$page = $this->pages->getOneById($pageId, ['template' => $info['page']['templates_id'], 'parent_id' => $info['page']['parent_id']]);
 		} else {
 			$page = $this->pages->newNullPage();
 		}
@@ -745,7 +729,7 @@ class PagesRequest extends Wire {
 		} else if(strlen($redirectLogin)) {
 			// redirect URL provided in template.redirectLogin
 			$redirectUrl = str_replace('{id}', $page->id, $redirectLogin);
-			list($path, $query) = array($redirectUrl, '');
+			list($path, $query) = [$redirectUrl, ''];
 			if(strpos($redirectUrl, '?') !== false) list($path, $query) = explode('?', $redirectUrl, 2);
 			if(strlen($path) && strpos($path, '/') === 0 && strpos($path, '//') === false) {
 				// attempt to match to page so we can use URL with scheme and relative to installation url
@@ -895,7 +879,7 @@ class PagesRequest extends Wire {
 
 		if($this->redirectUrl) {
 			if(strpos($this->redirectUrl, '://') !== false) {
-				$url = str_replace(array('http://', 'https://'), "$scheme://", $this->redirectUrl);
+				$url = str_replace(['http://', 'https://'], "$scheme://", $this->redirectUrl);
 			} else {
 				$url = "$scheme://$config->httpHost$this->redirectUrl";
 			}
@@ -948,7 +932,7 @@ class PagesRequest extends Wire {
 		// @todo replace static allowMethods array with template setting like below
 		// $allowMethods = $page->template->get('requestMethods'); 
 		// $allowMethods = array('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH');
-		$allowMethods = array(); // feature disabled until further development
+		$allowMethods = []; // feature disabled until further development
 		if(empty($allowMethods)) return true; // all allowed when none selected
 		$method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : '';
 		if(empty($method)) return true;
@@ -1218,7 +1202,7 @@ class PagesRequest extends Wire {
 		if(empty($value)) $value = "unknown";
 		$value = "$code $value";
 		if($this->responseMessage) $value .= ": $this->responseMessage";
-		$attrs = array();
+		$attrs = [];
 		if(!empty($this->pageInfo['urlSegments'])) $attrs[] = 'urlSegments';
 		if($this->pageNum > 1) $attrs[] = 'pageNum';
 		if($this->requestFile) $attrs[] = 'file';

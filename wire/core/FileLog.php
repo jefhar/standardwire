@@ -46,7 +46,7 @@ class FileLog extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $itemsLogged = array();
+	protected $itemsLogged = [];
 
 	/**
 	 * Delimiter used in log entries
@@ -128,7 +128,7 @@ class FileLog extends Wire {
 	 * 
 	 */
 	protected function cleanStr($str) {
-		$str = str_replace(array("\r\n", "\r", "\n"), ' ', trim($str)); 
+		$str = str_replace(["\r\n", "\r", "\n"], ' ', trim($str)); 
 		if(strlen($str) > $this->maxLineLength) $str = substr($str, 0, $this->maxLineLength); 
 		if(strpos($str, ' ^+') !== false) $str = str_replace(' ^=', ' ^ +', $str); // disallowed sequence
 		return $str; 	
@@ -147,14 +147,9 @@ class FileLog extends Wire {
 	 * @return bool Success state: true if log written, false if not. 
 	 * 
 	 */
-	public function save($str, array $options = array()) {
+	public function save($str, array $options = []) {
 		
-		$defaults = array(
-			'mergeDups' => 0,
-			'allowDups' => true, 
-			'maxTries' => 20, 
-			'maxTriesDelay' => 2000, 
-		);
+		$defaults = ['mergeDups' => 0, 'allowDups' => true, 'maxTries' => 20, 'maxTriesDelay' => 2000];
 
 		if(!$this->logFilename) return false;
 		
@@ -475,10 +470,7 @@ class FileLog extends Wire {
 	 * 
 	 */
 	public function getDate($dateFrom, $dateTo = 0, $pageNum = 1, $limit = 100) {
-		$options = array(
-			'dateFrom' => $dateFrom,
-			'dateTo' => $dateTo, 
-		);
+		$options = ['dateFrom' => $dateFrom, 'dateTo' => $dateTo];
 		return $this->find($limit, $pageNum, $options); 
 	}
 
@@ -500,15 +492,9 @@ class FileLog extends Wire {
 	 * @throws \Exception on fatal error
 	 * 
 	 */
-	public function find($limit = 100, $pageNum = 1, array $options = array()) {
+	public function find($limit = 100, $pageNum = 1, array $options = []) {
 		
-		$defaults = array(
-			'text' => null, 
-			'dateFrom' => 0,
-			'dateTo' => 0,
-			'reverse' => true, 
-			'toFile' => '', 
-		);
+		$defaults = ['text' => null, 'dateFrom' => 0, 'dateTo' => 0, 'reverse' => true, 'toFile' => ''];
 		
 		$options = array_merge($defaults, $options); 
 		$hasFilters = !empty($options['text']);
@@ -529,7 +515,7 @@ class FileLog extends Wire {
 			$fp = null;
 		}
 		
-		$lines = array();
+		$lines = [];
 		$start = ($pageNum-1) * $limit; 
 		$end = $start + $limit; 
 		$cnt = 0; // number that will be written or returned by this
@@ -537,7 +523,7 @@ class FileLog extends Wire {
 		$chunkNum = 0;
 		$totalChunks = $this->getTotalChunks($this->chunkSize); 
 		$stopNow = false;
-		$chunkLineHashes = array();
+		$chunkLineHashes = [];
 		
 		while($chunkNum <= $totalChunks && !$stopNow) {
 			
@@ -683,12 +669,7 @@ class FileLog extends Wire {
 	 */
 	public function pruneDate($oldestDate) {
 		$toFile = $this->logFilename . '.new';
-		$qty = $this->find(0, 1, array(
-			'reverse' => false, 
-			'toFile' => $toFile,
-			'dateFrom' => $oldestDate, 
-			'dateTo' => time(),
-		));
+		$qty = $this->find(0, 1, ['reverse' => false, 'toFile' => $toFile, 'dateFrom' => $oldestDate, 'dateTo' => time()]);
 		if(file_exists($toFile)) {
 			$files = $this->wire()->files;
 			$files->unlink($this->logFilename, true);

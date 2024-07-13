@@ -38,7 +38,7 @@ class PagesLoader extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $nativeColumns = array();
+	protected $nativeColumns = [];
 
 	/**
 	 * Total number of pages loaded by getById()
@@ -272,7 +272,7 @@ class PagesLoader extends Wire {
 				
 		} else if(is_int($selector)) {
 			// page ID integer
-			$value = $this->getById(array($selector), $loadOptions);
+			$value = $this->getById([$selector], $loadOptions);
 		}
 	
 		if($value) {
@@ -322,18 +322,18 @@ class PagesLoader extends Wire {
 	 * @return PageArray|array
 	 *
 	 */
-	public function find($selector, $options = array()) {
+	public function find($selector, $options = []) {
 
 		if(is_string($options)) $options = Selectors::keyValueStringToArray($options);
 
-		$loadOptions = isset($options['loadOptions']) && is_array($options['loadOptions']) ? $options['loadOptions'] : array();
+		$loadOptions = isset($options['loadOptions']) && is_array($options['loadOptions']) ? $options['loadOptions'] : [];
 		$loadPages = array_key_exists('loadPages', $options) ? (bool) $options['loadPages'] : true; 
 		$caller = isset($options['caller']) ? $options['caller'] : 'pages.find';
 		$lazy = empty($options['lazy']) ? false : true;
 		$findIDs = isset($options['findIDs']) ? $options['findIDs'] : false;
 		$debug = $this->debug && !$lazy;
 		$allowShortcuts = $loadPages && !$lazy && (!$findIDs || $findIDs === 4); 
-		$joinFields = isset($options['joinFields']) ? $options['joinFields'] : array();
+		$joinFields = isset($options['joinFields']) ? $options['joinFields'] : [];
 		$cachePages = isset($options['cache']) ? $options['cache'] : true;
 		
 		if($cachePages) {
@@ -356,7 +356,7 @@ class PagesLoader extends Wire {
 			$selectors->init($selector);
 		}
 		
-		if(isset($options['include']) && in_array($options['include'], array('hidden', 'unpublished', 'all'))) {
+		if(isset($options['include']) && in_array($options['include'], ['hidden', 'unpublished', 'all'])) {
 			$selectors->add(new SelectorEqual('include', $options['include']));
 		}
 
@@ -366,7 +366,7 @@ class PagesLoader extends Wire {
 		if(!$lazy && !$findIDs) {
 			$fields = $this->wire()->fields;
 			// support the joinFields option when selector contains 'field=a|b|c' or 'join=a|b|c'
-			foreach(array('field', 'join') as $name) {
+			foreach(['field', 'join'] as $name) {
 				if(strpos($selectorString, "$name=") === false || $fields->get($name)) continue; 
 				foreach($selectors as $selector) {
 					if($selector->field() !== $name) continue;
@@ -376,7 +376,7 @@ class PagesLoader extends Wire {
 			}
 			if(count($joinFields)) {
 				unset($options['include']); // because it was moved into $selectors earlier
-				return $this->findMin($selectors, array_merge($options, array('joinFields' => $joinFields)));
+				return $this->findMin($selectors, array_merge($options, ['joinFields' => $joinFields]));
 			}
 		} 
 		
@@ -390,8 +390,8 @@ class PagesLoader extends Wire {
 		}
 		
 		$pageFinder = $this->pages->getPageFinder();
-		$pagesInfo = array();
-		$pagesIDs = array();
+		$pagesInfo = [];
+		$pagesIDs = [];
 	
 		if($debug) Debug::timer("$caller($selectorString)", true);
 		$profiler = $this->wire()->profiler;
@@ -443,7 +443,7 @@ class PagesLoader extends Wire {
 			$loadPages = false;
 			$cachePages = false;
 			$template = null;
-			$templatesByID = array();
+			$templatesByID = [];
 			$loading = $this->loading;
 
 			if(!$loading) $this->loading = true;
@@ -476,15 +476,15 @@ class PagesLoader extends Wire {
 			// parent_id is null unless a single parent was specified in the selectors
 			$templates = $this->wire()->templates;
 			$parent_id = $pageFinder->getParentID();
-			$idsSorted = array();
-			$idsByTemplate = array();
-			$scores = array();
+			$idsSorted = [];
+			$idsByTemplate = [];
+			$scores = [];
 
 			// organize the pages by template ID
 			foreach($pagesInfo as $page) {
 				$tpl_id = (int) $page['templates_id'];
 				$id = (int) $page['id'];
-				if(!isset($idsByTemplate[$tpl_id])) $idsByTemplate[$tpl_id] = array();
+				if(!isset($idsByTemplate[$tpl_id])) $idsByTemplate[$tpl_id] = [];
 				$idsByTemplate[$tpl_id][] = $id;
 				$idsSorted[] = $id;
 				if(!empty($page['score'])) $scores[$id] = (float) $page['score'];
@@ -570,11 +570,7 @@ class PagesLoader extends Wire {
 		
 		if($profilerEvent) $profiler->stop($profilerEvent);
 
-		if($this->pages->hasHook('found()')) $this->pages->found($pages, array(
-			'pageFinder' => $pageFinder,
-			'pagesInfo' => $pagesInfo,
-			'options' => $options
-		));
+		if($this->pages->hasHook('found()')) $this->pages->found($pages, ['pageFinder' => $pageFinder, 'pagesInfo' => $pagesInfo, 'options' => $options]);
 		
 		if($findIDs) {
 			if($findIDs === 3 || $findIDs === 4) $pagesInfo['pageArray'] = $pages;
@@ -622,19 +618,19 @@ class PagesLoader extends Wire {
 	 * @since 3.0.172
 	 * 
 	 */
-	public function findMin($selector, array $options = array()) {
+	public function findMin($selector, array $options = []) {
 
 		$useCache = isset($options['cache']) ? $options['cache'] : true;
 		$templates = $this->wire()->templates;
 		$languages = $this->wire()->languages;
-		$languageIds = array();
-		$templatesById = array();
-		$tmpAutojoinFields = array(); // fields to autojoin temporarily, just during this method call
+		$languageIds = [];
+		$templatesById = [];
+		$tmpAutojoinFields = []; // fields to autojoin temporarily, just during this method call
 
 		if($languages) foreach($languages as $language) $languageIds[$language->id] = $language->id;
 		
 		$options['findIDs'] = $useCache ? 4 : 3;
-		$joinFields = isset($options['joinFields']) ? $options['joinFields'] : array();
+		$joinFields = isset($options['joinFields']) ? $options['joinFields'] : [];
 		$rows = $this->find($selector, $options);
 		
 		// if PageArray was already available in cache, return it now
@@ -671,14 +667,7 @@ class PagesLoader extends Wire {
 			$sortfield = $template->sortfield;
 			if(empty($sortfield) && isset($row['sortfield'])) $sortfield = $row['sortfield'];
 			
-			$set = array(
-				'pageClass' => $template->getPageClass(),
-				'isLoaded' => false,
-				'id' => $row['id'],
-				'template' => $template,
-				'parent_id' => $row['parent_id'],
-				'sortfield' => $sortfield,
-			);
+			$set = ['pageClass' => $template->getPageClass(), 'isLoaded' => false, 'id' => $row['id'], 'template' => $template, 'parent_id' => $row['parent_id'], 'sortfield' => $sortfield];
 		
 			unset($row['templates_id'], $row['parent_id'], $row['id'], $row['sortfield']);
 			
@@ -771,16 +760,18 @@ class PagesLoader extends Wire {
 	 * @return Page|NullPage
 	 *
 	 */
-	public function findOne($selector, $options = array()) {
+	public function findOne($selector, $options = []) {
 		
 		if(empty($selector)) return $this->pages->newNullPage();
 		if(is_string($options)) $options = Selectors::keyValueStringToArray($options);
 		
-		$defaults = array(
-			'findOne' => true, // find only one page
-			'getTotal' => false, // don't count totals
-			'caller' => 'pages.findOne'
-		);
+		$defaults = [
+      'findOne' => true,
+      // find only one page
+      'getTotal' => false,
+      // don't count totals
+      'caller' => 'pages.findOne',
+  ];
 		
 		$options = array_merge($defaults, $options);
 		$items = $this->pages->find($selector, $options);
@@ -842,7 +833,7 @@ class PagesLoader extends Wire {
 	 * @since 3.0.218
 	 *
 	 */
-	public function findCache($selector, $expire = 60, $options = array()) {
+	public function findCache($selector, $expire = 60, $options = []) {
 
 		$user = $this->wire()->user;
 		$cache = $this->wire()->cache;
@@ -886,7 +877,7 @@ class PagesLoader extends Wire {
 		} else {
 			$ids = null;
 			if(strpos($selectorStr, 'template') !== false && empty($options['template'])) {
-				$info = Selectors::selectorHasField($selectors, array('template', 'templates_id'), array('verbose' => true));
+				$info = Selectors::selectorHasField($selectors, ['template', 'templates_id'], ['verbose' => true]);
 				if($info['result']) $options['template'] = $this->wire()->templates->get($info['value']);
 				echo "template=$options[template]\n";
 			}
@@ -899,11 +890,7 @@ class PagesLoader extends Wire {
 			} else {
 				$ids = $this->pages->findIDs($selectors, $options);
 			}
-			$data = array(
-				'selector' => $selectorStr,
-				'roles' => $rolesStr,
-				'pages' => $ids
-			);
+			$data = ['selector' => $selectorStr, 'roles' => $rolesStr, 'pages' => $ids];
 			$cache->saveFor($ns, $cacheName, $data, $expire);
 			
 		} else if(empty($options['findIDs'])) {
@@ -929,7 +916,7 @@ class PagesLoader extends Wire {
 	 * @return Page|NullPage Always returns a Page object, but will return NullPage (with id=0) when no match found
 	 *
 	 */
-	public function get($selector, $options = array()) {
+	public function get($selector, $options = []) {
 		
 		if(empty($selector)) return $this->pages->newNullPage();
 		
@@ -952,12 +939,15 @@ class PagesLoader extends Wire {
 			}
 		}
 		
-		$defaults = array(
-			'findOne' => true, // find only one page
-			'findAll' => true, // no exclusions
-			'getTotal' => false, // don't count totals
-			'caller' => 'pages.get'
-		);
+		$defaults = [
+      'findOne' => true,
+      // find only one page
+      'findAll' => true,
+      // no exclusions
+      'getTotal' => false,
+      // don't count totals
+      'caller' => 'pages.get',
+  ];
 		
 		$options = count($options) ? array_merge($defaults, $options) : $defaults;
 		$page = $this->pages->find($selector, $options)->first();
@@ -984,18 +974,22 @@ class PagesLoader extends Wire {
 	 * @since 3.0.153
 	 * 
 	 */
-	public function has($selector, $verbose = false, array $options = array()) {
+	public function has($selector, $verbose = false, array $options = []) {
 	
-		$defaults = array(
-			'findOne' => true, // find only one page
-			'findAll' => true, // no exclusions
-			'findIDs' => $verbose ? 2 : 1, // 2=all cols, 1=IDs only
-			'getTotal' => false, // don't count totals
-			'caller' => 'pages.has',
-		);
+		$defaults = [
+      'findOne' => true,
+      // find only one page
+      'findAll' => true,
+      // no exclusions
+      'findIDs' => $verbose ? 2 : 1,
+      // 2=all cols, 1=IDs only
+      'getTotal' => false,
+      // don't count totals
+      'caller' => 'pages.has',
+  ];
 
 		$options = count($options) ? array_merge($defaults, $options) : $defaults;
-		if(empty($selector)) return $verbose ? array() : 0;
+		if(empty($selector)) return $verbose ? [] : 0;
 
 		if((is_string($selector) || is_int($selector)) && !$verbose) {
 			// see if any matching page is already in the cache
@@ -1006,7 +1000,7 @@ class PagesLoader extends Wire {
 		$items = $this->pages->find($selector, $options);
 		
 		if($verbose) {
-			$value = count($items) ? reset($items) : array();
+			$value = count($items) ? reset($items) : [];
 		} else {
 			$value = count($items) ? (int) reset($items) : 0;
 		}
@@ -1057,27 +1051,29 @@ class PagesLoader extends Wire {
 	 */
 	public function getById($_ids, $template = null, $parent_id = null) {
 
-		$options = array(
-			'cache' => true,
-			'getFromCache' => true,
-			'template' => null,
-			'parent_id' => null,
-			'getNumChildren' => true,
-			'getOne' => false,
-			'autojoin' => true,
-			'findTemplates' => true,
-			'joinSortfield' => true,
-			'joinFields' => array(),
-			'page' => null, 
-			'pageClass' => '',  // blank = auto detect
-			'pageArray' => null, // PageArray to populate to
-			'pageArrayClass' => 'PageArray',
-			'caller' => '', 
-		);
+		$options = [
+      'cache' => true,
+      'getFromCache' => true,
+      'template' => null,
+      'parent_id' => null,
+      'getNumChildren' => true,
+      'getOne' => false,
+      'autojoin' => true,
+      'findTemplates' => true,
+      'joinSortfield' => true,
+      'joinFields' => [],
+      'page' => null,
+      'pageClass' => '',
+      // blank = auto detect
+      'pageArray' => null,
+      // PageArray to populate to
+      'pageArrayClass' => 'PageArray',
+      'caller' => '',
+  ];
 	
 		$templates = $this->wire()->templates;
 		$database = $this->wire()->database;
-		$idsByTemplate = array();
+		$idsByTemplate = [];
 		$loading = $this->loading;
 
 		if(is_array($template)) {
@@ -1104,16 +1100,16 @@ class PagesLoader extends Wire {
 			// convert string of IDs to array
 			$_ids = trim($_ids, '|, ');
 			if(ctype_digit($_ids)) {
-				$_ids = array((int) $_ids); // single ID: "123"
+				$_ids = [(int) $_ids]; // single ID: "123"
 			} else if(strpos($_ids, '|')) {
 				$_ids = explode('|', $_ids); // pipe-separated IDs: "123|456|789"
 			} else if(strpos($_ids, ',')) {
 				$_ids = explode(',', $_ids); // comma-separated IDs: "123,456,789"
 			} else {
-				$_ids = array(); // unrecognized ID string: fail
+				$_ids = []; // unrecognized ID string: fail
 			}
 		} else if(is_int($_ids)) {
-			$_ids = array($_ids);
+			$_ids = [$_ids];
 		}
 
 		if(!WireArray::iterable($_ids) || !count($_ids)) {
@@ -1123,8 +1119,8 @@ class PagesLoader extends Wire {
 
 		if(is_object($_ids)) $_ids = $_ids->getArray(); // ArrayObject or the like
 
-		$loaded = array(); // array of id => Page objects that have been loaded
-		$ids = array(); // sanitized version of $_ids
+		$loaded = []; // array of id => Page objects that have been loaded
+		$ids = []; // sanitized version of $_ids
 
 		// sanitize ids and determine which pages we can pull from cache
 		foreach($_ids as $key => $id) {
@@ -1135,7 +1131,7 @@ class PagesLoader extends Wire {
 					$tid = isset($id['templates_id']) ? (int) $id['templates_id'] : 0;
 					$id = (int) $id['id'];
 					if($tid) {
-						if(!isset($idsByTemplate[$tid])) $idsByTemplate[$tid] = array();
+						if(!isset($idsByTemplate[$tid])) $idsByTemplate[$tid] = [];
 						$idsByTemplate[$tid][] = $id;
 					}
 				} else {
@@ -1220,7 +1216,7 @@ class PagesLoader extends Wire {
 					list($id, $templates_id) = $row;
 					$id = (int) $id;
 					$templates_id = (int) $templates_id;
-					if(!isset($idsByTemplate[$templates_id])) $idsByTemplate[$templates_id] = array();
+					if(!isset($idsByTemplate[$templates_id])) $idsByTemplate[$templates_id] = [];
 					$idsByTemplate[$templates_id][] = $id;
 				}
 			}
@@ -1228,11 +1224,11 @@ class PagesLoader extends Wire {
 
 		} else if($template === null) {
 			// no template provided, and autojoin not needed (so we don't need to know template)
-			$idsByTemplate = array(0 => $ids);
+			$idsByTemplate = [0 => $ids];
 
 		} else {
 			// template was provided
-			$idsByTemplate = array($template->id => $ids);
+			$idsByTemplate = [$template->id => $ids];
 		}
 
 		foreach($idsByTemplate as $templates_id => $ids) {
@@ -1328,11 +1324,7 @@ class PagesLoader extends Wire {
 						// create new Page object
 						$pageTemplate = $template ?: $templates->get((int) $row['templates_id']); 
 						$pageClass = empty($options['pageClass']) && $pageTemplate ? $pageTemplate->getPageClass() : $class; 
-						$page = $this->pages->newPage(array(
-							'pageClass' => $pageClass,
-							'template' => $pageTemplate ?: $row['templates_id'],
-							'parent' => $row['parent_id'], 
-						));
+						$page = $this->pages->newPage(['pageClass' => $pageClass, 'template' => $pageTemplate ?: $row['templates_id'], 'parent' => $row['parent_id']]);
 					}
 					unset($row['templates_id'], $row['parent_id']);
 					$page->loaderCache = $options['cache'];
@@ -1415,40 +1407,23 @@ class PagesLoader extends Wire {
 	 * @return array|NullPage|Page|PageArray
 	 * 
 	 */
-	public function findByName($name, array $options = array()) {
+	public function findByName($name, array $options = []) {
 		
-		$defaults = array(
-			'parent' => 0, 
-			'parentName' => '',
-			'getArray' => false,
-			'getOne' => false,
-		);
+		$defaults = ['parent' => 0, 'parentName' => '', 'getArray' => false, 'getOne' => false];
 		
 		$options = array_merge($defaults, $options);
 		$getArray = $options['getArray'];
 		$getOne = $options['getOne'];
 		
-		$blankRow = array(
-			'id' => 0,
-			'templates_id' => 0,
-			'parent_id' => 0,
-		);
+		$blankRow = ['id' => 0, 'templates_id' => 0, 'parent_id' => 0];
 		
-		$joins = array();
+		$joins = [];
 		
-		$selects = array(
-			'pages.id',
-			'pages.parent_id',
-			'pages.templates_id',
-		);
+		$selects = ['pages.id', 'pages.parent_id', 'pages.templates_id'];
 		
-		$wheres = array(
-			'pages.name=:name',
-		);
+		$wheres = ['pages.name=:name'];
 		
-		$binds = array(
-			'name' => $name,
-		);
+		$binds = ['name' => $name];
 		
 		if($options['parent']) {
 			$wheres[] = 'pages.parent_id=:parentId';
@@ -1474,7 +1449,7 @@ class PagesLoader extends Wire {
 		
 		$query->execute();
 		$rowCount = (int) $query->rowCount();
-		$rows = array();
+		$rows = [];
 		
 		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
 			$rows[] = $row;
@@ -1492,12 +1467,12 @@ class PagesLoader extends Wire {
 			if($getOne) {
 				return $getArray ? $blankRow : $this->pages->newNullPage();
 			} else {
-				return $getArray ? array() : $this->pages->newPageArray();
+				return $getArray ? [] : $this->pages->newPageArray();
 			}
 		} else if($rowCount === 1) {
 			// one row matched
 			if($getOne) {
-				return $getArray ? reset($rows) : $this->pages->getByIDs($rows, array('getOne' => true));
+				return $getArray ? reset($rows) : $this->pages->getByIDs($rows, ['getOne' => true]);
 			} else {
 				return $getArray ? $rows : $this->pages->getByIDs($rows);
 			}
@@ -1533,23 +1508,19 @@ class PagesLoader extends Wire {
 	 * @return string Path to page or blank on error/not-found
 	 *
 	 */
-	public function getPath($id, $options = array()) {
+	public function getPath($id, $options = []) {
 		
 		$modules = $this->wire()->modules;
 		$database = $this->wire()->database;
 		$languages = $this->wire()->languages;
 		$config = $this->wire()->config;
 
-		$defaults = array(
-			'language' => null,
-			'useCache' => true,
-			'usePagePaths' => true
-		);
+		$defaults = ['language' => null, 'useCache' => true, 'usePagePaths' => true];
 
 		if(!is_array($options)) {
 			// language was specified rather than $options
 			$defaults['language'] = $options;
-			$options = array();
+			$options = [];
 		}
 
 		$options = array_merge($defaults, $options);
@@ -1671,26 +1642,18 @@ class PagesLoader extends Wire {
 	 * @see PagesPathFinder::get(), PagesPathFinder::getPage()
 	 *
 	 */
-	public function getByPath($path, $options = array()) {
+	public function getByPath($path, $options = []) {
 
 		$modules = $this->wire()->modules;
 		$sanitizer = $this->wire()->sanitizer;
 		$config = $this->wire()->config;
 		$database = $this->wire()->database;
 
-		$defaults = array(
-			'getID' => false,
-			'useLanguages' => false,
-			'useHistory' => false,
-			'allowUrl' => true,
-			'allowPartial' => true,
-			'allowUrlSegments' => false,
-			'_isRecursive' => false,
-		);
+		$defaults = ['getID' => false, 'useLanguages' => false, 'useHistory' => false, 'allowUrl' => true, 'allowPartial' => true, 'allowUrlSegments' => false, '_isRecursive' => false];
 
 		if(!is_array($options)) {
 			$defaults['useLanguages'] = (bool) $options;
-			$options = array();
+			$options = [];
 		}
 		
 		$options = array_merge($defaults, $options);
@@ -1721,7 +1684,7 @@ class PagesLoader extends Wire {
 
 		if($path === '/') {
 			// this can only be homepage
-			return $options['getID'] ? $homepageID : $this->getById($homepageID, array('getOne' => true));
+			return $options['getID'] ? $homepageID : $this->getById($homepageID, ['getOne' => true]);
 		} else if(empty($path)) {
 			// path is empty and cannot match anything
 			return $options['getID'] ? 0 : $this->pages->newNullPage();
@@ -1735,7 +1698,7 @@ class PagesLoader extends Wire {
 		$languages = $options['useLanguages'] ? $this->wire()->languages : null;
 		if($languages && !$languages->hasPageNames()) $languages = null;
 
-		$langKeys = array(':name' => 'name');
+		$langKeys = [':name' => 'name'];
 		if($languages) {
 			foreach($languages as $language) {
 				if($language->isDefault()) continue;
@@ -1752,8 +1715,8 @@ class PagesLoader extends Wire {
 			// first see if we can find a single page just having the name that's the last path part
 			// this is an optimization if the page name happens to be globally unique in the system, which is often the case
 			$name = end($pathParts);
-			$binds = array(':name' => $name);
-			$wheres = array();
+			$binds = [':name' => $name];
+			$wheres = [];
 			$numParts = count($pathParts);
 
 			// can match 'name' or 'name123' cols where 123 is language ID
@@ -1792,9 +1755,9 @@ class PagesLoader extends Wire {
 		if(!$pageID) {
 			// multiple pages have the name or partial path match is not allowed
 			// build a query joining all the path parts
-			$joins = array();
-			$wheres = array();
-			$binds = array();
+			$joins = [];
+			$wheres = [];
+			$binds = [];
 			$n = 0;
 			$lastAlias = "pages";
 			$lastPart = array_pop($pathParts);
@@ -1803,7 +1766,7 @@ class PagesLoader extends Wire {
 				$n++;
 				$alias = "_pages$n";
 				$part = array_pop($pathParts);
-				$whereORs = array();
+				$whereORs = [];
 				foreach($langKeys as $bindKey => $colName) {
 					$bindKey .= "_$n";
 					$whereORs[] = "$alias.$colName=$bindKey";
@@ -1819,7 +1782,7 @@ class PagesLoader extends Wire {
 			// there were no pathParts, so we are matching just a rootParent
 			if($isRootParent) $wheres[] = "pages.parent_id=1";
 
-			$whereORs = array();
+			$whereORs = [];
 			foreach($langKeys as $bindKey => $colName) {
 				$whereORs[] = "pages.$colName=$bindKey";
 				$binds[$bindKey] = $lastPart;
@@ -1844,23 +1807,20 @@ class PagesLoader extends Wire {
 			} else if($rowCount > 1 && $isRootParent) {
 				// multiple pages matched off root
 				// use either 'default' language match or first matching language
-				$rows = array();
+				$rows = [];
 				while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
 					$rows[] = $row;
 					if($row['name'] !== $lastPart) continue;
-					$rows = array($row); // force use of only this row (default language)
+					$rows = [$row]; // force use of only this row (default language)
 					break;
 				}
 				$row = reset($rows);
-				list($pageID, $templatesID, $parentID) = array($row['id'], $row['templates_id'], $row['parent_id']); 
+				list($pageID, $templatesID, $parentID) = [$row['id'], $row['templates_id'], $row['parent_id']]; 
 				
 			} else if($rowCount > 1) {
 				// multiple pages matched somewhere in site, we need a stronger tool (pagesPathFinder)
 				$pathFinder = $this->pages->pathFinder();
-				$info = $pathFinder->get($_path, array(
-					'useLanguages' => $options['useLanguages'], 
-					'useHistory' => $options['useHistory'], 
-				));
+				$info = $pathFinder->get($_path, ['useLanguages' => $options['useLanguages'], 'useHistory' => $options['useHistory']]);
 				if(!empty($info['page']['id'])) {
 					// pathFinder found a match
 					if(count($info['urlSegments']) && !$options['allowUrlSegments']) {
@@ -1891,13 +1851,8 @@ class PagesLoader extends Wire {
 		if(!$pageID && $options['allowUrlSegments'] && !$options['_isRecursive'] && count($_pathParts)) {
 			// attempt to match parent pages that allow URL segments
 			$pathParts = $_pathParts;
-			$urlSegments = array();
-			$recursiveOptions = array_merge($options, array(
-				'getID' => false,
-				'allowUrlSegments' => false,
-				'allowPartial' => false,
-				'_isRecursive' => true
-			));
+			$urlSegments = [];
+			$recursiveOptions = array_merge($options, ['getID' => false, 'allowUrlSegments' => false, 'allowPartial' => false, '_isRecursive' => true]);
 
 			do {
 				$urlSegment = array_pop($pathParts);
@@ -1922,11 +1877,7 @@ class PagesLoader extends Wire {
 		if($options['getID']) return (int) $pageID;
 		if(!$pageID) return $this->pages->newNullPage();
 
-		return $this->getById((int) $pageID, array(
-			'template' => $templatesID ? $this->wire()->templates->get((int) $templatesID) : null,
-			'parent_id' => (int) $parentID,
-			'getOne' => true
-		));
+		return $this->getById((int) $pageID, ['template' => $templatesID ? $this->wire()->templates->get((int) $templatesID) : null, 'parent_id' => (int) $parentID, 'getOne' => true]);
 	}
 
 	/**
@@ -1955,9 +1906,9 @@ class PagesLoader extends Wire {
 	 * @since 3.0.172
 	 *
 	 */
-	public function getFresh($selectorOrPage, $options = array()) {
+	public function getFresh($selectorOrPage, $options = []) {
 		if(!isset($options['cache'])) $options['cache'] = false;
-		if(!isset($options['loadOptions'])) $options['loadOptions'] = array();
+		if(!isset($options['loadOptions'])) $options['loadOptions'] = [];
 		if(!isset($options['caller'])) $options['caller'] = 'pages.loader.getFresh';
 		$options['loadOptions']['getFromCache'] = false;
 		if(!isset($options['loadOptions']['cache'])) $options['loadOptions']['cache'] = false;
@@ -1993,7 +1944,7 @@ class PagesLoader extends Wire {
 	 * @return int
 	 *
 	 */
-	public function count($selector = '', $options = array()) {
+	public function count($selector = '', $options = []) {
 		if(is_string($options)) $options = Selectors::keyValueStringToArray($options);
 		if(empty($selector)) {
 			if(empty($options)) {
@@ -2034,7 +1985,7 @@ class PagesLoader extends Wire {
 	 * @return PageArray
 	 *
 	 */
-	protected function filterListable(PageArray $items, $includeMode = '', array $options = array()) {
+	protected function filterListable(PageArray $items, $includeMode = '', array $options = []) {
 		if($includeMode === 'all') return $items;
 		$itemsAllowed = $this->pages->newPageArray($options);
 		foreach($items as $item) {

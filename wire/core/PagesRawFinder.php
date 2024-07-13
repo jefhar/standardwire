@@ -16,20 +16,13 @@ class PagesRawFinder extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * @var array
 	 * 
 	 */
-	protected $defaults = array(
-		'indexed' => true,
-		'objects' => false, 
-		'entities' => false,
-		'nulls' => false,
-		'findOne' => false,
-		'flat' => false,
-	);
+	protected $defaults = ['indexed' => true, 'objects' => false, 'entities' => false, 'nulls' => false, 'findOne' => false, 'flat' => false];
 
 	/**
 	 * @var string|array|Selectors
@@ -47,43 +40,43 @@ class PagesRawFinder extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $requestFields = array();
+	protected $requestFields = [];
 
 	/**
 	 * @var array
 	 * 
 	 */
-	protected $nativeFields = array();
+	protected $nativeFields = [];
 	
 	/**
 	 * @var array
 	 * 
 	 */
-	protected $parentFields = array();
+	protected $parentFields = [];
 
 	/**
 	 * @var array
 	 * 
 	 */
-	protected $childrenFields = array();
+	protected $childrenFields = [];
 	
 	/**
 	 * @var array
 	 *
 	 */
-	protected $templateFields = array();
+	protected $templateFields = [];
 
 	/**
 	 * @var array
 	 *
 	 */
-	protected $customFields = array();
+	protected $customFields = [];
 
 	/**
 	 * @var array
 	 * 
 	 */
-	protected $runtimeFields = array();
+	protected $runtimeFields = [];
 
 	/**
 	 * Fields to rename in returned value, i.e. [ 'title' => 'label' ]
@@ -91,7 +84,7 @@ class PagesRawFinder extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $renameFields = array();
+	protected $renameFields = [];
 
 	/**
 	 * Temporary fields set to $this->value that should be unset from return value
@@ -99,13 +92,13 @@ class PagesRawFinder extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $unsetFields = array();
+	protected $unsetFields = [];
 
 	/**
 	 * @var array
 	 *
 	 */
-	protected $customCols = array();
+	protected $customCols = [];
 
 	/**
 	 * Columns requested as fieldName.col rather than fieldName[col]
@@ -115,7 +108,7 @@ class PagesRawFinder extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $customDotCols = array();
+	protected $customDotCols = [];
 
 	/**
 	 * Results of the raw find
@@ -123,7 +116,7 @@ class PagesRawFinder extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $values = array();
+	protected $values = [];
 
 	/**
 	 * True to return array indexed by field name for each page, false to return single value for each page
@@ -181,11 +174,11 @@ class PagesRawFinder extends Wire {
 
 		$this->selector = $selector;
 		$this->options = array_merge($this->defaults, $options);
-		$this->values = array();
-		$this->requestFields = array();
-		$this->customFields = array();
-		$this->nativeFields = array();
-		$this->customCols = array();
+		$this->values = [];
+		$this->requestFields = [];
+		$this->customFields = [];
+		$this->nativeFields = [];
+		$this->customCols = [];
 		$this->getMultiple = true;
 		$this->getAll = false;
 		$this->ids = null;
@@ -200,7 +193,7 @@ class PagesRawFinder extends Wire {
 		
 		if(empty($field) && !$this->selectorIsPageIDs) {
 			// check if field specified in selector instead
-			$field = array();
+			$field = [];
 			$multi = false;
 			if(!$selector instanceof Selectors) {
 				$selector = new Selectors($selector); 
@@ -238,13 +231,13 @@ class PagesRawFinder extends Wire {
 			
 		} else if(is_array($field)) {
 			// one or more fields requested in array, we will return an array for each page
-			$this->requestFields = array();
-			$this->renameFields = array();
+			$this->requestFields = [];
+			$this->renameFields = [];
 			$this->processRequestFieldsArray($field);
 			
 		} else {
 			// one field requested in string or Field object
-			$this->requestFields = array($field);
+			$this->requestFields = [$field];
 			$this->getMultiple = false;
 		}
 
@@ -260,23 +253,19 @@ class PagesRawFinder extends Wire {
 		}
 		
 		// detect options in selector
-		$optionsValues = array();
-		foreach(array('objects', 'entities', 'flat', 'nulls', 'options') as $name) {
+		$optionsValues = [];
+		foreach(['objects', 'entities', 'flat', 'nulls', 'options'] as $name) {
 			if($this->selectorIsPageIDs) continue;
 			if($selectorString && strpos($selectorString, "$name=") === false) continue;
 			if($fields->get($name)) continue; // if maps to a real field then ignore
-			$result = Selectors::selectorHasField($this->selector, $name, array(
-				'operator' => '=',
-				'verbose' => true,
-				'remove' => true,
-			));
+			$result = Selectors::selectorHasField($this->selector, $name, ['operator' => '=', 'verbose' => true, 'remove' => true]);
 			$value = $result['value'];
 			if($result['result'] && $value && !isset($options[$name])) {
 				if($name === 'options') {
 					if(is_string($value)) $optionsValues[] = $value;
 					if(is_array($value)) $optionsValues = array_merge($optionsValues, $value);
 				} else if(is_array($value)) {
-					$this->options[$name] = array();
+					$this->options[$name] = [];
 					foreach($value as $v) $this->options[$name][$v] = $v;
 				} else if(!ctype_digit("$value")) {
 					$this->options[$name] = $value; 
@@ -286,7 +275,7 @@ class PagesRawFinder extends Wire {
 			}
 			if(!empty($result['selectors'])) $this->selector = $result['selectors'];
 		}
-		foreach(array('objects', 'entities', 'flat') as $name) {
+		foreach(['objects', 'entities', 'flat'] as $name) {
 			if(in_array($name, $optionsValues)) $this->options[$name] = true;
 		}
 	}
@@ -319,7 +308,7 @@ class PagesRawFinder extends Wire {
 	 * @since 3.0.172
 	 *
 	 */
-	public function find($selector, $field = '', $options = array()) {
+	public function find($selector, $field = '', $options = []) {
 		
 		static $level = 0;
 		$level++;
@@ -425,8 +414,8 @@ class PagesRawFinder extends Wire {
 	protected function splitFields() {
 		
 		$fields = $this->wire()->fields;
-		$fails = array();
-		$runtimeNames = array('meta', 'references');
+		$fails = [];
+		$runtimeNames = ['meta', 'references'];
 
 		// split request fields into custom fields and native (pages table) fields
 		foreach($this->requestFields as $key => $fieldName) {
@@ -513,12 +502,12 @@ class PagesRawFinder extends Wire {
 			} else if($fieldObject instanceof Field) {
 				$this->customFields[$fieldName] = $fieldObject;
 				if(!empty($colName)) {
-					$colNames = is_array($colName) ? $colName : array($colName);
+					$colNames = is_array($colName) ? $colName : [$colName];
 					foreach($colNames as $col) {
-						if(!isset($this->customCols[$fieldName])) $this->customCols[$fieldName] = array();
+						if(!isset($this->customCols[$fieldName])) $this->customCols[$fieldName] = [];
 						$this->customCols[$fieldName][$col] = $col;
 						if($dotCol) {
-							if(!isset($this->customDotCols[$fieldName])) $this->customDotCols[$fieldName] = array();
+							if(!isset($this->customDotCols[$fieldName])) $this->customDotCols[$fieldName] = [];
 							$this->customDotCols[$fieldName][$col] = $col;
 						}
 					}
@@ -537,12 +526,12 @@ class PagesRawFinder extends Wire {
 	 */
 	protected function findNativeFields() {
 		
-		$this->ids = array();
-		$allNatives = array();
-		$fails = array();
+		$this->ids = [];
+		$allNatives = [];
+		$fails = [];
 		$rootUrl = $this->wire()->config->urls->root;
 		$templates = $this->wire()->templates;
-		$templatesById = array();
+		$templatesById = [];
 		$getPaths = $this->getPaths;
 		
 		if(empty($this->selector)) return;
@@ -563,7 +552,7 @@ class PagesRawFinder extends Wire {
 		if($this->getAll) $this->nativeFields = $allNatives;
 		
 		// native columns we will populate into $values
-		$getNatives = array();
+		$getNatives = [];
 
 		foreach($this->nativeFields as $fieldName) {
 			if($fieldName === '*' || $fieldName === 'pages' || $fieldName === 'pages.*') {
@@ -632,7 +621,7 @@ class PagesRawFinder extends Wire {
 			if(!count($this->ids)) return;
 			foreach($this->customFields as $fieldName => $field) {
 				/** @var Field $field */
-				$cols = isset($this->customCols[$fieldName]) ? $this->customCols[$fieldName] : array();
+				$cols = isset($this->customCols[$fieldName]) ? $this->customCols[$fieldName] : [];
 				$this->findCustomField($field, $cols);
 			}
 		} else if($this->getAll && !empty($this->ids)) {
@@ -653,12 +642,12 @@ class PagesRawFinder extends Wire {
 		$database = $this->wire()->database;
 		$sanitizer = $this->wire()->sanitizer;
 		$getArray = true;
-		$getCols = array();
-		$skipCols = array();
+		$getCols = [];
+		$skipCols = [];
 		$getAllCols = false;
 		$getExternal = false; // true when request includes columns not in field’s DB schema
-		$pageRefCols = array();
-		$externalCols = array(); // columns that are external from field’s DB schema
+		$pageRefCols = [];
+		$externalCols = []; // columns that are external from field’s DB schema
 
 		/** @var FieldtypeMulti $fieldtypeMulti */
 		$fieldtype = $field->type;
@@ -668,15 +657,15 @@ class PagesRawFinder extends Wire {
 		
 		$fieldName = $field->name;
 		$schema = $fieldtype->getDatabaseSchema($field);
-		$schema = $fieldtype->trimDatabaseSchema($schema, array('trimDefault' => false));
+		$schema = $fieldtype->trimDatabaseSchema($schema, ['trimDefault' => false]);
 		$table = $database->escapeTable($field->getTable());
-		$sorts = array();
+		$sorts = [];
 
 		if(empty($table) || empty($schema) || $fieldtype instanceof FieldtypeFieldsetOpen) return;
 
 		if(empty($cols)) { 
 			// no cols specified
-			$trimSchema = $fieldtype->trimDatabaseSchema($schema, array('trimDefault' => true, 'trimMeta' => true));
+			$trimSchema = $fieldtype->trimDatabaseSchema($schema, ['trimDefault' => true, 'trimMeta' => true]);
 			unset($trimSchema['data']); 
 			foreach($trimSchema as $key => $value) {
 				// multi-language columns do not count as custom schema
@@ -743,7 +732,7 @@ class PagesRawFinder extends Wire {
 		$colSQL = $getAllCols ? '*' : '`' . implode('`,`', $getCols) . '`';
 		if(!$getAllCols && !in_array('pages_id', $getCols)) $colSQL .= ',`pages_id`';
 		
-		$orderby = array();
+		$orderby = [];
 		if(!count($this->nativeFields)) $orderby[] = "FIELD(pages_id, $idsCSV)";
 		if(count($sorts)) $orderby[] = implode(',', $sorts);
 		
@@ -766,7 +755,7 @@ class PagesRawFinder extends Wire {
 			if($getAllCols) {
 				$value = $row;
 			} else if($getArray) {
-				$value = array();
+				$value = [];
 				foreach($getCols as $col) {
 					$value[$col] = isset($row[$col]) ? $row[$col] : null;
 				}
@@ -778,7 +767,7 @@ class PagesRawFinder extends Wire {
 			
 			if(!isset($this->values[$id])) {
 				// Overall page placeholder array
-				$this->values[$id] = array();
+				$this->values[$id] = [];
 			}
 		
 			if($fieldtypeMulti) {
@@ -786,7 +775,7 @@ class PagesRawFinder extends Wire {
 
 				/** @var FieldtypeMulti $fieldtype */
 				if(!isset($this->values[$id][$fieldName])) {
-					$this->values[$id][$fieldName] = array();
+					$this->values[$id][$fieldName] = [];
 				}
 
 				if($fieldtypePage && count($pageRefCols)) {
@@ -870,7 +859,7 @@ class PagesRawFinder extends Wire {
 					unset($a['sort']);
 					$this->values[$pageId][$fieldName][$key] = $a;
 				} else if($getArray) {
-					$this->values[$pageId][$fieldName][$key] = array();
+					$this->values[$pageId][$fieldName][$key] = [];
 					foreach($cols as $colName) {
 						$value = $option->get($colName);
 						if(!is_string($value) && !is_int($value)) $value = null;
@@ -893,7 +882,7 @@ class PagesRawFinder extends Wire {
 	 * 
 	 */
 	protected function findCustomFieldtypePage(Field $field, $fieldName, array $pageRefCols) {
-		$pageRefIds = array();
+		$pageRefIds = [];
 		foreach($this->values as /* $pageId => */ $row) {
 			if(!isset($row[$fieldName])) continue;
 			$pageRefIds = array_merge($pageRefIds, $row[$fieldName]);
@@ -929,13 +918,13 @@ class PagesRawFinder extends Wire {
 	 */
 	protected function findCustomAll() {
 
-		$idsByTemplate = array();
+		$idsByTemplate = [];
 
 		foreach($this->ids() as $id) {
 			if(!isset($this->values[$id])) continue;
 			$row = $this->values[$id];
 			$templateId = $row['templates_id'];
-			if(!isset($idsByTemplate[$templateId])) $idsByTemplate[$templateId] = array();
+			if(!isset($idsByTemplate[$templateId])) $idsByTemplate[$templateId] = [];
 			$idsByTemplate[$templateId][$id] = $id;
 		}
 
@@ -943,7 +932,7 @@ class PagesRawFinder extends Wire {
 			$template = $this->wire()->templates->get($templateId);
 			if(!$template) continue;
 			foreach($template->fieldgroup as $field) {
-				$this->findCustomField($field, array());
+				$this->findCustomField($field, []);
 			}
 		}
 	}
@@ -956,11 +945,11 @@ class PagesRawFinder extends Wire {
 	 */
 	protected function findParent() {
 		
-		$ids = array();
+		$ids = [];
 		
 		foreach($this->values as $pageId => $data) {
 			$parentId = $data['parent_id'];
-			if(!isset($ids[$parentId])) $ids[$parentId] = array();
+			if(!isset($ids[$parentId])) $ids[$parentId] = [];
 			$ids[$parentId][] = $pageId;
 		}
 		
@@ -993,8 +982,8 @@ class PagesRawFinder extends Wire {
 
 		$templates = $this->wire()->templates;
 		$templateFields = $this->templateFields;
-		$templateData = array();
-		$templateIds = array();
+		$templateData = [];
+		$templateIds = [];
 
 		foreach($this->values as /* $pageId => */ $data) {
 			$templateId = $data['templates_id'];
@@ -1003,7 +992,7 @@ class PagesRawFinder extends Wire {
 
 		foreach($templateIds as $templateId) {
 			$template = $templates->get($templateId);
-			$templateData[$templateId] = array();
+			$templateData[$templateId] = [];
 			foreach($templateFields as /* $fullName => */ $colName) {
 				if(empty($colName)) $colName = 'name';
 				$value = $template->get($colName);
@@ -1033,7 +1022,7 @@ class PagesRawFinder extends Wire {
 	 */
 	protected function findRuntime() {
 
-		$runtimeFields = array();
+		$runtimeFields = [];
 		$fieldNames = $this->runtimeFields;
 
 		unset($fieldNames['url'], $fieldNames['path']);
@@ -1047,7 +1036,7 @@ class PagesRawFinder extends Wire {
 		foreach($fieldNames as $fieldName) {
 			$colName = '';
 			if(strpos($fieldName, '.')) list($fieldName, $colName) = explode('.', $fieldName, 2);
-			if(!isset($runtimeFields[$fieldName])) $runtimeFields[$fieldName] = array();
+			if(!isset($runtimeFields[$fieldName])) $runtimeFields[$fieldName] = [];
 			if($colName) $runtimeFields[$fieldName][] = $colName;
 		}
 
@@ -1073,7 +1062,7 @@ class PagesRawFinder extends Wire {
 		$this->ids(true);
 
 		$getAll = $this->getAll || in_array('*', $names, true) || empty($names);
-		if($getAll) $names = array();
+		if($getAll) $names = [];
 
 		$sql = "SELECT source_id, name, data FROM pages_meta WHERE source_id IN($this->ids)";
 		$query = $this->wire()->database->prepare($sql);
@@ -1083,12 +1072,12 @@ class PagesRawFinder extends Wire {
 			$id = (int) $row['source_id'];
 			$name = $row['name'];
 			$data = json_decode($row['data'], true);
-			if(!isset($this->values[$id]['meta'])) $this->values[$id]['meta'] = array();
+			if(!isset($this->values[$id]['meta'])) $this->values[$id]['meta'] = [];
 			if($getAll || in_array($name, $names, true)) $this->values[$id]['meta'][$name] = $data;
 		}
 		
 		foreach(array_keys($this->values) as $id) {
-			if(!isset($this->values[$id]['meta'])) $this->values[$id]['meta'] = array();
+			if(!isset($this->values[$id]['meta'])) $this->values[$id]['meta'] = [];
 		}
 
 		$query->closeCursor();
@@ -1110,7 +1099,7 @@ class PagesRawFinder extends Wire {
 	protected function findReferences(array $colNames) {
 		
 		$database = $this->wire()->database;
-		$pageFields = array();
+		$pageFields = [];
 		
 		if(empty($this->ids)) return;
 		
@@ -1121,7 +1110,7 @@ class PagesRawFinder extends Wire {
 		if(empty($pageFields)) return;
 		
 		foreach($this->values as $id => $data) {
-			$this->values[$id]['references'] = array();
+			$this->values[$id]['references'] = [];
 		}
 
 		$showField = array_search('field', $colNames);
@@ -1131,8 +1120,8 @@ class PagesRawFinder extends Wire {
 		}
 
 		$this->ids(true);
-		$fromPageIds = array();
-		$findPageIds = array();
+		$fromPageIds = [];
+		$findPageIds = [];
 		
 		foreach($pageFields as $pageField) {
 			$fieldName = $pageField->name;
@@ -1146,8 +1135,8 @@ class PagesRawFinder extends Wire {
 			while($row = $query->fetch(\PDO::FETCH_NUM)) {
 				$fromPageId = (int) $row[0]; // pages_id
 				$toPageId = (int) $row[1]; // data
-				if(!isset($fromPageIds[$toPageId])) $fromPageIds[$toPageId] = array();
-				if(!isset($fromPageIds[$toPageId][$fieldName])) $fromPageIds[$toPageId][$fieldName] = array();
+				if(!isset($fromPageIds[$toPageId])) $fromPageIds[$toPageId] = [];
+				if(!isset($fromPageIds[$toPageId][$fieldName])) $fromPageIds[$toPageId][$fieldName] = [];
 				$fromPageIds[$toPageId][$fieldName][] = $fromPageId;
 				$findPageIds[] = $fromPageId;
 			}
@@ -1164,7 +1153,7 @@ class PagesRawFinder extends Wire {
 				if($showField) {
 					$references = $fromPageIds[$toPageId];
 				} else {
-					$references = array();
+					$references = [];
 					foreach($fromPageIds[$toPageId] as /* $fieldName => */ $ids) {
 						$references = array_merge($references, $ids);
 					}
@@ -1191,7 +1180,7 @@ class PagesRawFinder extends Wire {
 					$row = $rows[$fromId];
 					if($showField) {
 						if(!isset($this->values[$toPageId]['references'][$fieldName])) {
-							$this->values[$toPageId]['references'][$fieldName] = array();
+							$this->values[$toPageId]['references'][$fieldName] = [];
 						}
 						if($this->options['indexed']) {
 							$this->values[$toPageId]['references'][$fieldName][$fromId] = $row;
@@ -1220,7 +1209,7 @@ class PagesRawFinder extends Wire {
 	 * @throws WireException
 	 * 
 	 */
-	protected function findIDs($selector, $verbose, array $options = array()) {
+	protected function findIDs($selector, $verbose, array $options = []) {
 		
 		$options = array_merge($this->options, $options); 
 		$options['verbose'] = $verbose;
@@ -1230,7 +1219,7 @@ class PagesRawFinder extends Wire {
 		// if selector was just a page ID, return it in an id indexed array
 		if(is_int($selector) || (is_string($selector) && ctype_digit($selector))) {
 			$id = (int) $selector;
-			return array($id => $id); 
+			return [$id => $id]; 
 		}
 
 		// if selector is not array of page IDs then let pages.findIDs handle it
@@ -1243,7 +1232,7 @@ class PagesRawFinder extends Wire {
 		if(empty($verbose)) {
 			// if selector already has what is needed and verbose data not needed,
 			// then return it now, but make sure it is indexed by ID first
-			$a = array();
+			$a = [];
 			foreach($selector as $id) $a[(int) $id] = (int) $id;
 			return $a;
 		}
@@ -1251,16 +1240,16 @@ class PagesRawFinder extends Wire {
 		// convert selector to CSV string of page IDs
 		$selector = implode(',', array_map('intval', $selector));
 		
-		$selects = array();
-		$joins = array();
-		$wheres = array("id IN($selector)");
+		$selects = [];
+		$joins = [];
+		$wheres = ["id IN($selector)"];
 		
 		if($verbose === '*') {
 			// get all columns
 			$selects[] = 'pages.*';
 		} else {
 			// get just base columns
-			$selects = array('pages.id', 'pages.templates_id', 'pages.parent_id'); 
+			$selects = ['pages.id', 'pages.templates_id', 'pages.parent_id']; 
 		}
 		
 		if($this->getPaths) {
@@ -1276,7 +1265,7 @@ class PagesRawFinder extends Wire {
 		
 		$query = $this->wire()->database->prepare($sql);
 		$query->execute();
-		$rows = array();
+		$rows = [];
 		
 		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
 			$id = (int) $row['id'];
@@ -1366,7 +1355,7 @@ class PagesRawFinder extends Wire {
 	 * 
 	 */
 	protected function ids($csv = false) {
-		if($this->ids === null) return $csv ? '' : array();
+		if($this->ids === null) return $csv ? '' : [];
 		if($csv) {
 			if(is_array($this->ids)) $this->ids = implode(',', array_map('intval', $this->ids));
 		} else if(is_string($this->ids)) {
@@ -1386,7 +1375,7 @@ class PagesRawFinder extends Wire {
 	protected function setIds(array $ids) {
 		$this->ids = $ids;
 		foreach($ids as $id) {
-			$this->values[$id] = array();
+			$this->values[$id] = [];
 		}
 	}
 
@@ -1402,7 +1391,7 @@ class PagesRawFinder extends Wire {
 	 */
 	protected function flattenValues(array $values, $prefix = '', $delimiter = '.') {
 		
-		$flat = array();
+		$flat = [];
 		
 		foreach($values as $key => $value) {
 			
@@ -1410,8 +1399,8 @@ class PagesRawFinder extends Wire {
 				if(ctype_digit("$key") && $prefix) {
 					// integer keys map to array values
 					$k = rtrim($prefix, $delimiter);
-					if(!isset($flat[$k])) $flat[$k] = array();
-					if(!is_array($flat[$k])) $flat[$k] = array($flat[$k]);
+					if(!isset($flat[$k])) $flat[$k] = [];
+					if(!is_array($flat[$k])) $flat[$k] = [$flat[$k]];
 					$flat[$k][$key] = $value;
 				} else {
 					$flat["$prefix$key"] = $value;
@@ -1434,7 +1423,7 @@ class PagesRawFinder extends Wire {
 				list($k1, $k2) = explode("$delimiter$key$delimiter", $k); 
 				unset($a[$k]);
 				$kk = "$k1$delimiter$k2";
-				if(!isset($flat[$kk])) $flat[$kk] = array();
+				if(!isset($flat[$kk])) $flat[$kk] = [];
 				$flat[$kk][$key] = $v;
 				$converted = true;
 			}
@@ -1454,7 +1443,7 @@ class PagesRawFinder extends Wire {
 	 * 
 	 */
 	protected function populateNullValues(&$values) {
-		$emptyValue = array();
+		$emptyValue = [];
 		if(count($this->requestFields)) {
 			// specific fields requested
 			foreach($this->requestFields as $name) {
@@ -1468,7 +1457,7 @@ class PagesRawFinder extends Wire {
 		} else {
 			// all fields requested
 			$templates = $this->wire()->templates;
-			$emptyValues = array();
+			$emptyValues = [];
 			foreach($values as $key => $value) {
 				if(!isset($value['templates_id'])) continue;
 				$tid = (int) $value['templates_id'];
@@ -1477,7 +1466,7 @@ class PagesRawFinder extends Wire {
 				} else {
 					$template = $templates->get((int) $value['templates_id']);
 					if(!$template) continue;
-					$emptyValue = array();
+					$emptyValue = [];
 					foreach($template->fieldgroup as $field) {
 						$emptyValue[$field->name] = null;
 					}

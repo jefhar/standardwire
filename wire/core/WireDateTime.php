@@ -18,112 +18,171 @@ class WireDateTime extends Wire {
 	 * Date formats in date() format
 	 *
 	 */
-	static protected $dateFormats = array(
+	static protected $dateFormats = [
+     // Gregorian little-endian, starting with day (used by most of world)
+     'l, j F Y',
+     // Monday, 1 April 2012
+     'j F Y',
+     // 1 April 2012
+     'd-M-Y',
+     // 01-Apr-2012
+     'dMy',
+     // 01Apr12
+     'd/m/Y',
+     // 01/04/2012
+     'd.m.Y',
+     // 01.04.2012
+     'd/m/y',
+     // 01/04/12
+     'd.m.y',
+     // 01.04.12
+     'j/n/Y',
+     // 1/4/2012
+     'j.n.Y',
+     // 1.4.2012
+     'j/n/y',
+     // 1/4/12
+     'j.n.y',
+     // 1.4.12
+     // Gregorian big-endian, starting with year (used in Asian countries, Hungary, Sweden, and US armed forces)
+     'Y-m-d',
+     // 2012-04-01 (ISO-8601)
+     'Y/m/d',
+     // 2012/04/01 (ISO-8601)
+     'Y.n.j',
+     // 2012.4.1 (common in China)
+     'Y/n/j',
+     // 2012/4/1
+     'Y F j',
+     // 2012 April 1
+     'Y-M-j, l',
+     // 2012-Apr-1, Monday
+     'Y-M-j',
+     // 2012-Apr-1
+     'YMj',
+     // 2012Apr1
+     // Middle-endian, starting with month (US and some Canada)
+     'l, F j, Y',
+     // Monday, April 1, 2012
+     'F j, Y',
+     // April 1, 2012
+     'M j, Y',
+     // Apr 1, 2012
+     'm/d/Y',
+     // 04/01/2012
+     'm.d.Y',
+     // 04.01.2012
+     'm/d/y',
+     // 04/01/12
+     'm.d.y',
+     // 04.01.12
+     'n/j/Y',
+     // 4/1/2012
+     'n.j.Y',
+     // 4.1.2012
+     'n/j/y',
+     // 4/1/12
+     'n.j.y',
+ ];
 
-		// Gregorian little-endian, starting with day (used by most of world)
-		'l, j F Y', // Monday, 1 April 2012
-		'j F Y',	// 1 April 2012
-		'd-M-Y',	// 01-Apr-2012
-		'dMy',		// 01Apr12
-		'd/m/Y',	// 01/04/2012
-		'd.m.Y',	// 01.04.2012
-		'd/m/y',	// 01/04/12
-		'd.m.y',	// 01.04.12
-		'j/n/Y',	// 1/4/2012
-		'j.n.Y',	// 1.4.2012
-		'j/n/y',	// 1/4/12
-		'j.n.y',	// 1.4.12
-
-		// Gregorian big-endian, starting with year (used in Asian countries, Hungary, Sweden, and US armed forces)
-		'Y-m-d',	// 2012-04-01 (ISO-8601)
-		'Y/m/d',	// 2012/04/01 (ISO-8601)
-		'Y.n.j',	// 2012.4.1 (common in China)
-		'Y/n/j',	// 2012/4/1 
-		'Y F j',	// 2012 April 1
-		'Y-M-j, l',	// 2012-Apr-1, Monday
-		'Y-M-j',	// 2012-Apr-1
-		'YMj',		// 2012Apr1
-
-		// Middle-endian, starting with month (US and some Canada)
-		'l, F j, Y',	// Monday, April 1, 2012
-		'F j, Y',	// April 1, 2012
-		'M j, Y',	// Apr 1, 2012
-		'm/d/Y',	// 04/01/2012 
-		'm.d.Y',	// 04.01.2012 
-		'm/d/y',	// 04/01/12 
-		'm.d.y',	// 04.01.12 
-		'n/j/Y',	// 4/1/2012 
-		'n.j.Y',	// 4.1.2012 
-		'n/j/y',	// 4/1/12 
-		'n.j.y',	// 4.1.12 
-
-		// Other
-		//'%x', 	// 04/01/12 (locale based date)
-		//'%c', 	// Tue Feb 5 00:45:10 2012 (locale based date/time)
-		// 'U',		// Unix Timestamp
-
-	);
-
-	static protected $timeFormats = array(
-		'g:i a',	// 5:01 pm
-		'h:i a',	// 05:01 pm
-		'g:i A',	// 5:01 PM
-		'h:i A',	// 05:01 PM
-		'H:i',		// 17:01 (with leading zeros)
-		'H:i:s',	// 17:01:01 (with leading zeros)
-
-		// Relative 
-		'!relative',
-		'!relative-',
-		'!rel',
-		'!rel-',
-		'!r',
-		'!r-',
-	);
+	static protected $timeFormats = [
+     'g:i a',
+     // 5:01 pm
+     'h:i a',
+     // 05:01 pm
+     'g:i A',
+     // 5:01 PM
+     'h:i A',
+     // 05:01 PM
+     'H:i',
+     // 17:01 (with leading zeros)
+     'H:i:s',
+     // 17:01:01 (with leading zeros)
+     // Relative
+     '!relative',
+     '!relative-',
+     '!rel',
+     '!rel-',
+     '!r',
+     '!r-',
+ ];
 
 	/**
 	 * Date/time translation table from PHP date() to strftime() and JS/jQuery
 	 *
 	 */
-	static protected $dateConversion = array(
-		// date  	strftime js    	regex
-		'l' => array(	'%A', 	'DD', 	'\w+'), 			// Name of day, long			Monday
-		'D' => array(	'%a', 	'D', 	'\w+'),				// Name of day, short			Mon
-		'F' => array(	'%B', 	'MM', 	'\w+'),				// Name of month, long			April
-		'M' => array(	'%b', 	'M', 	'\w+'),				// Name of month, short			Apr
-		'j' => array(	'%-d', 	'd', 	'\d{1,2}'),			// Day without leading zeros		1
-		'd' => array(	'%d', 	'dd', 	'\d{2}'),			// Day with leading zeros		01
-		'n' => array(	'%-m', 	'm', 	'\d{1,2}'),			// Month without leading zeros		4
-		'm' => array(	'%m', 	'mm', 	'\d{2}'),			// Month with leading zeros		04
-		'y' => array(	'%y', 	'y', 	'\d{2}'),			// Year 2 character			12
-		'Y' => array(	'%Y', 	'yy', 	'\d{4}'),			// Year 4 character			2012
-		'N' => array(	'%u', 	'', 	'[1-7]'),			// Day of the week (1-7)		1
-		'w' => array(	'%w', 	'', 	'[0-6]'),			// Zero-based day of week (0-6)		0
-		'S' => array(	'', 	'', 	'\w{2}'),			// Day ordinal suffix			st, nd, rd, th
-		'z' => array(	'%-j', 	'o', 	'\d{1,3}'),			// Day of the year (0-365)		123
-		'W' => array(	'%W', 	'', 	'\d{1,2}'),			// Week # of the year			42
-		't' => array(	'', 	'', 	'(28|29|30|31)'),		// Number of days in month		28
-		'o' => array(	'%V', 	'', 	'\d{1,2}'),			// ISO-8601 week number			42
-		'a' => array(	'%P',	'tt',	'[aApP][mM]'),			// am or pm				am
-		'A' => array(	'%p',	'TT',	'[aApP][mM]'),			// AM or PM				AM
-		'g' => array(	'%-I',	'h', 	'\d{1,2}'),			// 12-hour format, no leading zeros	5
-		'h' => array(	'%I', 	'hh', 	'\d{2}'),			// 12-hour format, leading zeros	05
-		'G' => array(	'%-H', 	'h24', 	'\d{1,2}'),			// 24-hour format, no leading zeros	5
-		'H' => array(	'%H', 	'hh24', '\d{2}'),			// 24-hour format, leading zeros	05
-		'i' => array(	'%M', 	'mm', 	'[0-5][0-9]'),			// Minutes				09
-		's' => array(	'%S', 	'ss', 	'[0-5][0-9]'), 			// Seconds				59
-		'e' => array(	'', 	'', 	'\w+'),				// Timezone Identifier			UTC, GMT, Atlantic/Azores
-		'I' => array(	'', 	'', 	'[01]'),			// Daylight savings time?		1=yes, 0=no
-		'O' => array(	'', 	'', 	'[-+]\d{4}'),			// Difference to Greenwich time/hrs	+0200
-		'P' => array(	'', 	'', 	'[-+]\d{2}:\d{2}'),		// Same as above, but with colon	+02:00
-		'T' => array(	'', 	'', 	'\w+'),				// Timezone abbreviation		MST, EST
-		'Z' => array(	'', 	'', 	'-?\d+'),			// Timezone offset in seconds		-43200 through 50400
-		'c' => array(	'', 	'', 	'[-+:T\d]{19,25}'),		// ISO-8601 date			2004-02-12T15:19:21+00:00
-		'r' => array(	'', 	'',		'\w+, \d+ \w+ \d{4}'),		// RFC-2822 date			Thu, 21 Dec 2000 16:01:07 +0200
-		'U' => array(	'%s', 	'@', 	'\d+'),				// Unix timestamp			123344556	
-	);
+	static protected $dateConversion = [
+     // date  	strftime js    	regex
+     'l' => ['%A', 'DD', '\w+'],
+     // Name of day, long			Monday
+     'D' => ['%a', 'D', '\w+'],
+     // Name of day, short			Mon
+     'F' => ['%B', 'MM', '\w+'],
+     // Name of month, long			April
+     'M' => ['%b', 'M', '\w+'],
+     // Name of month, short			Apr
+     'j' => ['%-d', 'd', '\d{1,2}'],
+     // Day without leading zeros		1
+     'd' => ['%d', 'dd', '\d{2}'],
+     // Day with leading zeros		01
+     'n' => ['%-m', 'm', '\d{1,2}'],
+     // Month without leading zeros		4
+     'm' => ['%m', 'mm', '\d{2}'],
+     // Month with leading zeros		04
+     'y' => ['%y', 'y', '\d{2}'],
+     // Year 2 character			12
+     'Y' => ['%Y', 'yy', '\d{4}'],
+     // Year 4 character			2012
+     'N' => ['%u', '', '[1-7]'],
+     // Day of the week (1-7)		1
+     'w' => ['%w', '', '[0-6]'],
+     // Zero-based day of week (0-6)		0
+     'S' => ['', '', '\w{2}'],
+     // Day ordinal suffix			st, nd, rd, th
+     'z' => ['%-j', 'o', '\d{1,3}'],
+     // Day of the year (0-365)		123
+     'W' => ['%W', '', '\d{1,2}'],
+     // Week # of the year			42
+     't' => ['', '', '(28|29|30|31)'],
+     // Number of days in month		28
+     'o' => ['%V', '', '\d{1,2}'],
+     // ISO-8601 week number			42
+     'a' => ['%P', 'tt', '[aApP][mM]'],
+     // am or pm				am
+     'A' => ['%p', 'TT', '[aApP][mM]'],
+     // AM or PM				AM
+     'g' => ['%-I', 'h', '\d{1,2}'],
+     // 12-hour format, no leading zeros	5
+     'h' => ['%I', 'hh', '\d{2}'],
+     // 12-hour format, leading zeros	05
+     'G' => ['%-H', 'h24', '\d{1,2}'],
+     // 24-hour format, no leading zeros	5
+     'H' => ['%H', 'hh24', '\d{2}'],
+     // 24-hour format, leading zeros	05
+     'i' => ['%M', 'mm', '[0-5][0-9]'],
+     // Minutes				09
+     's' => ['%S', 'ss', '[0-5][0-9]'],
+     // Seconds				59
+     'e' => ['', '', '\w+'],
+     // Timezone Identifier			UTC, GMT, Atlantic/Azores
+     'I' => ['', '', '[01]'],
+     // Daylight savings time?		1=yes, 0=no
+     'O' => ['', '', '[-+]\d{4}'],
+     // Difference to Greenwich time/hrs	+0200
+     'P' => ['', '', '[-+]\d{2}:\d{2}'],
+     // Same as above, but with colon	+02:00
+     'T' => ['', '', '\w+'],
+     // Timezone abbreviation		MST, EST
+     'Z' => ['', '', '-?\d+'],
+     // Timezone offset in seconds		-43200 through 50400
+     'c' => ['', '', '[-+:T\d]{19,25}'],
+     // ISO-8601 date			2004-02-12T15:19:21+00:00
+     'r' => ['', '', '\w+, \d+ \w+ \d{4}'],
+     // RFC-2822 date			Thu, 21 Dec 2000 16:01:07 +0200
+     'U' => ['%s', '@', '\d+'],
+ ];
 	
-	protected $caches = array();
+	protected $caches = [];
 
 	/**
 	 * Return all predefined PHP date() formats for use as dates
@@ -289,7 +348,7 @@ class WireDateTime extends Wire {
 				$TRIM0 = false;
 			}
 			$value = $this->strftime($format, $value);
-			if($TRIM0) $value = str_replace(array('TRIM00', 'TRIM0'), '', $value);
+			if($TRIM0) $value = str_replace(['TRIM00', 'TRIM0'], '', $value);
 
 		} else {
 			$value = $this->date($format, $value);
@@ -334,7 +393,7 @@ class WireDateTime extends Wire {
 
 			if(!isset(self::$dateConversion[$c])) {
 				// unknown character
-				if($type == 'regex' && in_array($c, array('.', '[', ']', '(', ')', '*', '+', '?'))) {
+				if($type == 'regex' && in_array($c, ['.', '[', ']', '(', ')', '*', '+', '?'])) {
 					$c = '\\' . $c; // escape regex chars
 				}
 				$newFormat .= $c;
@@ -447,11 +506,8 @@ class WireDateTime extends Wire {
 	 * @since 3.0.178
 	 * 
 	 */
-	function strtotime($str, $options = array()) {
-		$defaults = array(
-			'emptyReturnValue' => null, 
-			'baseTimestamp' => null,
-		);
+	function strtotime($str, $options = []) {
+		$defaults = ['emptyReturnValue' => null, 'baseTimestamp' => null];
 		if(is_int($options)) $defaults['baseTimestamp'] = $options; 
 		$options = is_array($options) ? array_merge($defaults, $options) : $defaults;
 		$str = trim($str);
@@ -513,28 +569,47 @@ class WireDateTime extends Wire {
 		
 		// replacements, in addition to those specified in self::$dateConversion
 		// strftime format => date format
-		$replacements = array(
-			'%e' => 'j', // Day of the month without leading zeros
-			'%j' => 'z', // Day of the year, 3 digits with leading zeros
-			'%U' => '_', // Week number of the given year, starting with the first Sunday as the first week (not implemented)
-			'%h' => 'M', // Abbreviated month name
-			'%C' => '_', // Two digit representation of the century (year divided by 100, truncated to an integer) (not implemented)
-			'%g' => 'y', // Two digit representation of the year going by ISO-8601:1988 standards (see %V)
-			'%G' => 'Y', // 4 digit year
-			'%k' => 'G', // Hour in 24-hour format
-			'%l' => 'g', // Hour in 12-hour format
-			'%r' => 'h:i:s A', // Example: 09:34:17 PM
-			'%R' => 'G:i', // Example: 00:35 for 12:35 AM
-			'%T' => 'G:i:s', // Example: 21:34:17 for 09:34:17 PM
-			'%X' => 'G:i:s', // Preferred time representation based on locale, without the date, Example: 03:59:16 or 15:59:16
-			'%Z' => 'T', // The time zone abbreviation. Example: EST for Eastern Time
-			'%c' => 'Y-m-d H:i:s', // Preferred date and time stamp based on locale
-			'%D' => 'm/d/y', // Example: 02/05/09 for February 5, 2009
-			'%F' => 'Y-m-d', // Example: 2009-02-05 for February 5, 2009
-			'%n' => '\\n', // newline
-			'%t' => '\\t', // tab
-			'%%' => '%', // literal percent
-		);
+		$replacements = [
+      '%e' => 'j',
+      // Day of the month without leading zeros
+      '%j' => 'z',
+      // Day of the year, 3 digits with leading zeros
+      '%U' => '_',
+      // Week number of the given year, starting with the first Sunday as the first week (not implemented)
+      '%h' => 'M',
+      // Abbreviated month name
+      '%C' => '_',
+      // Two digit representation of the century (year divided by 100, truncated to an integer) (not implemented)
+      '%g' => 'y',
+      // Two digit representation of the year going by ISO-8601:1988 standards (see %V)
+      '%G' => 'Y',
+      // 4 digit year
+      '%k' => 'G',
+      // Hour in 24-hour format
+      '%l' => 'g',
+      // Hour in 12-hour format
+      '%r' => 'h:i:s A',
+      // Example: 09:34:17 PM
+      '%R' => 'G:i',
+      // Example: 00:35 for 12:35 AM
+      '%T' => 'G:i:s',
+      // Example: 21:34:17 for 09:34:17 PM
+      '%X' => 'G:i:s',
+      // Preferred time representation based on locale, without the date, Example: 03:59:16 or 15:59:16
+      '%Z' => 'T',
+      // The time zone abbreviation. Example: EST for Eastern Time
+      '%c' => 'Y-m-d H:i:s',
+      // Preferred date and time stamp based on locale
+      '%D' => 'm/d/y',
+      // Example: 02/05/09 for February 5, 2009
+      '%F' => 'Y-m-d',
+      // Example: 2009-02-05 for February 5, 2009
+      '%n' => '\\n',
+      // newline
+      '%t' => '\\t',
+      // tab
+      '%%' => '%',
+  ];
 
 		foreach(self::$dateConversion as $dateFormat => $formats) {
 			$strftimeFormat = $formats[0];
@@ -614,7 +689,7 @@ class WireDateTime extends Wire {
 			if(isset($abbreviate['ago'])) $ago = $abbreviate['ago'];
 		}
 
-		$lengths = array("60","60","24","7","4.35","12","10");
+		$lengths = ["60", "60", "24", "7", "4.35", "12", "10"];
 		$now = time();
 		if(!ctype_digit("$ts")) $ts = strtotime($ts);
 		if(empty($ts)) return "";
@@ -648,8 +723,8 @@ class WireDateTime extends Wire {
 		// return sprintf('%s%d%s%s %s', $prepend, (int) $difference, $space, $period, $tense); // i.e. 2 days ago (d=qty, 2=period, 3=tense)
 		$quantity = $prepend . $difference . $space;
 		$format = $this->_('Q P T'); // Relative time order: Q=Quantity, P=Period, T=Tense (i.e. 2 Days Ago)
-		$format = str_replace(array('Q', 'P', 'T'), array('{Q}', '{P}', '{T}'), $format);
-		$out = str_replace(array('{Q}', '{P}', '{T}'), array(" $quantity", " $period", " $tense"), $format);
+		$format = str_replace(['Q', 'P', 'T'], ['{Q}', '{P}', '{T}'], $format);
+		$out = str_replace(['{Q}', '{P}', '{T}'], [" $quantity", " $period", " $tense"], $format);
 		
 		if($abbreviate === 1) {
 			$out = str_replace(" ", "", $out); // no space when extra-abbreviate is active
@@ -704,14 +779,9 @@ class WireDateTime extends Wire {
 	 * @since 3.0.129
 	 * 
 	 */
-	public function elapsedTimeStr($start, $stop = null, $abbreviate = false, array $options = array()) {
+	public function elapsedTimeStr($start, $stop = null, $abbreviate = false, array $options = []) {
 		
-		$defaults = array(
-			'delimiter' => ' ', 
-			'exclude' => array(),
-			'include' => array(),
-			'getArray' => false, 
-		);
+		$defaults = ['delimiter' => ' ', 'exclude' => [], 'include' => [], 'getArray' => false];
 		
 		if(is_array($stop)) {
 			// options specified in $stop argument 
@@ -721,16 +791,16 @@ class WireDateTime extends Wire {
 		}
 
 		$options = array_merge($defaults, $options);
-		$periodNames = array('weeks', 'days', 'hours', 'minutes', 'seconds');
-		$usePeriods = array();
+		$periodNames = ['weeks', 'days', 'hours', 'minutes', 'seconds'];
+		$usePeriods = [];
 		$negative = false;
 		
-		foreach(array('exclude', 'include') as $key) {
+		foreach(['exclude', 'include'] as $key) {
 			if(is_string($options[$key])) {
 				$value = trim($options[$key]);
-				$options[$key] = $value ? explode(' ', $value) : array();
+				$options[$key] = $value ? explode(' ', $value) : [];
 			} else if(!is_array($options[$key])) {
-				$options[$key] = array();
+				$options[$key] = [];
 			}
 			foreach($options[$key] as $k => $v) {
 				if(!in_array($v, $periodNames)) unset($options[$key][$k]); 
@@ -751,11 +821,11 @@ class WireDateTime extends Wire {
 		if(!ctype_digit("$stop")) $stop = strtotime($stop);
 		
 		if($start > $stop) {
-			list($start, $stop) = array($stop, $start);
+			list($start, $stop) = [$stop, $start];
 			$negative = true;
 		}
 
-		$times = array();
+		$times = [];
 		$seconds = $stop - $start;
 	
 		if($seconds >= 604800 && $abbreviate !== 0 && isset($usePeriods['weeks'])) {
@@ -812,8 +882,8 @@ class WireDateTime extends Wire {
 			if(isset($usePeriods['seconds'])) $value .= ":$seconds";
 		} else {
 			$periods = $this->getPeriods($abbreviate); 
-			$a = array();
-			$getArray = array();
+			$a = [];
+			$getArray = [];
 			foreach($times as $key => $qty) {
 				$pluralKey = rtrim($key, 's') . 's';
 				if(empty($qty) && ($pluralKey !== 'seconds' || count($a))) continue;
@@ -860,89 +930,8 @@ class WireDateTime extends Wire {
 	 */
 	protected function getPeriods($abbreviate, $plural = null) {
 		
-		static $definitions = array();
-		if(empty($definitions)) $definitions = array(
-			'keys-singular' => array(
-				'second', 
-				'minute', 
-				'hour', 
-				'day', 
-				'week', 
-				'month', 
-				'year', 
-				'decade'
-			),
-			'keys-plural' => array(
-				'seconds', 
-				'minutes', 
-				'hours', 
-				'days', 
-				'weeks', 
-				'months', 
-				'years', 
-				'decades'
-			),
-			'short-singular' => array(
-				$this->_("s"),
-				$this->_("m"),
-				$this->_("hr"),
-				$this->_("d"),
-				$this->_("wk"),
-				$this->_("mon"),
-				$this->_("yr"),
-				$this->_("decade")
-			),
-			'short-plural' => array(
-				$this->_("s"),
-				$this->_("m"),
-				$this->_("hr"),
-				$this->_("d"),
-				$this->_("wks"),
-				$this->_("mths"),
-				$this->_("yrs"),
-				$this->_("decades")
-			),
-			'medium-singular' => array(
-				$this->_("sec"),
-				$this->_("min"),
-				$this->_("hr"),
-				$this->_("day"),
-				$this->_("week"),
-				$this->_("month"),
-				$this->_("year"),
-				$this->_("decade")
-			),
-			'medium-plural' => array(
-				$this->_("secs"),
-				$this->_("mins"),
-				$this->_("hrs"),
-				$this->_("days"),
-				$this->_("weeks"),
-				$this->_("months"),
-				$this->_("years"),
-				$this->_("decades")
-			),
-			'large-singular' => array(
-				$this->_("second"),
-				$this->_("minute"),
-				$this->_("hour"),
-				$this->_("day"),
-				$this->_("week"),
-				$this->_("month"),
-				$this->_("year"),
-				$this->_("decade")
-			),
-			'large-plural' => array(
-				$this->_("seconds"),
-				$this->_("minutes"),
-				$this->_("hours"),
-				$this->_("days"),
-				$this->_("weeks"),
-				$this->_("months"),
-				$this->_("years"),
-				$this->_("decades")
-			),
-		);
+		static $definitions = [];
+		if(empty($definitions)) $definitions = ['keys-singular' => ['second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade'], 'keys-plural' => ['seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years', 'decades'], 'short-singular' => [$this->_("s"), $this->_("m"), $this->_("hr"), $this->_("d"), $this->_("wk"), $this->_("mon"), $this->_("yr"), $this->_("decade")], 'short-plural' => [$this->_("s"), $this->_("m"), $this->_("hr"), $this->_("d"), $this->_("wks"), $this->_("mths"), $this->_("yrs"), $this->_("decades")], 'medium-singular' => [$this->_("sec"), $this->_("min"), $this->_("hr"), $this->_("day"), $this->_("week"), $this->_("month"), $this->_("year"), $this->_("decade")], 'medium-plural' => [$this->_("secs"), $this->_("mins"), $this->_("hrs"), $this->_("days"), $this->_("weeks"), $this->_("months"), $this->_("years"), $this->_("decades")], 'large-singular' => [$this->_("second"), $this->_("minute"), $this->_("hour"), $this->_("day"), $this->_("week"), $this->_("month"), $this->_("year"), $this->_("decade")], 'large-plural' => [$this->_("seconds"), $this->_("minutes"), $this->_("hours"), $this->_("days"), $this->_("weeks"), $this->_("months"), $this->_("years"), $this->_("decades")]];
 		
 		if($abbreviate === 1) {
 			// extra short abbreviations
@@ -971,7 +960,7 @@ class WireDateTime extends Wire {
 		if($plural === false) return $periodsSingular;
 	
 		// get all indexed by term
-		$periods = array();
+		$periods = [];
 		foreach($definitions['keys-plural'] as $key => $term) {
 			$periods[$term] = $periodsPlural[$key];
 		}
@@ -996,15 +985,8 @@ class WireDateTime extends Wire {
 
 		$findReplace = [];
 		$f = $format;
-		$keys = array();
-		$ltrKeys = array(
-			'F' => 'monthNames',
-			'M' => 'monthAbbrs',
-			'l' => 'dayNames',
-			'D' => 'dayAbbrs',
-			'a' => 'meridiums',
-			'A' => 'meridiums',
-		);
+		$keys = [];
+		$ltrKeys = ['F' => 'monthNames', 'M' => 'monthAbbrs', 'l' => 'dayNames', 'D' => 'dayAbbrs', 'a' => 'meridiums', 'A' => 'meridiums'];
 		
 		foreach($ltrKeys as $ltr => $key) {
 			$a = self::$dateConversion[$ltr];
@@ -1039,68 +1021,21 @@ class WireDateTime extends Wire {
 		$k = $key . $this->wire()->user->language->id;
 		switch($key) {
 			case 'monthNames':
-				if(empty($this->caches[$k])) $this->caches[$k] = array(
-					'January' => $this->_('January'),
-					'February' => $this->_('February'),
-					'March' => $this->_('March'),
-					'April' => $this->_('April'),
-					'May' => $this->_('May'),
-					'June' => $this->_('June'),
-					'July' => $this->_('July'),
-					'August' => $this->_('August'),
-					'September' => $this->_('September'),
-					'October' => $this->_('October'),
-					'November' => $this->_('November'),
-					'December' => $this->_('December'),
-				);
+				if(empty($this->caches[$k])) $this->caches[$k] = ['January' => $this->_('January'), 'February' => $this->_('February'), 'March' => $this->_('March'), 'April' => $this->_('April'), 'May' => $this->_('May'), 'June' => $this->_('June'), 'July' => $this->_('July'), 'August' => $this->_('August'), 'September' => $this->_('September'), 'October' => $this->_('October'), 'November' => $this->_('November'), 'December' => $this->_('December')];
 				return $this->caches[$k];
 			case 'monthAbbrs':
-				if(empty($this->caches[$k])) $this->caches[$k] = array(
-					'Jan' => $this->_x('Jan', 'month-abbr'),
-					'Feb' => $this->_x('Feb', 'month-abbr'),
-					'Mar' => $this->_x('Mar', 'month-abbr'),
-					'Apr' => $this->_x('Apr', 'month-abbr'),
-					'May' => $this->_x('May', 'month-abbr'),
-					'Jun' => $this->_x('Jun', 'month-abbr'),
-					'Jul' => $this->_x('Jul', 'month-abbr'),
-					'Aug' => $this->_x('Aug', 'month-abbr'),
-					'Sep' => $this->_x('Sep', 'month-abbr'),
-					'Oct' => $this->_x('Oct', 'month-abbr'),
-					'Nov' => $this->_x('Nov', 'month-abbr'),
-					'Dec' => $this->_x('Dec', 'month-abbr'),
-				);
+				if(empty($this->caches[$k])) $this->caches[$k] = ['Jan' => $this->_x('Jan', 'month-abbr'), 'Feb' => $this->_x('Feb', 'month-abbr'), 'Mar' => $this->_x('Mar', 'month-abbr'), 'Apr' => $this->_x('Apr', 'month-abbr'), 'May' => $this->_x('May', 'month-abbr'), 'Jun' => $this->_x('Jun', 'month-abbr'), 'Jul' => $this->_x('Jul', 'month-abbr'), 'Aug' => $this->_x('Aug', 'month-abbr'), 'Sep' => $this->_x('Sep', 'month-abbr'), 'Oct' => $this->_x('Oct', 'month-abbr'), 'Nov' => $this->_x('Nov', 'month-abbr'), 'Dec' => $this->_x('Dec', 'month-abbr')];
 				return $this->caches[$k];
 			case 'dayNames':
-				if(empty($this->caches[$k])) $this->caches[$k] = array(
-					'Monday' => $this->_('Monday'),
-					'Tuesday' => $this->_('Tuesday'),
-					'Wednesday' => $this->_('Wednesday'),
-					'Thursday' => $this->_('Thursday'),
-					'Friday' => $this->_('Friday'),
-					'Saturday' => $this->_('Saturday'),
-					'Sunday' => $this->_('Sunday'),
-				);
+				if(empty($this->caches[$k])) $this->caches[$k] = ['Monday' => $this->_('Monday'), 'Tuesday' => $this->_('Tuesday'), 'Wednesday' => $this->_('Wednesday'), 'Thursday' => $this->_('Thursday'), 'Friday' => $this->_('Friday'), 'Saturday' => $this->_('Saturday'), 'Sunday' => $this->_('Sunday')];
 				return $this->caches[$k];
 			case 'dayAbbrs':
-				if(empty($this->caches[$k])) $this->caches[$k] = array(
-					'Mon' => $this->_x('Mon', 'day-abbr'),
-					'Tue' => $this->_x('Tue', 'day-abbr'),
-					'Wed' => $this->_x('Wed', 'day-abbr'),
-					'Thu' => $this->_x('Thu', 'day-abbr'),
-					'Fri' => $this->_x('Fri', 'day-abbr'),
-					'Sat' => $this->_x('Sat', 'day-abbr'),
-					'Sun' => $this->_x('Sun', 'day-abbr'),
-				);
+				if(empty($this->caches[$k])) $this->caches[$k] = ['Mon' => $this->_x('Mon', 'day-abbr'), 'Tue' => $this->_x('Tue', 'day-abbr'), 'Wed' => $this->_x('Wed', 'day-abbr'), 'Thu' => $this->_x('Thu', 'day-abbr'), 'Fri' => $this->_x('Fri', 'day-abbr'), 'Sat' => $this->_x('Sat', 'day-abbr'), 'Sun' => $this->_x('Sun', 'day-abbr')];
 				return $this->caches[$k];
 			case 'meridiums':
-				if(empty($this->caches[$k])) $this->caches[$k] = array(
-					'am' => $this->_x('am', 'ante-meridium-lowercase'),
-					'pm' => $this->_x('pm', 'post-meridium-lowercase'),
-					'AM' => $this->_x('AM', 'ante-meridium-uppercase'),
-					'PM' => $this->_x('PM', 'post-meridium-uppercase'),
-				);
+				if(empty($this->caches[$k])) $this->caches[$k] = ['am' => $this->_x('am', 'ante-meridium-lowercase'), 'pm' => $this->_x('pm', 'post-meridium-lowercase'), 'AM' => $this->_x('AM', 'ante-meridium-uppercase'), 'PM' => $this->_x('PM', 'post-meridium-uppercase')];
 				return $this->caches[$k];
 		}
-		return array();
+		return [];
 	}
 }

@@ -33,9 +33,9 @@ class PageValues extends Wire {
 		}
 
 		$value = $page;
-		$values = array();
+		$values = [];
 
-		$wireArrayProperties = array('first', 'last', 'count', 'keys', 'values');
+		$wireArrayProperties = ['first', 'last', 'count', 'keys', 'values'];
 
 		do {
 			$key = array_shift($keys);
@@ -82,8 +82,8 @@ class PageValues extends Wire {
 					case 'first':
 					case 'last': $v = $value; break;
 					case 'count': $v = 1; break;
-					case 'values': $v = array($value); break;
-					case 'keys': $v = ("$value" === $value->className() ? array(0) : array("$value")); break;
+					case 'values': $v = [$value]; break;
+					case 'keys': $v = ("$value" === $value->className() ? [0] : ["$value"]); break;
 				}
 				$value = $v;
 			} else if(is_array($value)) {
@@ -164,7 +164,7 @@ class PageValues extends Wire {
 		}
 
 		if($value === null) {
-			return $getIterable ? array() : null;
+			return $getIterable ? [] : null;
 		}
 
 		if(is_object($value)) {
@@ -177,10 +177,10 @@ class PageValues extends Wire {
 			} else if($value instanceof \Traversable) {
 				// WireArray or other
 			} else {
-				$value = array($value);
+				$value = [$value];
 			}
 		} else if($getIterable) {
-			$value = is_array($value) ? $value : array($value);
+			$value = is_array($value) ? $value : [$value];
 		}
 
 		if($property !== '') {
@@ -251,10 +251,10 @@ class PageValues extends Wire {
 			if(strpos($keys, ',') !== false) {
 				$keys = explode(',', $keys);
 			} else {
-				$keys = array($keys);
+				$keys = [$keys];
 			}
 		}
-		$values = array();
+		$values = [];
 		foreach($keys as $key) {
 			$key = trim("$key");
 			$value = strlen($key) ? $page->get($key) : null;
@@ -351,7 +351,7 @@ class PageValues extends Wire {
 			return '';
 		}
 
-		$parts = strpos($key, '.') ? explode('.', $key) : array($key);
+		$parts = strpos($key, '.') ? explode('.', $key) : [$key];
 		$value = $page;
 
 		do {
@@ -411,9 +411,7 @@ class PageValues extends Wire {
 		$value = $page->getMarkup($key);
 		$length = strlen($value);
 		if(!$length) return '';
-		$options = array(
-			'entities' => ($entities === null ? $page->of() : (bool) $entities)
-		);
+		$options = ['entities' => ($entities === null ? $page->of() : (bool) $entities)];
 		$sanitizer = $this->wire()->sanitizer;
 		if($oneLine) {
 			$value = $sanitizer->markupToLine($value, $options);
@@ -453,7 +451,7 @@ class PageValues extends Wire {
 			// status provided as something other than integer
 			if(is_string($value) && !ctype_digit($value)) {
 				// string of one or more status names
-				if(strpos($value, ',') !== false) $value = str_replace(array(', ', ','), ' ', $value);
+				if(strpos($value, ',') !== false) $value = str_replace([', ', ','], ' ', $value);
 				$value = explode(' ', strtolower($value));
 			}
 			if(is_array($value)) {
@@ -748,7 +746,7 @@ class PageValues extends Wire {
 			$this->setFieldValue($page, $key, $value, false);
 		}
 		
-		$page->fieldDataQueue(array());
+		$page->fieldDataQueue([]);
 
 		return true;
 	}
@@ -889,7 +887,7 @@ class PageValues extends Wire {
 		$invokeArgument = '';
 
 		if($value !== null && $page->wakeupNameQueue($key)) {
-			$value = $fieldtype->_callHookMethod('wakeupValue', array($page, $field, $value));
+			$value = $fieldtype->_callHookMethod('wakeupValue', [$page, $field, $value]);
 			$value = $fieldtype->sanitizeValue($page, $field, $value);
 			$trackChanges = $page->trackChanges(true);
 			$page->setTrackChanges(false);
@@ -934,13 +932,13 @@ class PageValues extends Wire {
 		if($selector) {
 			$value = $fieldtype->loadPageFieldFilter($page, $field, $selector);
 		} else {
-			$value = $fieldtype->_callHookMethod('loadPageField', array($page, $field));
+			$value = $fieldtype->_callHookMethod('loadPageField', [$page, $field]);
 		}
 
 		if($value === null) {
 			$value = $fieldtype->getDefaultValue($page, $field);
 		} else {
-			$value = $fieldtype->_callHookMethod('wakeupValue', array($page, $field, $value));
+			$value = $fieldtype->_callHookMethod('wakeupValue', [$page, $field, $value]);
 		}
 
 		// turn off output formatting and set the field value, which may apply additional changes
@@ -988,7 +986,7 @@ class PageValues extends Wire {
 		if($page->of()) {
 			// output formatting is enabled so return a formatted value
 			//$value = $field->type->formatValue($this, $field, $value);
-			$value = $field->type->_callHookMethod('formatValue', array($page, $field, $value));
+			$value = $field->type->_callHookMethod('formatValue', [$page, $field, $value]);
 			// check again for interface since value may now be different
 			if($hasInterface) $hasInterface = $value instanceof PageFieldValueInterface;
 			if($hasInterface) $value->formatted(true);
@@ -1031,7 +1029,7 @@ class PageValues extends Wire {
 		if(!$isLoaded && strpos($key, '__')) {
 			list($key, $subKey) = explode('__', $key, 2);
 			$fieldData = $page->fieldDataQueue($key);
-			if($fieldData === null) $fieldData = array();
+			if($fieldData === null) $fieldData = [];
 			$fieldData[$subKey] = $value;
 			$page->fieldDataQueue($key, $fieldData);
 			return $page;
@@ -1091,7 +1089,7 @@ class PageValues extends Wire {
 				if($value->formatted()) $isCorrupted = true;
 			} else if($page->of()) {
 				// check if value is modified by being formatted
-				$result = $fieldtype->_callHookMethod('formatValue', array($page, $field, $value));
+				$result = $fieldtype->_callHookMethod('formatValue', [$page, $field, $value]);
 				if($result != $value) $isCorrupted = true;
 			}
 			if($isCorrupted) {
@@ -1100,7 +1098,7 @@ class PageValues extends Wire {
 				// possibility of data corruption is high. We set the Page::statusCorrupted status so that Pages::save() can abort.
 				$page->set('status', $page->status | Page::statusCorrupted);
 				$corruptedFields = $page->get('_statusCorruptedFields');
-				if(!is_array($corruptedFields)) $corruptedFields = array();
+				if(!is_array($corruptedFields)) $corruptedFields = [];
 				$corruptedFields[$field->name] = $field->name;
 				$page->set('_statusCorruptedFields', $corruptedFields);
 			}

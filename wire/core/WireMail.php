@@ -79,20 +79,22 @@ class WireMail extends WireData implements WireMailInterface {
 	 * Mail properties
 	 *
 	 */
-	protected $mail = array(
-		'to' => array(), // to addresses - associative: both key and value are email (to prevent dups)
-		'toName' => array(), // to names - associative: indexed by 'to' email address, may be blank/null for any email 
-		'from' => '', 
-		'fromName' => '', 
-		'replyTo' => '',
-		'replyToName' => '', 
-		'subject' => '', 
-		'body' => '',
-		'bodyHTML' => '',
-		'header' => array(),
-		'param' => array(), 
-		'attachments' => array(), 
-	);
+	protected $mail = [
+     'to' => [],
+     // to addresses - associative: both key and value are email (to prevent dups)
+     'toName' => [],
+     // to names - associative: indexed by 'to' email address, may be blank/null for any email
+     'from' => '',
+     'fromName' => '',
+     'replyTo' => '',
+     'replyToName' => '',
+     'subject' => '',
+     'body' => '',
+     'bodyHTML' => '',
+     'header' => [],
+     'param' => [],
+     'attachments' => [],
+ ];
 
 	/**
 	 * Construct
@@ -229,7 +231,7 @@ class WireMail extends WireData implements WireMailInterface {
 			}
 		}
 		$email = $this->sanitizeEmail($email); 
-		return array($email, $name); 
+		return [$email, $name]; 
 	}
 
 	/**
@@ -278,8 +280,8 @@ class WireMail extends WireData implements WireMailInterface {
 
 		if(is_null($email)) { 
 			// clear existing values
-			$this->mail['to'] = array(); 
-			$this->mail['toName'] = array();
+			$this->mail['to'] = []; 
+			$this->mail['toName'] = [];
 			return $this; 
 		}
 
@@ -516,7 +518,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 */
 	public function param($value) {
 		if(is_null($value)) {
-			$this->mail['param'] = array();
+			$this->mail['param'] = [];
 		} else { 
 			$this->mail['param'][] = $value; 
 		}
@@ -548,7 +550,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 */
 	public function attachment($value, $filename = '') {
 		if(is_null($value)) {
-			$this->mail['attachments'] = array();
+			$this->mail['attachments'] = [];
 		} else if(is_file($value)) { 
 			$filename = $filename ? basename($filename) : basename($value);
 			$this->mail['attachments'][$filename] = $value; 
@@ -676,8 +678,8 @@ class WireMail extends WireData implements WireMailInterface {
 		$subboundary = $this->multipartBoundary('alt');
 	
 		// don’t allow boundary to appear in visible portions of email
-		$text = $this->strReplace($this->body, array($boundary, $subboundary)); 
-		$html = $this->strReplace($this->bodyHTML, array($boundary, $subboundary));
+		$text = $this->strReplace($this->body, [$boundary, $subboundary]); 
+		$html = $this->strReplace($this->bodyHTML, [$boundary, $subboundary]);
 
 		// if plain text only, return now
 		if(empty($html) && !count($this->attachments)) return quoted_printable_encode($text);
@@ -750,12 +752,7 @@ class WireMail extends WireData implements WireMailInterface {
 		
 		foreach($this->attachments as $filename => $file) {
 			
-			$filename = $sanitizer->text($filename, array(
-				'maxLength' => 512,
-				'truncateTail' => false, 
-				'stripSpace' => '-',
-				'stripQuotes' => true
-			));
+			$filename = $sanitizer->text($filename, ['maxLength' => 512, 'truncateTail' => false, 'stripSpace' => '-', 'stripQuotes' => true]);
 			
 			if(stripos($filename, $boundary) !== false) continue;
 			
@@ -789,7 +786,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * 
 	 */
 	protected function strReplace($str, $find, $replace = '') {
-		if(!is_array($find)) $find = array($find);
+		if(!is_array($find)) $find = [$find];
 		if(!is_string($str)) $str = (string) $str;
 		foreach($find as $findStr) {
 			if(is_array($findStr)) continue;
@@ -834,7 +831,7 @@ class WireMail extends WireData implements WireMailInterface {
 			return substr(mb_encode_mimeheader("Subject: $subject", 'UTF-8', 'Q', "\r\n"), 9);
 		}
 
-		$out = array();
+		$out = [];
 		$isFirst = true;
 		$n = 0;
 

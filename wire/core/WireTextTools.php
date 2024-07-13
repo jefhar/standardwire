@@ -64,33 +64,34 @@ class WireTextTools extends Wire {
 	 * @see Sanitizer::markupToText()
 	 *
 	 */
-	public function markupToText($str, array $options = array()) {
+	public function markupToText($str, array $options = []) {
 		
 		$sanitizer = $this->wire()->sanitizer;
 		
-		$defaults = array(
-			'keepTags' => array(),
-			'clearTags' => array('script', 'style', 'object'), 
-			'linksToUrls' => true, // convert links to just URL rather than removing entirely
-			'linksToMarkdown' => false, // convert links to Markdown style links
-			'splitBlocks' => "\n\n",
-			'uppercaseHeadlines' => false, 
-			'underlineHeadlines' => true, 
-			'convertEntities' => true, 
-			'listItemPrefix' => '• ', 
-			'preIndent' => '', // indent for text within a <pre>
-			'collapseSpaces' => true,
-			'replacements' => array(
-				'&nbsp;' => ' '
-			),
-			'finishReplacements' => array(), // replacements applied at very end (internal)
-		);
+		$defaults = [
+      'keepTags' => [],
+      'clearTags' => ['script', 'style', 'object'],
+      'linksToUrls' => true,
+      // convert links to just URL rather than removing entirely
+      'linksToMarkdown' => false,
+      // convert links to Markdown style links
+      'splitBlocks' => "\n\n",
+      'uppercaseHeadlines' => false,
+      'underlineHeadlines' => true,
+      'convertEntities' => true,
+      'listItemPrefix' => '• ',
+      'preIndent' => '',
+      // indent for text within a <pre>
+      'collapseSpaces' => true,
+      'replacements' => ['&nbsp;' => ' '],
+      'finishReplacements' => [],
+  ];
 		
 		$str = (string) $str;
 		if(!strlen($str)) return '';
 
 		// merge options using arrays
-		foreach(array('replacements') as $key) {
+		foreach(['replacements'] as $key) {
 			if(!isset($options[$key])) continue;
 			$options[$key] = array_merge($defaults[$key], $options[$key]);
 		}
@@ -107,7 +108,7 @@ class WireTextTools extends Wire {
 
 			// normalize newlines
 			if(strpos($str, "\r") !== false) {
-				$str = str_replace(array("\r\n", "\r"), "\n", $str);
+				$str = str_replace(["\r\n", "\r"], "\n", $str);
 			}
 
 			// normalize tabs to spaces
@@ -135,7 +136,7 @@ class WireTextTools extends Wire {
 
 			// convert <br> tags to be just a single newline
 			if(stripos($str, '<br') !== false) {
-				$str = str_replace(array('<br>', '<br/>', '<br />', '</li>'), "<br>\n", $str);
+				$str = str_replace(['<br>', '<br/>', '<br />', '</li>'], "<br>\n", $str);
 				while(stripos($str, "\n<br>") !== false) $str = str_replace("\n<br>", "<br>", $str);
 				while(stripos($str, "<br>\n\n") !== false) $str = str_replace("<br>\n\n", "<br>\n", $str);
 			}
@@ -170,7 +171,7 @@ class WireTextTools extends Wire {
 			// convert "<a href='url'>text</a>" tags to "text (url)"
 			if(($options['linksToUrls'] || $options['linksToMarkdown']) && stripos($str, '<a ') !== false) {
 				if(preg_match_all('!<a\s[^<>]*href=([^\s>]+)[^<>]*>(.+?)</a>!is', $str, $matches)) {
-					$links = array();
+					$links = [];
 					foreach($matches[0] as $key => $fullMatch) {
 						$href = trim($matches[1][$key], '"\'');
 						if(strpos($href, '#') === 0) continue; // do not convert jumplinks
@@ -203,7 +204,7 @@ class WireTextTools extends Wire {
 			foreach($options['clearTags'] as $s) {
 				$s = strtolower($s);
 				if(stripos($str, "<$s") === false) continue;
-				$str = str_ireplace(array("<$s", "</$s"), array("<$s", "</$s"), $str); // adjust case
+				$str = str_ireplace(["<$s", "</$s"], ["<$s", "</$s"], $str); // adjust case
 				$parts = explode("<$s", $str); 
 				foreach($parts as $key => $part) {
 					if(strpos($part, "</$s>") === false) {
@@ -231,7 +232,7 @@ class WireTextTools extends Wire {
 			// not allowing any tags
 			$str = strip_tags($str);
 			// if any possible tag characters remain, drop them now
-			$str = str_replace(array('<', '>'), ' ', $str);
+			$str = str_replace(['<', '>'], ' ', $str);
 		}
 
 		// apply any other replacements
@@ -295,14 +296,9 @@ class WireTextTools extends Wire {
 	 * @return string
 	 *
 	 */
-	public function fixUnclosedTags($str, $remove = true, $options = array()) {
+	public function fixUnclosedTags($str, $remove = true, $options = []) {
 		
-		$defaults = array(
-			'ignoreTags' => array(
-				'area','base','br','col','command','embed','hr','img','input',
-				'keygen','link','menuitem','meta','param','source','track','wbr',
-			),
-		);
+		$defaults = ['ignoreTags' => ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr']];
 
 		if(isset($options['ignoreTags'])) {
 			// merge user specified ignoreTags with our defaults so that both are used
@@ -310,8 +306,8 @@ class WireTextTools extends Wire {
 		}
 		
 		$options = array_merge($defaults, $options);
-		$tags = array();
-		$unclosed = array();
+		$tags = [];
+		$unclosed = [];
 
 		$n1 = substr_count($str, '>');
 		$n2 = substr_count($str, '</');
@@ -385,27 +381,14 @@ class WireTextTools extends Wire {
 	 * @return string
 	 *
 	 */
-	public function collapse($str, array $options = array()) {
+	public function collapse($str, array $options = []) {
 
-		$defaults = array(
-			'stripTags' => true,
-			'keepTags' => array(),
-			'collapseLinesWith' => ' ',
-			'endBlocksWith' => '',
-			'convertEntities' => true,
-			'linksToUrls' => false,
-		);
+		$defaults = ['stripTags' => true, 'keepTags' => [], 'collapseLinesWith' => ' ', 'endBlocksWith' => '', 'convertEntities' => true, 'linksToUrls' => false];
 
 		$options = array_merge($defaults, $options);
 
 		if($options['stripTags']) {
-			$str = $this->markupToText($str, array(
-				'underlineHeadlines' => false,
-				'uppercaseHeadlines' => false,
-				'convertEntities' => $options['convertEntities'],
-				'linksToUrls' => $options['linksToUrls'],
-				'keepTags' => $options['keepTags'],
-			));
+			$str = $this->markupToText($str, ['underlineHeadlines' => false, 'uppercaseHeadlines' => false, 'convertEntities' => $options['convertEntities'], 'linksToUrls' => $options['linksToUrls'], 'keepTags' => $options['keepTags']]);
 			if(!strlen($str)) return $str;
 		}
 
@@ -419,7 +402,7 @@ class WireTextTools extends Wire {
 
 		// convert CRs to LFs
 		if(strpos($str, "\r") !== false) {
-			$str = str_replace(array("\r\n", "\r"), "\n", $str);
+			$str = str_replace(["\r\n", "\r"], "\n", $str);
 		}
 
 		// collapse whitespace that appears before or after newlines
@@ -437,7 +420,7 @@ class WireTextTools extends Wire {
 		}
 
 		// replace all types of newlines
-		$str = str_replace(array("\r\n", "\r", "\n\n", "\n"), $r, $str);
+		$str = str_replace(["\r\n", "\r", "\n\n", "\n"], $r, $str);
 
 		// while there are consecutives of our collapse string, reduce them to one
 		while(strpos($str, "$r$r") !== false) {
@@ -516,33 +499,45 @@ class WireTextTools extends Wire {
 	 * @return string
 	 *
 	 */
-	function truncate($str, $maxLength, $options = array()) {
+	function truncate($str, $maxLength, $options = []) {
 		
 		if(!strlen($str)) return '';
 
 		$ent = __(true, 'entityEncode', false);
 
-		$defaults = array(
-			'type' => 'word', // word, punctuation, sentence, or block
-			'maximize' => true, // include as much as possible within the type and maxLength (false=include as little as possible)
-			'visible' => false, // when true, invisible text (markup, entities, etc.) does not count towards string length. (default=false)
-			'trim' => $this->_(',;/') . ' ', // Trim these characters from the end of the returned string
-			'noTrim' => $this->_(')]>}”»'), // Never trim these characters from end of returned string
-			'more' => '…', // Append to truncated strings that do not end with sentence punctuation
-			'stripTags' => true, // strip HTML tags? (currently required, see keepTags to keep some)
-			'keepTags' => array(), // if strip HTML tags is true, optional array of tag names you want to keep
-			'keepFormatTags' => false, // alternative to keepTags: keep just inline text format tags like strong, em, etc. 
-			'collapseWhitespace' => true, // collapsed whitespace (currently required)
-			'collapseLinesWith' => ' ' . $this->_('…') . ' ', // String placed between joined lines (like from paragraphs)
-			'convertEntities' => false, // convert entity encoded characters to non-entity equivalents? (default=false)
-			'noEndSentence' => $this->_('Mr. Mrs. Ms. Dr. Hon. PhD. i.e. e.g.'), // When in sentence type, words that do not end the sentence (space-separated)
-		);
+		$defaults = [
+      'type' => 'word',
+      // word, punctuation, sentence, or block
+      'maximize' => true,
+      // include as much as possible within the type and maxLength (false=include as little as possible)
+      'visible' => false,
+      // when true, invisible text (markup, entities, etc.) does not count towards string length. (default=false)
+      'trim' => $this->_(',;/') . ' ',
+      // Trim these characters from the end of the returned string
+      'noTrim' => $this->_(')]>}”»'),
+      // Never trim these characters from end of returned string
+      'more' => '…',
+      // Append to truncated strings that do not end with sentence punctuation
+      'stripTags' => true,
+      // strip HTML tags? (currently required, see keepTags to keep some)
+      'keepTags' => [],
+      // if strip HTML tags is true, optional array of tag names you want to keep
+      'keepFormatTags' => false,
+      // alternative to keepTags: keep just inline text format tags like strong, em, etc.
+      'collapseWhitespace' => true,
+      // collapsed whitespace (currently required)
+      'collapseLinesWith' => ' ' . $this->_('…') . ' ',
+      // String placed between joined lines (like from paragraphs)
+      'convertEntities' => false,
+      // convert entity encoded characters to non-entity equivalents? (default=false)
+      'noEndSentence' => $this->_('Mr. Mrs. Ms. Dr. Hon. PhD. i.e. e.g.'),
+  ];
 
 		if($ent) __(true, 'entityEncode', $ent);
 		
 		if(is_string($options) && ctype_alpha($options)) {
 			$defaults['type'] = $options;
-			$options = array();
+			$options = [];
 		}
 
 		if(is_array($maxLength)) {
@@ -559,15 +554,13 @@ class WireTextTools extends Wire {
 		$type = $options['type'];
 		$str = trim($str);
 		$blockEndChar = '¶';
-		$tests = array();
+		$tests = [];
 		$punctuationChars = $this->getPunctuationChars();
 		$endSentenceChars = $this->getPunctuationChars(true);
 		$endSentenceChars[] = ':';
 
 		if($options['keepFormatTags']) {
-			$options['keepTags'] = array_merge($options['keepTags'], array(
-				'abbr','acronym','b','big','cite','code','em','i','kbd', 'q','samp','small','span','strong','sub','sup','time','var',
-			));
+			$options['keepTags'] = array_merge($options['keepTags'], ['abbr', 'acronym', 'b', 'big', 'cite', 'code', 'em', 'i', 'kbd', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'var']);
 		}
 
 		if($type === 'block') {
@@ -716,7 +709,7 @@ class WireTextTools extends Wire {
 				$offset = $nextOffset;
 				$thisStr = $nextStr;
 				$nextStr = '';
-				$chars = array('.');
+				$chars = ['.'];
 			}
 			
 			foreach($chars as $find) {
@@ -804,26 +797,22 @@ class WireTextTools extends Wire {
 	 * @see WireTextTools::getWordStem()
 	 * 
 	 */
-	public function getWordAlternates($word, array $options = array()) {
+	public function getWordAlternates($word, array $options = []) {
 		
-		if(!$this->hasHook('wordAlternates()')) return array();
+		if(!$this->hasHook('wordAlternates()')) return [];
 		
-		$defaults = array(
-			'operator' => '', 
-			'minLength' => 2, 
-			'lowercase' => false, 
-		);
+		$defaults = ['operator' => '', 'minLength' => 2, 'lowercase' => false];
 		
 		$options = array_merge($defaults, $options);
 		$word = $this->trim($word);
-		$words = array();
+		$words = [];
 		$wordLow = $this->strtolower($word);
 		
 		if($options['lowercase']) $word = $wordLow;
-		if(empty($word)) return array();
+		if(empty($word)) return [];
 		
 		$alternates = $this->wordAlternates($word, $options);
-		if(!count($alternates)) return array();
+		if(!count($alternates)) return [];
 		
 		// if original word appears in return value, remove it
 		$key = array_search($word, $alternates);
@@ -893,7 +882,7 @@ class WireTextTools extends Wire {
 	 */
 	protected function ___wordAlternates($word, array $options) {
 		if($word && $options) {} // ignore
-		$alternates = array();
+		$alternates = [];
 		return $alternates;
 	}
 
@@ -909,16 +898,12 @@ class WireTextTools extends Wire {
 	 * @since 3.0.126
 	 *
 	 */
-	public function findPlaceholders($str, array $options = array()) {
+	public function findPlaceholders($str, array $options = []) {
 		
-		$defaults = array(
-			'has' => false,
-			'tagOpen' => '{',
-			'tagClose' => '}', 
-		);
+		$defaults = ['has' => false, 'tagOpen' => '{', 'tagClose' => '}'];
 		
 		$options = array_merge($defaults, $options);
-		$tags = array();
+		$tags = [];
 		$pos1 = strpos($str, $options['tagOpen']);
 		
 		if($pos1 === false) return $options['has'] ? false : $tags;
@@ -951,7 +936,7 @@ class WireTextTools extends Wire {
 	 * @since 3.0.126
 	 *
 	 */
-	public function hasPlaceholders($str, array $options = array()) {
+	public function hasPlaceholders($str, array $options = []) {
 		$options['has'] = true;
 		return $this->findPlaceholders($str, $options);
 	}
@@ -989,21 +974,27 @@ class WireTextTools extends Wire {
 	 * @since 3.0.126 Use wirePopulateStringTags() function for older versions
 	 *
 	 */
-	public function populatePlaceholders($str, $vars, array $options = array()) {
+	public function populatePlaceholders($str, $vars, array $options = []) {
 		
-		$defaults = array(
-			'tagOpen' => '{', // opening tag (required)
-			'tagClose' => '}', // closing tag (optional)
-			'recursive' => false, // if replacement value contains tags, populate those too?
-			'removeNullTags' => true, // if a tag value resolves to a NULL, remove it? If false, tag will be left in tact.
-			'entityEncode' => false, // entity encode values pulled from $vars?
-			'entityDecode' => false, // entity decode values pulled from $vars?
-			'allowMarkup' => true, // allow markup to appear in populated variables?
-		);
+		$defaults = [
+      'tagOpen' => '{',
+      // opening tag (required)
+      'tagClose' => '}',
+      // closing tag (optional)
+      'recursive' => false,
+      // if replacement value contains tags, populate those too?
+      'removeNullTags' => true,
+      // if a tag value resolves to a NULL, remove it? If false, tag will be left in tact.
+      'entityEncode' => false,
+      // entity encode values pulled from $vars?
+      'entityDecode' => false,
+      // entity decode values pulled from $vars?
+      'allowMarkup' => true,
+  ];
 
 		$options = array_merge($defaults, $options);
-		$optionsNoRecursive = $options['recursive'] ? array_merge($options, array('recursive' => false)) : $options;
-		$replacements = array();
+		$optionsNoRecursive = $options['recursive'] ? array_merge($options, ['recursive' => false]) : $options;
+		$replacements = [];
 		$tags = $this->findPlaceholders($str, $options);
 
 		// create a list of replacements by finding replacement values in $vars
@@ -1080,23 +1071,25 @@ class WireTextTools extends Wire {
 	 * @todo currently 'protected' for later use
 	 *
 	 */
-	protected function placeholderSanitizers($str, $data, array $options = array()) {
+	protected function placeholderSanitizers($str, $data, array $options = []) {
 		
 
-		$defaults = array(
-			'tagOpen' => '{', 
-			'tagClose' => '}', 
-			'sanitizersBefore' => array('string'), // sanitizers to apply before requested ones
-			'sanitizersAfter' => array(), // sanitizers to apply after requested ones
-			'sanitizersDefault' => array('text'), // defaults if only {var} is presented without {var:sanitizer}
-		);
+		$defaults = [
+      'tagOpen' => '{',
+      'tagClose' => '}',
+      'sanitizersBefore' => ['string'],
+      // sanitizers to apply before requested ones
+      'sanitizersAfter' => [],
+      // sanitizers to apply after requested ones
+      'sanitizersDefault' => ['text'],
+  ];
 		
 
 		$options = array_merge($defaults, $options);
 		$sanitizer = $this->wire()->sanitizer;
 		$dataIsArray = is_array($data);
-		$replacements = array();
-		$parts = array();
+		$replacements = [];
+		$parts = [];
 		
 		if(strpos($str, $options['tagOpen']) === false || !strpos($str, $options['tagClose'])) return $str;
 		
@@ -1104,16 +1097,16 @@ class WireTextTools extends Wire {
 			throw new WireException('$data argument must be associative array, WireData or WireInputData');
 		}
 	
-		list($tagOpen, $tagClose) = array(preg_quote($options['tagOpen']), preg_quote($options['tagClose'])); 
+		list($tagOpen, $tagClose) = [preg_quote($options['tagOpen']), preg_quote($options['tagClose'])]; 
 		
 		$regex = '/OPEN([-_.a-z0-9]+)(:[_,a-z0-9]+CLOSE|CLOSE)/i';
-		$regex = str_replace(array('OPEN', 'CLOSE'), array($tagOpen, $tagClose), $regex); 
+		$regex = str_replace(['OPEN', 'CLOSE'], [$tagOpen, $tagClose], $regex); 
 		if(!preg_match_all($regex, $str, $matches)) return $str;
 
 		foreach($matches[0] as $key => $placeholder) {
 			$varName = $matches[1][$key];
 			$sanitizers = trim($matches[2][$key], ':}');
-			$sanitizers = strlen($sanitizers) ? explode(',', $sanitizers) : array();
+			$sanitizers = strlen($sanitizers) ? explode(',', $sanitizers) : [];
 			if(!count($sanitizers)) $sanitizers = $options['sanitizersDefault'];
 			if($dataIsArray) {
 				/** @var array $data */
@@ -1123,7 +1116,7 @@ class WireTextTools extends Wire {
 				$value = $data->get($varName);
 			}
 			$n = 0;
-			foreach(array($options['sanitizersBefore'], $sanitizers, $options['sanitizersAfter']) as $methods) {
+			foreach([$options['sanitizersBefore'], $sanitizers, $options['sanitizersAfter']] as $methods) {
 				foreach($methods as $method) {
 					if(!$sanitizer->methodExists($method)) throw new WireException("Unknown sanitizer method: $method");
 					$value = $sanitizer->sanitize($value, $method);
@@ -1131,7 +1124,7 @@ class WireTextTools extends Wire {
 				}
 			}
 			if(!$n) $value = $placeholder;
-			$replacements[] = array($placeholder, $value);
+			$replacements[] = [$placeholder, $value];
 		}
 
 		// piece it back together manually so values in $data cannot introduce more placeholders
@@ -1159,9 +1152,9 @@ class WireTextTools extends Wire {
 	 * @todo currently 'protected' for later use
 	 * 
 	 */
-	protected function placeholderSelector($selectorString, $data, array $options = array()) {
-		if(!isset($options['sanitizersBefore'])) $options['sanitizersBefore'] = array();
-		if(!isset($options['sanitizersAfter'])) $options['sanitizersAfter'] = array();
+	protected function placeholderSelector($selectorString, $data, array $options = []) {
+		if(!isset($options['sanitizersBefore'])) $options['sanitizersBefore'] = [];
+		if(!isset($options['sanitizersAfter'])) $options['sanitizersAfter'] = [];
 		$options['sanitizersBefore'][] = 'text';
 		$options['sanitizersAfter'][] = 'selectorValue';
 		return $this->placeholderSanitizers($selectorString, $data, $options);
@@ -1180,7 +1173,7 @@ class WireTextTools extends Wire {
 	 */
 	protected function diffArray(array $oldArray, array $newArray) {
 		
-		$matrix = array();
+		$matrix = [];
 		$maxLen = 0;
 		$oldMax = 0; 
 		$newMax = 0;
@@ -1205,9 +1198,7 @@ class WireTextTools extends Wire {
 		}
 		
 		if($maxLen == 0) {
-			$result = array(
-				array('del' => $oldArray, 'ins' => $newArray)
-			);
+			$result = [['del' => $oldArray, 'ins' => $newArray]];
 			
 		} else {
 			$result = array_merge(
@@ -1240,18 +1231,13 @@ class WireTextTools extends Wire {
 	 * @since 3.0.144
 	 * 
 	 */
-	public function diffMarkup($old, $new, array $options = array()) {
+	public function diffMarkup($old, $new, array $options = []) {
 		
-		$defaults = array(
-			'ins' => "<ins>{out}</ins>",
-			'del' => "<del>{out}</del>", 
-			'entityEncode' => true,
-			'split' => '\s+', 
-		);
+		$defaults = ['ins' => "<ins>{out}</ins>", 'del' => "<del>{out}</del>", 'entityEncode' => true, 'split' => '\s+'];
 		
 		/** @var Sanitizer $sanitizer */
 		$sanitizer = $this->wire('sanitizer');
-		list($old, $new) = array("$old", "$new"); // enforce as string
+		list($old, $new) = ["$old", "$new"]; // enforce as string
 		$options = array_merge($defaults, $options);
 		$oldArray = preg_split("!($options[split])!", $old, 0, PREG_SPLIT_DELIM_CAPTURE);
 		$newArray = preg_split("!($options[split])!", $new, 0, PREG_SPLIT_DELIM_CAPTURE);
@@ -1262,7 +1248,7 @@ class WireTextTools extends Wire {
 		
 		foreach($diffArray as $diff) {
 			if(is_array($diff)) {
-				foreach(array('del', 'ins') as $key) {
+				foreach(['del', 'ins'] as $key) {
 					if(empty($diff[$key])) continue;
 					$diffStr = implode('', $diff[$key]);
 					if($options['entityEncode']) $diffStr = $sanitizer->entities1($diffStr);
@@ -1312,21 +1298,22 @@ class WireTextTools extends Wire {
 	 * @since 3.0.162
 	 * 
 	 */
-	public function findReplaceEscapeChars(&$str, array $escapeChars, array $options = array()) {
+	public function findReplaceEscapeChars(&$str, array $escapeChars, array $options = []) {
 
-		$defaults = array(
-			'escapePrefix' => '\\',
-			'restoreEscape' => false,  // when restoring, also restore escape prefix?
-			'gluePrefix' => '{ESC',
-			'glueSuffix' => '}',
-			'unescapeUnknown' => false,
-			'removeUnknown' => false,
-		);
+		$defaults = [
+      'escapePrefix' => '\\',
+      'restoreEscape' => false,
+      // when restoring, also restore escape prefix?
+      'gluePrefix' => '{ESC',
+      'glueSuffix' => '}',
+      'unescapeUnknown' => false,
+      'removeUnknown' => false,
+  ];
 
 		$options = array_merge($defaults, $options);
 		$escapePrefix = $options['escapePrefix'];
-		if(strpos($str, $escapePrefix) === false) return array();
-		$escapes = array();
+		if(strpos($str, $escapePrefix) === false) return [];
+		$escapes = [];
 		$glueSuffix = $options['glueSuffix'];
 		$parts = explode($escapePrefix, $str);
 		$n = 0;

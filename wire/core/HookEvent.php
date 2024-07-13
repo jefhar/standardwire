@@ -39,7 +39,7 @@ class HookEvent extends WireData {
 	 * Cached argument names indexed by "className.method"
 	 *
 	 */
-	static protected $argumentNames = array();
+	static protected $argumentNames = [];
 
 	/**
 	 * Construct the HookEvent and establish default values
@@ -47,17 +47,8 @@ class HookEvent extends WireData {
 	 * @param array $eventData Optional event data to start with
 	 *
 	 */
-	public function __construct(array $eventData = array()) {
-		$data = array(
-			'object' => null,
-			'method' => '',
-			'arguments' => array(),
-			'return' => null,
-			'replace' => false,
-			'options' => array(),
-			'id' => '',
-			'cancelHooks' => false
-		);
+	public function __construct(array $eventData = []) {
+		$data = ['object' => null, 'method' => '', 'arguments' => [], 'return' => null, 'replace' => false, 'options' => [], 'id' => '', 'cancelHooks' => false];
 		if(!empty($eventData)) $data = array_merge($data, $eventData);
 		$this->data = $data;
 		parent::__construct();
@@ -131,7 +122,7 @@ class HookEvent extends WireData {
 			return array_key_exists($key, $arguments) ? $arguments[$key] : null;
 		}
 
-		$argumentsByName = array();
+		$argumentsByName = [];
 
 		foreach($names as $key => $name) {
 			$value = null;
@@ -184,7 +175,7 @@ class HookEvent extends WireData {
 
 		if(isset(self::$argumentNames[$key])) return self::$argumentNames[$key];
 
-		$argumentNames = array();
+		$argumentNames = [];
 		$method = new \ReflectionMethod($o, '___' . $m); 
 		$arguments = $method->getParameters();
 

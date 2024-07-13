@@ -26,12 +26,7 @@ class PageAccess {
 	 * @var array
 	 * 
 	 */
-	protected $types = array(
-		'view',
-		'edit',
-		'add',
-		'create',
-	);
+	protected $types = ['view', 'edit', 'add', 'create'];
 
 	/**
 	 * Normalize a permission name type

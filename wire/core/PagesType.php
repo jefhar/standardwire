@@ -45,7 +45,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * @var array of Template objects indexed by template id
 	 * 
 	 */
-	protected $templates = array();
+	protected $templates = [];
 
 	/**
 	 * ID of the first parent page used by this PagesType (legacy)
@@ -61,7 +61,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * @var array of page IDs indexed by ID.
 	 * 
 	 */
-	protected $parents = array();
+	protected $parents = [];
 
 	/**
 	 * Class name to instantiate pages as
@@ -81,7 +81,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * @param int|Page|array $parents Parent ID or array of parent IDs (may also be Page or array of Page objects)
 	 *
 	 */
-	public function __construct(ProcessWire $wire, $templates = array(), $parents = array()) {
+	public function __construct(ProcessWire $wire, $templates = [], $parents = []) {
 		$this->setWire($wire);
 		$this->addTemplates($templates);
 		$this->addParents($parents); 
@@ -127,14 +127,14 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * 
 	 */
 	public function addParents($parents) {
-		if(!WireArray::iterable($parents)) $parents = array($parents);
+		if(!WireArray::iterable($parents)) $parents = [$parents];
 		foreach($parents as $parent) {
 			if(is_int($parent)) {
 				$id = $parent;
 			} else if(is_string($parent) && ctype_digit($parent)) {
 				$id = (int) $parent;
 			} else if(is_string($parent)) {
-				$parent = $this->wire()->pages->get($parent, array('loadOptions' => array('autojoin' => false)));
+				$parent = $this->wire()->pages->get($parent, ['loadOptions' => ['autojoin' => false]]);
 				$id = $parent->id;
 			} else if($parent instanceof Page) {
 				$id = $parent->id;
@@ -307,13 +307,13 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * @return array
 	 * 
 	 */
-	protected function getLoadOptions(array $loadOptions = array()) {
-		$_loadOptions = array(
-			'pageClass' => $this->getPageClass(),
-			//'getNumChildren' => false, 
-			'joinSortfield' => false,
-			'joinFields' => $this->getJoinFieldNames()
-		);
+	protected function getLoadOptions(array $loadOptions = []) {
+		$_loadOptions = [
+      'pageClass' => $this->getPageClass(),
+      //'getNumChildren' => false,
+      'joinSortfield' => false,
+      'joinFields' => $this->getJoinFieldNames(),
+  ];
 		if(count($loadOptions)) $_loadOptions = array_merge($_loadOptions, $loadOptions);
 		return $_loadOptions; 
 	}
@@ -328,9 +328,9 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * @see Pages::find()
 	 *
 	 */
-	public function find($selectorString, $options = array()) {
+	public function find($selectorString, $options = []) {
 		if(!isset($options['findAll'])) $options['findAll'] = true;
-		if(!isset($options['loadOptions'])) $options['loadOptions'] = array();
+		if(!isset($options['loadOptions'])) $options['loadOptions'] = [];
 		$options['loadOptions'] = $this->getLoadOptions($options['loadOptions']); 
 		if(empty($options['caller'])) $options['caller'] = $this->className() . ".find($selectorString)";
 		$pages = $this->wire()->pages->find($this->selectorString($selectorString), $options);
@@ -354,7 +354,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * @see Pages::findIDs()
 	 * 
 	 */
-	public function findIDs($selectorString, $options = array()) {
+	public function findIDs($selectorString, $options = []) {
 		if(!isset($options['findAll'])) $options['findAll'] = true;
 		if(empty($options['caller'])) $options['caller'] = $this->className() . ".findIDs($selectorString)";
 		$ids = $this->wire()->pages->findIDs($this->selectorString($selectorString), $options);
@@ -375,7 +375,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 		
 		if(empty($selectorString)) return $pages->newNullPage();
 		
-		$options = $this->getLoadOptions(array('getOne' => true));
+		$options = $this->getLoadOptions(['getOne' => true]);
 		
 		if(empty($options['caller'])) {
 			$caller = $this->className() . ".get($selectorString)";
@@ -393,7 +393,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 			} else {
 				// multiple templates and/or parents possible
 			}
-			$page = $pages->getById(array((int) $selectorString), $options);
+			$page = $pages->getById([(int) $selectorString], $options);
 			
 		} else if(strpos($selectorString, '=') === false) { 
 			// selector string contains no operators, so it is a page name or path
@@ -410,10 +410,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 		}
 	
 		if($page === null) {
-			$page = $pages->get($this->selectorString($selectorString), array(
-				'caller' => $caller,
-				'loadOptions' => $options
-			));
+			$page = $pages->get($this->selectorString($selectorString), ['caller' => $caller, 'loadOptions' => $options]);
 		}
 		
 		if($page->id) { 
@@ -447,7 +444,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 */
 	public function ___save(Page $page) {
 		if(!$this->isValid($page)) throw new WireException($this->errors('first'));
-		return $this->wire()->pages->save($page, array('adjustName' => false));
+		return $this->wire()->pages->save($page, ['adjustName' => false]);
 	}
 	
 	/**
@@ -491,10 +488,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 		
 		$parent = $this->getParent();
 
-		$page = $this->wire()->pages->newPage(array(
-			'pageClass' => $this->getPageClass(),
-			'template' => $this->template
-		)); 
+		$page = $this->wire()->pages->newPage(['pageClass' => $this->getPageClass(), 'template' => $this->template]); 
 		$page->parent = $parent; 
 		$page->name = $name; 
 		$page->sort = $parent->numChildren; 
@@ -520,9 +514,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 */
 	#[\ReturnTypeWillChange] 
 	public function getIterator() {
-		return $this->find("id>0, sort=name", array(
-			'caller' => $this->className() . '.getIterator()'
-		)); 
+		return $this->find("id>0, sort=name", ['caller' => $this->className() . '.getIterator()']); 
 	}
 
 	/**
@@ -546,7 +538,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * 
 	 */
 	public function getTemplates() {
-		return count($this->templates) ? $this->templates : array($this->template);
+		return count($this->templates) ? $this->templates : [$this->template];
 	}
 
 	/**
@@ -570,7 +562,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * 
 	 */
 	public function getParentIDs() {
-		return count($this->parents) ? $this->parents : array($this->parent_id); 
+		return count($this->parents) ? $this->parents : [$this->parent_id]; 
 	}
 
 	/**
@@ -647,12 +639,12 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * 
 	 */
 	#[\ReturnTypeWillChange]
-	public function count($selectorString = '', array $options = array()) {
+	public function count($selectorString = '', array $options = []) {
 		if(empty($selectorString) && empty($options) && count($this->parents) == 1) {
 			return $this->getParent()->numChildren();
 		}
 		$selectorString = $this->selectorString($selectorString); 
-		$defaults = array('findAll' => true); 
+		$defaults = ['findAll' => true]; 
 		$options = array_merge($defaults, $options); 
 		return $this->wire()->pages->count($selectorString, $options); 
 	}
@@ -664,7 +656,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * 
 	 */
 	protected function getJoinFieldNames() {
-		return array();
+		return [];
 	}
 
 	/*********************************************************************************************
@@ -683,7 +675,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 *
 	 */
 	public function ___saveReady(Page $page) { 
-		return array(); 
+		return []; 
 	}
 
 	/**
@@ -697,7 +689,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * @since 3.0.128
 	 *
 	 */
-	public function ___saved(Page $page, array $changes = array(), $values = array()) { }
+	public function ___saved(Page $page, array $changes = [], $values = []) { }
 
 	/**
 	 * Hook called when a new page of this type has been added

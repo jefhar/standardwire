@@ -32,7 +32,7 @@ class PageTraversal {
 	 * @return int Number of children
 	 *
 	 */
-	public function numChildren(Page $page, $selector = null, array $options = array()) {
+	public function numChildren(Page $page, $selector = null, array $options = []) {
 
 		$descendants = empty($options['descendants']) ? false : true;
 		$parentType = $descendants ? 'has_parent' : 'parent_id';
@@ -101,7 +101,7 @@ class PageTraversal {
 		if($selector === null) {
 			return $page->_pages('count', "has_parent=$page->id, include=all");
 		} else {
-			return $this->numChildren($page, $selector, array('descendants' => true));
+			return $this->numChildren($page, $selector, ['descendants' => true]);
 		}
 	}
 
@@ -114,16 +114,16 @@ class PageTraversal {
 	 * @return PageArray
 	 *
 	 */
-	public function children(Page $page, $selector = '', $options = array()) {
+	public function children(Page $page, $selector = '', $options = []) {
 		if(!$page->numChildren) return $page->_pages()->newPageArray();
-		$defaults = array('caller' => 'page.children'); 
+		$defaults = ['caller' => 'page.children']; 
 		$options = array_merge($defaults, $options); 
 		$sortfield = $page->sortfield();
 		if(is_array($selector)) {
 			// selector is array
 			$selector["parent_id"] = $page->id;
 			if(isset($selector["sort"])) $sortfield = '';
-			if($sortfield) $selector[] = array("sort", $sortfield);
+			if($sortfield) $selector[] = ["sort", $sortfield];
 		} else {
 			// selector is string
 			$selector = trim("parent_id=$page->id, $selector", ", ");
@@ -143,13 +143,13 @@ class PageTraversal {
 	 * @return Page|NullPage
 	 *
 	 */
-	public function child(Page $page, $selector = '', $options = array()) {
+	public function child(Page $page, $selector = '', $options = []) {
 		if(!$page->numChildren) return $page->_pages()->newNullPage();
-		$defaults = array('getTotal' => false, 'caller' => 'page.child'); 
+		$defaults = ['getTotal' => false, 'caller' => 'page.child']; 
 		$options = array_merge($defaults, $options); 
 		if(is_array($selector)) {
 			$selector["limit"] = 1;
-			$selector[] = array("start", "0");
+			$selector[] = ["start", "0"];
 		} else {
 			$selector .= ($selector ? ', ' : '') . "limit=1";
 			if(strpos($selector, 'start=') === false) $selector .= ", start=0"; // prevent pagination
@@ -276,13 +276,13 @@ class PageTraversal {
 		$sort = $parent->sortfield(); 
 		if(is_array($selector)) {
 			$selector["parent_id"] = $page->parent_id;	
-			$selector[] = array('sort', $sort);
+			$selector[] = ['sort', $sort];
 		} else {
 			$selector = "parent_id=$page->parent_id, $selector";
 			if(strpos($selector, 'sort=') === false) $selector .= ", sort=$sort";
 			$selector = trim($selector, ", ");
 		}
-		$options = array('caller' => 'page.siblings'); 
+		$options = ['caller' => 'page.siblings']; 
 		return $page->_pages('find', $selector, $options); 
 	}
 
@@ -312,13 +312,7 @@ class PageTraversal {
 	 */
 	protected function _nextFinderOptions(Page $page, $selector, $options) {
 
-		$fo = array(
-			'findOne' => $options['all'] ? false : true,
-			'startAfterID' => $options['prev'] ? 0 : $page->id,
-			'stopBeforeID' => $options['prev'] ? $page->id : 0,
-			'returnVerbose' => $options['all'] ? false : true,
-			'alwaysAllowIDs' => array(),
-		);
+		$fo = ['findOne' => $options['all'] ? false : true, 'startAfterID' => $options['prev'] ? 0 : $page->id, 'stopBeforeID' => $options['prev'] ? $page->id : 0, 'returnVerbose' => $options['all'] ? false : true, 'alwaysAllowIDs' => []];
 
 		if($page->isUnpublished() || $page->isHidden()) {
 			// allow next() to still move forward even though it is hidden or unpublished
@@ -357,7 +351,7 @@ class PageTraversal {
 
 		} else {
 			// selector string
-			$findOptions = $options['prev'] ? array() : array('startAfterID' => $page->id);
+			$findOptions = $options['prev'] ? [] : ['startAfterID' => $page->id];
 			$stopPage = $page->_pages('find', "$selector, limit=1, $until", $findOptions)->first();
 		}
 
@@ -389,14 +383,17 @@ class PageTraversal {
 	 *  - `Page|NullPage` in other cases. 
 	 *
 	 */ 
-	protected function _next(Page $page, $selector = '', array $options = array()) {
+	protected function _next(Page $page, $selector = '', array $options = []) {
 
-		$defaults = array(
-			'prev' => false, // get previous rather than next
-			'all' => false, // get multiple/all
-			'until' => '', // until selector string ('all' option assumed)
-			'qty' => false, // when true, returns just the quantity that would match ('all' option assumed)
-		);
+		$defaults = [
+      'prev' => false,
+      // get previous rather than next
+      'all' => false,
+      // get multiple/all
+      'until' => '',
+      // until selector string ('all' option assumed)
+      'qty' => false,
+  ];
 
 		$options = array_merge($defaults, $options);
 		$pages = $page->wire()->pages;
@@ -429,21 +426,13 @@ class PageTraversal {
 			$result = $options['all'] ? $pages->newPageArray() : $pages->newNullPage();
 
 		} else if($options['all']) {
-			$result = $pages->getById($rows, array(
-				'parent_id' => $parent->id,
-				'cache' => $page->loaderCache
-			));
+			$result = $pages->getById($rows, ['parent_id' => $parent->id, 'cache' => $page->loaderCache]);
 			if($options['prev']) $result = $result->reverse();
 
 		} else {
 			$row = reset($rows);
 			if($row && !empty($row['id'])) {
-				$result = $pages->getById(array($row['id']), array(
-					'template' => $page->wire()->templates->get($row['templates_id']),
-					'parent_id' => $row['parent_id'],
-					'getOne' => true,
-					'cache' => $page->loaderCache
-				));
+				$result = $pages->getById([$row['id']], ['template' => $page->wire()->templates->get($row['templates_id']), 'parent_id' => $row['parent_id'], 'getOne' => true, 'cache' => $page->loaderCache]);
 			} else {
 				$result = $pages->newNullPage();
 			}
@@ -474,7 +463,7 @@ class PageTraversal {
 	 */
 	public function index(Page $page, $selector = '') {
 		if($selector === true) $selector = "include=all";
-		$index = $this->_next($page, $selector, array('prev' => true, 'all' => true, 'qty' => 'index'));
+		$index = $this->_next($page, $selector, ['prev' => true, 'all' => true, 'qty' => 'index']);
 		return $index;
 	}
 
@@ -499,7 +488,7 @@ class PageTraversal {
 	 *
 	 */
 	public function prev(Page $page, $selector = '') {
-		return $this->_next($page, $selector, array('prev' => true));
+		return $this->_next($page, $selector, ['prev' => true]);
 	}
 
 
@@ -512,8 +501,8 @@ class PageTraversal {
 	 * @return PageArray Returns all matching pages after this one.
 	 *
 	 */
-	public function nextAll(Page $page, $selector = '', array $options = array()) {
-		$defaults = array('all' => true);
+	public function nextAll(Page $page, $selector = '', array $options = []) {
+		$defaults = ['all' => true];
 		$options = array_merge($options, $defaults);
 		return $this->_next($page, $selector, $options);
 	}
@@ -527,11 +516,8 @@ class PageTraversal {
 	 * @return PageArray Returns all matching pages after this one.
 	 *
 	 */
-	public function prevAll(Page $page, $selector = '', array $options = array()) {
-		$defaults = array(
-			'prev' => true, 
-			'all' => true
-		);
+	public function prevAll(Page $page, $selector = '', array $options = []) {
+		$defaults = ['prev' => true, 'all' => true];
 		$options = array_merge($options, $defaults);
 		return $this->_next($page, $selector, $options);
 	}
@@ -546,11 +532,8 @@ class PageTraversal {
 	 * @return PageArray
 	 *
 	 */
-	public function nextUntil(Page $page, $selector = '', $filter = '', array $options = array()) {
-		$defaults = array(
-			'all' => true, 
-			'until' => $selector
-		);
+	public function nextUntil(Page $page, $selector = '', $filter = '', array $options = []) {
+		$defaults = ['all' => true, 'until' => $selector];
 		$options = array_merge($options, $defaults);
 		return $this->_next($page, $filter, $options);
 	}
@@ -565,12 +548,8 @@ class PageTraversal {
 	 * @return PageArray
 	 *
 	 */
-	public function prevUntil(Page $page, $selector = '', $filter = '', array $options = array()) {
-		$defaults = array(
-			'prev' => true, 
-			'all' => true, 
-			'until' => $selector
-		);
+	public function prevUntil(Page $page, $selector = '', $filter = '', array $options = []) {
+		$defaults = ['prev' => true, 'all' => true, 'until' => $selector];
 		$options = array_merge($options, $defaults);
 		return $this->_next($page, $filter, $options);
 	}
@@ -613,21 +592,12 @@ class PageTraversal {
 	 * @see Page::path(), Page::httpUrl(), Page::editUrl(), Page::localUrl()
 	 *
 	 */
-	public function urlOptions(Page $page, $options = array()) {
+	public function urlOptions(Page $page, $options = []) {
 
 		$config = $page->wire()->config;
 		$template = $page->template;
 
-		$defaults = array(
-			'http' => is_bool($options) ? $options : false,
-			'scheme' => '', 
-			'host' => '', 
-			'pageNum' => is_int($options) || (is_string($options) && in_array($options, array('+', '-'))) ? $options : 1,
-			'data' => array(),
-			'urlSegmentStr' => is_string($options) ? $options : '',
-			'urlSegments' => array(),
-			'language' => is_object($options) && wireInstanceOf($options, 'Language') ? $options : null,
-		);
+		$defaults = ['http' => is_bool($options) ? $options : false, 'scheme' => '', 'host' => '', 'pageNum' => is_int($options) || (is_string($options) && in_array($options, ['+', '-'])) ? $options : 1, 'data' => [], 'urlSegmentStr' => is_string($options) ? $options : '', 'urlSegments' => [], 'language' => is_object($options) && wireInstanceOf($options, 'Language') ? $options : null];
 
 		if(empty($options)) {
 			$url = rtrim($config->urls->root, '/') . $page->path();
@@ -762,28 +732,23 @@ class PageTraversal {
 	 * @return array
 	 *
 	 */
-	public function urls(Page $page, $options = array()) {
+	public function urls(Page $page, $options = []) {
 
-		$defaults = array(
-			'http' => false,
-			'past' => true,
-			'languages' => true,
-			'language' => null, 
-		);
+		$defaults = ['http' => false, 'past' => true, 'languages' => true, 'language' => null];
 
 		$modules = $page->wire()->modules;
 		$options = array_merge($defaults, $options);
 		$languages = $options['languages'] ? $page->wire()->languages : null;
 		$slashUrls = $page->template->slashUrls;
 		$httpHostUrl = $options['http'] ? $page->wire()->input->httpHostUrl() : '';
-		$urls = array();
+		$urls = [];
 
 		if($options['language'] && $languages) {
 			if(!$options['language'] instanceof Page) {
 				$options['language'] = $languages->get($options['language']);
 			}
 			if($options['language'] && $options['language']->id) {
-				$languages = array($options['language']);
+				$languages = [$options['language']];
 			}
 		}
 
@@ -795,7 +760,7 @@ class PageTraversal {
 				$urls[$language->name] = $page->localUrl($language);
 			}
 		} else {
-			$urls = array('default' => $page->url());
+			$urls = ['default' => $page->url()];
 		}
 
 		// add in historical URLs
@@ -803,10 +768,7 @@ class PageTraversal {
 			/** @var PagePathHistory $history */
 			$history = $modules->get('PagePathHistory');
 			$rootUrl = $page->wire()->config->urls->root;
-			$pastPaths = $history->getPathHistory($page, array(
-				'language' => $options['language'],
-				'verbose' => true	
-			)); 
+			$pastPaths = $history->getPathHistory($page, ['language' => $options['language'], 'verbose' => true]); 
 			foreach($pastPaths as $pathInfo) {
 				$key = '';
 				if(!empty($pathInfo['language'])) {
@@ -855,7 +817,7 @@ class PageTraversal {
 	 * @return string URL for editing this page
 	 *
 	 */
-	public function editUrl(Page $page, $options = array()) {
+	public function editUrl(Page $page, $options = []) {
 
 		$config = $page->wire()->config;
 		$adminTemplate = $page->wire()->templates->get('admin'); /** @var Template $adminTemplate */
@@ -922,13 +884,13 @@ class PageTraversal {
 	 * @see Page::url(), Page::localHttpUrl()
 	 *
 	 */
-	public function httpUrl(Page $page, $options = array()) {
+	public function httpUrl(Page $page, $options = []) {
 
 		$template = $page->template();
 		if(!$template) return '';
 
 		if(is_array($options)) unset($options['http']);
-		if($options === true || $options === false) $options = array();
+		if($options === true || $options === false) $options = [];
 
 		$url = $page->url($options);
 		if(strpos($url, '://')) return $url;
@@ -1024,10 +986,10 @@ class PageTraversal {
 		}
 
 		// results
-		$fieldCounts = array(); // counts indexed by field name (if count mode)
+		$fieldCounts = []; // counts indexed by field name (if count mode)
 		$pages = $page->wire()->pages;
 		$items = $pages->newPageArray();
-		$itemsByField = array();
+		$itemsByField = [];
 
 		foreach($page->template->fieldgroup as $f) {
 			/** @var Field $f */
@@ -1081,7 +1043,7 @@ class PageTraversal {
 	 * @throws WireException
 	 * 
 	 */
-	public function links(Page $page, $selector = '', $field = false, array $options = array()) {
+	public function links(Page $page, $selector = '', $field = false, array $options = []) {
 		/** @var FieldtypeTextarea $fieldtype */
 		$fieldtype = $page->wire()->fieldtypes->get('FieldtypeTextarea');
 		if(!$fieldtype) throw new WireException('Unable to find FieldtypeTextarea');
@@ -1097,7 +1059,7 @@ class PageTraversal {
 	 * 
 	 */
 	public function numLinks(Page $page, $field = false) {
-		return $this->links($page, true, $field, array('getCount' => true));
+		return $this->links($page, true, $field, ['getCount' => true]);
 	}
 
 	/**
@@ -1109,7 +1071,7 @@ class PageTraversal {
 	 * 
 	 */
 	public function hasLinks(Page $page, $field = false) {
-		return $this->links($page, '', $field, array('getCount' => true));
+		return $this->links($page, '', $field, ['getCount' => true]);
 	}
 
 

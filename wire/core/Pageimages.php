@@ -127,9 +127,9 @@ class Pageimages extends Pagefiles {
 	 */
 	public function getAllVariations() {
 		
-		$variations = array();
-		$extensions = array();
-		$basenames = array();
+		$variations = [];
+		$extensions = [];
+		$basenames = [];
 		
 		foreach($this as $pageimage) {
 			/** @var Pageimage $pageimage */
@@ -137,7 +137,7 @@ class Pageimages extends Pagefiles {
 			$ext = $pageimage->ext;
 			$extensions[$name] = $ext;
 			$basenames[$name] = basename($name, ".$ext");
-			$variations[$name] = array();	
+			$variations[$name] = [];	
 		}
 		
 		foreach(new \DirectoryIterator($this->path()) as $file) {
@@ -229,7 +229,7 @@ class Pageimages extends Pagefiles {
 	 * @since 3.0.126
 	 *
 	 */
-	public function ___render($markup = '', $options = array()) {
+	public function ___render($markup = '', $options = []) {
 		$out = '';
 		$limit = 0;
 		$n = 0;

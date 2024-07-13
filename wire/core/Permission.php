@@ -29,20 +29,7 @@ class Permission extends Page {
 	 * @var array
 	 * 
 	 */
-	static protected $parentPermissions = array(
-		'page-view' => 'none',
-		'page-lister' => 'none',
-		'page-edit' => 'none', 
-		'user-admin' => 'page-edit',
-		'lang-edit' => 'page-edit',
-		'page-lock' => 'page-edit',
-		'page-hide' => 'page-edit',
-		'page-clone' => 'page-edit',
-		'page-move' => 'page-edit',
-		'page-template' => 'page-edit',
-		'page-sort' => 'page-edit',
-		'page' => 'page-edit', // all page-* permissions
-	);
+	static protected $parentPermissions = ['page-view' => 'none', 'page-lister' => 'none', 'page-edit' => 'none', 'user-admin' => 'page-edit', 'lang-edit' => 'page-edit', 'page-lock' => 'page-edit', 'page-hide' => 'page-edit', 'page-clone' => 'page-edit', 'page-move' => 'page-edit', 'page-template' => 'page-edit', 'page-sort' => 'page-edit', 'page' => 'page-edit'];
 
 	/**
 	 * Create a new Permission page in memory. 

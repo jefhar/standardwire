@@ -120,7 +120,7 @@ class Installer {
 			"If you need help or have questions during installation, please stop by our " . 
 			"<a href='https://processwire.com/talk/' target='_blank'>support board</a> and we'll be glad to help."
 		);
-		$this->btn("Get Started", array('icon' => 'sign-in')); 
+		$this->btn("Get Started", ['icon' => 'sign-in']); 
 	}
 
 
@@ -146,22 +146,9 @@ class Installer {
 	 * 
 	 */
 	protected function findProfiles() {
-		$profiles = array(
-			//'site-blank' => null,
-			//'site-default' => null, // preferred starting order
-			//'site-beginner' => null,
-			//'site-languages' => null, 
-		); 
-		$dirTests = array(
-			'install', 
-			'templates',
-			'assets',
-		);
-		$fileTests = array(
-			'config.php',
-			'templates/admin.php',
-			'install/install.sql',
-		);
+		$profiles = []; 
+		$dirTests = ['install', 'templates', 'assets'];
+		$fileTests = ['config.php', 'templates/admin.php', 'install/install.sql'];
 		foreach(new \DirectoryIterator(__DIR__) as $dir) {
 			if($dir->isDot() || !$dir->isDir()) continue; 
 			$name = $dir->getBasename();
@@ -171,7 +158,7 @@ class Installer {
 			foreach($dirTests as $test) if(!is_dir($path . $test)) $passed = false;
 			foreach($fileTests as $test) if(!file_exists($path . $test)) $passed = false; 
 			if(!$passed) continue;
-			$profile = array('name' => str_replace('site-', '', $name));
+			$profile = ['name' => str_replace('site-', '', $name)];
 			$infoFile = $path . 'install/info.php';
 			if(file_exists($infoFile)) {
 				/** @noinspection PhpIncludeInspection */
@@ -286,7 +273,7 @@ class Installer {
 		} else {
 			if($this->post('step') === '000') $this->alertOk('Refreshed profiles');
 			$this->selectProfile();
-			$this->btn('Refresh', array('value' => '000', 'icon' => 'refresh', 'secondary' => true, 'float' => true));
+			$this->btn('Refresh', ['value' => '000', 'icon' => 'refresh', 'secondary' => true, 'float' => true]);
 			$this->btnContinue();
 			return;
 		}
@@ -364,11 +351,11 @@ class Installer {
 			$this->ok("$memoryLimitLabel"); 
 		}
 	
-		$dirs = array(
-			// directory => required?
-			'./site/assets/' => true,
-			'./site/modules/' => false, 
-		);
+		$dirs = [
+      // directory => required?
+      './site/assets/' => true,
+      './site/modules/' => false,
+  ];
 		foreach($dirs as $dir => $required) {
 			$d = ltrim($dir, '.'); 
 			if(!file_exists($dir)) {
@@ -405,10 +392,10 @@ class Installer {
 
 		if($this->numErrors) {
 			$this->p("One or more errors were found above. We recommend you correct these issues before proceeding or <a href='https://processwire.com/talk/'>contact ProcessWire support</a> if you have questions or think the error is incorrect. But if you want to proceed anyway, click Continue below.");
-			$this->btn("Check Again", array('value' => 1, 'icon' => 'refresh', 'float' => true)); 
-			$this->btn("Continue to Next Step", array('value' => 2, 'icon' => 'angle-right', 'secondary' => true)); 
+			$this->btn("Check Again", ['value' => 1, 'icon' => 'refresh', 'float' => true]); 
+			$this->btn("Continue to Next Step", ['value' => 2, 'icon' => 'angle-right', 'secondary' => true]); 
 		} else {
-			$this->btn("Continue to Next Step", array('value' => 2, 'icon' => 'angle-right')); 
+			$this->btn("Continue to Next Step", ['value' => 2, 'icon' => 'angle-right']); 
 		}
 	}
 
@@ -419,7 +406,7 @@ class Installer {
 	 * @param int $hasNumTables
 	 *
 	 */
-	protected function dbConfig($values = array(), $hasNumTables = 0) {
+	protected function dbConfig($values = [], $hasNumTables = 0) {
 
 		if(!is_file("./site/install/install.sql")) die(
 			"There is no installation profile in /site/. Please place one there before continuing. " . 
@@ -430,11 +417,7 @@ class Installer {
 			$this->sectionStart('fa-database Existing tables action'); 
 			// select($name, $label, $value, array $options) {
 			$this->p("What would you like to do with the existing database tables that are present?");
-			$this->select('dbTablesAction', '', 0, array(
-				'0' => 	"Click to select tables action",
-				'ignore' => "Ignore tables*", 
-				'remove' => "Remove tables", 
-			), 0);
+			$this->select('dbTablesAction', '', 0, ['0' => 	"Click to select tables action", 'ignore' => "Ignore tables*", 'remove' => "Remove tables"], 0);
 			$this->p("*When choosing “Ignore tables”, existing tables having the same name as newly imported tables will still be deleted.", 'detail'); 
 			$this->sectionStop();
 		}
@@ -471,23 +454,23 @@ class Installer {
 		
 		$this->input('dbName', 'DB Name', $values['dbName']); 
 		$this->input('dbUser', 'DB User', $values['dbUser']);
-		$this->input('dbPass', 'DB Pass', $values['dbPass'], array('type' => 'password', 'required' => false)); 
+		$this->input('dbPass', 'DB Pass', $values['dbPass'], ['type' => 'password', 'required' => false]); 
 		$this->input('dbHost', 'DB Host', $values['dbHost']); 
 		$this->input('dbPort', 'DB Port', $values['dbPort']);
 	
-		$this->select('dbCharset', 'DB Charset', $values['dbCharset'], array('utf8', 'utf8mb4'));
-		$this->select('dbEngine', 'DB Engine', $values['dbEngine'], array('MyISAM', 'InnoDB'));
+		$this->select('dbCharset', 'DB Charset', $values['dbCharset'], ['utf8', 'utf8mb4']);
+		$this->select('dbEngine', 'DB Engine', $values['dbEngine'], ['MyISAM', 'InnoDB']);
 		$this->clear();
 	
 		$this->p(
 			"The DB Charset option “utf8mb4” may not be compatible with all 3rd party modules.<br />" . 
 			"The DB Engine option “InnoDB” requires MySQL 5.6.4 or newer.", 
-			array('class' => 'detail', 'style' => 'margin-top:0')
+			['class' => 'detail', 'style' => 'margin-top:0']
 		);
 		$this->sectionStop();
 
 		$cgi = false;
-		$defaults = array();
+		$defaults = [];
 
 		if(is_writable(__FILE__)) {
 			$defaults['chmodDir'] = "755";
@@ -538,18 +521,18 @@ class Installer {
 		$this->p("Permissions must be 3 digits each. Should you opt to use the defaults provided, you can also adjust these permissions later if desired by editing <u>/site/config.php</u>.", "detail");
 
 		$this->input('chmodDir', 'Directories', $values['chmodDir']); 
-		$this->input('chmodFile', 'Files', $values['chmodFile'], array('clear' => true)); 
+		$this->input('chmodFile', 'Files', $values['chmodFile'], ['clear' => true]); 
 
 		if($cgi) {
 			$this->p(
 				"We detected that this file (install.php) is writable. That means Apache may be running as your user account. Given that, we populated the permissions above (755 &amp; 644) as possible starting point.", 
-				array('class' => 'detail', 'style' => 'margin-top:0')
+				['class' => 'detail', 'style' => 'margin-top:0']
 			);
 		} else {
 			$this->p(
 				"WARNING: 777 and 666 permissions mean that directories and files are readable and writable to everyone on the server (and thus not particularly safe). If in any kind of shared hosting environment, please consult your web host for their recommended permission settings for Apache readable/writable directories and files before proceeding. " . 
 				"<a target='_blank' href='https://processwire.com/docs/security/file-permissions/'>More</a>",
-				array('class' => 'detail', 'style' => 'margin-top:0')
+				['class' => 'detail', 'style' => 'margin-top:0']
 			);
 		}
 		
@@ -589,7 +572,7 @@ class Installer {
 		);
 		$this->sectionStop();
 		
-		$this->btnContinue(array('value' => 4)); 
+		$this->btnContinue(['value' => 4]); 
 		$this->p("Note: After you click the button above, be patient &hellip; it may take a minute.", "detail");
 	}
 
@@ -599,11 +582,11 @@ class Installer {
 	 */
 	protected function dbSaveConfig() {
 
-		$values = array();
+		$values = [];
 		$database = null;
 		
 		// file permissions
-		$fields = array('chmodDir', 'chmodFile');
+		$fields = ['chmodDir', 'chmodFile'];
 		foreach($fields as $field) {
 			$value = $this->post($field, 'int');
 			if(strlen("$value") !== 3) {
@@ -629,10 +612,10 @@ class Installer {
 		}
 
 		// http hosts
-		$values['httpHosts'] = array();
+		$values['httpHosts'] = [];
 		$httpHosts = $this->post('httpHosts', 'textarea');
 		if(strlen($httpHosts)) {
-			$httpHosts = str_replace(array("'", '"'), '', $httpHosts);
+			$httpHosts = str_replace(["'", '"'], '', $httpHosts);
 			$httpHosts = explode("\n", $httpHosts);
 			foreach($httpHosts as $key => $host) {
 				$host = strtolower(trim(filter_var($host, FILTER_SANITIZE_URL)));
@@ -645,7 +628,7 @@ class Installer {
 		$values['debugMode'] = $this->post('debugMode', 'int');
 
 		// db configuration
-		$fields = array('dbUser', 'dbName', 'dbPass', 'dbHost', 'dbPort', 'dbEngine', 'dbCharset');
+		$fields = ['dbUser', 'dbName', 'dbPass', 'dbHost', 'dbPort', 'dbEngine', 'dbCharset'];
 		
 		foreach($fields as $field) {
 			$value = $this->post($field, 'string');
@@ -666,10 +649,7 @@ class Installer {
 			error_reporting(0); 
 			
 			$dsn = "mysql:dbname=$values[dbName];host=$values[dbHost];port=$values[dbPort]";
-			$driver_options = array(
-				\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
-				\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
-			);
+			$driver_options = [\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'", \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
 			
 			try {
 				$database = new \PDO($dsn, $values['dbUser'], $values['dbPass'], $driver_options);
@@ -695,10 +675,7 @@ class Installer {
 		$this->h("fa-database Test Database and Save Configuration");
 		$this->alertOk("Database connection successful to " . htmlspecialchars($values['dbName'])); 
 		
-		$options = array(
-			'dbCharset' => strtolower($values['dbCharset']), 
-			'dbEngine' => $values['dbEngine']
-		);
+		$options = ['dbCharset' => strtolower($values['dbCharset']), 'dbEngine' => $values['dbEngine']];
 
 		// check if MySQL is new enough to support InnoDB with fulltext indexes
 		if($options['dbEngine'] == 'InnoDB') {
@@ -1049,15 +1026,12 @@ class Installer {
 	 * @param array $options
 	 *
 	 */
-	protected function profileImportSQL($database, $file1, $file2, array $options = array()) {
-		$defaults = array(
-			'dbEngine' => 'MyISAM',
-			'dbCharset' => 'utf8', 
-		);
+	protected function profileImportSQL($database, $file1, $file2, array $options = []) {
+		$defaults = ['dbEngine' => 'MyISAM', 'dbCharset' => 'utf8'];
 		$options = array_merge($defaults, $options); 
 		if(self::TEST_MODE) return;
-		$restoreOptions = array();
-		$replace = array();
+		$restoreOptions = [];
+		$replace = [];
 		if($options['dbEngine'] != 'MyISAM') {
 			$replace['ENGINE=MyISAM'] = "ENGINE=$options[dbEngine]";
 		}
@@ -1092,15 +1066,9 @@ class Installer {
 	 */
 	protected function adminAccount($wire = null) {
 
-		$values = array(
-			'admin_name' => 'processwire',
-			'username' => 'admin',
-			'userpass' => '',
-			'userpass_confirm' => '',
-			'useremail' => '',
-		);
+		$values = ['admin_name' => 'processwire', 'username' => 'admin', 'userpass' => '', 'userpass_confirm' => '', 'useremail' => ''];
 
-		$clean = array();
+		$clean = [];
 
 		foreach($values as $key => $value) {
 			if($wire && $wire->input->post($key)) $value = $wire->input->post($key);
@@ -1109,12 +1077,12 @@ class Installer {
 		}
 
 		$this->sectionStart("fa-sign-in Admin Panel");
-		$this->input("admin_name", "Admin Login URL", $clean['admin_name'], array('type' => 'name')); 
+		$this->input("admin_name", "Admin Login URL", $clean['admin_name'], ['type' => 'name']); 
 		$this->clear();
 		
 		$this->p(
 			"fa-info-circle You can change the admin URL later by editing the admin page and changing the name on the settings tab.",
-			array('class' => 'detail', 'style' => 'margin-top:0')
+			['class' => 'detail', 'style' => 'margin-top:0']
 		); 
 		$this->sectionStop();
 		
@@ -1123,13 +1091,13 @@ class Installer {
 			"You will use this account to login to your ProcessWire admin. It will have superuser access, so please make sure " . 
 			"to create a <a target='_blank' href='https://en.wikipedia.org/wiki/Password_strength'>strong password</a>."
 		);
-		$this->input("username", "User", $clean['username'], array('type' => 'name')); 
-		$this->input("userpass", "Password", $clean['userpass'], array('type' => 'password')); 
-		$this->input("userpass_confirm", "Password <small class='detail'>(again)</small>", $clean['userpass_confirm'], array('type' => 'password')); 
-		$this->input("useremail", "Email Address", $clean['useremail'], array('clear' => true, 'type' => 'email')); 
+		$this->input("username", "User", $clean['username'], ['type' => 'name']); 
+		$this->input("userpass", "Password", $clean['userpass'], ['type' => 'password']); 
+		$this->input("userpass_confirm", "Password <small class='detail'>(again)</small>", $clean['userpass_confirm'], ['type' => 'password']); 
+		$this->input("useremail", "Email Address", $clean['useremail'], ['clear' => true, 'type' => 'email']); 
 		$this->p(
 			"fa-warning Please remember the password you enter above as you will not be able to retrieve it again.", 
-			array('class' => 'detail', 'style' => 'margin-top:0')
+			['class' => 'detail', 'style' => 'margin-top:0']
 		);
 		$this->sectionStop();
 		
@@ -1138,7 +1106,7 @@ class Installer {
 		$this->p($this->getRemoveableItems(true)); 
 		$this->sectionStop();
 			
-		$this->btnContinue(array('value' => 5)); 
+		$this->btnContinue(['value' => 5]); 
 	}
 
 	/**
@@ -1156,31 +1124,11 @@ class Installer {
 		$postItems = $this->post('remove_items', 'array');
 		$out = '';
 		
-		$items = array(
-			'install-php' => array(
-				'label' => 'Remove installer (install.php) when finished', 
-				'file' => "/install.php", 
-				'path' => $root . "install.php", 
-			),
-			'install-dir' => array(
-				'label' => 'Remove installer site profile assets (/site/install/)',
-				'path' => $root . "site/install/", 
-				'file' => '/site/install/', 
-			), 
-			'gitignore' => array(
-				'label' => 'Remove .gitignore file',
-				'path' => $root . ".gitignore",
-				'file' => '/.gitignore',
-			)
-		);
+		$items = ['install-php' => ['label' => 'Remove installer (install.php) when finished', 'file' => "/install.php", 'path' => $root . "install.php"], 'install-dir' => ['label' => 'Remove installer site profile assets (/site/install/)', 'path' => $root . "site/install/", 'file' => '/site/install/'], 'gitignore' => ['label' => 'Remove .gitignore file', 'path' => $root . ".gitignore", 'file' => '/.gitignore']];
 		
 		foreach($this->findProfiles() as $name => $profile) {
 			$title = empty($profile['title']) ? $name : $profile['title'];
-			$items[$name] = array(
-				'label' => "Remove unused $title site profile (/$name/)", 
-				'path' => $root . "$name/",
-				'file' => "/$name/", 
-			);
+			$items[$name] = ['label' => "Remove unused $title site profile (/$name/)", 'path' => $root . "$name/", 'file' => "/$name/"];
 		}
 		
 		foreach($items as $name => $item) {
@@ -1333,8 +1281,8 @@ class Installer {
 		);
 		$this->sectionStop();
 
-		$this->btn("Login to Admin", array('value' => 1, 'icon' => 'sign-in', 'float' => true, 'href' => "./$adminName/")); 
-		$this->btn("View Site ", array('value' => 1, 'icon' => 'angle-right', 'secondary' => true, 'href' => "./")); 
+		$this->btn("Login to Admin", ['value' => 1, 'icon' => 'sign-in', 'float' => true, 'href' => "./$adminName/"]); 
+		$this->btn("View Site ", ['value' => 1, 'icon' => 'angle-right', 'secondary' => true, 'href' => "./"]); 
 
 		// set a define that indicates installation is completed so that this script no longer runs
 		if(!self::TEST_MODE) {
@@ -1353,7 +1301,7 @@ class Installer {
 	protected function finish($wire, $user) {
 		$file = __DIR__ . '/site/install/finish.php';
 		if(is_file($file)) {
-			$fuel = array_merge($wire->wire('all')->getArray(), array('user' => $user));
+			$fuel = array_merge($wire->wire('all')->getArray(), ['user' => $user]);
 			$installer = $this;
 			if($installer) {} // ignore
 			extract($fuel);
@@ -1519,17 +1467,8 @@ class Installer {
 	 * @param array $options
 	 *
 	 */
-	public function btn($label, array $options = array()) {
-		$defaults = array(
-			'name' => 'step',
-			'value' => '0',
-			'icon' => 'angle-right',
-			'secondary' => false,
-			'float' => false,
-			'href' => '',
-			'type' => 'submit',
-			'class' => '',
-		);
+	public function btn($label, array $options = []) {
+		$defaults = ['name' => 'step', 'value' => '0', 'icon' => 'angle-right', 'secondary' => false, 'float' => false, 'href' => '', 'type' => 'submit', 'class' => ''];
 		$options = array_merge($defaults, $options);
 		$options['class'] = trim($options['class'] . ' ' . ($options['secondary'] ? 'ui-priority-secondary' : ''));
 		if($options['float']) $options['class'] = trim("$options[class] uk-float-left");
@@ -1555,7 +1494,7 @@ class Installer {
 	 * @param array $options
 	 * 
 	 */
-	public function btnContinue(array $options = array()) {
+	public function btnContinue(array $options = []) {
 		$this->btn('Continue', $options);
 	}
 
@@ -1600,13 +1539,8 @@ class Installer {
 	 * @param array $options
 	 *
 	 */
-	public function input($name, $label, $value, array $options = array()) {
-		$defaults = array(
-			'clear' => false, 
-			'type' => 'text', 
-			'required' => true,
-			'width' => 150, 
-		);
+	public function input($name, $label, $value, array $options = []) {
+		$defaults = ['clear' => false, 'type' => 'text', 'required' => true, 'width' => 150];
 		$options = array_merge($defaults, $options);
 		$width = $options['width'];
 		$required = $options['required'] ? "required='required'" : "";
@@ -1766,7 +1700,7 @@ class Installer {
 			case 'text':
 				$value = (string) $value;
 				if(strlen($value)) {
-					$value = str_replace(array("\r", "\n", "\t"), ' ', "$value");
+					$value = str_replace(["\r", "\n", "\t"], ' ', "$value");
 					$value = trim(strip_tags($value));
 					if(strlen($value) > 255) $value = substr($value, 0, 255);
 				}
@@ -1775,7 +1709,7 @@ class Installer {
 				$value = (string) $value;
 				if(strlen($value)) {
 					$value = strip_tags($value);
-					$value = str_replace(array("\r\n", "\r"), "\n", $value);
+					$value = str_replace(["\r\n", "\r"], "\n", $value);
 					if(strlen($value) > 4096) $value = substr($value, 0, 4096);
 					$value = trim($value);
 				}
@@ -1806,7 +1740,7 @@ class Installer {
 				$value = $value ? true : false;
 				break;
 			case 'array':	
-				$value = is_array($value) ? $value : array();
+				$value = is_array($value) ? $value : [];
 				break;
 		}
 		
@@ -1841,18 +1775,7 @@ class Installer {
 		}
 		$file = $path . '.htaccess';
 		if($result && $block && !file_exists($file)) {
-			$data = array(
-				'# Start ProcessWire:pwball (install)',
-				'# Block all access (fallback if root .htaccess missing)',
-				'<IfModule mod_authz_core.c>',
-				'  Require all denied',
-				'</IfModule>',
-				'<IfModule !mod_authz_core.c>',
-				'  Order allow,deny',
-				'  Deny from all',
-				'</IfModule>',
-				'# End ProcessWire:pwball',
-			);
+			$data = ['# Start ProcessWire:pwball (install)', '# Block all access (fallback if root .htaccess missing)', '<IfModule mod_authz_core.c>', '  Require all denied', '</IfModule>', '<IfModule !mod_authz_core.c>', '  Order allow,deny', '  Deny from all', '</IfModule>', '# End ProcessWire:pwball'];
 			file_put_contents($file, implode("\n", $data));
 			chmod($file, octdec($this->chmodFile));
 		}
@@ -1938,17 +1861,8 @@ class Installer {
 	 */
 	protected function timezones() {
 		$timezones = timezone_identifiers_list();
-		if(!is_array($timezones)) return array('UTC');
-		$extras = array(
-			'US Eastern|America/New_York',
-			'US Central|America/Chicago',
-			'US Mountain|America/Denver',
-			'US Mountain (no DST)|America/Phoenix',
-			'US Pacific|America/Los_Angeles',
-			'US Alaska|America/Anchorage',
-			'US Hawaii|America/Adak',
-			'US Hawaii (no DST)|Pacific/Honolulu',
-		);
+		if(!is_array($timezones)) return ['UTC'];
+		$extras = ['US Eastern|America/New_York', 'US Central|America/Chicago', 'US Mountain|America/Denver', 'US Mountain (no DST)|America/Phoenix', 'US Pacific|America/Los_Angeles', 'US Alaska|America/Anchorage', 'US Hawaii|America/Adak', 'US Hawaii (no DST)|Pacific/Honolulu'];
 		foreach($extras as $t) $timezones[] = $t; 
 		return $timezones; 
 	}
@@ -1963,7 +1877,7 @@ class Installer {
 	 */
 	protected function getMemoryLimit($getInUnit = 'M') {
 		// $units = array('M' => 1048576, 'K' => 1024, 'G' => 1073741824);
-		$units = array('M' => 1000000, 'K' => 1000, 'G' => 1000000000);
+		$units = ['M' => 1000000, 'K' => 1000, 'G' => 1000000000];
 		$value = (string) ini_get('memory_limit');
 		$value = trim(strtoupper($value), ' B'); // KB=K, MB=>M, GB=G, 
 		$unit = substr($value, -1); // K, M, G

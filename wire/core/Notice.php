@@ -180,21 +180,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.149
 	 * 
 	 */
-	static protected $flagNames = array(
-		self::prepend => 'prepend',
-		self::debug => 'debug',
-		self::log => 'log',
-		self::logOnly => 'logOnly',
-		self::allowMarkup => 'allowMarkup',
-		self::allowMarkdown => 'allowMarkdown',
-		self::allowDuplicate => 'allowDuplicate',
-		self::anonymous => 'anonymous',
-		self::noGroup => 'noGroup',
-		self::login => 'login',
-		self::admin => 'admin',
-		self::superuser => 'superuser',
-		self::persist => 'persist',
-	);
+	static protected $flagNames = [self::prepend => 'prepend', self::debug => 'debug', self::log => 'log', self::logOnly => 'logOnly', self::allowMarkup => 'allowMarkup', self::allowMarkdown => 'allowMarkdown', self::allowDuplicate => 'allowDuplicate', self::anonymous => 'anonymous', self::noGroup => 'noGroup', self::login => 'login', self::admin => 'admin', self::superuser => 'superuser', self::persist => 'persist'];
 
 	/**
 	 * Alternate names to flags
@@ -203,12 +189,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.208
 	 * 
 	 */
-	static protected $flagNamesAlt = array(
-		'duplicate' => self::allowDuplicate,
-		'markup' => self::allowMarkup,
-		'markdown' => self::allowMarkdown,
-		'separate' => self::noGroup,
-	);
+	static protected $flagNamesAlt = ['duplicate' => self::allowDuplicate, 'markup' => self::allowMarkup, 'markdown' => self::allowMarkdown, 'separate' => self::noGroup];
 	
 	/**
 	 * Create the Notice
@@ -286,7 +267,7 @@ abstract class Notice extends WireData {
 			if(ctype_digit($value)) {
 				$flags = (int) $value;
 			} else {
-				if(strpos($value, ',') !== false) $value = str_replace(array(', ', ','), ' ', $value);
+				if(strpos($value, ',') !== false) $value = str_replace([', ', ','], ' ', $value);
 				$value = explode(' ', $value);
 			}
 		}
@@ -340,9 +321,9 @@ abstract class Notice extends WireData {
 		if($flags === null) {
 			$flagNames = self::$flagNames;
 		} else if(!is_int($flags)) {
-			$flagNames = array();
+			$flagNames = [];
 		} else {
-			$flagNames = array();
+			$flagNames = [];
 			foreach(self::$flagNames as $flag => $flagName) {
 				if($flags & $flag) $flagNames[$flag] = $flagName;
 			}

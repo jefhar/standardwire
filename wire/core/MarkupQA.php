@@ -58,11 +58,7 @@ class MarkupQA extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $settings = array(
-		'ignorePaths' => array(),
-		'debug' => false,
-		'verbose' => false,
-	);
+	protected $settings = ['ignorePaths' => [], 'debug' => false, 'verbose' => false];
 
 	/**
 	 * Construct
@@ -134,7 +130,7 @@ class MarkupQA extends Wire {
 			} else if(strpos($paths, ",")) {
 				$paths = explode(",", $paths);
 			} else {
-				$paths = strlen($paths) ? array($paths) : array();
+				$paths = strlen($paths) ? [$paths] : [];
 			}
 			foreach($paths as $k => $v) $paths[$k] = trim($v); // remove any remaining whitespace
 		}
@@ -218,21 +214,21 @@ class MarkupQA extends Wire {
 		$rootURL = $config->urls->root;
 		$rootHostURL = $httpHost . $rootURL;
 
-		$replacements = array(
-			// wakeup => sleep
-			" href=\"$rootURL" => "\thref=\"/",
-			" href='$rootURL" => "\thref='/",
-			" src=\"$rootURL" => "\tsrc=\"/",
-			" src='$rootURL" => "\tsrc='/",
-		);
+		$replacements = [
+      // wakeup => sleep
+      " href=\"$rootURL" => "\thref=\"/",
+      " href='$rootURL" => "\thref='/",
+      " src=\"$rootURL" => "\tsrc=\"/",
+      " src='$rootURL" => "\tsrc='/",
+  ];
 		
-		if(strpos($value, "//$rootHostURL")) $replacements = array_merge($replacements, array(
-			// wakeup => sleep
-			" href='http://$rootHostURL" => "\thref='http://$httpHost/",
-			" href='https://$rootHostURL" => "\thref='https://$httpHost/",
-			" href=\"http://$rootHostURL" => "\thref=\"http://$httpHost/",
-			" href=\"https://$rootHostURL" => "\thref=\"https://$httpHost/",
-		));
+		if(strpos($value, "//$rootHostURL")) $replacements = array_merge($replacements, [
+      // wakeup => sleep
+      " href='http://$rootHostURL" => "\thref='http://$httpHost/",
+      " href='https://$rootHostURL" => "\thref='https://$httpHost/",
+      " href=\"http://$rootHostURL" => "\thref=\"http://$httpHost/",
+      " href=\"https://$rootHostURL" => "\thref=\"https://$httpHost/",
+  ]);
 		
 		if($sleep) {
 			// sleep 
@@ -240,8 +236,8 @@ class MarkupQA extends Wire {
 
 			if($this->verbose()) {
 				$info = $this->page->get('_markupQA');	
-				if(!is_array($info)) $info = array();
-				if(!isset($info[$this->field->name]) || !is_array($info[$this->field->name])) $info[$this->field->name] = array();
+				if(!is_array($info)) $info = [];
+				if(!isset($info[$this->field->name]) || !is_array($info[$this->field->name])) $info[$this->field->name] = [];
 				$info[$this->field->name]['href'] = substr_count($value, "\thref=");
 				$info[$this->field->name]['src'] = substr_count($value, "\tsrc=");
 				$this->page->setQuietly('_markupQA', $info);
@@ -324,19 +320,10 @@ class MarkupQA extends Wire {
 		// if there is already a data-pwid attribute present, then links are already asleep
 		if(strpos($value, 'href=') === false || strpos($value, 'data-pwid=')) return;
 	
-		$info = $this->verbose() ? $this->page->get('_markupQA') : array();
-		if(!is_array($info)) $info = array();
+		$info = $this->verbose() ? $this->page->get('_markupQA') : [];
+		if(!is_array($info)) $info = [];
 		
-		$counts = array(
-			'external' => 0,
-			'internal' => 0,
-			'relative' => 0,
-			'files' => 0,
-			'other' => 0,
-			'unresolved' => 0,
-			'nohttp' => 0,
-			'ignored' => 0,
-		);
+		$counts = ['external' => 0, 'internal' => 0, 'relative' => 0, 'files' => 0, 'other' => 0, 'unresolved' => 0, 'nohttp' => 0, 'ignored' => 0];
 		
 		if(isset($info[$this->field->name])) {
 			$counts = array_merge($counts, $info[$this->field->name]);	
@@ -351,7 +338,7 @@ class MarkupQA extends Wire {
 		
 		if(!preg_match_all($re, $value, $matches)) return;
 		
-		$replacements = array();
+		$replacements = [];
 		$languages = $this->wire()->languages;
 		$debug = $this->debug();
 		$config = $this->wire()->config;
@@ -413,11 +400,7 @@ class MarkupQA extends Wire {
 			if($ignored) continue;
 	
 			// get the page for the path
-			$getByPathOptions = array(
-				'useLanguages' => $languages ? true : false,
-				'allowUrlSegments' => true,
-				'useHistory' => true
-			);
+			$getByPathOptions = ['useLanguages' => $languages ? true : false, 'allowUrlSegments' => true, 'useHistory' => true];
 			$page = $pages->getByPath($path, $getByPathOptions);
 			if(!$page->id) {
 				// if not found try again with non-urlSegment partial matching
@@ -494,7 +477,7 @@ class MarkupQA extends Wire {
 	public function wakeupLinks(&$value) {
 
 		// if there's no data-pwid attribute present, then there's nothing to do here
-		if(strpos($value, 'data-pwid=') === false) return array();
+		if(strpos($value, 'data-pwid=') === false) return [];
 		
 		$re = '!' . 
 			'(<a[^\t<>]*?)' . // 1:"start" which includes "<a" and everything up until data-pwid attribute
@@ -504,9 +487,9 @@ class MarkupQA extends Wire {
 			'([^<>]*>)' . // 5:"end" which includes everything else and closing ">", i.e. query string, other attrs, etc.
 			'!i';
 		
-		if(!preg_match_all($re, $value, $matches)) return array();
+		if(!preg_match_all($re, $value, $matches)) return [];
 		
-		$replacements = array();
+		$replacements = [];
 		$languages = $this->wire()->languages;
 		$config = $this->wire()->config;
 		$pages = $this->wire()->pages;
@@ -543,9 +526,7 @@ class MarkupQA extends Wire {
 				$language = null;
 			}
 			
-			$livePath = $pages->getPath($pageID, array(
-				'language' => $language
-			));
+			$livePath = $pages->getPath($pageID, ['language' => $language]);
 			
 			if($urlSegmentStr) {
 				$livePath = rtrim($livePath, '/') . "/$urlSegmentStr";
@@ -620,22 +601,18 @@ class MarkupQA extends Wire {
 	 * @return PageArray|array|int
 	 * 
 	 */
-	public function findLinks(Page $page = null, $fieldNames = array(), $selector = '', array $options = array()) {
+	public function findLinks(Page $page = null, $fieldNames = [], $selector = '', array $options = []) {
 		
 		$pages = $this->wire()->pages;
 		$fields = $this->wire()->fields;
 		$database = $this->wire()->database;
 		
-		$defaults = array(
-			'getIDs' => false,
-			'getCount' => false, 
-			'confirm' => true 
-		);
+		$defaults = ['getIDs' => false, 'getCount' => false, 'confirm' => true];
 
 		$options = array_merge($defaults, $options);
 		
 		if($options['getIDs']) {
-			$result = array();
+			$result = [];
 		} else if($options['getCount']) {
 			$result = 0;
 		} else {
@@ -662,12 +639,12 @@ class MarkupQA extends Wire {
 			return $pages->count($selector);
 		} else {
 			// find the IDs
-			$checkIDs = array();
+			$checkIDs = [];
 			$foundIDs = $pages->findIDs($selector);
 			if(!count($foundIDs)) return $result;
 			if($options['confirm']) {
 				$checkIDs = array_flip($foundIDs);
-				$foundIDs = array();
+				$foundIDs = [];
 			}
 		}
 		
@@ -743,7 +720,7 @@ class MarkupQA extends Wire {
 	 *  - removeNoAccess (bool): Remove references to images user doesn't have view permission to (default=true)
 	 *
 	 */
-	public function checkImgTags(&$value, array $options = array()) {
+	public function checkImgTags(&$value, array $options = []) {
 		if(strpos($value, '<img ') !== false && preg_match_all('{(<' . 'img [^>]+>)}', $value, $matches)) {
 			foreach($matches[0] as $img) {
 				$this->checkImgTag($value, $img, $options);
@@ -762,13 +739,9 @@ class MarkupQA extends Wire {
 	 *  - removeNoAccess (bool): Remove references to images user doesn't have view permission to (default=true)
 	 *
 	 */
-	protected function checkImgTag(&$value, $img, array $options = array()) {
+	protected function checkImgTag(&$value, $img, array $options = []) {
 		
-		$defaults = array(
-			'replaceBlankAlt' => true,
-			'removeNoExists' => true,
-			'removeNoAccess' => true, 
-		);
+		$defaults = ['replaceBlankAlt' => true, 'removeNoExists' => true, 'removeNoAccess' => true];
 		
 		$options = array_merge($defaults, $options);
 		$replaceAlt = ''; // exact text to replace for blank alt attribute, i.e. alt=""
@@ -778,12 +751,12 @@ class MarkupQA extends Wire {
 
 		if($this->verbose()) {
 			$markupQA = $this->page->get('_markupQA');
-			if(!is_array($markupQA)) $markupQA = array();
-			if(!isset($markupQA[$this->field->name])) $markupQA[$this->field->name] = array();
+			if(!is_array($markupQA)) $markupQA = [];
+			if(!isset($markupQA[$this->field->name])) $markupQA[$this->field->name] = [];
 			$info =& $markupQA[$this->field->name];
 		} else {
 			$markupQA = null;
-			$info = array();
+			$info = [];
 		}
 
 		if(!isset($info['img_unresolved'])) $info['img_unresolved'] = 0;
@@ -928,7 +901,7 @@ class MarkupQA extends Wire {
 		}
 
 		$info['targetName'] = $basename; 
-		$variations = array($info);
+		$variations = [$info];
 		while(!empty($info['parent'])) {
 			$variations[] = $info['parent'];
 			$info = $info['parent'];
@@ -940,7 +913,7 @@ class MarkupQA extends Wire {
 		
 		foreach(array_reverse($variations) as $info) {
 			// definitely a variation, attempt to re-create it
-			$options = array();
+			$options = [];
 			if($info['crop']) $options['cropping'] = $info['crop'];
 			if($info['suffix']) {
 				$options['suffix'] = $info['suffix'];

@@ -24,20 +24,15 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 */
 	public function find(array $options) {
 
-		$defaults = array(
-			'names' => array(),
-			'expires' => array(),
-			'expiresMode' => 'OR',
-			'get' => array('name', 'expires', 'data'),
-		);
+		$defaults = ['names' => [], 'expires' => [], 'expiresMode' => 'OR', 'get' => ['name', 'expires', 'data']];
 		
 		$database = $this->wire()->database;
 		$options = array_merge($defaults, $options);
-		$where = array();
-		$whereNames = array();
-		$whereExpires = array();
-		$binds = array();
-		$cols = array();
+		$where = [];
+		$whereNames = [];
+		$whereExpires = [];
+		$binds = [];
+		$cols = [];
 
 		if(count($options['names'])) {
 			$n = 0;
@@ -82,7 +77,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 			if($col === 'size') $cols[] = 'LENGTH(data) AS size';
 		}
 		
-		if(empty($cols)) return array();
+		if(empty($cols)) return [];
 
 		$sql = 'SELECT ' . implode(',', $cols) . ' FROM caches ';
 		if(count($where)) {
@@ -98,7 +93,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 			$query->bindValue($bindKey, $bindValue);
 		}
 
-		if(!$this->executeQuery($query)) return array();
+		if(!$this->executeQuery($query)) return [];
 		
 		$rows = $query->fetchAll(\PDO::FETCH_ASSOC);
 		$query->closeCursor();

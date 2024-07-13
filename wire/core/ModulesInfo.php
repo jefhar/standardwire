@@ -58,13 +58,13 @@ class ModulesInfo extends ModulesClass {
 	 * Cache of module information
 	 *
 	 */
-	public $moduleInfoCache = array();
+	public $moduleInfoCache = [];
 
 	/**
 	 * Cache of module information (verbose text) including: summary, author, href, file, core
 	 *
 	 */
-	public $moduleInfoCacheVerbose = array();
+	public $moduleInfoCacheVerbose = [];
 
 	/**
 	 * Cache of uninstalled module information (verbose for uninstalled) including: summary, author, href, file, core
@@ -72,7 +72,7 @@ class ModulesInfo extends ModulesClass {
 	 * Note that this one is indexed by class name rather than by ID (since uninstalled modules have no ID)
 	 *
 	 */
-	public $moduleInfoCacheUninstalled = array();
+	public $moduleInfoCacheUninstalled = [];
 	
 	/**
 	 * Last known versions of modules, for version change tracking
@@ -80,7 +80,7 @@ class ModulesInfo extends ModulesClass {
 	 * @var array of ModuleName (string) => last known version (integer|string)
 	 *
 	 */
-	protected $modulesLastVersions = array();
+	protected $modulesLastVersions = [];
 	
 	/**
 	 * Cache of namespace => path for unique module namespaces (memory cache only)
@@ -97,19 +97,7 @@ class ModulesInfo extends ModulesClass {
 	 * @var array
 	 *
 	 */
-	protected $moduleInfoVerboseKeys = array(
-		'summary',
-		'author',
-		'href',
-		'file',
-		'core',
-		'versionStr',
-		'permissions',
-		'searchable',
-		'page',
-		'license',
-		// 'languages',
-	);
+	protected $moduleInfoVerboseKeys = ['summary', 'author', 'href', 'file', 'core', 'versionStr', 'permissions', 'searchable', 'page', 'license'];
 
 	/**
 	 * Template for individual module info
@@ -117,62 +105,54 @@ class ModulesInfo extends ModulesClass {
 	 * @var array 
 	 * 
 	 */
-	protected $infoTemplate = array(
-		// module database ID
-		'id' => 0,
-		// module class name 
-		'name' => '',
-		// module title
-		'title' => '',
-		// module version
-		'version' => 0,
-		// module version (always formatted string)
-		'versionStr' => '0.0.0',
-		// who authored the module? (included in 'verbose' mode only)
-		'author' => '',
-		// summary of what this module does (included in 'verbose' mode only)
-		'summary' => '',
-		// URL to module details (included in 'verbose' mode only)
-		'href' => '',
-		// Optional name of icon representing this module (currently font-awesome icon names, excluding the "fa-" portion)
-		'icon' => '',
-		// this method converts this to array of module names, regardless of how the module specifies it
-		'requires' => array(),
-		// module name is key, value is array($operator, $version). Note 'requiresVersions' index is created by this function.
-		'requiresVersions' => array(),
-		// array of module class names
-		'installs' => array(),
-		// permission required to execute this module
-		'permission' => '',
-		// permissions automatically installed/uninstalled with this module. array of ('permission-name' => 'Description')
-		'permissions' => array(),
-		// true if module is autoload, false if not. null=unknown
-		'autoload' => null,
-		// true if module is singular, false if not. null=unknown
-		'singular' => null,
-		// unix-timestamp date/time module added to system (for uninstalled modules, it is the file date)
-		'created' => 0,
-		// is the module currently installed? (boolean, or null when not determined)
-		'installed' => null,
-		// this is set to true when the module is configurable, false when it's not, and null when it's not determined
-		'configurable' => null,
-		// verbose mode only: true when module implements SearchableModule interface, or null|false when not
-		'searchable' => null,
-		// namespace that module lives in (string)
-		'namespace' => null,
-		// verbose mode only: this is set to the module filename (from PW installation root), false when it can't be found, null when it hasn't been determined
-		'file' => null,
-		// verbose mode only: this is set to true when the module is a core module, false when it's not, and null when it's not determined
-		'core' => null,
-		// verbose mode only: any translations supplied with the module
-		// 'languages' => null,
-
-		// other properties that may be present, but are optional, for Process modules:
-		// 'nav' => array(), // navigation definition: see Process.php
-		// 'useNavJSON' => bool, // whether the Process module provides JSON navigation
-		// 'page' => array(), // page to create for Process module: see Process.php
-		// 'permissionMethod' => string or callable // method to call to determine permission: see Process.php
-	);
+	protected $infoTemplate = [
+     // module database ID
+     'id' => 0,
+     // module class name
+     'name' => '',
+     // module title
+     'title' => '',
+     // module version
+     'version' => 0,
+     // module version (always formatted string)
+     'versionStr' => '0.0.0',
+     // who authored the module? (included in 'verbose' mode only)
+     'author' => '',
+     // summary of what this module does (included in 'verbose' mode only)
+     'summary' => '',
+     // URL to module details (included in 'verbose' mode only)
+     'href' => '',
+     // Optional name of icon representing this module (currently font-awesome icon names, excluding the "fa-" portion)
+     'icon' => '',
+     // this method converts this to array of module names, regardless of how the module specifies it
+     'requires' => [],
+     // module name is key, value is array($operator, $version). Note 'requiresVersions' index is created by this function.
+     'requiresVersions' => [],
+     // array of module class names
+     'installs' => [],
+     // permission required to execute this module
+     'permission' => '',
+     // permissions automatically installed/uninstalled with this module. array of ('permission-name' => 'Description')
+     'permissions' => [],
+     // true if module is autoload, false if not. null=unknown
+     'autoload' => null,
+     // true if module is singular, false if not. null=unknown
+     'singular' => null,
+     // unix-timestamp date/time module added to system (for uninstalled modules, it is the file date)
+     'created' => 0,
+     // is the module currently installed? (boolean, or null when not determined)
+     'installed' => null,
+     // this is set to true when the module is configurable, false when it's not, and null when it's not determined
+     'configurable' => null,
+     // verbose mode only: true when module implements SearchableModule interface, or null|false when not
+     'searchable' => null,
+     // namespace that module lives in (string)
+     'namespace' => null,
+     // verbose mode only: this is set to the module filename (from PW installation root), false when it can't be found, null when it hasn't been determined
+     'file' => null,
+     // verbose mode only: this is set to true when the module is a core module, false when it's not, and null when it's not determined
+     'core' => null,
+ ];
 
 	/**
 	 * Replacement/default values to use when property is null
@@ -180,14 +160,7 @@ class ModulesInfo extends ModulesClass {
 	 * @var array 
 	 * 
 	 */
-	protected $infoNullReplacements = array(
-		'autoload' => false, 
-		'singular' => false, 
-		'configurable' => false, 
-		'core' => false, 
-		'installed' => true, 
-		'namespace' => "\\ProcessWire\\",
-	);
+	protected $infoNullReplacements = ['autoload' => false, 'singular' => false, 'configurable' => false, 'core' => false, 'installed' => true, 'namespace' => "\\ProcessWire\\"];
 
 	/**
 	 * Is the module info cache empty?
@@ -239,7 +212,7 @@ class ModulesInfo extends ModulesClass {
 			// get all
 			foreach($infos as $moduleID => $info) {
 				if(empty($info)) {
-					$info = array();
+					$info = [];
 				} else if(is_array($info)) {
 					continue;
 				} else {
@@ -249,20 +222,20 @@ class ModulesInfo extends ModulesClass {
 			}
 			return $infos;
 		} else if($moduleID === 0) {
-			return $property ? null : array();
+			return $property ? null : [];
 		}
 		if(!ctype_digit("$moduleID")) {
 			// convert module name to module id
 			$moduleID = $this->moduleID($moduleID);
-			if(!$moduleID) return ($property ? null : array());
+			if(!$moduleID) return ($property ? null : []);
 		}
 		$moduleID = (int) $moduleID;
-		if(!isset($infos[$moduleID])) return ($property ? null : array());
+		if(!isset($infos[$moduleID])) return ($property ? null : []);
 		$info = $infos[$moduleID];
-		if(empty($info)) return ($property ? null : array());
+		if(empty($info)) return ($property ? null : []);
 		if(is_string($info)) {
 			$info = json_decode($info, true);
-			if(!is_array($info)) $info = array();
+			if(!is_array($info)) $info = [];
 			$infos[$moduleID] = $info;
 		}
 		if($property) return isset($info[$property]) ? $info[$property] : null;
@@ -300,14 +273,14 @@ class ModulesInfo extends ModulesClass {
 			$path = $this->wire()->config->paths($moduleName);
 		}
 
-		if(empty($path)) return array();
+		if(empty($path)) return [];
 
 		// module exists and has a dedicated path on the file system
 		// we will try to get info from a PHP or JSON info file
 		$filePHP = $path . "$moduleName.info.php";
 		$fileJSON = $path . "$moduleName.info.json";
 
-		$info = array();
+		$info = [];
 		if(file_exists($filePHP)) {
 			/** @noinspection PhpIncludeInspection */
 			include($filePHP); // will populate $info automatically
@@ -317,7 +290,7 @@ class ModulesInfo extends ModulesClass {
 			$info = file_get_contents($fileJSON);
 			$info = json_decode($info, true);
 			if(!$info) {
-				$info = array();
+				$info = [];
 				$this->error("Invalid JSON module info file for $moduleName");
 			}
 		}
@@ -335,7 +308,7 @@ class ModulesInfo extends ModulesClass {
 	 */
 	public function getModuleInfoInternal($module, $namespace = '') {
 
-		$info = array();
+		$info = [];
 
 		if($module instanceof ModulePlaceholder) {
 			$this->modules->includeModule($module);
@@ -352,7 +325,7 @@ class ModulesInfo extends ModulesClass {
 			$className = wireClassName($namespace . $module, true);
 			if(!class_exists($className)) $this->modules->includeModule($module);
 			if(is_callable("$className::getModuleInfo")) {
-				$info = call_user_func(array($className, 'getModuleInfo'));
+				$info = call_user_func([$className, 'getModuleInfo']);
 			}
 		}
 
@@ -367,9 +340,9 @@ class ModulesInfo extends ModulesClass {
 	 * @return array
 	 *
 	 */
-	public function getModuleInfoSystem($moduleName, array $options = array()) {
+	public function getModuleInfoSystem($moduleName, array $options = []) {
 
-		$info = array();
+		$info = [];
 		
 		if($moduleName === 'PHP') {
 			$info['id'] = 0;
@@ -383,15 +356,10 @@ class ModulesInfo extends ModulesClass {
 			$info['title'] = $moduleName;
 			$info['version'] = $this->wire()->config->version;
 			$info['namespace'] = self::defaultNamespace;
-			$info['requiresVersions'] = array(
-				'PHP' => array('>=', '5.3.8'),
-				'PHP_modules' => array('=', 'PDO,mysqli'),
-				'Apache_modules' => array('=', 'mod_rewrite'),
-				'MySQL' => array('>=', '5.0.15'),
-			);
+			$info['requiresVersions'] = ['PHP' => ['>=', '5.3.8'], 'PHP_modules' => ['=', 'PDO,mysqli'], 'Apache_modules' => ['=', 'mod_rewrite'], 'MySQL' => ['>=', '5.0.15']];
 			$info['requires'] = array_keys($info['requiresVersions']);
 		} else {
-			return array();
+			return [];
 		}
 
 		$info['versionStr'] = $info['version'];
@@ -471,21 +439,16 @@ class ModulesInfo extends ModulesClass {
 	 * @todo move all getModuleInfo methods to their own ModuleInfo class and break this method down further.
 	 *
 	 */
-	public function getModuleInfo($class, array $options = array()) {
+	public function getModuleInfo($class, array $options = []) {
 
 		if($class === 'info') return $this->infoTemplate;
 		if($class === '*' || $class === 'all') return $this->getModuleInfoAll($options);
 		if($class === 'ProcessWire' || $class === 'PHP') return $this->getModuleInfoSystem($class, $options);
 		
-		$defaults = array(
-			'verbose' => false,
-			'minify' => false,
-			'noCache' => false,
-			'noInclude' => false,
-		);
+		$defaults = ['verbose' => false, 'minify' => false, 'noCache' => false, 'noInclude' => false];
 
 		$options = array_merge($defaults, $options);
-		$info = array();
+		$info = [];
 		$module = $class;
 		$fromCache = false;  // was the data loaded from cache?
 		$moduleName = $this->moduleName($module);
@@ -545,11 +508,7 @@ class ModulesInfo extends ModulesClass {
 		}
 
 		if(!$fromCache && empty($info)) {
-			return array_merge($this->infoTemplate, array(
-				'title' => $module,
-				'summary' => 'Inactive',
-				'error' => 'Unable to locate module',
-			));
+			return array_merge($this->infoTemplate, ['title' => $module, 'summary' => 'Inactive', 'error' => 'Unable to locate module']);
 		}
 
 		$info['id'] = (int) $moduleID;
@@ -588,7 +547,7 @@ class ModulesInfo extends ModulesClass {
 				if(strpos($info['requires'], ',') !== false) {
 					$info['requires'] = explode(',', $info['requires']);
 				} else {
-					$info['requires'] = array($info['requires']);
+					$info['requires'] = [$info['requires']];
 				}
 			}
 
@@ -603,7 +562,7 @@ class ModulesInfo extends ModulesClass {
 					$operator = '>=';
 					$version = 0;
 				}
-				$info['requiresVersions'][$class] = array($operator, $version);
+				$info['requiresVersions'][$class] = [$operator, $version];
 			}
 
 			// what does it install?
@@ -613,7 +572,7 @@ class ModulesInfo extends ModulesClass {
 				if(strpos($info['installs'], ',') !== false) {
 					$info['installs'] = explode(',', $info['installs']);
 				} else {
-					$info['installs'] = array($info['installs']);
+					$info['installs'] = [$info['installs']];
 				}
 			}
 
@@ -665,10 +624,7 @@ class ModulesInfo extends ModulesClass {
 				// default namespace, assumed since all core modules are in default namespace
 				$info['namespace'] = self::defaultNamespace;
 			} else {
-				$info['namespace'] = $this->getModuleNamespace($moduleName, array(
-					'file' => $info['file'],
-					'noCache' => $options['noCache']
-				));
+				$info['namespace'] = $this->getModuleNamespace($moduleName, ['file' => $info['file'], 'noCache' => $options['noCache']]);
 			}
 
 			if(!$options['verbose']) {
@@ -715,12 +671,8 @@ class ModulesInfo extends ModulesClass {
 	 * @return array
 	 * 
 	 */
-	public function getModuleInfoAll(array $options = array()) {
-		$defaults = array(
-			'verbose' => false, 
-			'noCache' => false, 
-			'minify' => true,
-		);
+	public function getModuleInfoAll(array $options = []) {
+		$defaults = ['verbose' => false, 'noCache' => false, 'minify' => true];
 		$options = array_merge($defaults, $options);
 		if(!count($this->moduleInfoCache)) $this->loadModuleInfoCache();
 		$modulesInfo = $this->moduleInfoCache();
@@ -767,7 +719,7 @@ class ModulesInfo extends ModulesClass {
 	 * @see Modules::getModuleInfo()
 	 *
 	 */
-	public function getModuleInfoVerbose($class, array $options = array()) {
+	public function getModuleInfoVerbose($class, array $options = []) {
 		$options['verbose'] = true;
 		$info = $this->getModuleInfo($class, $options);
 		return $info;
@@ -783,7 +735,7 @@ class ModulesInfo extends ModulesClass {
 	 * @since 3.0.107
 	 *
 	 */
-	public function getModuleInfoProperty($class, $property, array $options = array()) {
+	public function getModuleInfoProperty($class, $property, array $options = []) {
 
 		if(empty($options['noCache'])) {
 			// shortcuts where possible
@@ -792,7 +744,7 @@ class ModulesInfo extends ModulesClass {
 					return $this->getModuleNamespace($class);
 				case 'requires':
 					$v = $this->moduleInfoCache($class, 'requiresVersions'); // must be 'requiredVersions' here
-					if(empty($v)) return array(); // early exit when known not to exist
+					if(empty($v)) return []; // early exit when known not to exist
 					break; // fallback to calling getModuleInfo
 			}
 		}
@@ -824,10 +776,10 @@ class ModulesInfo extends ModulesClass {
 
 		if(ctype_alnum($require)) {
 			// no version is specified
-			return array($require, '', 0);
+			return [$require, '', 0];
 		}
 
-		$operators = array('<=', '>=', '<', '>', '!=', '=');
+		$operators = ['<=', '>=', '<', '>', '!=', '='];
 		$operator = '';
 		foreach($operators as $o) {
 			if(strpos($require, $o)) {
@@ -837,7 +789,7 @@ class ModulesInfo extends ModulesClass {
 		}
 
 		// if no operator found, then no version is being specified
-		if(!$operator) return array($require, '', 0);
+		if(!$operator) return [$require, '', 0];
 
 		// extract class and version
 		list($class, $version) = explode($operator, $require);
@@ -845,7 +797,7 @@ class ModulesInfo extends ModulesClass {
 		// make version an integer if possible
 		if(ctype_digit("$version")) $version = (int) $version;
 
-		return array($class, $operator, $version);
+		return [$class, $operator, $version];
 	}
 	
 	/**
@@ -919,9 +871,9 @@ class ModulesInfo extends ModulesClass {
 			$this->message("saveModuleInfoCache (" . (++$n) . ")");
 		}
 
-		$this->moduleInfoCache = array();
-		$this->moduleInfoCacheVerbose = array();
-		$this->moduleInfoCacheUninstalled = array();
+		$this->moduleInfoCache = [];
+		$this->moduleInfoCacheVerbose = [];
+		$this->moduleInfoCacheUninstalled = [];
 
 		$user = $this->wire()->user;
 		$languages = $this->wire()->languages;
@@ -939,7 +891,7 @@ class ModulesInfo extends ModulesClass {
 
 		$installableFiles = $this->modules->installableFiles;
 
-		foreach(array(true, false) as $installed) {
+		foreach([true, false] as $installed) {
 
 			$items = $installed ? $this->modules : array_keys($installableFiles);
 
@@ -947,7 +899,7 @@ class ModulesInfo extends ModulesClass {
 
 				$class = is_object($module) ? $module->className() : $module;
 				$class = wireClassName($class, false);
-				$info = $this->getModuleInfo($class, array('noCache' => true, 'verbose' => true));
+				$info = $this->getModuleInfo($class, ['noCache' => true, 'verbose' => true]);
 				$moduleID = (int) $info['id']; // note ID is always 0 for uninstalled modules
 
 				if(!empty($info['error'])) {
@@ -985,7 +937,7 @@ class ModulesInfo extends ModulesClass {
 				if($installed) {
 
 					$verboseKeys = $this->moduleInfoVerboseKeys;
-					$verboseInfo = array();
+					$verboseInfo = [];
 
 					foreach($verboseKeys as $key) {
 						if(!empty($info[$key])) $verboseInfo[$key] = $info[$key];
@@ -1001,11 +953,7 @@ class ModulesInfo extends ModulesClass {
 			}
 		}
 
-		$caches = array(
-			self::moduleInfoCacheName => 'moduleInfoCache',
-			self::moduleInfoCacheVerboseName => 'moduleInfoCacheVerbose',
-			self::moduleInfoCacheUninstalledName => 'moduleInfoCacheUninstalled',
-		);
+		$caches = [self::moduleInfoCacheName => 'moduleInfoCache', self::moduleInfoCacheVerboseName => 'moduleInfoCacheVerbose', self::moduleInfoCacheUninstalledName => 'moduleInfoCacheUninstalled'];
 
 		$defaultTrimNS = trim(self::defaultNamespace, "\\");
 
@@ -1058,14 +1006,14 @@ class ModulesInfo extends ModulesClass {
 		$sanitizer = $this->wire()->sanitizer;
 		$config = $this->wire()->config;
 
-		$versionChanges = array();
-		$editLinks = array();
-		$newModules = array();
-		$moveModules = array();
-		$missModules = array();
+		$versionChanges = [];
+		$editLinks = [];
+		$newModules = [];
+		$moveModules = [];
+		$missModules = [];
 
 		// record current module versions currently in moduleInfo
-		$moduleVersions = array();
+		$moduleVersions = [];
 		foreach($this->moduleInfoCache() as $id => $moduleInfo) {
 			if(isset($this->modulesLastVersions[$id])) {
 				$moduleVersions[$id] = $this->modulesLastVersions[$id];
@@ -1079,9 +1027,9 @@ class ModulesInfo extends ModulesClass {
 		$this->modules->deleteCache(self::moduleInfoCacheVerboseName);
 		$this->modules->deleteCache(self::moduleInfoCacheUninstalledName);
 
-		$this->moduleInfoCache = array();
-		$this->moduleInfoCacheVerbose = array();
-		$this->moduleInfoCacheUninstalled = array();
+		$this->moduleInfoCache = [];
+		$this->moduleInfoCacheVerbose = [];
+		$this->moduleInfoCacheUninstalled = [];
 
 		// save new moduleInfo cache
 		$this->saveModuleInfoCache();
@@ -1117,7 +1065,7 @@ class ModulesInfo extends ModulesClass {
 			if(isset($this->moduleInfoCache[$moduleID])) {
 				// module is present in moduleInfo
 				if($this->modules->flags->hasFlag($moduleID, Modules::flagsNoFile)) {
-					$file = $this->modules->getModuleFile($moduleName, array('fast' => false));
+					$file = $this->modules->getModuleFile($moduleName, ['fast' => false]);
 					if($file) {
 						// remove flagsNoFile if file is found
 						$this->modules->flags->setFlag($moduleID, Modules::flagsNoFile, false);
@@ -1125,9 +1073,9 @@ class ModulesInfo extends ModulesClass {
 				}
 			} else {
 				// module is missing moduleInfo
-				$file = $this->modules->getModuleFile($moduleName, array('fast' => false));
+				$file = $this->modules->getModuleFile($moduleName, ['fast' => false]);
 				if(!$file) {
-					$file = $this->modules->getModuleFile($moduleName, array('fast' => true, 'guess' => true));
+					$file = $this->modules->getModuleFile($moduleName, ['fast' => true, 'guess' => true]);
 					// add flagsNoFile if file cannot be located
 					$missModules[$moduleName] = "$moduleName => $file";
 					$editUrl = $this->modules->configs->getModuleEditUrl($moduleName, false) . '&missing=1';
@@ -1141,33 +1089,24 @@ class ModulesInfo extends ModulesClass {
 		$this->updateModuleVersionsCache();
 
 		// report detected changes
-		$reports = array(
-			array(
-				'label' => $this->_('Found %d new module(s):'),
-				'items' => $newModules,
-			),
-			/*
-			array(
-				'label' => $this->_('Found %d moved module(s):'),
-				'items' => $moveModules, 
-			),
-			*/
-			array(
-				'label' => $this->_('Found %d module(s) missing file:'),
-				'items' => $missModules,
-			),
-			array(
-				'label' => $this->_('Found %d module version changes (applied when each module is loaded):'),
-				'items' => $versionChanges,
-			),
-		);
+		$reports = [
+      ['label' => $this->_('Found %d new module(s):'), 'items' => $newModules],
+      /*
+      array(
+      	'label' => $this->_('Found %d moved module(s):'),
+      	'items' => $moveModules, 
+      ),
+      */
+      ['label' => $this->_('Found %d module(s) missing file:'), 'items' => $missModules],
+      ['label' => $this->_('Found %d module version changes (applied when each module is loaded):'), 'items' => $versionChanges],
+  ];
 		
 		$qty = 0;
 
 		foreach($reports as $report) {
 			if(!count($report['items'])) continue;
 			if($showMessages) {
-				$items = array();
+				$items = [];
 				foreach($report['items'] as $moduleName => $item) {
 					$item = $sanitizer->entities($item);
 					if(isset($editLinks[$moduleName])) $item .= " - " . $editLinks[$moduleName];
@@ -1273,7 +1212,7 @@ class ModulesInfo extends ModulesClass {
 		$config = $this->wire()->config;
 		if(!is_null($this->moduleNamespaceCache)) return $this->moduleNamespaceCache;
 		$defaultNamespace = strlen(__NAMESPACE__) ? "\\" . __NAMESPACE__ . "\\" : "";
-		$namespaces = array();
+		$namespaces = [];
 		foreach($this->moduleInfoCache() as /* $moduleID => */ $info) {
 			if(!isset($info['namespace']) || $info['namespace'] === $defaultNamespace || $info['namespace'] === "\\") continue;
 			$moduleName = $info['name'];
@@ -1296,13 +1235,9 @@ class ModulesInfo extends ModulesClass {
 	 * @return null|string Returns namespace, or NULL if unable to determine. Namespace is ready to use in a string (i.e. has trailing slashes)
 	 *
 	 */
-	public function getModuleNamespace($moduleName, $options = array()) {
+	public function getModuleNamespace($moduleName, $options = []) {
 
-		$defaults = array(
-			'file' => null,
-			'noLoad' => false,
-			'noCache' => false,
-		);
+		$defaults = ['file' => null, 'noLoad' => false, 'noCache' => false];
 
 		$namespace = null;
 
@@ -1382,12 +1317,6 @@ class ModulesInfo extends ModulesClass {
 	}
 	
 	public function getDebugData() {
-		return array(
-			'moduleInfoCache' => $this->moduleInfoCache,
-			'moduleInfoCacheVerbose' => $this->moduleInfoCacheVerbose,
-			'moduleInfoCacheUninstalled' => $this->moduleInfoCacheUninstalled,
-			'modulesLastVersions' => $this->modulesLastVersions,
-			'moduleNamespaceCache' => $this->moduleNamespaceCache
-		);
+		return ['moduleInfoCache' => $this->moduleInfoCache, 'moduleInfoCacheVerbose' => $this->moduleInfoCacheVerbose, 'moduleInfoCacheUninstalled' => $this->moduleInfoCacheUninstalled, 'modulesLastVersions' => $this->modulesLastVersions, 'moduleNamespaceCache' => $this->moduleNamespaceCache];
 	}
 }

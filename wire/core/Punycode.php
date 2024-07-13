@@ -46,24 +46,13 @@ class Punycode {
 	 *
 	 * @param array
 	 */
-	protected static $encodeTable = array(
-		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-		'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-		'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-	);
+	protected static $encodeTable = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 	/**
 	 * Decode table
 	 *
 	 * @param array
 	 */
-	protected static $decodeTable = array(
-		'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5,
-		'g' => 6, 'h' => 7, 'i' => 8, 'j' => 9, 'k' => 10, 'l' => 11,
-		'm' => 12, 'n' => 13, 'o' => 14, 'p' => 15, 'q' => 16, 'r' => 17,
-		's' => 18, 't' => 19, 'u' => 20, 'v' => 21, 'w' => 22, 'x' => 23,
-		'y' => 24, 'z' => 25, '0' => 26, '1' => 27, '2' => 28, '3' => 29,
-		'4' => 30, '5' => 31, '6' => 32, '7' => 33, '8' => 34, '9' => 35
-	);
+	protected static $decodeTable = ['a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6, 'h' => 7, 'i' => 8, 'j' => 9, 'k' => 10, 'l' => 11, 'm' => 12, 'n' => 13, 'o' => 14, 'p' => 15, 'q' => 16, 'r' => 17, 's' => 18, 't' => 19, 'u' => 20, 'v' => 21, 'w' => 22, 'x' => 23, 'y' => 24, 'z' => 25, '0' => 26, '1' => 27, '2' => 28, '3' => 29, '4' => 30, '5' => 31, '6' => 32, '7' => 33, '8' => 34, '9' => 35];
 	/**
 	 * Character encoding
 	 *
@@ -267,11 +256,7 @@ class Punycode {
 	 * @return array Multi-dimension array with basic, non-basic and aggregated code points
 	 */
 	protected function listCodePoints($input) {
-		$codePoints = array(
-			'all' => array(),
-			'basic' => array(),
-			'nonBasic' => array(),
-		);
+		$codePoints = ['all' => [], 'basic' => [], 'nonBasic' => []];
 		$length = mb_strlen($input, $this->encoding);
 		for($i = 0; $i < $length; $i++) {
 			$char = mb_substr($input, $i, 1, $this->encoding);

@@ -59,7 +59,7 @@ class Users extends PagesType {
 	 * @param array $parents
 	 * 
 	 */
-	public function __construct(ProcessWire $wire, $templates = array(), $parents = array()) {
+	public function __construct(ProcessWire $wire, $templates = [], $parents = []) {
 		parent::__construct($wire, $templates, $parents);
 		$this->setPageClass('User'); 
 		$this->guestRoleId = (int) $wire->config->guestUserRolePageID;
@@ -157,10 +157,7 @@ class Users extends PagesType {
 	 */
 	public function newUser() {
 		/** @var User $user */
-		$user = $this->wire()->pages->newPage(array(
-			'template' => 'user',
-			'pageClass' => $this->getPageClass()
-		));
+		$user = $this->wire()->pages->newPage(['template' => 'user', 'pageClass' => $this->getPageClass()]);
 		return $user;
 	}
 

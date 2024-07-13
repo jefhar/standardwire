@@ -16,7 +16,7 @@ class ModulesFlags extends ModulesClass {
 	 * @var array
 	 *
 	 */
-	protected $moduleFlags = array();
+	protected $moduleFlags = [];
 
 	/**
 	 * Get or set flags for module by module ID
@@ -174,7 +174,7 @@ class ModulesFlags extends ModulesClass {
 		}
 
 		// handle addFlag and removeFlag moduleInfo properties
-		foreach(array(0 => 'removeFlag', 1 => 'addFlag') as $add => $flagsType) {
+		foreach([0 => 'removeFlag', 1 => 'addFlag'] as $add => $flagsType) {
 			if(empty($info[$flagsType])) continue;
 			if($flags & $info[$flagsType]) {
 				// already has the flags
@@ -193,8 +193,6 @@ class ModulesFlags extends ModulesClass {
 	}
 	
 	public function getDebugData() {
-		return array(
-			'moduleFlags' => $this->moduleFlags
-		);
+		return ['moduleFlags' => $this->moduleFlags];
 	}
 }

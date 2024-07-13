@@ -50,16 +50,7 @@ class WireHooks {
 	 * - public: auto-assigned to true or false by addHook() as to whether the method is public or private/protected.
 	 *
 	 */
-	protected $defaultHookOptions = array(
-		'type' => 'method',
-		'before' => false,
-		'after' => true,
-		'priority' => 100,
-		'allInstances' => false,
-		'fromClass' => '',
-		'argMatch' => null,
-		'objMatch' => null,
-	);
+	protected $defaultHookOptions = ['type' => 'method', 'before' => false, 'after' => true, 'priority' => 100, 'allInstances' => false, 'fromClass' => '', 'argMatch' => null, 'objMatch' => null];
 
 	/**
 	 * Static hooks are applicable to all instances of the descending class.
@@ -68,27 +59,13 @@ class WireHooks {
 	 * It is for internal use only. See also $defaultHookOptions[allInstances].
 	 *
 	 */
-	protected $staticHooks = array(
-		// 'SomeClass' => [
-		//   'someMethod' => [ hooks ],
-		//   'someOtherMethod' => [ hooks ]
-		// ],
-		// 'AnotherClass' => [
-		//   'anotherMethod' => [ hooks ] 
-		// ]
-	);
+	protected $staticHooks = [];
 
 	/**
 	 * @var array
 	 * 
 	 */
-	protected $pathHooks = array(
-		// 'HookID' => [
-		//    'match' => '/foo/bar/{baz}/(.+)/', 
-		//    'filters' => [ 0 => '/foo/', 2 => '/bar/' ], 
-		//   ], ... 
-		// ]
-	);
+	protected $pathHooks = [];
 
 	/**
 	 * A cache of all hook method/property names for an optimization.
@@ -99,10 +76,7 @@ class WireHooks {
 	 * This cache exists primarily to gain some speed in our __get and __call methods.
 	 *
 	 */
-	protected $hookMethodCache = array(
-		// 'method()' => true,
-		// 'property' => true, 
-	);
+	protected $hookMethodCache = [];
 
 	/**
 	 * Same as hook method cache but for "Class::method"
@@ -110,16 +84,13 @@ class WireHooks {
 	 * @var array
 	 * 
 	 */
-	protected $hookClassMethodCache = array(
-		// 'Class::method()' => true, 
-		// 'Class::property' => true, 
-	);
+	protected $hookClassMethodCache = [];
 
 	/**
 	 * Cache of all local hooks combined, for debugging purposes
 	 *
 	 */
-	protected $allLocalHooks = array();
+	protected $allLocalHooks = [];
 
 	/**
 	 * Cached parent classes and interfaces
@@ -127,7 +98,7 @@ class WireHooks {
 	 * @var array of class|interface => [ 'parentClass', 'parentClass', 'interface', 'interface', 'etc.' ]
 	 * 
 	 */
-	protected $parentClasses = array();
+	protected $parentClasses = [];
 	
 	/**
 	 * @var Config
@@ -139,7 +110,7 @@ class WireHooks {
 	 * @var array
 	 * 
 	 */
-	protected $debugTimers = array();
+	protected $debugTimers = [];
 
 	/**
 	 * Characters that can begin a path hook definition (i.e. '/path/' or '!regex!', etc.)
@@ -179,15 +150,7 @@ class WireHooks {
 	 * @var string[] 
 	 * 
 	 */
-	protected $argMatchTypes = array(
-		'array' => 'is_array',
-		'bool' => 'is_bool',
-		'float' => 'is_float',
-		'int' => 'is_int',
-		'null' => 'is_null',
-		'object' => 'is_object',
-		'string' => 'is_string',
-	);
+	protected $argMatchTypes = ['array' => 'is_array', 'bool' => 'is_bool', 'float' => 'is_float', 'int' => 'is_int', 'null' => 'is_null', 'object' => 'is_object', 'string' => 'is_string'];
 
 	/**
 	 * Construct WireHooks
@@ -215,7 +178,7 @@ class WireHooks {
 	 */
 	public function getHooks(Wire $object, $method = '', $getHooks = self::getHooksAll) {
 
-		$hooks = array();
+		$hooks = [];
 
 		// see if we can do a quick exit
 		if($method && $method !== '*' && !$this->isHookedOrParents($object, $method)) return $hooks;
@@ -241,7 +204,7 @@ class WireHooks {
 
 		$needSort = false;
 		$namespace = __NAMESPACE__ ? __NAMESPACE__ . "\\" : "";
-		$objectParentNamespaces = array();
+		$objectParentNamespaces = [];
 
 		// join in static hooks
 		foreach($this->staticHooks as $className => $staticHooks) {
@@ -556,7 +519,7 @@ class WireHooks {
 	 * @throws WireException
 	 *
 	 */
-	public function addHook(Wire $object, $method, $toObject, $toMethod = null, $options = array()) {
+	public function addHook(Wire $object, $method, $toObject, $toMethod = null, $options = []) {
 		
 		if(empty($options['noAddHooks']) && (is_array($method) || strpos($method, ',') !== false)) {
 			// potentially multiple methods to hook in $method argument
@@ -647,7 +610,7 @@ class WireHooks {
 					// zero-based argument indexes specified, i.e. 0:template=product, 1:order_status
 					$args = preg_split('/\b([0-9]):/', trim($argMatch), -1, PREG_SPLIT_DELIM_CAPTURE);
 					if(count($args)) {
-						$argMatch = array();
+						$argMatch = [];
 						array_shift($args); // blank
 						while(count($args)) {
 							$argKey = (int) trim(array_shift($args));
@@ -658,7 +621,7 @@ class WireHooks {
 				} else {
 					// just single argument specified, so argument 0 is assumed
 				}
-				if(is_string($argMatch)) $argMatch = array(0 => $argMatch);
+				if(is_string($argMatch)) $argMatch = [0 => $argMatch];
 				foreach($argMatch as $argKey => $argVal) {
 					if(Selectors::stringHasSelector($argVal)) {
 						/** @var Selectors $selectors */
@@ -676,7 +639,7 @@ class WireHooks {
 		if($options['allInstances'] || $options['fromClass']) {
 			// hook all instances of this class
 			$hookClass = $options['fromClass'] ?: $object->className();
-			if(!isset($this->staticHooks[$hookClass])) $this->staticHooks[$hookClass] = array();
+			if(!isset($this->staticHooks[$hookClass])) $this->staticHooks[$hookClass] = [];
 			$hooks =& $this->staticHooks[$hookClass];
 			$options['allInstances'] = true;
 			$local = 0;
@@ -715,14 +678,7 @@ class WireHooks {
 		$id = "$hookClass:$priority:$method";
 		$options['priority'] = $priority;
 		
-		$hook = array(
-			'id' => $id,
-			'method' => $method,
-			'toObject' => $toObject,
-			'toMethod' => $toMethod,
-			'toPublic' => $toPublic, 
-			'options' => $options,
-		);
+		$hook = ['id' => $id, 'method' => $method, 'toObject' => $toObject, 'toMethod' => $toMethod, 'toPublic' => $toPublic, 'options' => $options];
 		$hooks[$method][$priority] = $hook;
 
 		// cache record known hooks so they can be detected quickly
@@ -777,7 +733,7 @@ class WireHooks {
 	 * @since 3.0.137
 	 *
 	 */
-	protected function addHooks(Wire $object, $methods, $toObject, $toMethod = null, $options = array()) {
+	protected function addHooks(Wire $object, $methods, $toObject, $toMethod = null, $options = []) {
 		
 		if(!is_array($methods)) {
 			// potentially multiple methods defined in a CSV string
@@ -806,7 +762,7 @@ class WireHooks {
 				foreach($strs as $key => $val) {
 					if(strpos($val, ')') === false) continue;
 					list($a, $b) = explode(')', $val, 2);
-					if(strpos($a, ',') !== false) $a = str_replace(array(', ', ','), $argSplit, $a);
+					if(strpos($a, ',') !== false) $a = str_replace([', ', ','], $argSplit, $a);
 					$strs[$key] = "$a)$b";
 				}
 				
@@ -820,7 +776,7 @@ class WireHooks {
 			}
 		}
 		
-		$result = array();
+		$result = [];
 		$options['noAddHooks'] = true; // prevent addHook() from calling addHooks() again
 		
 		foreach($methods as $method) {
@@ -846,7 +802,7 @@ class WireHooks {
 	 * @throws WireException
 	 * 
 	 */
-	protected function addPathHook(Wire $object, $path, $toObject, $toMethod, $options = array()) {
+	protected function addPathHook(Wire $object, $path, $toObject, $toMethod, $options = []) {
 		
 		if(!$this->allowPathHooks) {
 			throw new WireException('Path hooks must be attached during init or ready states');
@@ -854,7 +810,7 @@ class WireHooks {
 		
 		$method = 'ProcessPageView::pathHooks';
 		$id = $this->addHook($object, $method, $toObject, $toMethod, $options); 
-		$filters = array();
+		$filters = [];
 		$path = trim($path);
 		$pathParts = explode('/', trim($path, '/'));
 		$key = null;
@@ -862,7 +818,7 @@ class WireHooks {
 		foreach($pathParts as $index => $filter) {
 
 			// see if it is alphanumeric, other than dash or underscore
-			if(!ctype_alnum($filter) && !ctype_alnum(str_replace(array('-', '_'), '', $filter))) {
+			if(!ctype_alnum($filter) && !ctype_alnum(str_replace(['-', '_'], '', $filter))) {
 				// likely a regex pattern or named argument, see if we can use some from beginning
 				$filterNew = '';
 				for($n = 0; $n < strlen($filter); $n++) {
@@ -875,7 +831,7 @@ class WireHooks {
 			}
 			
 			// test the filter to see which one will match
-			foreach(array("/$filter/", "/$filter", "$filter/") as $test) {
+			foreach(["/$filter/", "/$filter", "$filter/"] as $test) {
 				$pos = strpos($path, $test); 
 				if($pos === false) continue;
 				$filter = $test;
@@ -890,10 +846,7 @@ class WireHooks {
 		// trailing slash on last filter is optional
 		if($key !== null) $filters[$key] = rtrim($filters[$key], '/');
 		
-		$this->pathHooks[$id] = array(
-			'match' => $path,
-			'filters' => $filters, 
-		);
+		$this->pathHooks[$id] = ['match' => $path, 'filters' => $filters];
 		
 		return $id; 
 	}
@@ -945,12 +898,7 @@ class WireHooks {
 			$type = 'custom';
 		}
 
-		$result = array(
-			'return' => null,
-			'numHooksRun' => 0,
-			'methodExists' => $methodExists,
-			'replace' => false,
-		);
+		$result = ['return' => null, 'numHooksRun' => 0, 'methodExists' => $methodExists, 'replace' => false];
 		
 		if($type === 'method' || $type === 'property' || $type === 'either') {
 			if(!$methodExists && !$this->isHookedOrParents($object, $method, $type)) {
@@ -960,7 +908,7 @@ class WireHooks {
 		
 		if($hooks === null) $hooks = $this->getHooks($object, $method);
 	
-		foreach(array('before', 'after') as $when) {
+		foreach(['before', 'after'] as $when) {
 
 			if($type === 'method') {
 				if($when === 'after' && $result['replace'] !== true) {
@@ -1013,9 +961,9 @@ class WireHooks {
 							$argMatch = trim($argMatch, '<>'); 
 							if(strpos($argMatch, '|')) {
 								// i.e. <User|Role|Permission> or <int|float> etc.
-								$argMatches = explode('|', str_replace(array('<', '>'), '', $argMatch));
+								$argMatches = explode('|', str_replace(['<', '>'], '', $argMatch));
 							} else {
-								$argMatches = array($argMatch);
+								$argMatches = [$argMatch];
 							}
 							foreach($argMatches as $argMatchType) {
 								if(isset($this->argMatchTypes[$argMatchType])) {
@@ -1047,25 +995,14 @@ class WireHooks {
 					$useHookReturnValue = true;
 				}
 
-				$event = new HookEvent(array(
-					'object' => $object,
-					'method' => $method,
-					'arguments' => $arguments,
-					'when' => $when,
-					'return' => $result['return'],
-					'id' => $hook['id'],
-					'options' => $hook['options']
-				));
+				$event = new HookEvent(['object' => $object, 'method' => $method, 'arguments' => $arguments, 'when' => $when, 'return' => $result['return'], 'id' => $hook['id'], 'options' => $hook['options']]);
 				$this->wire->wire($event);
 
 				$toObject = $hook['toObject'];
 				$toMethod = $hook['toMethod'];
 			
 				if($profiler) {
-					$profilerEvent = $profiler->start($hook['id'], $this, array(
-						'event' => $event, 
-						'hook' => $hook,
-					));
+					$profilerEvent = $profiler->start($hook['id'], $this, ['event' => $event, 'hook' => $hook]);
 				} else {
 					$profilerEvent = false;
 				}
@@ -1094,7 +1031,7 @@ class WireHooks {
 						$returnValue = $toObject->$toMethod($event);
 					} else {
 						// protected or private
-						$returnValue = $toObject->_callMethod($toMethod, array($event));
+						$returnValue = $toObject->_callMethod($toMethod, [$event]);
 					}
 					$toMethodCallable = true; 
 				}
@@ -1182,7 +1119,7 @@ class WireHooks {
 		if(strpos($matchPath, '{pageNum}') !== false) {
 			// the {pageNum} named argument maps to $input->pageNum. remove the {pageNum} argument
 			// from the match path since it is handled differently from other named arguments
-			$find = array('/{pageNum}/', '/{pageNum}', '{pageNum}');
+			$find = ['/{pageNum}/', '/{pageNum}', '{pageNum}'];
 			$matchPath = str_replace($find, '/', $matchPath);
 			$pathHook['match'] = str_replace($find, '/', $pathHook['match']); 
 			$pageNumArgument = $pageNum;
@@ -1271,7 +1208,7 @@ class WireHooks {
 	 */
 	protected function hookTimer($object, $method, $arguments) {
 		$timerName = $object->className() . "::$method";
-		$notes = array();
+		$notes = [];
 		foreach($arguments as $argument) {
 			if(is_object($argument)) $notes[] = get_class($argument);
 			else if(is_array($argument)) $notes[] = "array(" . count($argument) . ")";
@@ -1386,7 +1323,7 @@ class WireHooks {
 	 * 
 	 */
 	public function filterPathHooks($requestPath, $has = false) {
-		$pathHooks = array();
+		$pathHooks = [];
 		foreach($this->pathHooks as $id => $pathHook) {
 			$fail = false;
 			foreach($pathHook['filters'] as $filter) {

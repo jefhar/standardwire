@@ -101,12 +101,15 @@
  */
 function __($text, $textdomain = null, $context = '') {
 	
-	static $options = array(
-		'entityEncode' => null, // true=always, false=never, 1=only if not already encoded, null=undefined (backwards compatible behavior)
-		'translations' => false, // fallback translations to use when live translation not available ['Original text' => 'Translated text']
-		'replacements' => false, // global replacements (no textdomain), becomes array once set
-		'_useLimit' => null, // internal use: use limit argument for debug_backtrace call
-	);
+	static $options = [
+     'entityEncode' => null,
+     // true=always, false=never, 1=only if not already encoded, null=undefined (backwards compatible behavior)
+     'translations' => false,
+     // fallback translations to use when live translation not available ['Original text' => 'Translated text']
+     'replacements' => false,
+     // global replacements (no textdomain), becomes array once set
+     '_useLimit' => null,
+ ];
 	
 	$textArray = false;
 	$encode = $options['entityEncode'];
@@ -121,11 +124,11 @@ function __($text, $textdomain = null, $context = '') {
 			$text = reset($textArray);
 		} else if($text === true && $textdomain !== null) {
 			// setting (or getting) custom option
-			list($option, $values) = array($textdomain, $context);
+			list($option, $values) = [$textdomain, $context];
 			if($option === 'replacements' || $option === 'translations') {
 				// setting or getting global 'replacements' or 'translations'
 				// if not given any values to set then return current value
-				if(!is_array($values)) return $options[$option] ?: array();
+				if(!is_array($values)) return $options[$option] ?: [];
 				// merge with existing 'replacements' or 'translations'
 				$options[$option] = $options[$option] === false ? $values : array_merge($options[$option], $values);
 				// return current value
@@ -153,7 +156,7 @@ function __($text, $textdomain = null, $context = '') {
 		// array for replacement means only apply to named context, ie. 'text' => [ 'replacement', 'context' ]
 		if(is_array($value)) $value = isset($value[1]) && $value[1] === $context ? $value[0] : $text;
 		// false for $language on the next line ensures the $text value is returned in next if() statement
-		if($value !== $text) list($text, $language) = array($value, false); 
+		if($value !== $text) list($text, $language) = [$value, false]; 
 	}
 
 	// if multi-language not installed or not available then just return given text
@@ -357,7 +360,7 @@ function wireLangEntityEncode($value = '') {
  * @since 3.0.154 Versions 3.0.125 to 3.0.153 can use __(true, array $values); 
  * 
  */
-function wireLangTranslations(array $values = array()) {
+function wireLangTranslations(array $values = []) {
 	return __(true, 'translations', $values);
 }
 

@@ -192,7 +192,7 @@ abstract class Selector extends WireData {
 		$this->set('group', null); // group name identified with 'group_name@' before a field name
 		$this->set('quote', ''); // if $value in quotes, this contains either: ', ", [, {, or (, indicating quote type (set by Selectors class)
 		$this->set('forceMatch', null); // boolean true to force match, false to force non-match
-		parent::set('altOperators', array()); // optional alternate operators
+		parent::set('altOperators', []); // optional alternate operators
 		$this->setField($field);
 		$this->setValue($value);
 	}
@@ -245,8 +245,8 @@ abstract class Selector extends WireData {
 	public function fields() {
 		$field = parent::get('field');
 		if(is_array($field)) return $field;
-		if(!strlen($field)) return array();
-		return array($field); 
+		if(!strlen($field)) return [];
+		return [$field]; 
 	}
 
 	/**
@@ -289,15 +289,15 @@ abstract class Selector extends WireData {
 		if(is_array($values)) {
 			// ok
 		} else if(is_string($values)) {
-			$values = strlen($values) ? array($values) : array();
+			$values = strlen($values) ? [$values] : [];
 		} else if(is_object($values)) {
-			$values = $values instanceof WireArray ? $values->getArray() : array($values);
+			$values = $values instanceof WireArray ? $values->getArray() : [$values];
 		} else if($values) {
-			$values = array($values);
+			$values = [$values];
 		} else {
-			$values = array();
+			$values = [];
 		}
-		if($nonEmpty && !count($values)) $values = array('');
+		if($nonEmpty && !count($values)) $values = [''];
 		return $values; 
 	}
 
@@ -332,7 +332,7 @@ abstract class Selector extends WireData {
 		if($type == 'string') {
 			if(is_array($field)) $field = implode('|', $field);
 		} else if($type == 'array') {
-			if(!is_array($field)) $field = array($field);
+			if(!is_array($field)) $field = [$field];
 		} else if($type) {
 			throw new WireException("Unknown type '$type' specified to getField()");
 		}
@@ -376,7 +376,7 @@ abstract class Selector extends WireData {
 		if($type == 'string') {
 			if(is_array($value)) $value = $this->wire()->sanitizer->selectorValue($value);
 		} else if($type == 'array') {
-			if(!is_array($value)) $value = array($value);
+			if(!is_array($value)) $value = [$value];
 		} else if($this->quote == '[') {
 			if(is_string($value) && Selectors::stringHasSelector($value)) {
 				$value = $this->wire(new Selectors($value));
@@ -418,7 +418,7 @@ abstract class Selector extends WireData {
 			return $this;
 		}
 		if($key === 'altOperators') {
-			if(!is_array($value)) $value = array();
+			if(!is_array($value)) $value = [];
 			$operator = $this->operator();
 			foreach($value as $k => $v) {
 				// don’t allow current operator to be an altOperator
@@ -528,7 +528,7 @@ abstract class Selector extends WireData {
 		if(is_bool($forceMatch)) return $forceMatch;
 		
 		$matches = false;
-		$values1 = is_array($this->value) ? $this->value : array($this->value); 
+		$values1 = is_array($this->value) ? $this->value : [$this->value]; 
 		$field = $this->field; 
 		$operator = $this->operator();
 
@@ -547,7 +547,7 @@ abstract class Selector extends WireData {
 		}
 
 		if(is_string($value) && strpos($value, '|') !== false) $value = explode('|', $value); 
-		if(!is_array($value)) $value = array($value);
+		if(!is_array($value)) $value = [$value];
 		$values2 = $value; 
 		unset($value);
 
@@ -561,7 +561,7 @@ abstract class Selector extends WireData {
 			$numMatchesRequired = count($values1) * count($values2);
 		} 
 		
-		$fields = is_array($field) ? $field : array($field); 
+		$fields = is_array($field) ? $field : [$field]; 
 		
 		foreach($fields as $field) {
 	
@@ -642,7 +642,7 @@ abstract class Selector extends WireData {
 			$fieldName = explode('|', $fieldName);
 		}
 		if(is_array($fieldName)) {
-			$fieldNames = array();
+			$fieldNames = [];
 			foreach($fieldName as $name) {
 				$name = $this->sanitizeFieldName($name);
 				if($name !== '') $fieldNames[] = $name;
@@ -652,7 +652,7 @@ abstract class Selector extends WireData {
 		$fieldName = trim($fieldName, '. ');
 		if($fieldName === '') return $fieldName;
 		if(ctype_alnum($fieldName)) return $fieldName;
-		if(ctype_alnum(str_replace(array('.', '_'), '', $fieldName))) return $fieldName;
+		if(ctype_alnum(str_replace(['.', '_'], '', $fieldName))) return $fieldName;
 		return '';
 	}
 
@@ -693,11 +693,7 @@ abstract class Selector extends WireData {
 	 * 
 	 */
 	public function __debugInfo() {
-		$info = array(
-			'field' => $this->field,
-			'operator' => $this->operator,
-			'value' => $this->value,
-		);
+		$info = ['field' => $this->field, 'operator' => $this->operator, 'value' => $this->value];
 		if($this->not) $info['not'] = true;
 		if($this->forceMatch) $info['forceMatch'] = true;
 		if($this->group) $info['group'] = $this->group; 
@@ -714,34 +710,7 @@ abstract class Selector extends WireData {
 	 *
 	 */
 	static public function loadSelectorTypes() { 
-		$types = array(
-			'Equal',
-			'NotEqual',
-			'GreaterThan',
-			'LessThan',
-			'GreaterThanEqual',
-			'LessThanEqual',
-			'Contains',
-			'ContainsLike',
-			'ContainsWords',
-			'ContainsWordsPartial',
-			'ContainsWordsLive',
-			'ContainsWordsLike',
-			'ContainsWordsExpand',
-			'ContainsAnyWords',
-			'ContainsAnyWordsPartial',
-			'ContainsAnyWordsLike',
-			'ContainsAnyWordsExpand',
-			'ContainsExpand',
-			'ContainsMatch',
-			'ContainsMatchExpand',
-			'ContainsAdvanced',
-			'Starts',
-			'StartsLike',
-			'Ends',
-			'EndsLike',
-			'BitwiseAnd',
-		);
+		$types = ['Equal', 'NotEqual', 'GreaterThan', 'LessThan', 'GreaterThanEqual', 'LessThanEqual', 'Contains', 'ContainsLike', 'ContainsWords', 'ContainsWordsPartial', 'ContainsWordsLive', 'ContainsWordsLike', 'ContainsWordsExpand', 'ContainsAnyWords', 'ContainsAnyWordsPartial', 'ContainsAnyWordsLike', 'ContainsAnyWordsExpand', 'ContainsExpand', 'ContainsMatch', 'ContainsMatchExpand', 'ContainsAdvanced', 'Starts', 'StartsLike', 'Ends', 'EndsLike', 'BitwiseAnd'];
 		foreach($types as $type) {
 			$class = "Selector$type";
 			/** @var Selector $className */

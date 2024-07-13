@@ -88,7 +88,7 @@ abstract class FileCompilerModule extends WireData implements Module, Configurab
 		}
 		$data .= '<?';
 
-		if(!preg_match_all('!\?>(.+?)<\?!s', $data, $matches)) return array();
+		if(!preg_match_all('!\?>(.+?)<\?!s', $data, $matches)) return [];
 
 		foreach($matches[1] as $markup) {
 			$_markup = $this->compileMarkup($markup);

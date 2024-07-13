@@ -67,7 +67,7 @@ abstract class ModulesClass extends Wire {
 	 * @return WireLog
 	 *
 	 */
-	public function log($str, $options = array()) {
+	public function log($str, $options = []) {
 		return $this->modules->log($str, $options);
 	}
 	
@@ -86,6 +86,6 @@ abstract class ModulesClass extends Wire {
 	}
 
 	public function getDebugData() {
-		return array();
+		return [];
 	}
 }

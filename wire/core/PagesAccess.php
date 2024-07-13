@@ -29,19 +29,19 @@ class PagesAccess extends Wire {
 	 * Cached templates that don't define access
 	 *
 	 */
-	protected $_templates = array(); 
+	protected $_templates = []; 
 
 	/**
 	 * Cached templates that DO define access
 	 *
 	 */
-	protected $_accessTemplates = array();
+	protected $_accessTemplates = [];
 
 	/**
 	 * Array of page parent IDs that have already been completed
 	 *
 	 */
-	protected $completedParentIDs = array(); 
+	protected $completedParentIDs = []; 
 
 	/**
 	 * Construct a PagesAccess instance, optionally specifying a Page or Template
@@ -71,8 +71,8 @@ class PagesAccess extends Wire {
 	 */
 	protected function rebuild($parent_id = 1, $accessTemplateID = 0, $doDeletions = true) {
 
-		$insertions = array();
-		$deletions = array();
+		$insertions = [];
+		$deletions = [];
 		$accessTemplates = $this->getAccessTemplates();
 		$parent_id = (int) $parent_id;
 		$accessTemplateID = (int) $accessTemplateID;

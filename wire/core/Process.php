@@ -109,7 +109,7 @@ abstract class Process extends WireData implements Module {
 	 * @var array associative
 	 * 
 	 */
-	private $_viewVars = array();
+	private $_viewVars = [];
 
 	/**
 	 * Construct
@@ -276,15 +276,10 @@ abstract class Process extends WireData implements Module {
 	 *
 	 */
 	public function ___install() {
-		$info = $this->wire()->modules->getModuleInfoVerbose($this, array('noCache' => true)); 
+		$info = $this->wire()->modules->getModuleInfoVerbose($this, ['noCache' => true]); 
 		// if a 'page' property is provided in the moduleInfo, we will create a page and assign this process automatically
 		if(!empty($info['page'])) { // bool, array, or string
-			$defaults = array(
-				'name' => '', 
-				'parent' => null, 
-				'title' => '', 
-				'template' => 'admin'
-			);
+			$defaults = ['name' => '', 'parent' => null, 'title' => '', 'template' => 'admin'];
 			$a = $defaults;
 			if(is_array($info['page'])) {
 				$a = array_merge($a, $info['page']);
@@ -292,7 +287,7 @@ abstract class Process extends WireData implements Module {
 				$a['name'] = $info['page'];
 			}
 			// find any other properties that were specified, which will will send as $extras properties
-			$extras = array();
+			$extras = [];
 			foreach($a as $key => $value) {
 				if(in_array($key, array_keys($defaults))) continue; 
 				$extras[$key] = $value; 
@@ -313,7 +308,7 @@ abstract class Process extends WireData implements Module {
 	 *
 	 */
 	public function ___uninstall() {
-		$info = $this->wire()->modules->getModuleInfoVerbose($this, array('noCache' => true));
+		$info = $this->wire()->modules->getModuleInfoVerbose($this, ['noCache' => true]);
 		// if a 'page' property is provided in the moduleInfo, we will trash pages using this Process automatically
 		if(!empty($info['page'])) $this->uninstallPage();
 	}
@@ -358,7 +353,7 @@ abstract class Process extends WireData implements Module {
 	 * @throws WireException if page can't be created
 	 *
 	 */
-	protected function ___installPage($name = '', $parent = null, $title = '', $template = 'admin', $extras = array()) {
+	protected function ___installPage($name = '', $parent = null, $title = '', $template = 'admin', $extras = []) {
 		
 		$pages = $this->wire()->pages;
 		$config = $this->wire()->config;
@@ -393,7 +388,7 @@ abstract class Process extends WireData implements Module {
 		$page->title = $title ?: $info['title'];
 		foreach($extras as $key => $value) $page->set($key, $value); 
 		if($languages) $languages->unsetDefault();
-		$pages->save($page, array('adjustName' => true)); 
+		$pages->save($page, ['adjustName' => true]); 
 		if(!$page->id) throw new WireException("Unable to create page: $parent->path$name"); 
 		$this->message(sprintf($this->_('Created Page: %s'), $page->path)); 
 		return $page;
@@ -440,28 +435,36 @@ abstract class Process extends WireData implements Module {
 	 * @throws Wire404Exception if getModuleInfo() doesn't specify useNavJSON=true;
 	 * 
 	 */
-	public function ___executeNavJSON(array $options = array()) {
+	public function ___executeNavJSON(array $options = []) {
 		
 		$sanitizer = $this->wire()->sanitizer;
 		$modules = $this->wire()->modules;
 		$config = $this->wire()->config;
 		$page = $this->wire()->page;
 		
-		$defaults = array(
-			'items' => array(),
-			'itemLabel' => 'name', 
-			'itemLabel2' => '', // smaller secondary label, when needed
-			'edit' => 'edit?id={id}', // URL segment for edit
-			'add' => 'add', // URL segment for add
-			'addLabel' => __('Add New', '/wire/templates-admin/default.php'),
-			'addIcon' => 'plus-circle',
-			'iconKey' => 'icon', // property/field containing icon, when applicable
-			'icon' => '', // default icon to use for items
-			'classKey' => '_class', // property to pull additional class names from. Example class: "separator" or "highlight"
-			'labelClassKey' => '_labelClass', // property to pull class for element to wrap label
-			'sort' => true, // automatically sort items A-Z?
-			'getArray' => false, // makes this method return an array rather than JSON
-		);
+		$defaults = [
+      'items' => [],
+      'itemLabel' => 'name',
+      'itemLabel2' => '',
+      // smaller secondary label, when needed
+      'edit' => 'edit?id={id}',
+      // URL segment for edit
+      'add' => 'add',
+      // URL segment for add
+      'addLabel' => __('Add New', '/wire/templates-admin/default.php'),
+      'addIcon' => 'plus-circle',
+      'iconKey' => 'icon',
+      // property/field containing icon, when applicable
+      'icon' => '',
+      // default icon to use for items
+      'classKey' => '_class',
+      // property to pull additional class names from. Example class: "separator" or "highlight"
+      'labelClassKey' => '_labelClass',
+      // property to pull class for element to wrap label
+      'sort' => true,
+      // automatically sort items A-Z?
+      'getArray' => false,
+  ];
 		
 		$options = array_merge($defaults, $options); 
 		$moduleInfo = $modules->getModuleInfo($this); 
@@ -469,17 +472,14 @@ abstract class Process extends WireData implements Module {
 			throw new Wire404Exception('No JSON nav available', Wire404Exception::codeSecondary);
 		}
 
-		$data = array(
-			'url' => $page->url,
-			'label' => $this->_((string) $page->get('title|name')),
-			'icon' => empty($moduleInfo['icon']) ? '' : $moduleInfo['icon'], // label icon
-			'add' => array(
-				'url' => $options['add'],
-				'label' => $options['addLabel'], 
-				'icon' => $options['addIcon'], 
-			),
-			'list' => array(),
-		);
+		$data = [
+      'url' => $page->url,
+      'label' => $this->_((string) $page->get('title|name')),
+      'icon' => empty($moduleInfo['icon']) ? '' : $moduleInfo['icon'],
+      // label icon
+      'add' => ['url' => $options['add'], 'label' => $options['addLabel'], 'icon' => $options['addIcon']],
+      'list' => [],
+  ];
 		
 		if(empty($options['add'])) $data['add'] = null;
 		
@@ -489,14 +489,14 @@ abstract class Process extends WireData implements Module {
 				$id = $item->id;
 				$name = $item->name; 
 				$label = (string) $item->{$options['itemLabel']};
-				$icon = str_replace(array('icon-', 'fa-'),'', (string) $item->{$options['iconKey']});
+				$icon = str_replace(['icon-', 'fa-'],'', (string) $item->{$options['iconKey']});
 				$class = $item->{$options['classKey']};
 			} else if(is_array($item)) {
 				$id = isset($item['id']) ? $item['id'] : '';
 				$name = isset($item['name']) ? $item['name'] : '';
 				$label = isset($item[$options['itemLabel']]) ? $item[$options['itemLabel']] : '';
 				$class = isset($item[$options['classKey']]) ? $item[$options['classKey']] : '';	
-				if(isset($item[$options['iconKey']])) $icon = str_replace(array('icon-', 'fa-'),'', (string) $item[$options['iconKey']]);
+				if(isset($item[$options['iconKey']])) $icon = str_replace(['icon-', 'fa-'],'', (string) $item[$options['iconKey']]);
 			} else {
 				$this->error("Item must be object or array: $item"); 
 				continue;
@@ -526,12 +526,7 @@ abstract class Process extends WireData implements Module {
 				}
 			}
 			
-			$data['list'][$_label] = array(
-				'url' => str_replace(array('{id}', '{name}'), array($id, $name), $options['edit']),
-				'label' => $label,
-				'icon' => $icon, 
-				'className' => $class, 
-			);
+			$data['list'][$_label] = ['url' => str_replace(['{id}', '{name}'], [$id, $name], $options['edit']), 'label' => $label, 'icon' => $icon, 'className' => $class];
 		}
 		// sort alpha, case insensitive
 		if($options['sort']) uksort($data['list'], 'strcasecmp');

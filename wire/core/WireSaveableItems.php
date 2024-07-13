@@ -69,7 +69,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 * @since 3.0.146
 	 * 
 	 */
-	public function makeItem(array $a = array()) {
+	public function makeItem(array $a = []) {
 		$item = $this->makeBlankItem();
 		$this->wire($item);
 		foreach($a as $key => $value) {
@@ -127,11 +127,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 		// Note: ProcessWire core does not appear to ever reach this point as the
 		// core does not use selectors to load any of its WireSaveableItems
 
-		$functionFields = array(
-			'sort' => '', 
-			'limit' => '', 
-			'start' => '',
-		);
+		$functionFields = ['sort' => '', 'limit' => '', 'start' => ''];
 		
 		$item = $this->makeBlankItem();
 		$fields = array_keys($item->getTableData());
@@ -304,7 +300,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 		$id = (int) $item->id;
 		$this->saveReady($item); 
 		$data = $item->getTableData();
-		$binds = array();
+		$binds = [];
 		$namePrevious = false;
 		
 		if($id && $item->isChanged('name')) {
@@ -516,7 +512,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 */
 	public function getAllValues($valueType = 'id', $indexType = '', $matchType = '', $matchValue = null) {
 		
-		$values = array();
+		$values = [];
 		$useValueArray = is_array($valueType);
 		$matchArray = is_array($matchValue) ? array_flip($matchValue) : false;
 		$items = $this->getWireArray();
@@ -537,7 +533,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 				}
 				if($useValueArray) {
 					/** @var array $valueType */
-					$value = array();
+					$value = [];
 					foreach($valueType as $key) {
 						$value[$key] = isset($row[$key]) ? $row[$key] : null;
 					}
@@ -568,7 +564,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 			}
 			if($useValueArray) {
 				/** @var array $valueType */
-				$value = array();
+				$value = [];
 				foreach($valueType as $key) {
 					$value[$key] = $field->get($key);
 				}
@@ -675,7 +671,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 * @param array $changes
 	 *
 	 */
-	public function ___saved(Saveable $item, array $changes = array()) {
+	public function ___saved(Saveable $item, array $changes = []) {
 		if(count($changes)) {
 			$this->log("Saved '$item->name', Changes: " . implode(', ', $changes)); 
 		} else {
@@ -755,10 +751,10 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 */
 	public function log($str, Saveable $item = null) {
 		$logs = $this->wire()->config->logs;
-		$name = $this->className(array('lowercase' => true)); 
+		$name = $this->className(['lowercase' => true]); 
 		if($logs && in_array($name, $logs)) {
 			if($item && strpos($str, "'$item->name'") === false) $str .= " '$item->name'";
-			return parent::___log($str, array('name' => $name));
+			return parent::___log($str, ['name' => $name]);
 		}
 		return parent::___log(); 
 	}
@@ -785,9 +781,9 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 *
 	 */
 	public function __debugInfo() {
-		$info = array(); // parent::__debugInfo();
-		$info['loaded'] = array();
-		$info['notLoaded'] = array();
+		$info = []; // parent::__debugInfo();
+		$info['loaded'] = [];
+		$info['notLoaded'] = [];
 		foreach($this->getWireArray() as $item) {
 			/** @var WireData|Saveable $item */
 			$when = $item->get('_lazy');
@@ -816,9 +812,9 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 * @var array
 	 *
 	 */
-	protected $lazyItems = array(); // [ 0 => [ ... ], 1 => [ ... ], etc. ]
-	protected $lazyNameIndex = array(); // [ 'name' => 123 ] where 123 is key in $lazyItems
-	protected $lazyIdIndex = array(); // [ 3 => 123 ] where 3 is ID and 123 is key in $lazyItems
+	protected $lazyItems = []; // [ 0 => [ ... ], 1 => [ ... ], etc. ]
+	protected $lazyNameIndex = []; // [ 'name' => 123 ] where 123 is key in $lazyItems
+	protected $lazyIdIndex = []; // [ 3 => 123 ] where 3 is ID and 123 is key in $lazyItems
 
 	/**
 	 * @var bool|null
@@ -879,9 +875,9 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 
 		if($sortable) $items->sort('name'); // a-z
 
-		$this->lazyItems = array();
-		$this->lazyNameIndex = array();
-		$this->lazyIdIndex = array();
+		$this->lazyItems = [];
+		$this->lazyNameIndex = [];
+		$this->lazyIdIndex = [];
 
 		// if you want to identify what triggered a “load all”, uncomment one of below:
 		// bd(Debug::backtrace());

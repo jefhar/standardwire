@@ -110,10 +110,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * @var array
 	 *
 	 */
-	protected $image = array(
-		'width' => 0,
-		'height' => 0
-	);
+	protected $image = ['width' => 0, 'height' => 0];
 
 	/**
 	 * Allow images to be upscaled / enlarged?
@@ -129,16 +126,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * Beyond those included below, TRUE represents center and FALSE represents no cropping.
 	 *
 	 */
-	static protected $croppingValues = array(
-		'nw' => 'northwest',
-		'n' => 'north',
-		'ne' => 'northeast',
-		'w' => 'west',
-		'e' => 'east',
-		'sw' => 'southwest',
-		's' => 'south',
-		'se' => 'southeast',
-	);
+	static protected $croppingValues = ['nw' => 'northwest', 'n' => 'north', 'ne' => 'northeast', 'w' => 'west', 'e' => 'east', 'sw' => 'southwest', 's' => 'south', 'se' => 'southeast'];
 
 	/**
 	 * Allow images to be cropped to achieve necessary dimension? If so, what direction?
@@ -228,7 +216,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * @var array
 	 *
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Options allowed for sharpening
@@ -236,12 +224,13 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * @var array
 	 *
 	 */
-	static protected $sharpeningValues = array(
-		0 => 'none', // none
-		1 => 'soft',
-		2 => 'medium',
-		3 => 'strong'
-	);
+	static protected $sharpeningValues = [
+     0 => 'none',
+     // none
+     1 => 'soft',
+     2 => 'medium',
+     3 => 'strong',
+ ];
 
 	/**
 	 * List of valid option Names from config.php (@horst)
@@ -249,21 +238,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * @var array
 	 *
 	 */
-	protected $optionNames = array(
-		'autoRotation',
-		'upscaling',
-		'cropping',
-		'interlace', 
-		'quality',
-		'webpQuality',
-		'webpAdd',
-		'sharpening',
-		'defaultGamma',
-		'scale',
-		'rotate',
-		'flip',
-		'useUSM',
-	);
+	protected $optionNames = ['autoRotation', 'upscaling', 'cropping', 'interlace', 'quality', 'webpQuality', 'webpAdd', 'sharpening', 'defaultGamma', 'scale', 'rotate', 'flip', 'useUSM'];
 
 	/**
 	 * Supported image types (@teppo)
@@ -271,12 +246,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * @var array
 	 *
 	 */
-	protected $supportedImageTypes = array(
-		'gif' => IMAGETYPE_GIF,
-		'jpg' => IMAGETYPE_JPEG,
-		'jpeg' => IMAGETYPE_JPEG,
-		'png' => IMAGETYPE_PNG,
-	);
+	protected $supportedImageTypes = ['gif' => IMAGETYPE_GIF, 'jpg' => IMAGETYPE_JPEG, 'jpeg' => IMAGETYPE_JPEG, 'png' => IMAGETYPE_PNG];
 
 	/**
 	 * Indicates how much an image should be sharpened
@@ -300,10 +270,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * @var array
 	 *
 	 */
-	protected $validIptcTags = array(
-		'005', '007', '010', '012', '015', '020', '022', '025', '030', '035', '037', '038', '040', '045', '047', '050', '055', '060',
-		'062', '063', '065', '070', '075', '080', '085', '090', '092', '095', '100', '101', '103', '105', '110', '115', '116', '118',
-		'120', '121', '122', '130', '131', '135', '150', '199', '209', '210', '211', '212', '213', '214', '215', '216', '217');
+	protected $validIptcTags = ['005', '007', '010', '012', '015', '020', '022', '025', '030', '035', '037', '038', '040', '045', '047', '050', '055', '060', '062', '063', '065', '070', '075', '080', '085', '090', '092', '095', '100', '101', '103', '105', '110', '115', '116', '118', '120', '121', '122', '130', '131', '135', '150', '199', '209', '210', '211', '212', '213', '214', '215', '216', '217'];
 
 	/**
 	 * Information about the image from getimagesize (width, height, imagetype, channels, etc.)
@@ -361,7 +328,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * @var array
 	 * 
 	 */
-	protected $moduleConfigData = array();
+	protected $moduleConfigData = [];
 
 	/**
 	 * Collection of Imagefile and -format Informations from ImageInspector
@@ -389,7 +356,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * @param null|array $inspectionResult
 	 *
 	 */
-	public function prepare($filename, $options = array(), $inspectionResult = null) {
+	public function prepare($filename, $options = [], $inspectionResult = null) {
 
 		// ensures the resize doesn't timeout the request (with at least 30 seconds)
 		$this->setTimeLimit();
@@ -498,10 +465,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * 
 	 */
 	public function getSupportedFormats($type = '') {
-		$a = array(
-			'source' => $this->validSourceImageFormats(),
-			'target' => $this->validTargetImageFormats()
-		);
+		$a = ['source' => $this->validSourceImageFormats(), 'target' => $this->validTargetImageFormats()];
 		return $type && isset($a[$type]) ? $a[$type] : $a;
 	}
 
@@ -524,22 +488,9 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			$moduleInfo = $this->wire()->modules->getModuleInfoVerbose($className);
 		}
 
-		if(!is_array($moduleInfo)) $moduleInfo = array();
+		if(!is_array($moduleInfo)) $moduleInfo = [];
 
-		$info = array(
-			'name' => str_replace('ImageSizerEngine', '', $moduleName),
-			'title' => isset($moduleInfo['title']) ? $moduleInfo['title'] : '',
-			'class' => $moduleName,
-			'summary' => isset($moduleInfo['summary']) ? $moduleInfo['summary'] : '',
-			'author' => isset($moduleInfo['author']) ? $moduleInfo['author'] : '',
-			'moduleVersion' => isset($moduleInfo['version']) ? $moduleInfo['version'] : '',
-			'libraryVersion' => $this->getLibraryVersion(),
-			'priority' => $this->enginePriority,
-			'sources' => $formats['source'],
-			'targets' => $formats['target'],
-			'quality' => $this->quality,
-			'sharpening' => $this->sharpening,
-		);
+		$info = ['name' => str_replace('ImageSizerEngine', '', $moduleName), 'title' => isset($moduleInfo['title']) ? $moduleInfo['title'] : '', 'class' => $moduleName, 'summary' => isset($moduleInfo['summary']) ? $moduleInfo['summary'] : '', 'author' => isset($moduleInfo['author']) ? $moduleInfo['author'] : '', 'moduleVersion' => isset($moduleInfo['version']) ? $moduleInfo['version'] : '', 'libraryVersion' => $this->getLibraryVersion(), 'priority' => $this->enginePriority, 'sources' => $formats['source'], 'targets' => $formats['target'], 'quality' => $this->quality, 'sharpening' => $this->sharpening];
 
 		return $info;
 	}
@@ -638,8 +589,8 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 		if($this->wire()->config->debug) {
 			// add a timestamp and the name of the image sizer engine to the IPTC tag number 217
 			$entry = $this->className() . '-' . date('Ymd:His');
-			if(!$this->iptcRaw) $this->iptcRaw = array();
-			$this->iptcRaw['2#217'] = array(0 => $entry);
+			if(!$this->iptcRaw) $this->iptcRaw = [];
+			$this->iptcRaw['2#217'] = [0 => $entry];
 		}
 		if(!$this->iptcRaw) return null; // the sourceimage doesn't contain IPTC infos
 		$content = iptcembed($this->iptcPrepareData($includeCustomTags), $filename);
@@ -810,12 +761,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			}
 		}
 
-		return array(
-			0 => (int) $pWidth,
-			1 => (int) $pHeight,
-			2 => (int) $targetWidth,
-			3 => (int) $targetHeight
-		);
+		return [0 => (int) $pWidth, 1 => (int) $pHeight, 2 => (int) $targetWidth, 3 => (int) $targetHeight];
 	}
 
 	/**
@@ -843,10 +789,11 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			if(strpos($cropping, ',')) {
 				$cropping = explode(',', $cropping);
 			} else if(strpos($cropping, 'x') && preg_match('/^([pd])(\d+)x(\d+)(z\d+)?/', $cropping, $matches)) {
-				$cropping = array(
-					0 => (int) $matches[2], // x 
-					1 => (int) $matches[3] // y
-				);
+				$cropping = [
+        0 => (int) $matches[2],
+        // x
+        1 => (int) $matches[3],
+    ];
 				if(isset($matches[4])) {
 					$cropping[2] = (int) ltrim($matches[4], 'z'); // zoom
 				}
@@ -968,12 +915,12 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			list($x, $y, $w, $h) = $value;
 		} else {
 			// check for associative array
-			foreach(array('x', 'y', 'w', 'h') as $v) {
+			foreach(['x', 'y', 'w', 'h'] as $v) {
 				if(isset($value[$v])) $$v = $value[$v];
 			}
 		}
 		
-		foreach(array('x', 'y', 'w', 'h') as $k) {
+		foreach(['x', 'y', 'w', 'h'] as $k) {
 			$v = (int) (isset($$k) ? $$k : -1);
 			if(!$v && $k == 'w' && $h > 0) $v = $this->getProportionalWidth((int) $h); 
 			if(!$v && $k == 'h' && $w > 0) $v = $this->getProportionalHeight((int) $w); 
@@ -981,7 +928,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			if(('w' == $k || 'h' == $k) && 0 == $v) throw new WireException("Wrong param $k=$v for ImageSizer-cropExtra! " . print_r($value, true));
 		}
 
-		$this->cropExtra = array($x, $y, $w, $h);
+		$this->cropExtra = [$x, $y, $w, $h];
 
 		return $this;
 	}
@@ -1225,7 +1172,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 *
 	 */
 	public function setRotate($degrees) {
-		$valid = array(-270, -180, -90, 90, 180, 270);
+		$valid = [-270, -180, -90, 90, 180, 270];
 		$degrees = (int) $degrees;
 		if(in_array($degrees, $valid)) $this->rotate = $degrees;
 		return $this;
@@ -1353,7 +1300,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 *
 	 */
 	protected function getBooleanValue($value) {
-		if(in_array(strtolower($value), array('0', 'off', 'false', 'no', 'n', 'none'))) return false;
+		if(in_array(strtolower($value), ['0', 'off', 'false', 'no', 'n', 'none'])) return false;
 		return ((int) $value) > 0;
 	}
 	
@@ -1384,21 +1331,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 */
 	public function getOptions() {
 
-		$options = array(
-			'quality' => $this->quality,
-			'webpQuality' => $this->webpQuality,
-			'webpAdd' => $this->webpAdd,
-			'webpOnly' => $this->webpOnly,
-			'cropping' => $this->cropping,
-			'upscaling' => $this->upscaling,
-			'interlace' => $this->interlace, 
-			'autoRotation' => $this->autoRotation,
-			'sharpening' => $this->sharpening,
-			'defaultGamma' => $this->defaultGamma,
-			'cropExtra' => $this->cropExtra,
-			'scale' => $this->scale,
-			'useUSM' => $this->useUSM,
-		);
+		$options = ['quality' => $this->quality, 'webpQuality' => $this->webpQuality, 'webpAdd' => $this->webpAdd, 'webpOnly' => $this->webpOnly, 'cropping' => $this->cropping, 'upscaling' => $this->upscaling, 'interlace' => $this->interlace, 'autoRotation' => $this->autoRotation, 'sharpening' => $this->sharpening, 'defaultGamma' => $this->defaultGamma, 'cropExtra' => $this->cropExtra, 'scale' => $this->scale, 'useUSM' => $this->useUSM];
 
 		$options = array_merge($this->options, $options);
 
@@ -1415,19 +1348,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 */
 	public function get($key) {
 
-		$keys = array(
-			'filename',
-			'extension',
-			'imageType',
-			'image',
-			'modified',
-			'supportedImageTypes',
-			'info',
-			'iptcRaw',
-			'validIptcTags',
-			'cropExtra',
-			'options'
-		);
+		$keys = ['filename', 'extension', 'imageType', 'image', 'modified', 'supportedImageTypes', 'info', 'iptcRaw', 'validIptcTags', 'cropExtra', 'options'];
 
 		if($key === 'webpResult') return $this->webpResult;
 		if($key === 'webpOnly') return $this->webpOnly;
@@ -1477,7 +1398,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 *
 	 */
 	protected function iptcPrepareData($includeCustomTags = false) {
-		$customTags = array('213', '214', '215', '216', '217');
+		$customTags = ['213', '214', '215', '216', '217'];
 		$iptcNew = '';
 		foreach(array_keys($this->iptcRaw) as $s) {
 			$tag = substr($s, 2);
@@ -1529,16 +1450,19 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 */
 	protected function checkOrientation(&$correctionArray) {
 		// first value is rotation-degree and second value is flip-mode: 0=NONE | 1=HORIZONTAL | 2=VERTICAL
-		$corrections = array(
-			'1' => array(0, 0),
-			'2' => array(0, 1),
-			'3' => array(180, 0),
-			'4' => array(0, 2),
-			'5' => array(90, 1),    // OLD: 270
-			'6' => array(90, 0),    // OLD: 270
-			'7' => array(270, 1),   // OLD: 90
-			'8' => array(270, 0)    // OLD: 90
-		);
+		$corrections = [
+      '1' => [0, 0],
+      '2' => [0, 1],
+      '3' => [180, 0],
+      '4' => [0, 2],
+      '5' => [90, 1],
+      // OLD: 270
+      '6' => [90, 0],
+      // OLD: 270
+      '7' => [270, 1],
+      // OLD: 90
+      '8' => [270, 0],
+  ];
 		
 		if(!isset($this->info['orientation']) || !isset($corrections[strval($this->info['orientation'])])) {
 			return false;
@@ -1980,12 +1904,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 		$posX = $this->getFocusZoomPosition($this->cropping[0], $fullWidth, $cropW, $zoom); // calculate the x-position
 		$posY = $this->getFocusZoomPosition($this->cropping[1], $fullHeight, $cropH, $zoom); // calculate the y-position
 
-		return array(
-			0 => (int) $posX,
-			1 => (int) $posY,
-			2 => (int) $cropW,
-			3 => (int) $cropH
-		);
+		return [0 => (int) $posX, 1 => (int) $posY, 2 => (int) $cropW, 3 => (int) $cropH];
 	}
 
 	/**

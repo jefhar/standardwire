@@ -42,7 +42,7 @@ class SelectorContainsAdvanced extends SelectorContains {
 	 * 
 	 */
 	public function valueToCommands($value) {
-		$commands = array();
+		$commands = [];
 		$hasQuotes = strrpos($value, '"') || strrpos($value, '”') || strrpos($value, ')') || strrpos($value, '}');
 		$substr = function_exists('\\mb_substr') ? '\\mb_substr' : '\\substr';
 		$re = '/[-+]?("[^"]+"|\([^)]+\))\*?/';
@@ -61,20 +61,18 @@ class SelectorContainsAdvanced extends SelectorContains {
 				if(!strlen($phrase)) continue;
 				$phrase = str_replace('"', '', $phrase);
 				$query = $type . '"' . $phrase . '"' . ($partial ? '*' : ''); 
-				$a = array('type' => $type, 'value' => $phrase, 'query' => $query, 'partial' => $partial, 'phrase' => true);
+				$a = ['type' => $type, 'value' => $phrase, 'query' => $query, 'partial' => $partial, 'phrase' => true];
 				$commands[] = $a;
 			}
 		}
-		$words = $this->wire()->sanitizer->wordsArray($value, array(
-			'keepChars' => array('+', '-', '*')
-		));
+		$words = $this->wire()->sanitizer->wordsArray($value, ['keepChars' => ['+', '-', '*']]);
 		foreach($words as $word) {
 			$type = substr($word, 0, 1);
 			$partial = substr($word, -1) === '*';
 			if($type !== '+' && $type !== '-') $type = '';
 			$word = trim($word, '+-*');
 			$query = $type . $word . ($partial ? '*' : ''); 
-			$a = array('type' => $type, 'value' => $word, 'query' => $query, 'partial' => $partial, 'phrase' => false);
+			$a = ['type' => $type, 'value' => $word, 'query' => $query, 'partial' => $partial, 'phrase' => false];
 			$commands[] = $a;
 		}
 		return $commands;

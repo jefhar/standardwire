@@ -58,10 +58,10 @@ class WireMailTools extends Wire {
 	 * @return WireMail
 	 *
 	 */
-	public function ___new($options = array()) {
+	public function ___new($options = []) {
 	
-		if(is_string($options) && !empty($options)) $options = array('module' => $options); 
-		if(!is_array($options)) $options = array();
+		if(is_string($options) && !empty($options)) $options = ['module' => $options]; 
+		if(!is_array($options)) $options = [];
 
 		/** @var WireMail|null $mail */
 		$mail = null;
@@ -70,7 +70,7 @@ class WireMailTools extends Wire {
 	
 		// merge config settings with requested options
 		$settings = $this->wire()->config->wireMail;
-		if(!is_array($settings)) $settings = array();
+		if(!is_array($settings)) $settings = [];
 		if(count($options)) $settings = array_merge($settings, $options);
 		
 		// see if a specific WireMail module is requested
@@ -151,26 +151,27 @@ class WireMailTools extends Wire {
 	 * @return int|WireMail Returns number of messages sent or WireMail object if no arguments specified.
 	 *
 	 */
-	public function send($to = '', $from = '', $subject = '', $body = '', $options = array()) {
+	public function send($to = '', $from = '', $subject = '', $body = '', $options = []) {
 
 		$mail = $this->new();
 	
 		// if no $to address specified, return WireMail object
 		if(empty($to)) return $mail;
 
-		$defaults = array(
-			'body' => is_string($body) ? $body : '',
-			'bodyHTML' => '',
-			'replyTo' => '', // email address
-			'headers' => array(),
-		);
+		$defaults = [
+      'body' => is_string($body) ? $body : '',
+      'bodyHTML' => '',
+      'replyTo' => '',
+      // email address
+      'headers' => [],
+  ];
 
 		if(is_array($body)) {
 			// use case #2: body is provided in $options
 			$options = $body;
 		} else if(is_string($options)) {
 			// use case #3: body and bodyHTML are provided, but no $options
-			$options = array('bodyHTML' => $options);
+			$options = ['bodyHTML' => $options];
 		} else {
 			// use case #1: default behavior
 		}
@@ -227,7 +228,7 @@ class WireMailTools extends Wire {
 	 * @return int|WireMail Returns number of messages sent or WireMail object if no arguments specified.
 	 * 
 	 */
-	public function sendHTML($to = '', $from = '', $subject = '', $bodyHTML = '', $options = array()) {
+	public function sendHTML($to = '', $from = '', $subject = '', $bodyHTML = '', $options = []) {
 		$options['bodyHTML'] = $bodyHTML;
 		return $this->send($to, $from, $subject, $options);
 	}
@@ -272,12 +273,12 @@ class WireMailTools extends Wire {
 	 * @return bool True on success, false on fail.
 	 * 
 	 */
-	public function mail($to, $subject, $message, $headers = array()) {
+	public function mail($to, $subject, $message, $headers = []) {
 		$from = '';
 		
 		if(is_string($headers)) {
 			$_headers = explode("\n", $headers); 
-			$headers = array();
+			$headers = [];
 			foreach($_headers as $header) {
 				if(!strpos($header, ':')) continue;
 				list($key, $val) = explode(':', $header, 2);
@@ -327,15 +328,12 @@ class WireMailTools extends Wire {
 	 * @since 3.0.109
 	 * 
 	 */
-	public function mailHTML($to, $subject, $messageHTML, $headers = array()) {
+	public function mailHTML($to, $subject, $messageHTML, $headers = []) {
 		if(is_array($messageHTML)) {
 			$options = $messageHTML;
 			if(!empty($headers) && empty($options['headers'])) $options['headers'] = $headers;
 		} else {
-			$options = array(
-				'bodyHTML' => $messageHTML,
-				'headers' => $headers
-			);
+			$options = ['bodyHTML' => $messageHTML, 'headers' => $headers];
 		}
 		return $this->mail($to, $subject, $options); 
 	}
@@ -430,13 +428,9 @@ class WireMailTools extends Wire {
 	 * @since 3.0.129
 	 *
 	 */
-	public function ___isBlacklistEmail($email, array $options = array()) {
+	public function ___isBlacklistEmail($email, array $options = []) {
 
-		$defaults = array(
-			'blacklist' => array(),
-			'throw' => false,
-			'why' => false,
-		);
+		$defaults = ['blacklist' => [], 'throw' => false, 'why' => false];
 
 		$options = count($options) ? array_merge($defaults, $options) : $defaults;
 		$blacklist = $options['blacklist'];

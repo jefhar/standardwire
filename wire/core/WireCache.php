@@ -111,18 +111,7 @@ class WireCache extends Wire {
 	 * @var array
 	 *
 	 */
-	protected $expireNames = array(
-		'now' => self::expireNow,
-		'hour' => self::expireHourly,
-		'hourly' => self::expireHourly,
-		'day' => self::expireDaily,
-		'daily' => self::expireDaily,
-		'week' => self::expireWeekly,
-		'weekly' => self::expireWeekly,
-		'month' => self::expireMonthly,
-		'monthly' => self::expireMonthly,
-		'ignore' => self::expireIgnore
-	);
+	protected $expireNames = ['now' => self::expireNow, 'hour' => self::expireHourly, 'hourly' => self::expireHourly, 'day' => self::expireDaily, 'daily' => self::expireDaily, 'week' => self::expireWeekly, 'weekly' => self::expireWeekly, 'month' => self::expireMonthly, 'monthly' => self::expireMonthly, 'ignore' => self::expireIgnore];
 	
 	/**
 	 * Preloaded cache values, indexed by cache name
@@ -130,7 +119,7 @@ class WireCache extends Wire {
 	 * @var array
 	 *
 	 */
-	protected $preloads = array();
+	protected $preloads = [];
 
 	/**
 	 * Are we currently preloading?
@@ -256,14 +245,11 @@ class WireCache extends Wire {
 	 */
 	public function get($name, $expire = null, $func = null) {
 
-		$values = array();
+		$values = [];
 		$getMultiple = is_array($name); // retrieving multiple caches at once?
 		$expireNow = false;
 		
-		$expireIgnores = array(
-			self::expireIgnore, self::expireReserved, self::expireNever, 
-			self::expireSave, self::expireSelector
-		);
+		$expireIgnores = [self::expireIgnore, self::expireReserved, self::expireNever, self::expireSave, self::expireSelector];
 
 		if($expire !== null && $expire !== self::expireIgnore) {
 			if(!is_int($expire) && !is_string($expire) && is_callable($expire) && !$expire instanceof Wire) {
@@ -279,33 +265,26 @@ class WireCache extends Wire {
 		if($expire === self::expireNow) {
 			// forced expiration now
 			$expireNow = true;
-			$expires = array();
+			$expires = [];
 			
 		} else if(is_array($expire)) {
 			// selector [ 'expire' => self::expireSelector, 'selector' => '...' ]
-			$expires = array(
-				'= ' . $expire['expire']
-			);
+			$expires = ['= ' . $expire['expire']];
 			
 		} else if(in_array($expire, $expireIgnores, true)) {
 			// no expires conditions to match when: 
 			// ignore, reserved, never, save, or selector
-			$expires = array();
+			$expires = [];
 			
 		} else if($func !== null || empty($expire)) {
 			// match row only if its expiration is greater than current date/time
 			// or if it has one of the expirations at or below never (save, reserved, etc.)
 			// also use this if $func in play since the expire is used for save rather than get
-			$expires = array(
-				'> ' . date(self::dateFormat),
-				'<= ' . self::expireNever
-			);
+			$expires = ['> ' . date(self::dateFormat), '<= ' . self::expireNever];
 			
 		} else {
 			// expire represents date/time of expiration
-			$expires = array(
-				'< ' . $expire,
-			);
+			$expires = ['< ' . $expire];
 		}
 			
 
@@ -317,10 +296,10 @@ class WireCache extends Wire {
 				unset($this->preloads[$name]);
 				return $value;
 			}
-			$names = array($name);
+			$names = [$name];
 		}
 
-		$wildcards = array();
+		$wildcards = [];
 
 		foreach($names as $s) {
 			if(strpos($s, '%') !== false) $s = str_replace('%', '*', $s);
@@ -334,15 +313,11 @@ class WireCache extends Wire {
 			throw new WireException("Function (\$func) may not be specified to \$cache->get() when requesting multiple caches.");
 		}
 		
-		$findOptions = array(
-			'names' => $names,
-			'expires' => $expires,
-			'get' => array('name', 'data')
-		);
+		$findOptions = ['names' => $names, 'expires' => $expires, 'get' => ['name', 'data']];
 
 		if($getMultiple) {
 			// get array value
-			$rows = $expireNow ? array() : $this->cacher()->find($findOptions);
+			$rows = $expireNow ? [] : $this->cacher()->find($findOptions);
 			foreach($rows as $row) {
 				$value = $row['data'];
 				$name = $row['name'];
@@ -360,8 +335,8 @@ class WireCache extends Wire {
 			
 		} else {
 			// get single cache value
-			$findOptions['get'] = array('data');
-			$value = $expireNow ? array() : $this->cacher()->find($findOptions);
+			$findOptions['get'] = ['data'];
+			$value = $expireNow ? [] : $this->cacher()->find($findOptions);
 			$value = count($value) ? reset($value) : null;
 		
 			if(empty($value)) {
@@ -405,7 +380,7 @@ class WireCache extends Wire {
 
 		$ref = new \ReflectionFunction($func);
 		$params = $ref->getParameters(); // requested arguments
-		$args = array(); // arguments we provide
+		$args = []; // arguments we provide
 
 		foreach($params as $param) {
 			$arg = null;
@@ -493,7 +468,7 @@ class WireCache extends Wire {
 	 *
 	 */
 	public function save($name, $data, $expire = self::expireDaily) {
-		$options = array(); // additional data to pass along to cacher save() method
+		$options = []; // additional data to pass along to cacher save() method
 	
 		if(empty($expire) && $expire !== self::expireNow) $expire = self::expireDaily;	
 		
@@ -521,10 +496,7 @@ class WireCache extends Wire {
 
 		if(is_array($expire)) {
 			// expire based on selector string
-			$data = array(
-				'selector' => $expire['selector'],
-				'WireCache' => $data
-			);
+			$data = ['selector' => $expire['selector'], 'WireCache' => $data];
 			$options['expireArray'] = $expire;
 			$expire = self::expireSelector;
 			// $this->cacheNameSelectors = null; // clear memory cache for maintenancePage method
@@ -535,7 +507,7 @@ class WireCache extends Wire {
 			if($data === false) throw new WireException("Unable to encode array data for cache: $name");
 		} else if(is_string($data) && $this->looksLikeJSON($data)) {
 			// ensure potentially already encoded JSON text remains as text when cache is awakened
-			$data = json_encode(array('WireCache' => $data));
+			$data = json_encode(['WireCache' => $data]);
 		}
 
 		if(is_null($data)) $data = '';
@@ -635,16 +607,13 @@ class WireCache extends Wire {
 		} else if(is_string($expire) && Selectors::stringHasSelector($expire)) {
 			// expire when page matches selector
 			if($verbose || $verbose === null) {
-				return array(
-					'expire' => self::expireSelector,
-					'selector' => $expire
-				);
+				return ['expire' => self::expireSelector, 'selector' => $expire];
 			}
 			return self::expireSelector;
 
-		} else if(in_array($expire, array(self::expireNever, self::expireReserved, self::expireSave, self::expireNow))) {
+		} else if(in_array($expire, [self::expireNever, self::expireReserved, self::expireSave, self::expireNow])) {
 			// good, we'll take it as-is
-			return $verbose ? array('expire' => $expire) : $expire;
+			return $verbose ? ['expire' => $expire] : $expire;
 
 		} else {
 
@@ -675,7 +644,7 @@ class WireCache extends Wire {
 
 		$expire = date(self::dateFormat, $expire);
 		
-		if($verbose) $expire = array('expire' => $expire); 
+		if($verbose) $expire = ['expire' => $expire]; 
 
 		return $expire;
 	}
@@ -697,14 +666,11 @@ class WireCache extends Wire {
 	 */
 	public function delete($name) {
 		if(strpos($name, '*') !== false) {
-			$rows = $this->cacher()->find(array(
-				'names' => array($name),
-				'get' => array('name'),
-			));
+			$rows = $this->cacher()->find(['names' => [$name], 'get' => ['name']]);
 		} else {
-			$rows = array(array('name' => $name));
+			$rows = [['name' => $name]];
 		}
-		$clearedNames = array();
+		$clearedNames = [];
 		foreach($rows as $row) {
 			$name = $row['name'];
 			try {
@@ -812,36 +778,22 @@ class WireCache extends Wire {
 
 		if(is_object($obj)) {
 			if($useCacherMaint) {
-				$result = call_user_func_array(array($cacher, 'maintenance'), array($obj));
+				$result = call_user_func_array([$cacher, 'maintenance'], [$obj]);
 				if($result) return true;
 			}
 			// check to see if it is worthwhile to perform this kind of maintenance at all
 			if($this->usePageTemplateMaintenance === null) {
-				$rows = $cacher->find(array(
-					'get' => array('name'),
-					'expiresMode' => 'OR',
-					'expires' => array(
-						'= ' . self::expireSave, 
-						'= ' . self::expireSelector
-					)
-				));
+				$rows = $cacher->find(['get' => ['name'], 'expiresMode' => 'OR', 'expires' => ['= ' . self::expireSave, '= ' . self::expireSelector]]);
 				if(!count($rows)) {
 					$templates = $this->wire()->templates;
-					if(!$templates) $templates = array();
+					if(!$templates) $templates = [];
 					$minID = 999999;
 					$maxID = 0;
 					foreach($templates as $template) {
 						if($template->id > $maxID) $maxID = $template->id;
 						if($template->id < $minID) $minID = $template->id;
 					}
-					$rows = $this->cacher()->find(array(
-						'get' => array('name'),
-						'expiresMode' => 'AND',
-						'expires' => array(
-							'>= ' . date(self::dateFormat, $minID),
-							'<= ' . date(self::dateFormat, $maxID),
-						)
-					));
+					$rows = $this->cacher()->find(['get' => ['name'], 'expiresMode' => 'AND', 'expires' => ['>= ' . date(self::dateFormat, $minID), '<= ' . date(self::dateFormat, $maxID)]]);
 				}
 				$this->usePageTemplateMaintenance = count($rows);
 			}
@@ -876,7 +828,7 @@ class WireCache extends Wire {
 
 		// perform general maintenance now	
 		if($useCacherMaint) {
-			$result = (bool) call_user_func_array(array($cacher, 'maintenance'), array(null));
+			$result = (bool) call_user_func_array([$cacher, 'maintenance'], [null]);
 		} else {
 			$result = $this->maintenanceGeneral();
 		}
@@ -893,14 +845,7 @@ class WireCache extends Wire {
 	 */
 	protected function maintenanceGeneral() {
 
-		$rows = $this->cacher()->find(array(
-			'get' => array('name'),
-			'expiresMode' => 'AND',
-			'expires' => array(
-				'<= ' . date(self::dateFormat, time()),
-				'> ' . self::expireNever
-			)
-		));
+		$rows = $this->cacher()->find(['get' => ['name'], 'expiresMode' => 'AND', 'expires' => ['<= ' . date(self::dateFormat, time()), '> ' . self::expireNever]]);
 
 		$qty = 0;
 
@@ -927,12 +872,8 @@ class WireCache extends Wire {
 		if($this->cacheNameSelectors === null) {
 			// locate all caches that specify selector strings and cache them so that 
 			// we don't have to re-load them on every page save
-			$this->cacheNameSelectors = array();
-			$rows = $this->cacher()->find(array(
-				'expires' => array(
-					'= ' . self::expireSelector
-				)
-			));
+			$this->cacheNameSelectors = [];
+			$rows = $this->cacher()->find(['expires' => ['= ' . self::expireSelector]]);
 			foreach($rows as $row) {
 				$data = json_decode($row['data'], true);
 				if($data === false || !isset($data['selector'])) continue;
@@ -953,14 +894,7 @@ class WireCache extends Wire {
 			}
 		}
 
-		$rows = $this->cacher()->find(array(
-			'get' => array('name'),
-			'expiresMode' => 'OR',
-			'expires' => array(
-				'= ' . self::expireSave,
-				'= ' . date(self::dateFormat, $page->template->id)
-			),
-		));
+		$rows = $this->cacher()->find(['get' => ['name'], 'expiresMode' => 'OR', 'expires' => ['= ' . self::expireSave, '= ' . date(self::dateFormat, $page->template->id)]]);
 
 		foreach($rows as $row) {
 			if($this->delete($row['name'])) $qty++;
@@ -981,14 +915,7 @@ class WireCache extends Wire {
 	 */
 	protected function maintenanceTemplate(Template $template) {
 
-		$rows = $this->cacher()->find(array(
-			'get' => array('name'),
-			'expiresMode' => 'OR',
-			'expires' => array(
-				'= ' . self::expireSave,
-				'= ' . date(self::dateFormat, $template->id)
-			)
-		));
+		$rows = $this->cacher()->find(['get' => ['name'], 'expiresMode' => 'OR', 'expires' => ['= ' . self::expireSave, '= ' . date(self::dateFormat, $template->id)]]);
 
 		$qty = 0;
 
@@ -1018,7 +945,7 @@ class WireCache extends Wire {
 			return $this->wire(new $class());
 		}
 
-		$options = array();
+		$options = [];
 		$template = empty($data['template']) ? null : $this->wire()->templates->get((int) $data['template']);
 		if($template) $options['template'] = $template;
 		if($pageArrayClass != 'PageArray') $options['pageArrayClass'] = $pageArrayClass;
@@ -1038,9 +965,9 @@ class WireCache extends Wire {
 	 */
 	protected function pageArrayToArray(PageArray $items) {
 
-		$templates = array();
-		$ids = array();
-		$pageClasses = array();
+		$templates = [];
+		$ids = [];
+		$pageClasses = [];
 
 		foreach($items as $item) {
 			$templates[$item->template->id] = $item->template->id;
@@ -1053,10 +980,7 @@ class WireCache extends Wire {
 			throw new WireException("Can't cache multiple page types together: " . implode(', ', $pageClasses));
 		}
 
-		$data = array(
-			'PageArray' => $ids,
-			'template'  => count($templates) == 1 ? reset($templates) : 0,
-		);
+		$data = ['PageArray' => $ids, 'template'  => count($templates) == 1 ? reset($templates) : 0];
 
 		$pageClass = reset($pageClasses);
 		if($pageClass && $pageClass != 'Page') $data['pageClass'] = $pageClass;
@@ -1079,14 +1003,14 @@ class WireCache extends Wire {
 	 * @return array of arrays of cache info
 	 *
 	 */
-	public function getInfo($verbose = true, $names = array(), $exclude = array(), array $cols = array()) {
+	public function getInfo($verbose = true, $names = [], $exclude = [], array $cols = []) {
 
-		if(is_string($names)) $names = empty($names) ? array() : array($names);
-		if(is_string($exclude)) $exclude = empty($exclude) ? array() : array($exclude);
-		if(empty($cols)) $cols = array('name', 'expires', 'data', 'size');
+		if(is_string($names)) $names = empty($names) ? [] : [$names];
+		if(is_string($exclude)) $exclude = empty($exclude) ? [] : [$exclude];
+		if(empty($cols)) $cols = ['name', 'expires', 'data', 'size'];
 		
-		$all = array();
-		$options = count($names) ? array('names' => $names) : array();
+		$all = [];
+		$options = count($names) ? ['names' => $names] : [];
 		$options['get'] = $cols;
 		$templates = $this->wire()->templates;
 
@@ -1102,12 +1026,7 @@ class WireCache extends Wire {
 				if($skip) continue;
 			}
 
-			$info = array(
-				'name' => $row['name'],
-				'type' => 'string',
-				'expires' => '',
-				'size' => 0 
-			);
+			$info = ['name' => $row['name'], 'type' => 'string', 'expires' => '', 'size' => 0];
 
 			if(isset($row['data']) && $this->looksLikeJSON($row['data'])) {
 				// json encoded
@@ -1207,13 +1126,9 @@ class WireCache extends Wire {
 	 * @since 3.0.130
 	 *
 	 */
-	public function renderFile($filename, $expire = null, array $options = array()) {
+	public function renderFile($filename, $expire = null, array $options = []) {
 
-		$defaults = array(
-			'name' => '',
-			'vars' => array(),
-			'throwExceptions' => true,
-		);
+		$defaults = ['name' => '', 'vars' => [], 'throwExceptions' => true];
 
 		$paths = $this->wire()->config->paths;
 		$files = $this->wire()->files;
@@ -1246,7 +1161,7 @@ class WireCache extends Wire {
 			// cache does not exist or is older source file mtime
 			$out = $files->render($filename, $options['vars'], $options);
 			if($out === false) return false;
-			$data = array(time(), $out);
+			$data = [time(), $out];
 			if($expire === null) $expire = self::expireDaily;
 			$this->save($cacheName, $data, $expire);
 		} else {
@@ -1415,7 +1330,7 @@ class WireCache extends Wire {
 	 * @return WireLog
 	 *
 	 */
-	public function ___log($str = '', array $options = array()) {
+	public function ___log($str = '', array $options = []) {
 		//parent::___log($str, array('name' => 'cache'));
 		$str = ''; // disable log
 		return parent::___log($str, $options);

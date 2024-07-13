@@ -38,9 +38,7 @@ class WireClassLoader {
 	 * @var array
 	 * 
 	 */
-	protected $extensions = array(
-		'.php',
-	);
+	protected $extensions = ['.php'];
 	
 	/**
 	 * Class name prefixes to paths
@@ -48,7 +46,7 @@ class WireClassLoader {
 	 * @var array Indexed by prefix, values are arrays of paths
 	 *
 	 */
-	protected $prefixes = array();
+	protected $prefixes = [];
 
 	/**
 	 * Class name suffixes to paths
@@ -56,7 +54,7 @@ class WireClassLoader {
 	 * @var array Indexed by suffix, values are arrays of paths
 	 * 
 	 */
-	protected $suffixes = array();
+	protected $suffixes = [];
 
 	/**
 	 * True when finding file, string when file found, false when not active
@@ -70,7 +68,7 @@ class WireClassLoader {
 	 * @var array
 	 * 
 	 */
-	static protected $namespaces = array();
+	static protected $namespaces = [];
 
 	/**
 	 * Log of autoload activity when debug mode is on
@@ -78,7 +76,7 @@ class WireClassLoader {
 	 * @var array
 	 * 
 	 */
-	protected $debugLog = array();
+	protected $debugLog = [];
 
 	/**
 	 * Whether we are using debug mode
@@ -94,7 +92,7 @@ class WireClassLoader {
 	 */
 	public function __construct($wire = null) {
 		if($wire) $this->wire = $wire;
-		spl_autoload_register(array($this, 'loadClass'));
+		spl_autoload_register([$this, 'loadClass']);
 	}
 
 	/**
@@ -136,7 +134,7 @@ class WireClassLoader {
 	 * 
 	 */
 	public function addSuffix($suffix, $path) {
-		if(!isset($this->suffixes[$suffix])) $this->suffixes[$suffix] = array();
+		if(!isset($this->suffixes[$suffix])) $this->suffixes[$suffix] = [];
 		if(!empty($path) && is_dir($path)) $this->suffixes[$suffix][] = $this->path($path);
 	}
 	
@@ -151,7 +149,7 @@ class WireClassLoader {
 	 *
 	 */
 	public function addPrefix($prefix, $path) {
-		if(!isset($this->prefixes[$prefix])) $this->prefixes[$prefix] = array();
+		if(!isset($this->prefixes[$prefix])) $this->prefixes[$prefix] = [];
 		if(!empty($path) && is_dir($path)) $this->prefixes[$prefix][] = $this->path($path);
 	}
 
@@ -169,7 +167,7 @@ class WireClassLoader {
 	 * 
 	 */
 	public function addNamespace($namespace, $path) {
-		if(!isset(self::$namespaces[$namespace])) self::$namespaces[$namespace] = array();
+		if(!isset(self::$namespaces[$namespace])) self::$namespaces[$namespace] = [];
 		$path = $this->path($path);
 		if(!in_array($path, self::$namespaces[$namespace])) self::$namespaces[$namespace][] = $path;
 	}
@@ -182,7 +180,7 @@ class WireClassLoader {
 	 * 
 	 */
 	public function getNamespace($namespace) {
-		return isset(self::$namespaces[$namespace]) ? self::$namespaces[$namespace] : array();
+		return isset(self::$namespaces[$namespace]) ? self::$namespaces[$namespace] : [];
 	}
 
 	/**
@@ -239,7 +237,7 @@ class WireClassLoader {
 	public function loadClass($className) {
 		
 		static $level = 0;
-		static $levelHistory = array();
+		static $levelHistory = [];
 		$level++;
 		
 		if($this->modules === null && $this->wire) {
@@ -260,7 +258,7 @@ class WireClassLoader {
 		}
 		
 		$found = false;
-		$_parts = array();
+		$_parts = [];
 		
 		if(__NAMESPACE__) {
 			$parts = explode("\\", $className);
@@ -347,7 +345,7 @@ class WireClassLoader {
 	 */
 	protected function findClassInPaths($name, $paths, $dir = '') {
 		$found = false;
-		if(!is_array($paths)) $paths = array($paths);
+		if(!is_array($paths)) $paths = [$paths];
 		foreach($paths as $path) {
 			foreach($this->extensions as $ext) {
 				$file = "$path$dir$name$ext";
@@ -371,7 +369,7 @@ class WireClassLoader {
 	protected function findInPrefixSuffixPaths($name) {
 		$found = false;
 		
-		foreach(array('prefixes', 'suffixes') as $type) {
+		foreach(['prefixes', 'suffixes'] as $type) {
 			
 			foreach($this->$type as $fix => $paths) {
 				

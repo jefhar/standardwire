@@ -415,7 +415,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @var array
 	 *
 	 */
-	protected $fieldDataQueue = array();
+	protected $fieldDataQueue = [];
 
 	/**
 	 * Field names that should wakeup and sanitize on first access (populated when isLoaded==false)
@@ -425,7 +425,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @var array of (field name => true)
 	 * 
 	 */
-	protected $wakeupNameQueue = array();
+	protected $wakeupNameQueue = [];
 
 	/**
 	 * Is this a new page (not yet existing in the database)?
@@ -502,7 +502,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @var array
 	 *
 	 */
-	static public $instanceIDs = array();
+	static public $instanceIDs = [];
 
 	/**
 	 * Stack of ID indexed Page objects that are currently in the loading process. 
@@ -512,7 +512,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @var array
 	 *
 	 */
-	static public $loadingStack = array();
+	static public $loadingStack = [];
 
 	/**
 	 * Controls the behavior of Page::__isset function (no longer in use)
@@ -563,19 +563,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @var array
 	 *
 	 */
-	protected $settings = array(
-		'id' => 0, 
-		'name' => '', 
-		'status' => 1, 
-		'numChildren' => 0, 
-		'sort' => -1, 
-		'sortfield' => 'sort', 
-		'modified_users_id' => 0, 
-		'created_users_id' => 0,
-		'created' => 0,
-		'modified' => 0,
-		'published' => 0,
-	);
+	protected $settings = ['id' => 0, 'name' => '', 'status' => 1, 'numChildren' => 0, 'sort' => -1, 'sortfield' => 'sort', 'modified_users_id' => 0, 'created_users_id' => 0, 'created' => 0, 'modified' => 0, 'published' => 0];
 
 	/**
 	 * Page meta data
@@ -1507,7 +1495,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 				return $this->get($method);
 			}
 		} else if(isset(PageProperties::$baseMethodAlternates[$method])) { 
-			return call_user_func_array(array($this, PageProperties::$baseMethodAlternates[$method]), $arguments);
+			return call_user_func_array([$this, PageProperties::$baseMethodAlternates[$method]], $arguments);
 		} else {
 			return parent::___callUnknown($method, $arguments);
 		}
@@ -1724,7 +1712,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Pages::find()
 	 *
 	 */
-	public function find($selector = '', $options = array()) {
+	public function find($selector = '', $options = []) {
 		if(!$this->numChildren) {
 			return $this->wire()->pages->newPageArray();
 		}
@@ -1756,7 +1744,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @since 3.0.116
 	 *
 	 */
-	public function findOne($selector = '', $options = array()) {
+	public function findOne($selector = '', $options = []) {
 		if(!$this->numChildren) {
 			return $this->wire()->pages->newNullPage();
 		}
@@ -1794,7 +1782,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Page::child(), Page::find(), Page::numChildren(), Page::hasChildren()
 	 *
 	 */
-	public function children($selector = '', $options = array()) {
+	public function children($selector = '', $options = []) {
 		return $this->traversal()->children($this, $selector, $options); 
 	}
 
@@ -1879,7 +1867,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Page::children()
 	 *
 	 */
-	public function child($selector = '', $options = array()) {
+	public function child($selector = '', $options = []) {
 		return $this->traversal()->child($this, $selector, $options); 
 	}
 
@@ -2059,7 +2047,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 		}
 		if(!$includeCurrent) {
 			if(is_array($selector)) {
-				$selector[] = array('id', '!=', $this->id);
+				$selector[] = ['id', '!=', $this->id];
 			} else {
 				if(strlen($selector)) $selector .= ", ";	
 				$selector .= "id!=$this->id";
@@ -2162,10 +2150,10 @@ class Page extends WireData implements \Countable, WireMatchable {
 		if($siblings === null && $this->traversalPages) $siblings = $this->traversalPages;
 		if($getPrev) {
 			if($siblings) return $this->traversal()->prevAllSiblings($this, $selector, $siblings);
-			return $this->traversal()->prevAll($this, $selector, array('qty' => $getQty));
+			return $this->traversal()->prevAll($this, $selector, ['qty' => $getQty]);
 		}
 		if($siblings) return $this->traversal()->nextAllSiblings($this, $selector, $siblings);
-		return $this->traversal()->nextAll($this, $selector, array('qty' => $getQty));
+		return $this->traversal()->nextAll($this, $selector, ['qty' => $getQty]);
 	}
 
 	/**
@@ -2332,7 +2320,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Pages::save(), Pages::saveField(), Pages::saveReady(), Pages::saveFieldReady(), Pages::saved(), Pages::fieldSaved()
 	 *
 	 */
-	public function save($field = null, array $options = array()) {
+	public function save($field = null, array $options = []) {
 		
 		$pages = $this->wire()->pages;
 		
@@ -2394,13 +2382,13 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Pages::save()
 	 *
 	 */
-	public function setAndSave($key, $value = null, array $options = array()) {
+	public function setAndSave($key, $value = null, array $options = []) {
 		if(is_array($key)) {
 			$values = $key;
 			$property = count($values) == 1 ? key($values) : '';
 		} else {
 			$property = $key;
-			$values = array($key => $value);
+			$values = [$key => $value];
 		}
 		$of = $this->of();
 		if($of) $this->of(false);
@@ -2573,7 +2561,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 		if(parent::isChanged($what)) return true; 
 		$changed = false;
 		if($what) {
-			$data = array_key_exists($what, $this->data) ? array($this->data[$what]) : array();
+			$data = array_key_exists($what, $this->data) ? [$this->data[$what]] : [];
 		} else {
 			$data = &$this->data;
 		}
@@ -2631,7 +2619,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 *
 	 */
 	public function path() {
-		return $this->wire()->hooks->isHooked('Page::path()') ? $this->__call('path', array()) : $this->___path();
+		return $this->wire()->hooks->isHooked('Page::path()') ? $this->__call('path', []) : $this->___path();
 	}
 
 	/**
@@ -2792,7 +2780,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Page::addUrl(), page::removeUrl()
 	 * 
 	 */
-	public function urls($options = array()) {
+	public function urls($options = []) {
 		return $this->traversal()->urls($this, $options);	
 	}
 
@@ -2820,7 +2808,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Page::url(), Page::localHttpUrl()
 	 *
 	 */
-	public function httpUrl($options = array()) {
+	public function httpUrl($options = []) {
 		return $this->traversal()->httpUrl($this, $options);
 	}
 
@@ -2846,7 +2834,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @return string URL for editing this page
 	 * 
 	 */
-	public function editUrl($options = array()) {
+	public function editUrl($options = []) {
 		return $this->traversal()->editUrl($this, $options);
 	}
 
@@ -3224,7 +3212,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 *
 	 */
 	public function matchesDatabase($s) {
-		return $this->comparison()->matches($this, $s, array('useDatabase' => true));
+		return $this->comparison()->matches($this, $s, ['useDatabase' => true]);
 	}
 
 	/**
@@ -3341,7 +3329,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 *
 	 */
 	public function isPublic() {
-		return $this->wire()->hooks->isHooked('Page::isPublic()') ? $this->__call('isPublic', array()) : $this->___isPublic();
+		return $this->wire()->hooks->isHooked('Page::isPublic()') ? $this->__call('isPublic', []) : $this->___isPublic();
 	}
 
 	/**
@@ -3454,7 +3442,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 */
 	protected function processFieldDataQueue() {
 		if($this->values()->processFieldDataQueue($this, $this->fieldDataQueue)) {
-			$this->fieldDataQueue = array();
+			$this->fieldDataQueue = [];
 		}
 	}
 
@@ -3619,11 +3607,8 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @since 3.0.166
 	 *
 	 */
-	public function hasFile($file, array $options = array()) {
-		$defaults = array(
-			'getPathname' => false,
-			'getPagefile' => false,
-		);
+	public function hasFile($file, array $options = []) {
+		$defaults = ['getPathname' => false, 'getPagefile' => false];
 		$file = basename($file);
 		$options = array_merge($defaults, $options);
 		$hasFile = PagefilesManager::hasFile($this, $file, $options['getPathname']);
@@ -3671,7 +3656,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 		$trackChanges = $this->trackChanges();
 		if($trackChanges) $this->setTrackChanges(false); 
 		$template = $this->template();
-		$fieldgroup = $template ? $template->fieldgroup : array();
+		$fieldgroup = $template ? $template->fieldgroup : [];
 		foreach($fieldgroup as $field) { /** @var Field $field */
 			$value = parent::get($field->name);
 			if(!is_object($value)) continue;
@@ -3765,7 +3750,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 		$instanceID = $this->wire()->getProcessWireInstanceID();
 		if(!isset(PageProperties::$helpers[$instanceID])) {
 			// no helpers yet for this ProcessWire instance
-			PageProperties::$helpers[$instanceID] = array();
+			PageProperties::$helpers[$instanceID] = [];
 		}
 		if(!isset(PageProperties::$helpers[$instanceID][$className])) {
 			// helper not yet loaded, so load it
@@ -3938,11 +3923,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 			// load page
 			if(!is_int($this->lazyLoad) || $this->lazyLoad < 1) return false;
 			$this->lazyLoad = true;
-			$page = $this->wire()->pages->getById($this->id, array(
-				'cache' => (is_string($this->loaderCache) ? $this->loaderCache : false),
-				'getOne' => true,
-				'page' => $this // This. Just This.
-			));
+			$page = $this->wire()->pages->getById($this->id, ['cache' => (is_string($this->loaderCache) ? $this->loaderCache : false), 'getOne' => true, 'page' => $this]);
 			return $page->id > 0;
 		} else {
 			throw new WireException("Invalid arguments to Page::lazy()");
@@ -3961,7 +3942,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @throws WireException
 	 * 
 	 */
-	public function _pages($method = '', $selector = '', $options = array()) {
+	public function _pages($method = '', $selector = '', $options = []) {
 		if(empty($method)) return $this->wire()->pages;
 		if(!isset($options['cache'])) $options['cache'] = $this->loaderCache;
 		if(!isset($options['caller'])) $options['caller'] = "page._pages.$method";

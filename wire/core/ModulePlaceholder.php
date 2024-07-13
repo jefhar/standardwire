@@ -22,7 +22,7 @@ class ModulePlaceholder extends WireData implements Module {
 
 	protected $class = '';
 	protected $ns = '';
-	protected $moduleInfo = array();
+	protected $moduleInfo = [];
 
 	public function __construct() {
 		parent::__construct();
@@ -32,11 +32,7 @@ class ModulePlaceholder extends WireData implements Module {
 	}
 
 	static public function getModuleInfo() {
-		return array(
-			'title' => 'ModulePlaceholder: call $modules->get(class) to replace this placeholder.',  
-			'version' => 0, 
-			'summary' => '', 
-		);
+		return ['title' => 'ModulePlaceholder: call $modules->get(class) to replace this placeholder.', 'version' => 0, 'summary' => ''];
 	}
 
 	public function init() { }

@@ -43,7 +43,7 @@ class ImageSizer extends Wire {
 	 * @var array
 	 *
 	 */
-	protected $initialOptions = array();
+	protected $initialOptions = [];
 
 	/**
 	 * Known ImageSizer engine modules (class names) excluding ImageSizerEngineGD (the default)
@@ -61,7 +61,7 @@ class ImageSizer extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $failedEngineNames = array();
+	protected $failedEngineNames = [];
 
 	/**
 	 * Module/class name of engine that must only be used (for cases where you want to force a specific engine)
@@ -94,7 +94,7 @@ class ImageSizer extends Wire {
 	 * @param array $options Initial options to the engine.
 	 *
 	 */
-	public function __construct($filename = '', $options = array()) {
+	public function __construct($filename = '', $options = []) {
 		parent::__construct();
 		if(!empty($options)) $this->setOptions($options); 
 		if(!empty($filename)) $this->setFilename($filename);
@@ -113,7 +113,7 @@ class ImageSizer extends Wire {
 		
 		if(!$forceReload && is_array(self::$knownEngines)) return self::$knownEngines;
 		
-		self::$knownEngines = array();
+		self::$knownEngines = [];
 		
 		$modules = $this->wire()->modules;
 		$engines = $modules->findByPrefix('ImageSizerEngine');
@@ -170,8 +170,8 @@ class ImageSizer extends Wire {
 	 */
 	public function getEngineInfo($name = '') {
 		
-		$infos = array();
-		$engineNames = $name ? array($name) : $this->getEngines();
+		$infos = [];
+		$engineNames = $name ? [$name] : $this->getEngines();
 		$prefix = 'ImageSizerEngine';
 		
 		if($name && stripos($name, $prefix) === 0) {
@@ -189,7 +189,7 @@ class ImageSizer extends Wire {
 		}
 	
 		// if one engine requested reduce array to just that engine
-		if($name) $infos = isset($infos[$name]) ? $infos[$name] : array();
+		if($name) $infos = isset($infos[$name]) ? $infos[$name] : [];
 		
 		return $infos;
 	}
@@ -204,7 +204,7 @@ class ImageSizer extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	protected function newImageSizerEngine($filename = '', array $options = array(), $inspectionResult = null) {	
+	protected function newImageSizerEngine($filename = '', array $options = [], $inspectionResult = null) {	
 		
 		if(empty($filename)) $filename = $this->filename;
 		if(empty($options)) $options = $this->initialOptions;
@@ -269,7 +269,7 @@ class ImageSizer extends Wire {
 	 * @throws WireException
 	 * 
 	 */
-	protected function newDefaultImageSizerEngine($filename = '', $options = array(), $inspectionResult = null) {
+	protected function newDefaultImageSizerEngine($filename = '', $options = [], $inspectionResult = null) {
 		
 		if(empty($filename)) $filename = $this->filename;
 		if(empty($options)) $options = $this->initialOptions;
@@ -385,19 +385,19 @@ class ImageSizer extends Wire {
 		return $this;
 	}
 
-	public function setAutoRotation($value = true) { return $this->setOptions(array('autoRotation', $value)); }
-	public function setCropExtra($value) { return $this->setOptions(array('cropExtra', $value)); }
-	public function setCropping($cropping = true) { return $this->setOptions(array('cropping', $cropping)); }
-	public function setDefaultGamma($value = 2.2) { return $this->setOptions(array('defaultGamma', $value)); }
-	public function setFlip($flip) { return $this->setOptions(array('flip', $flip)); }
-	public function setHidpi($hidpi = true) { return $this->setOptions(array('hidpi', $hidpi)); }
-	public function setQuality($n) { return $this->setOptions(array('quality', $n)); }
-	public function setRotate($degrees) { return $this->setOptions(array('rotate', $degrees)); }
-	public function setScale($scale) { return $this->setOptions(array('scale', $scale)); }
-	public function setSharpening($value) { return $this->setOptions(array('sharpening', $value)); }
-	public function setTimeLimit($value = 30) { return $this->setOptions(array('timeLimit', $value)); }
-	public function setUpscaling($value = true) { return $this->setOptions(array('upscaling', $value)); }
-	public function setUseUSM($value = true) { return $this->setOptions(array('useUSM', $value)); }
+	public function setAutoRotation($value = true) { return $this->setOptions(['autoRotation', $value]); }
+	public function setCropExtra($value) { return $this->setOptions(['cropExtra', $value]); }
+	public function setCropping($cropping = true) { return $this->setOptions(['cropping', $cropping]); }
+	public function setDefaultGamma($value = 2.2) { return $this->setOptions(['defaultGamma', $value]); }
+	public function setFlip($flip) { return $this->setOptions(['flip', $flip]); }
+	public function setHidpi($hidpi = true) { return $this->setOptions(['hidpi', $hidpi]); }
+	public function setQuality($n) { return $this->setOptions(['quality', $n]); }
+	public function setRotate($degrees) { return $this->setOptions(['rotate', $degrees]); }
+	public function setScale($scale) { return $this->setOptions(['scale', $scale]); }
+	public function setSharpening($value) { return $this->setOptions(['sharpening', $value]); }
+	public function setTimeLimit($value = 30) { return $this->setOptions(['timeLimit', $value]); }
+	public function setUpscaling($value = true) { return $this->setOptions(['upscaling', $value]); }
+	public function setUseUSM($value = true) { return $this->setOptions(['useUSM', $value]); }
 	public function getWidth() { 
 		$image = $this->getEngine()->get('image');
 		return $image['width']; 
@@ -558,16 +558,19 @@ class ImageSizer extends Wire {
 			return null;
 		}
 		// first value is rotation-degree and second value is flip-mode: 0=NONE | 1=HORIZONTAL | 2=VERTICAL
-		$corrections = array(
-			'1' => array(0, 0),
-			'2' => array(0, 1),
-			'3' => array(180, 0),
-			'4' => array(0, 2),
-			'5' => array(90, 1),    // OLD: 270
-			'6' => array(90, 0),    // OLD: 270
-			'7' => array(270, 1),   // OLD: 90
-			'8' => array(270, 0)    // OLD: 90
-		);
+		$corrections = [
+      '1' => [0, 0],
+      '2' => [0, 1],
+      '3' => [180, 0],
+      '4' => [0, 2],
+      '5' => [90, 1],
+      // OLD: 270
+      '6' => [90, 0],
+      // OLD: 270
+      '7' => [270, 1],
+      // OLD: 90
+      '8' => [270, 0],
+  ];
 		if(!function_exists('exif_read_data')) return null;
 		$exif = @exif_read_data($filename, 'IFD0');
 		if(!is_array($exif)
@@ -597,7 +600,7 @@ class ImageSizer extends Wire {
 		}
 		$info = getimagesize($filename);
 		if(\IMAGETYPE_GIF != $info[2]) return false;
-		if(ImageSizerEngineGD::checkMemoryForImage(array($info[0], $info[1]))) {
+		if(ImageSizerEngineGD::checkMemoryForImage([$info[0], $info[1]])) {
 			return (bool) preg_match('/\x00\x21\xF9\x04.{4}\x00(\x2C|\x21)/s', file_get_contents($filename));
 		}
 		// we have not enough free memory to load the complete image at once, so we do it in chunks

@@ -34,10 +34,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * Permanent/common settings for a Fieldgroup, fields in the database
 	 *
 	 */
-	protected $settings = array(
-		'id' => 0, 
-		'name' => '', 
-	);
+	protected $settings = ['id' => 0, 'name' => ''];
 
 	/**
 	 * Any fields that were removed from this instance are noted so that Fieldgroups::save() can delete unused data
@@ -53,7 +50,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * This context overrides the values set in the field when it doesn't have context. 
 	 *
 	 */
-	protected $fieldContexts = array();
+	protected $fieldContexts = [];
 
 	/**
 	 * Per WireArray interface, items added must be instances of Field
@@ -352,7 +349,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	public function get($key) {
 		if($key == 'fields') return $this;
 		if($key == 'fields_id') {
-			$values = array();
+			$values = [];
 			foreach($this as $field) {
 				/** @var Field $field */
 				$values[] = $field->id;
@@ -382,7 +379,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 			// set field context for this fieldgroup
 			$data = $row['data'];
 			if(is_string($data)) $data = wireDecodeJSON($data); 
-			if(!is_array($data)) $row['data'] = array();
+			if(!is_array($data)) $row['data'] = [];
 			$this->fieldContexts[(int) "$item"] = $data;
 		}
 		return $this; 
@@ -530,13 +527,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 		
 		if(is_array($contextStr)) {
 			// 2nd argument is instead an array of options
-			$defaults = array(
-				'contextStr' => '', 	
-				'fieldName' => $fieldName, 
-				'namespace' => $namespace,
-				'flat' => $flat, 
-				'populate' => true, // populate page values?
-			);
+			$defaults = ['contextStr' => '', 'fieldName' => $fieldName, 'namespace' => $namespace, 'flat' => $flat, 'populate' => true];
 			$options = $contextStr;
 			$options = array_merge($defaults, $options);
 			$contextStr = $options['contextStr'];
@@ -549,14 +540,14 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 		}
 		
 		$container = $this->wire(new InputfieldWrapper());
-		$containers = array();
+		$containers = [];
 		$inFieldset = false;
 		$inHiddenFieldset = false;
 		$inModalGroup = '';
 	
 		// for multiple named fields
 		$multiMode = false;
-		$fieldInputfields = array();
+		$fieldInputfields = [];
 		if(is_array($fieldName)) {
 			// an array was specified for $fieldName
 			if(count($fieldName) == 1) {
@@ -736,12 +727,12 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 				if(isset($this->fieldContexts[$field_id][$namespace])) {
 					return $this->fieldContexts[$field_id][$namespace];
 				}
-				return array();
+				return [];
 			} else if(isset($this->fieldContexts[$field_id])) {
 				return $this->fieldContexts[$field_id];
 			}
 		}
-		return array();
+		return [];
 	}
 
 	/**
@@ -756,7 +747,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 */
 	public function setFieldContextArray($field_id, $data, $namespace = '') {
 		if($namespace) {
-			if(!isset($this->fieldContexts[$field_id])) $this->fieldContexts[$field_id] = array();	
+			if(!isset($this->fieldContexts[$field_id])) $this->fieldContexts[$field_id] = [];	
 			$namespace = self::contextNamespacePrefix . $namespace;
 			$this->fieldContexts[$field_id][$namespace] = $data;
 		} else {

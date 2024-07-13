@@ -263,15 +263,15 @@ abstract class AdminThemeFramework extends AdminTheme {
 		$process = $this->wire()->process;
 		$input = $this->wire()->input;
 
-		if(!$this->isEditor) return array();
-		if($page->name != 'page' && $page->name != 'list') return array();
-		if($input->urlSegment1 || $input->get('modal')) return array();
-		if(strpos($process, 'ProcessPageList') !== 0) return array();
+		if(!$this->isEditor) return [];
+		if($page->name != 'page' && $page->name != 'list') return [];
+		if($input->urlSegment1 || $input->get('modal')) return [];
+		if(strpos($process, 'ProcessPageList') !== 0) return [];
 
 		/** @var ProcessPageAdd $module */
-		$module = $this->wire()->modules->getModule('ProcessPageAdd', array('noInit' => true));
-		$data = $module->executeNavJSON(array('getArray' => true));
-		$actions = array();
+		$module = $this->wire()->modules->getModule('ProcessPageAdd', ['noInit' => true]);
+		$data = $module->executeNavJSON(['getArray' => true]);
+		$actions = [];
 
 		foreach($data['list'] as $item) {
 			$item['url'] = $data['url'] . $item['url'];
@@ -302,12 +302,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 		$page = $this->wire()->page;
 		$process = $this->wire()->process;
 
-		$classes = array(
-			"id-{$page->id}",
-			"template-{$page->template->name}",
-			"pw-init",
-			parent::getBodyClass(),
-		);
+		$classes = ["id-{$page->id}", "template-{$page->template->name}", "pw-init", parent::getBodyClass()];
 
 		if($this->isModal) $classes[] = 'modal';
 		if($this->isModal === 'inline') $classes[] = 'modal-inline';
@@ -341,7 +336,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * @return bool
 	 *
 	 */
-	public function allowPageInNav(Page $p, $children = array(), $permission = null) {
+	public function allowPageInNav(Page $p, $children = [], $permission = null) {
 
 		if($this->isSuperuser) return true;
 		
@@ -357,9 +352,9 @@ abstract class AdminThemeFramework extends AdminTheme {
 			$numAddable = $session->getFor('ProcessPageAdd', 'numAddable');
 			if($numAddable === null) {
 				/** @var ProcessPageAdd $processPageAdd */
-				$processPageAdd = $this->wire()->modules->getModule('ProcessPageAdd', array('noInit' => true));
+				$processPageAdd = $this->wire()->modules->getModule('ProcessPageAdd', ['noInit' => true]);
 				if($processPageAdd) {
-					$addData = $processPageAdd->executeNavJSON(array('getArray' => true));
+					$addData = $processPageAdd->executeNavJSON(['getArray' => true]);
 					$numAddable = $addData['list'];
 					$session->setFor('ProcessPageAdd', 'numAddable', $numAddable);
 				}
@@ -409,7 +404,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 */
 	public function ___getPrimaryNavArray() {
 
-		$items = array();
+		$items = [];
 		$config = $this->wire()->config;
 		$admin = $this->wire()->pages->get($config->adminRootPageID);
 
@@ -436,7 +431,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 		$user = $this->wire()->user;
 		
 		$textdomain = str_replace($config->paths->root, '/', $modules->getModuleFile($p->process));
-		$navArray = array();
+		$navArray = [];
 
 		if(is_array($module)) {
 			$moduleInfo = $module;
@@ -449,16 +444,17 @@ abstract class AdminThemeFramework extends AdminTheme {
 			$permission = empty($navItem['permission']) ? '' : $navItem['permission'];
 			if($permission && !$user->hasPermission($permission)) continue;
 
-			$navArray[] = array(
-				'id' => 0,
-				'parent_id' => $p->id,
-				'title' => $this->sanitizer->entities1(__($navItem['label'], $textdomain)), // translate from context of Process module
-				'name' => '',
-				'url' => $p->url . $navItem['url'],
-				'icon' => empty($navItem['icon']) ? '' : $navItem['icon'],
-				'children' => array(),
-				'navJSON' => empty($navItem['navJSON']) ? '' : $p->url . $navItem['navJSON'],
-			);
+			$navArray[] = [
+       'id' => 0,
+       'parent_id' => $p->id,
+       'title' => $this->sanitizer->entities1(__($navItem['label'], $textdomain)),
+       // translate from context of Process module
+       'name' => '',
+       'url' => $p->url . $navItem['url'],
+       'icon' => empty($navItem['icon']) ? '' : $navItem['icon'],
+       'children' => [],
+       'navJSON' => empty($navItem['navJSON']) ? '' : $p->url . $navItem['navJSON'],
+   ];
 		}
 
 		return $navArray;
@@ -473,20 +469,11 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 */
 	public function pageToNavArray(Page $p) {
 
-		$children = $p->numChildren ? $p->children("check_access=0") : array();
+		$children = $p->numChildren ? $p->children("check_access=0") : [];
 
 		if(!$this->allowPageInNav($p, $children)) return null;
 
-		$navArray = array(
-			'id' => $p->id,
-			'parent_id' => $p->parent_id,
-			'url' => $p->url,
-			'name' => $p->name,
-			'title' => $this->getPageTitle($p),
-			'icon' => $this->getPageIcon($p),
-			'children' => array(),
-			'navJSON' => '',
-		);
+		$navArray = ['id' => $p->id, 'parent_id' => $p->parent_id, 'url' => $p->url, 'name' => $p->name, 'title' => $this->getPageTitle($p), 'icon' => $this->getPageIcon($p), 'children' => [], 'navJSON' => ''];
 
 		if(!count($children)) {
 			// no children available
@@ -514,18 +501,9 @@ abstract class AdminThemeFramework extends AdminTheme {
 			if(!$c->process) continue;
 			$moduleInfo = $modules->getModuleInfo($c->process);
 			$permission = empty($moduleInfo['permission']) ? '' : $moduleInfo['permission'];
-			if(!$this->allowPageInNav($c, array(), $permission)) continue;
+			if(!$this->allowPageInNav($c, [], $permission)) continue;
 
-			$childItem = array(
-				'id' => $c->id,
-				'parent_id' => $c->parent_id,
-				'title' => $this->getPageTitle($c),
-				'name' => $c->name,
-				'url' => $c->url,
-				'icon' => $this->getPageIcon($c),
-				'children' => array(),
-				'navJSON' => empty($moduleInfo['useNavJSON']) ? '' : $c->url . 'navJSON/',
-			);
+			$childItem = ['id' => $c->id, 'parent_id' => $c->parent_id, 'title' => $this->getPageTitle($c), 'name' => $c->name, 'url' => $c->url, 'icon' => $this->getPageIcon($c), 'children' => [], 'navJSON' => empty($moduleInfo['useNavJSON']) ? '' : $c->url . 'navJSON/'];
 
 			if(!empty($moduleInfo['nav'])) {
 				$childItem['children'] = $this->moduleToNavArray($moduleInfo, $c);  
@@ -549,28 +527,13 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 */
 	public function ___getUserNavArray() {
 		$urls = $this->wire()->urls;
-		$navArray = array();
+		$navArray = [];
 		
-		$navArray[] = array(
-			'url' => $urls->root,
-			'title' => $this->_('View site'),
-			'target' => '_top',
-			'icon' => 'eye',
-		);
+		$navArray[] = ['url' => $urls->root, 'title' => $this->_('View site'), 'target' => '_top', 'icon' => 'eye'];
 		
-		if($this->wire()->user->hasPermission('profile-edit')) $navArray[] = array(
-			'url' => $urls->admin . 'profile/',
-			'title' => $this->_('Profile'),
-			'icon' => 'user',
-			'permission' => 'profile-edit',
-		);
+		if($this->wire()->user->hasPermission('profile-edit')) $navArray[] = ['url' => $urls->admin . 'profile/', 'title' => $this->_('Profile'), 'icon' => 'user', 'permission' => 'profile-edit'];
 		
-		$navArray[] = array(
-			'url' => $urls->admin . 'login/logout/',
-			'title' => $this->_('Logout'),
-			'target' => '_top',
-			'icon' => 'power-off',
-		);
+		$navArray[] = ['url' => $urls->admin . 'login/logout/', 'title' => $this->_('Logout'), 'target' => '_top', 'icon' => 'power-off'];
 		
 		return $navArray;
 	}
@@ -632,35 +595,48 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * @return string|array Returns string unless you specify true for $notices argument, then it returns an array.
 	 *
 	 */
-	public function renderNotices($notices, array $options = array()) {
+	public function renderNotices($notices, array $options = []) {
 
-		$defaults = array(
-			'messageClass' => 'NoticeMessage', // class for messages
-			'messageIcon' => 'check-square', // default icon to show with notices
-			'warningClass' => 'NoticeWarning', // class for warnings
-			'warningIcon' => 'exclamation-circle', // icon for warnings
-			'errorClass' => 'NoticeError', // class for errors
-			'errorIcon' => 'exclamation-triangle', // icon for errors
-			'debugClass' => 'NoticeDebug', // class for debug items (appended)
-			'debugIcon' => 'bug', // icon for debug notices
-			'closeClass' => 'pw-notice-remove notice-remove', // class for close notices link <a>
-			'closeIcon' => 'times', // icon for close notices link
-			'listMarkup' => "<ul class='pw-notices' id='notices'>{out}</ul><!--/notices-->",
-			'itemMarkup' => "<li class='{class}'>{remove}{icon}{text}</li>",
-			// the following apply only when groupByType==true
-			'groupByType' => true, // Group notices by type
-			'groupParentClass' => 'pw-notice-group-parent', // class for parent notices
-			'groupChildClass' => 'pw-notice-group-child', // class for children (of parent notices)
-			'groupToggleMarkup' => "<a class='pw-notice-group-toggle' href='#'>{label}" . 
-				"<i class='fa fa-fw fa-bell-o' data-toggle='fa-bell-o fa-bell'></i>" . 
-				"<i class='fa fa-fw fa-angle-right' data-toggle='fa-angle-right fa-angle-down'></i></a>", 
-			'groupToggleLabel' => $this->_("+{n-1}"), 
-		);
+		$defaults = [
+      'messageClass' => 'NoticeMessage',
+      // class for messages
+      'messageIcon' => 'check-square',
+      // default icon to show with notices
+      'warningClass' => 'NoticeWarning',
+      // class for warnings
+      'warningIcon' => 'exclamation-circle',
+      // icon for warnings
+      'errorClass' => 'NoticeError',
+      // class for errors
+      'errorIcon' => 'exclamation-triangle',
+      // icon for errors
+      'debugClass' => 'NoticeDebug',
+      // class for debug items (appended)
+      'debugIcon' => 'bug',
+      // icon for debug notices
+      'closeClass' => 'pw-notice-remove notice-remove',
+      // class for close notices link <a>
+      'closeIcon' => 'times',
+      // icon for close notices link
+      'listMarkup' => "<ul class='pw-notices' id='notices'>{out}</ul><!--/notices-->",
+      'itemMarkup' => "<li class='{class}'>{remove}{icon}{text}</li>",
+      // the following apply only when groupByType==true
+      'groupByType' => true,
+      // Group notices by type
+      'groupParentClass' => 'pw-notice-group-parent',
+      // class for parent notices
+      'groupChildClass' => 'pw-notice-group-child',
+      // class for children (of parent notices)
+      'groupToggleMarkup' => "<a class='pw-notice-group-toggle' href='#'>{label}" . 
+   				"<i class='fa fa-fw fa-bell-o' data-toggle='fa-bell-o fa-bell'></i>" . 
+   				"<i class='fa fa-fw fa-angle-right' data-toggle='fa-angle-right fa-angle-down'></i></a>",
+      'groupToggleLabel' => $this->_("+{n-1}"),
+  ];
 		
 		$options = array_merge($defaults, $options);
 		if($notices === true) return $options;
 		$config = $this->wire()->config;
-		$noticesArray = array();
+		$noticesArray = [];
 		$out = '';
 		
 		$removeIcon = $this->renderIcon($options['closeIcon']);
@@ -709,22 +685,17 @@ abstract class AdminThemeFramework extends AdminTheme {
 				$class .= " " . $options['debugClass'];
 				$icon = $options['debugIcon'];
 				// ensure non-debug version is set as well
-				if(!isset($noticesArray[$noticeType])) $noticesArray[$noticeType] = array();
+				if(!isset($noticesArray[$noticeType])) $noticesArray[$noticeType] = [];
 				$noticeType .= "-debug";
 			}
 
 			// indicate which class the notice originated from in debug mode
 			if($notice->class && $config->debug) $text = "{$notice->class}: $text";
 
-			$replacements = array(
-				'{class}' => $class,
-				'{remove}' => '', 
-				'{icon}' => $this->renderNavIcon($notice->icon ?: $icon),
-				'{text}' => $text,
-			);
+			$replacements = ['{class}' => $class, '{remove}' => '', '{icon}' => $this->renderNavIcon($notice->icon ?: $icon), '{text}' => $text];
 			
 			if($groupByType) {
-				if(!isset($noticesArray[$noticeType])) $noticesArray[$noticeType] = array();
+				if(!isset($noticesArray[$noticeType])) $noticesArray[$noticeType] = [];
 				$noticesArray[$noticeType][] = $replacements;
 			} else {
 				if($n === 0) $replacements['{remove}'] = $removeLink;
@@ -742,8 +713,8 @@ abstract class AdminThemeFramework extends AdminTheme {
 				$n = count($noticeReplacements);
 				if($n > 1) {
 					$notice =& $noticeReplacements[0];
-					$label = str_replace(array('{n}', '{n-1}'), array($n, $n-1), $options['groupToggleLabel']); 
-					$notice['{text}'] .= ' ' . str_replace(array('{label}'), array($label), $options['groupToggleMarkup']); 
+					$label = str_replace(['{n}', '{n-1}'], [$n, $n-1], $options['groupToggleLabel']); 
+					$notice['{text}'] .= ' ' . str_replace(['{label}'], [$label], $options['groupToggleMarkup']); 
 					$notice['{class}'] .= ' ' . $options['groupParentClass'];
 					$childClass = $options['groupChildClass'];
 				} else {
@@ -799,7 +770,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 *
 	 */
 	public function renderExtraMarkup($for) {
-		static $extras = array();
+		static $extras = [];
 		if(empty($extras)) $extras = $this->getExtraMarkup();
 		return isset($extras[$for]) ? $extras[$for] : '';
 	}
@@ -817,7 +788,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * @since 3.0.196
 	 *
 	 */
-	protected function ___renderFile($file, array $vars = array()) {
+	protected function ___renderFile($file, array $vars = []) {
 		extract($vars);
 		ob_start();
 		include($file);
@@ -834,7 +805,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * @since 3.0.196
 	 *
 	 */
-	public function includeFile($basename, array $vars = array()) {
+	public function includeFile($basename, array $vars = []) {
 
 		$file = '';
 

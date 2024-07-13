@@ -44,7 +44,7 @@ class PagesNames extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $delimiters = array('-', '_', '.');
+	protected $delimiters = ['-', '_', '.'];
 
 	/**
 	 * Default delimiter for separating words in page names
@@ -171,13 +171,13 @@ class PagesNames extends Wire {
 	 */
 	public function nameAndNumber($name, $delimiter = '') {
 		if(empty($delimiter)) $delimiter = $this->delimiter;
-		$fail = array($name, 0);
+		$fail = [$name, 0];
 		if(strpos($name, $delimiter) === false) return $fail;
 		$parts = explode($delimiter, $name);
 		$suffix = array_pop($parts);
 		if(!ctype_digit($suffix)) return $fail;
 		$suffix = ltrim($suffix, '0');
-		return array(implode($delimiter, $parts), (int) $suffix); 
+		return [implode($delimiter, $parts), (int) $suffix]; 
 	}
 
 	/**
@@ -209,12 +209,9 @@ class PagesNames extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function defaultPageNameFormat(Page $page, array $options = array()) {
+	public function defaultPageNameFormat(Page $page, array $options = []) {
 		
-		$defaults = array(
-			'fallbackFormat' => 'untitled-time',
-			'parent' => null, 
-		);
+		$defaults = ['fallbackFormat' => 'untitled-time', 'parent' => null];
 		
 		$options = array_merge($defaults, $options);
 		$parent = $options['parent'] ?: $page->parent();
@@ -282,12 +279,9 @@ class PagesNames extends Wire {
 	 * @return string
 	 *
 	 */
-	public function pageNameFromFormat(Page $page, $format = '', array $options = array()) {
+	public function pageNameFromFormat(Page $page, $format = '', array $options = []) {
 		
-		$defaults = array(
-			'format' => '', 
-			'language' => null, 
-		);
+		$defaults = ['format' => '', 'language' => null];
 		
 		if(is_array($format)) {
 			$options = $format;
@@ -377,7 +371,7 @@ class PagesNames extends Wire {
 
 				// if requested in some other language, see if we can get it in default language
 				if($language && !$language->isDefault()) {
-					$name = $this->pageNameFromFormat($page, $format, array('language' => $languages->getDefault())); 
+					$name = $this->pageNameFromFormat($page, $format, ['language' => $languages->getDefault()]); 
 				}
 
 				// fallback to untitled format if fields required are not present
@@ -435,14 +429,9 @@ class PagesNames extends Wire {
 	 * @return string Returns unique name
 	 *
 	 */
-	public function uniquePageName($name = '', $page = null, array $options = array()) {
+	public function uniquePageName($name = '', $page = null, array $options = []) {
 		
-		$defaults = array(
-			'name' => '',
-			'page' => null, 
-			'parent' => null, 
-			'language' => null 
-		);
+		$defaults = ['name' => '', 'page' => null, 'parent' => null, 'language' => null];
 
 		// handle argument substitutions
 		if(is_array($page)) {
@@ -481,11 +470,8 @@ class PagesNames extends Wire {
 		if(!strlen($name)) {
 			// no name currently present, so we need to determine what kind of name it should have
 			if($page) {
-				$format = $this->defaultPageNameFormat($page, array(
-					'fallbackFormat' => $page->id ? 'random' : 'untitled-time',
-					'parent' => $options['parent']
-				));
-				$name = $this->pageNameFromFormat($page, $format, array('language' => $options['language'])); 
+				$format = $this->defaultPageNameFormat($page, ['fallbackFormat' => $page->id ? 'random' : 'untitled-time', 'parent' => $options['parent']]);
+				$name = $this->pageNameFromFormat($page, $format, ['language' => $options['language']]); 
 			} else {
 				$name = $this->uniqueRandomPageName();
 			}
@@ -603,14 +589,9 @@ class PagesNames extends Wire {
 	 * @return int Returns quantity of pages using name, or 0 if name not in use.
 	 *
 	 */
-	public function pageNameExists($name, array $options = array()) {
+	public function pageNameExists($name, array $options = []) {
 
-		$defaults = array(
-			'page' => null,
-			'parent' => null,
-			'language' => null,
-			'multilang' => false,
-		);
+		$defaults = ['page' => null, 'parent' => null, 'language' => null, 'multilang' => false];
 
 		$options = array_merge($defaults, $options);
 		$languages = $options['multilang'] || $options['language'] ? $this->wire()->languages : null;
@@ -620,8 +601,8 @@ class PagesNames extends Wire {
 			$name = $this->wire()->sanitizer->pageName($name, Sanitizer::toAscii);
 		}
 
-		$wheres = array();
-		$binds = array();
+		$wheres = [];
+		$binds = [];
 		$parentID = $options['parent'] === null ? null : (int) "$options[parent]";
 		$pageID = $options['page'] === null ? null : (int) "$options[page]";
 
@@ -632,7 +613,7 @@ class PagesNames extends Wire {
 				$wheres[] = "$property=:$property";
 				$binds[":$property"] = $name;
 			}
-			$wheres = array('(' . implode(' OR ', $wheres) . ')');
+			$wheres = ['(' . implode(' OR ', $wheres) . ')'];
 		} else {
 			$wheres[] = 'name=:name';
 			$binds[':name'] = $name;
@@ -682,22 +663,11 @@ class PagesNames extends Wire {
 	 * @return string
 	 *
 	 */
-	public function uniqueRandomPageName($options = array()) {
+	public function uniqueRandomPageName($options = []) {
 
-		$defaults = array(
-			'page' => null,
-			'length' => 0,
-			'min' => 6,
-			'max' => 0,
-			'alpha' => true,
-			'numeric' => true,
-			'confirm' => true,
-			'parent' => 0,
-			'prefix' => '',
-			'suffix' => '',
-		);
+		$defaults = ['page' => null, 'length' => 0, 'min' => 6, 'max' => 0, 'alpha' => true, 'numeric' => true, 'confirm' => true, 'parent' => 0, 'prefix' => '', 'suffix' => ''];
 
-		if(is_int($options)) $options = array('length' => $options);
+		if(is_int($options)) $options = ['length' => $options];
 		$options = array_merge($defaults, $options);
 		$rand = new WireRandom();
 		$this->wire($rand);
@@ -716,7 +686,7 @@ class PagesNames extends Wire {
 			}
 
 			if($options['alpha'] && $options['numeric']) {
-				$name = $rand->alphanumeric($length, array('upper' => false, 'noStart' => '0123456789'));
+				$name = $rand->alphanumeric($length, ['upper' => false, 'noStart' => '0123456789']);
 			} else if($options['numeric']) {
 				$name = $rand->numeric($length);
 			} else {
@@ -726,7 +696,7 @@ class PagesNames extends Wire {
 			$name = $options['prefix'] . $name . $options['suffix'];
 
 			if($options['confirm']) {
-				$qty = $this->pageNameExists($name, array('page' => $options['page']));
+				$qty = $this->pageNameExists($name, ['page' => $options['page']]);
 			} else {
 				$qty = 0;
 			}

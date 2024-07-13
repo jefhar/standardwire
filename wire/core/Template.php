@@ -211,77 +211,127 @@ class Template extends WireData implements Saveable, Exportable {
 	 * The template's settings, as they relate to database schema
 	 *
 	 */
-	protected $settings = array(
-		'id' => 0, 
-		'name' => '', 
-		'fieldgroups_id' => 0, 
-		'flags' => 0,
-		'cache_time' => 0, 
-	); 
+	protected $settings = ['id' => 0, 'name' => '', 'fieldgroups_id' => 0, 'flags' => 0, 'cache_time' => 0]; 
 
 	/**
 	 * Array where get/set properties are stored
 	 *
 	 */
-	protected $data = array(
-		'useRoles' => 0, 		// does this template define access?
-		'editRoles' => array(),		// IDs of roles that may edit pages using this template
-		'addRoles' => array(),		// IDs of roles that may add children to pages using this template
-		'createRoles' => array(),	// IDs of roles that may create pages using this template
-		'rolesPermissions' => array(), 	// Permission overrides by role: Array keys are role IDs, values are permission ID (add) or negative permission ID (revoke)
-		'noInherit' => 0, 			// Specify 1 to prevent edit/add/create access from inheriting to non-access controlled children, or 0 for default inherit behavior.
-		'childrenTemplatesID' => 0, 	// template ID for child pages, or -1 if no children allowed. DEPRECATED
-		'sortfield' => '',		// Field that children of templates using this page should sort by. blank=page decides or 'sort'=manual drag-n-drop
-		'noChildren' => '', 		// set to 1 to cancel use of childTemplates
-		'noParents' => '', 		// set to 1 to cancel use of parentTemplates
-		'childTemplates' => array(),	// array of template IDs that are allowed for children. blank array = any. 
-		'parentTemplates' => array(),	// array of template IDs that are allowed for parents. blank array = any.
-		'allowPageNum' => 0, 		// allow page numbers in URLs?
-		'allowChangeUser' => 0,		// allow the createdUser/created_users_id field of pages to be changed? (with API or in admin w/superuser only)
-		'redirectLogin' => 0, 		// redirect when no access: 0 = 404, 1 = login page, 'url' = URL to redirec to
-		'urlSegments' => 0,		// allow URL segments on pages? (0=no, 1=yes any, string=only these segments)
-		'https' => 0, 			// use https? 0 = http or https, 1 = https only, -1 = http only
-		'slashUrls' => 1, 		// page URLs should have a trailing slash? 1 = yes, 0 = no	
-		'slashPageNum' => 0,	// should page number segments end with a slash? 0=either, 1=yes, -1=no (applies only if allowPageNum=1)
-		'slashUrlSegments' => 0,	// should URL segments end with a slash? 0=either, 1=yes, -1=no (applies only if urlSegments!=0)
-		'altFilename' => '',		// alternate filename for template file, if not based on template name
-		'guestSearchable' => 0, 	// pages appear in search results even when user doesn't have access?
-		'pageClass' => '', 		// class for instantiated page objects. 'Page' assumed if blank, or specify class name. 
-		'childNameFormat' => '',	// Name format for child pages. when specified, the page-add UI step can be skipped when adding chilcren. Counter appended till unique. Date format assumed if any non-pageName chars present. Use 'title' to pull from title field. 
-		'pageLabelField' => '',		// CSV or space separated string of field names to be displayed by ProcessPageList (overrides those set with ProcessPageList config). May also be a markup {tag} format string. 
-		'noGlobal' => 0, 		// template should ignore the 'global' option of fields?
-		'noMove' => 0,			// pages using this template are not moveable?
-		'noTrash' => 0,			// pages using this template may not go in trash? (i.e. they will be deleted not trashed)
-		'noSettings' => 0, 		// don't show a 'settings' tab on pages using this template?
-		'noChangeTemplate' => 0, 	// don't allow pages using this template to change their template?
-		'noShortcut' => 0, 		// don't allow pages using this template to appear in shortcut "add new page" menu
-		'noUnpublish' => 0,		// don't allow pages using this template to ever exist in an unpublished state - if page exists, it must be published 
-		'noLang' => 0,          // disable languages for this template (if multi-language support active)
-		'compile' => 3,		// Set to 1 to compile, set to 2 to compile file and included files, 3 for auto, or 0 to disable
-		'nameContentTab' => 0, 		// pages should display the 'name' field on the content tab?	
-		'noCacheGetVars' => '',		// GET vars that trigger disabling the cache (only when cache_time > 0)
-		'noCachePostVars' => '',	// POST vars that trigger disabling the cache (only when cache_time > 0)
-		'useCacheForUsers' => 0, 	// use cache for: 0 = only guest users, 1 = guests and logged in users
-		'cacheExpire' => 0, 		// expire the cache for all pages when page using this template is saved? (1 = yes, 0 = no- only current page)
-		'cacheExpirePages' => array(),	// array of Page IDs that should be expired, when cacheExpire == Template::cacheExpireSpecific
-		'cacheExpireSelector' => '', // selector string that matches pages to expire when cacheExpire == Template::cacheExpireSelector
-		'label' => '',			// label that describes what this template is for (optional)
-		'tags' => '',			// optional tags that can group this template with others in the admin templates list 
-		'modified' => 0, 		// last modified time for template or template file
-		'titleNames' => 0, 		// future page title changes re-create the page names too? (recommend only if PagePathHistory is installed)
-		'noPrependTemplateFile' => 0, // disable automatic inclusion of $config->prependTemplateFile 
-		'noAppendTemplateFile' => 0, // disable automatic inclusion of $config->appendTemplateFile
-		'prependFile' => '', // file to prepend (relative to /site/templates/)
-		'appendFile' => '', // file to append (relative to /site/templates/)
-		'pagefileSecure' => 0, // secure files connected with page? 0=Off, 1=Yes for unpub/non-public pages, 2=Always (3.0.166+)
-		'tabContent' => '', 	// label for the Content tab (if different from 'Content')
-		'tabChildren' => '', 	// label for the Children tab (if different from 'Children')
-		'nameLabel' => '', // label for the "name" property of the page (if something other than "Name")
-		'contentType' => '', // Content-type header or index of header from $config->contentTypes
-		'errorAction' => 0, // action to take on save when required field on published page is empty (0=notify,1=restore,2=unpublish)
-		'connectedFieldID' => null, // ID of connected field or null if not applicable
-		'ns' => '', // namespace found in the template file, or blank if not determined
-	);
+	protected $data = [
+     'useRoles' => 0,
+     // does this template define access?
+     'editRoles' => [],
+     // IDs of roles that may edit pages using this template
+     'addRoles' => [],
+     // IDs of roles that may add children to pages using this template
+     'createRoles' => [],
+     // IDs of roles that may create pages using this template
+     'rolesPermissions' => [],
+     // Permission overrides by role: Array keys are role IDs, values are permission ID (add) or negative permission ID (revoke)
+     'noInherit' => 0,
+     // Specify 1 to prevent edit/add/create access from inheriting to non-access controlled children, or 0 for default inherit behavior.
+     'childrenTemplatesID' => 0,
+     // template ID for child pages, or -1 if no children allowed. DEPRECATED
+     'sortfield' => '',
+     // Field that children of templates using this page should sort by. blank=page decides or 'sort'=manual drag-n-drop
+     'noChildren' => '',
+     // set to 1 to cancel use of childTemplates
+     'noParents' => '',
+     // set to 1 to cancel use of parentTemplates
+     'childTemplates' => [],
+     // array of template IDs that are allowed for children. blank array = any.
+     'parentTemplates' => [],
+     // array of template IDs that are allowed for parents. blank array = any.
+     'allowPageNum' => 0,
+     // allow page numbers in URLs?
+     'allowChangeUser' => 0,
+     // allow the createdUser/created_users_id field of pages to be changed? (with API or in admin w/superuser only)
+     'redirectLogin' => 0,
+     // redirect when no access: 0 = 404, 1 = login page, 'url' = URL to redirec to
+     'urlSegments' => 0,
+     // allow URL segments on pages? (0=no, 1=yes any, string=only these segments)
+     'https' => 0,
+     // use https? 0 = http or https, 1 = https only, -1 = http only
+     'slashUrls' => 1,
+     // page URLs should have a trailing slash? 1 = yes, 0 = no
+     'slashPageNum' => 0,
+     // should page number segments end with a slash? 0=either, 1=yes, -1=no (applies only if allowPageNum=1)
+     'slashUrlSegments' => 0,
+     // should URL segments end with a slash? 0=either, 1=yes, -1=no (applies only if urlSegments!=0)
+     'altFilename' => '',
+     // alternate filename for template file, if not based on template name
+     'guestSearchable' => 0,
+     // pages appear in search results even when user doesn't have access?
+     'pageClass' => '',
+     // class for instantiated page objects. 'Page' assumed if blank, or specify class name.
+     'childNameFormat' => '',
+     // Name format for child pages. when specified, the page-add UI step can be skipped when adding chilcren. Counter appended till unique. Date format assumed if any non-pageName chars present. Use 'title' to pull from title field.
+     'pageLabelField' => '',
+     // CSV or space separated string of field names to be displayed by ProcessPageList (overrides those set with ProcessPageList config). May also be a markup {tag} format string.
+     'noGlobal' => 0,
+     // template should ignore the 'global' option of fields?
+     'noMove' => 0,
+     // pages using this template are not moveable?
+     'noTrash' => 0,
+     // pages using this template may not go in trash? (i.e. they will be deleted not trashed)
+     'noSettings' => 0,
+     // don't show a 'settings' tab on pages using this template?
+     'noChangeTemplate' => 0,
+     // don't allow pages using this template to change their template?
+     'noShortcut' => 0,
+     // don't allow pages using this template to appear in shortcut "add new page" menu
+     'noUnpublish' => 0,
+     // don't allow pages using this template to ever exist in an unpublished state - if page exists, it must be published
+     'noLang' => 0,
+     // disable languages for this template (if multi-language support active)
+     'compile' => 3,
+     // Set to 1 to compile, set to 2 to compile file and included files, 3 for auto, or 0 to disable
+     'nameContentTab' => 0,
+     // pages should display the 'name' field on the content tab?
+     'noCacheGetVars' => '',
+     // GET vars that trigger disabling the cache (only when cache_time > 0)
+     'noCachePostVars' => '',
+     // POST vars that trigger disabling the cache (only when cache_time > 0)
+     'useCacheForUsers' => 0,
+     // use cache for: 0 = only guest users, 1 = guests and logged in users
+     'cacheExpire' => 0,
+     // expire the cache for all pages when page using this template is saved? (1 = yes, 0 = no- only current page)
+     'cacheExpirePages' => [],
+     // array of Page IDs that should be expired, when cacheExpire == Template::cacheExpireSpecific
+     'cacheExpireSelector' => '',
+     // selector string that matches pages to expire when cacheExpire == Template::cacheExpireSelector
+     'label' => '',
+     // label that describes what this template is for (optional)
+     'tags' => '',
+     // optional tags that can group this template with others in the admin templates list
+     'modified' => 0,
+     // last modified time for template or template file
+     'titleNames' => 0,
+     // future page title changes re-create the page names too? (recommend only if PagePathHistory is installed)
+     'noPrependTemplateFile' => 0,
+     // disable automatic inclusion of $config->prependTemplateFile
+     'noAppendTemplateFile' => 0,
+     // disable automatic inclusion of $config->appendTemplateFile
+     'prependFile' => '',
+     // file to prepend (relative to /site/templates/)
+     'appendFile' => '',
+     // file to append (relative to /site/templates/)
+     'pagefileSecure' => 0,
+     // secure files connected with page? 0=Off, 1=Yes for unpub/non-public pages, 2=Always (3.0.166+)
+     'tabContent' => '',
+     // label for the Content tab (if different from 'Content')
+     'tabChildren' => '',
+     // label for the Children tab (if different from 'Children')
+     'nameLabel' => '',
+     // label for the "name" property of the page (if something other than "Name")
+     'contentType' => '',
+     // Content-type header or index of header from $config->contentTypes
+     'errorAction' => 0,
+     // action to take on save when required field on published page is empty (0=notify,1=restore,2=unpublish)
+     'connectedFieldID' => null,
+     // ID of connected field or null if not applicable
+     'ns' => '',
+ ];
 
 	/**
 	 * Get or set loaded state
@@ -335,15 +385,15 @@ class Template extends WireData implements Saveable, Exportable {
 	protected function roleTypeNames($type) {
 		if($type instanceof Page) $type = $type->name;
 		if($type === 'view' || $type === 'roles' || $type === 'viewRoles' || $type === 'page-view') {
-			return array('view', 'roles', 'page-view');
+			return ['view', 'roles', 'page-view'];
 		} else if($type === 'edit' || $type === 'page-edit' || $type === 'editRoles') {
-			return array('edit', 'editRoles', 'page-edit');
+			return ['edit', 'editRoles', 'page-edit'];
 		} else if($type === 'create' || $type === 'page-create' || $type === 'createRoles') {
-			return array('create', 'createRoles', 'page-create');
+			return ['create', 'createRoles', 'page-create'];
 		} else if($type === 'add' || $type === 'page-add' || $type === 'addRoles') {
-			return array('add', 'addRoles', 'page-add');
+			return ['add', 'addRoles', 'page-add'];
 		}
-		return array('','','');
+		return ['', '', ''];
 	}
 
 	/**
@@ -383,7 +433,7 @@ class Template extends WireData implements Saveable, Exportable {
 			return $this->_roles;
 		
 		} else if(is_array($this->_roles)) {
-			$errors = array();
+			$errors = [];
 			$roles = $this->wire()->pages->newPageArray();
 			if(count($this->_roles)) {
 				$test = implode('0', $this->_roles); // test to see if it's all digits (IDs)
@@ -477,9 +527,9 @@ class Template extends WireData implements Saveable, Exportable {
 			return;
 		} 
 		
-		if(!WireArray::iterable($value)) $value = array();
+		if(!WireArray::iterable($value)) $value = [];
 		
-		$roleIDs = array();
+		$roleIDs = [];
 		$roles = null;
 		
 		foreach($value as $v) {
@@ -516,8 +566,8 @@ class Template extends WireData implements Saveable, Exportable {
 	 */
 	protected function setRolesPermissions($value) {
 		
-		if(!is_array($value)) $value = array();
-		$a = array();
+		if(!is_array($value)) $value = [];
+		$a = [];
 		
 		$roles = $this->wire()->roles;
 		$permissions = $this->wire()->permissions;
@@ -546,7 +596,7 @@ class Template extends WireData implements Saveable, Exportable {
 				$roleID = (string) ((int) $roleID);
 				$permissionID = (string) ((int) $permissionID);
 				
-				if(!isset($a[$roleID])) $a[$roleID] = array();
+				if(!isset($a[$roleID])) $a[$roleID] = [];
 				$a[$roleID][] = $permissionID;
 			}
 		}
@@ -595,14 +645,14 @@ class Template extends WireData implements Saveable, Exportable {
 		}
 		
 		if($type == 'all') {
-			$types = array('create', 'add', 'edit', 'view'); 
+			$types = ['create', 'add', 'edit', 'view']; 
 			$rolesPermissions = $this->rolesPermissions;
 			if(isset($rolesPermissions["$role->id"])) {
 				unset($rolesPermissions["$role->id"]); 
 				$this->rolesPermissions = $rolesPermissions; 
 			}
 		} else {
-			$types = array($type);
+			$types = [$type];
 		}
 		
 		foreach($types as $t) {
@@ -812,7 +862,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 *
 	 */
 	protected function setCacheExpirePages($value) {
-		if(!is_array($value)) $value = array();
+		if(!is_array($value)) $value = [];
 		foreach($value as $k => $v) {
 			if(is_object($v)) {
 				$v = $v->id;
@@ -1127,7 +1177,7 @@ class Template extends WireData implements Saveable, Exportable {
 		$a = parent::getArray();
 
 		if($this->useRoles) { 
-			$a['roles'] = array();	
+			$a['roles'] = [];	
 			foreach($this->getRoles() as $role) {
 				$a['roles'][] = $role->id;
 			}
@@ -1249,7 +1299,7 @@ class Template extends WireData implements Saveable, Exportable {
 		
 		if($setValue !== null && WireArray::iterable($setValue)) {
 			// set
-			$ids = array();
+			$ids = [];
 			foreach($setValue as $v) {
 				$template = $v instanceof Template ? $v : $templates->get($v);
 				if($template) {
@@ -1451,7 +1501,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 * 
 	 */
 	public function getTags() {
-		$tags = array();
+		$tags = [];
 		foreach(explode(' ', $this->tags) as $tag) {
 			if(!strlen($tag)) continue;
 			$tags[$tag] = $tag;
@@ -1545,7 +1595,7 @@ class Template extends WireData implements Saveable, Exportable {
 		if($icon && strpos($icon, "fa-") !== 0) $icon = "fa-$icon"; // convert anon icon to fa-icon
 		if($current) {
 			// replace icon currently in pageLabelField with new one
-			$label = str_replace(array("fa-$current", "icon-$current"), $icon, $label);
+			$label = str_replace(["fa-$current", "icon-$current"], $icon, $label);
 		} else if($icon) {
 			// add icon to pageLabelField where there wasn't one already
 			if(empty($label)) $label = $this->fieldgroup->hasField('title') ? 'title' : '';
@@ -1574,7 +1624,7 @@ class Template extends WireData implements Saveable, Exportable {
 		if(!$field) {
 			$fieldName = '';
 			$templateName = $this->name;
-			$prefixes = array('field-', 'field_', 'repeater_');
+			$prefixes = ['field-', 'field_', 'repeater_'];
 			foreach($prefixes as $prefix) {
 				if(strpos($templateName, $prefix) !== 0) continue;
 				list(,$fieldName) = explode($prefix, $templateName, 2);
@@ -1613,7 +1663,7 @@ class Template extends WireData implements Saveable, Exportable {
 	}
 	
 	public function __debugInfo() {
-		return array_merge(array('settings' => $this->settings), parent::__debugInfo());
+		return array_merge(['settings' => $this->settings], parent::__debugInfo());
 	}
 
 }

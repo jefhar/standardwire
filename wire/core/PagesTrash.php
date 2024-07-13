@@ -148,18 +148,10 @@ class PagesTrash extends Wire {
 	 */
 	public function getRestoreInfo(Page $page, $populateToPage = false) {
 
-		$info = array(
-			'restorable' => false,
-			'notes' => array(), 
-			'parent' => $this->pages->newNullPage(),
-			'parent_id' => 0,
-			'sort' => 0,
-			'name' => '',
-			'namePrevious' => '',
-		);
+		$info = ['restorable' => false, 'notes' => [], 'parent' => $this->pages->newNullPage(), 'parent_id' => 0, 'sort' => 0, 'name' => '', 'namePrevious' => ''];
 		
 		$languages = $this->wire()->languages;
-		if(!$languages || !$languages->hasPageNames()) $languages = array();
+		if(!$languages || !$languages->hasPageNames()) $languages = [];
 		
 		// initialize name properties in $info for each language 
 		foreach($languages as $language) {
@@ -209,7 +201,7 @@ class PagesTrash extends Wire {
 
 		if($newParent || $this->pages->count("parent=$nameParent, name=$name, id!=$page->id, include=all")) {
 			// check if there is already a page at the restore location with the same name
-			$name = $this->pages->names()->uniquePageName($name, $page, array('parent' => $nameParent));
+			$name = $this->pages->names()->uniquePageName($name, $page, ['parent' => $nameParent]);
 			if($name !== $namePrevious) {
 				$info['notes'][] = "Name changed from '$namePrevious' to '$name' to be unique in new parent";
 				$info['namePrevious'] = $namePrevious;
@@ -239,10 +231,7 @@ class PagesTrash extends Wire {
 			}
 			$langNamePrevious = $langName;
 			if($this->pages->count("parent=$nameParent, $langKey=$langName, id!=$page->id, include=all")) {
-				$langName = $this->pages->names()->uniquePageName($langName, $page, array(
-					'parent' => $nameParent,
-					'language' => $language
-				));
+				$langName = $this->pages->names()->uniquePageName($langName, $page, ['parent' => $nameParent, 'language' => $language]);
 				if($populateToPage) $page->set($langKey, $langName);
 			}
 			$info[$langKey] = $langName;
@@ -264,14 +253,7 @@ class PagesTrash extends Wire {
 	 */
 	public function parseTrashPageName($name) {
 		
-		$info = array(
-			'id' => 0,
-			'parent_id' => 0, 
-			'sort' => 0, 
-			'name' => $name,
-			'prefix' => '', 
-			'note' => '', 
-		);
+		$info = ['id' => 0, 'parent_id' => 0, 'sort' => 0, 'name' => $name, 'prefix' => '', 'note' => ''];
 		
 		// match "pageID.parentID.sort_name" in page name (1).(2.2)_3
 		if(!preg_match('/^(\d+)((?:\.\d+\.\d+)?)_(.+)$/', $name, $matches)) return false;
@@ -315,17 +297,9 @@ class PagesTrash extends Wire {
 	 *  - Returns associative array with verbose information if verbose option is chosen. 
 	 *
 	 */
-	public function emptyTrash(array $options = array()) {
+	public function emptyTrash(array $options = []) {
 
-		$defaults = array(
-			'chunkSize' => 100,
-			'chunkTimeLimit' => 600, 
-			'chunkLimit' => 100, 
-			'pageLimit' => 0, 
-			'timeLimit' => 3600, 
-			'pass2' => true, 
-			'verbose' => false, 
-		);
+		$defaults = ['chunkSize' => 100, 'chunkTimeLimit' => 600, 'chunkLimit' => 100, 'pageLimit' => 0, 'timeLimit' => 3600, 'pass2' => true, 'verbose' => false];
 		
 		$options = array_merge($defaults, $options);
 		$trashPage = $this->getTrashPage();
@@ -334,8 +308,8 @@ class PagesTrash extends Wire {
 		$lastTotalInTrash = 0;
 		$chunkCnt = 0;
 		$errorCnt = 0;
-		$nonTrashIDs = array(); // page IDs that had trash status but did not have trash parent
-		$result = array();
+		$nonTrashIDs = []; // page IDs that had trash status but did not have trash parent
+		$result = [];
 		$timer = $options['verbose'] ? Debug::timer() : null;
 		$startTime = time();
 		$stopTime = $options['timeLimit'] ? $startTime + $options['timeLimit'] : false;

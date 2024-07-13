@@ -141,7 +141,7 @@ class PagefilesManager extends Wire {
 	 *
 	 */
 	public function getFiles() {
-		$files = array();
+		$files = [];
 		foreach(new \DirectoryIterator($this->path()) as $file) {
 			if($file->isDot() || $file->isDir()) continue; 
 			// if($file->isFile()) $files[] = $file->getBasename(); // PHP 5.2.2
@@ -378,7 +378,7 @@ class PagefilesManager extends Wire {
  	 *
 	 */
 	public function path() {
-		return $this->wire()->hooks->isHooked('PagefilesManager::path()') ? $this->__call('path', array()) : $this->___path();
+		return $this->wire()->hooks->isHooked('PagefilesManager::path()') ? $this->__call('path', []) : $this->___path();
 	}
 
 	/**
@@ -408,7 +408,7 @@ class PagefilesManager extends Wire {
 	 *
 	 */
 	public function url() {
-		return $this->wire()->hooks->isHooked('PagefilesManager::url()') ? $this->__call('url', array()) : $this->___url();
+		return $this->wire()->hooks->isHooked('PagefilesManager::url()') ? $this->__call('url', []) : $this->___url();
 	}
 
 	/**
@@ -522,7 +522,7 @@ class PagefilesManager extends Wire {
 		$path = self::_path($page); 
 		if(!is_dir($path)) return false;
 		$file = basename($file);
-		$file = str_replace(array('\\', '/', '..'), '', $file);
+		$file = str_replace(['\\', '/', '..'], '', $file);
 		$pathname = $path . $file;
 		if(!file_exists($pathname)) return false;
 		if($getPathname) return $pathname;

@@ -21,7 +21,7 @@ class WireShutdown extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $types = array();
+	protected $types = [];
 
 	/**
 	 * Regular array of PHP E_* constants that are considered fatal (i.e. E_ERROR)
@@ -29,14 +29,7 @@ class WireShutdown extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $fatalTypes = array(
-		E_ERROR,
-		E_CORE_ERROR,
-		E_COMPILE_ERROR,
-		E_USER_ERROR,
-		E_PARSE,
-		E_RECOVERABLE_ERROR,
-	);
+	protected $fatalTypes = [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_PARSE, E_RECOVERABLE_ERROR];
 
 	/**
 	 * Fatal error response info, not used unless set manually by $shutdown->setFatalErrorResponse()
@@ -55,18 +48,7 @@ class WireShutdown extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $fatalErrorResponse = array(
-		'code' => 0,
-		'headers' => array(),
-		'emailTo' => '',
-		'emailFrom' => '',
-		'emailFromName' => '',
-		'emailSubject' => '',
-		'emailBody' => '',
-		'emailBodyHTML' => '',
-		'emailModule' => '', 
-		'words' => array(), 
-	);
+	protected $fatalErrorResponse = ['code' => 0, 'headers' => [], 'emailTo' => '', 'emailFrom' => '', 'emailFromName' => '', 'emailSubject' => '', 'emailBody' => '', 'emailBodyHTML' => '', 'emailModule' => '', 'words' => []];
 
 	/**
 	 * Associative array of phrase translations for this module
@@ -74,7 +56,7 @@ class WireShutdown extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $labels = array();
+	protected $labels = [];
 
 	/**
 	 * @var Config
@@ -88,7 +70,7 @@ class WireShutdown extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $error = array();
+	protected $error = [];
 
 	/**
 	 * Default HTML to use for error message
@@ -112,9 +94,9 @@ class WireShutdown extends Wire {
 	 */
 	public function __construct(Config $config) {
 		$this->config = $config;
-		register_shutdown_function(array($this, 'shutdown'));
+		register_shutdown_function([$this, 'shutdown']);
 		// If script is being called externally, add an extra shutdown function 
-		if(!$config->internal) register_shutdown_function(array($this, 'shutdownExternal'));
+		if(!$config->internal) register_shutdown_function([$this, 'shutdownExternal']);
 		parent::__construct();
 	}
 
@@ -146,35 +128,22 @@ class WireShutdown extends Wire {
 	 * 
 	 */
 	protected function prepareLabels() {
-		$this->types = array(
-			E_ERROR             => $this->_('Fatal Error'),
-			E_WARNING           => $this->_('Warning'),
-			E_PARSE             => $this->_('Parse Error'),
-			E_NOTICE            => $this->_('Notice'),
-			E_CORE_ERROR        => $this->_('Core Error'),
-			E_CORE_WARNING      => $this->_('Core Warning'),
-			E_COMPILE_ERROR     => $this->_('Compile Error'),
-			E_COMPILE_WARNING   => $this->_('Compile Warning'),
-			E_USER_ERROR        => $this->_('Error'),
-			E_USER_WARNING      => $this->_('User Warning'),
-			E_USER_NOTICE       => $this->_('User Notice'),
-			E_STRICT            => $this->_('Strict Warning'),
-			E_RECOVERABLE_ERROR => $this->_('Recoverable Fatal Error')
-		);
+		$this->types = [E_ERROR             => $this->_('Fatal Error'), E_WARNING           => $this->_('Warning'), E_PARSE             => $this->_('Parse Error'), E_NOTICE            => $this->_('Notice'), E_CORE_ERROR        => $this->_('Core Error'), E_CORE_WARNING      => $this->_('Core Warning'), E_COMPILE_ERROR     => $this->_('Compile Error'), E_COMPILE_WARNING   => $this->_('Compile Warning'), E_USER_ERROR        => $this->_('Error'), E_USER_WARNING      => $this->_('User Warning'), E_USER_NOTICE       => $this->_('User Notice'), E_STRICT            => $this->_('Strict Warning'), E_RECOVERABLE_ERROR => $this->_('Recoverable Fatal Error')];
 
-		$this->labels = array(
-			'error-logged' => $this->_('Error has been logged.'),
-			'admin-notified' => $this->_('Administrator has been notified.'),
-			'debug-mode' => $this->_('site is in debug mode.'),
-			'cli-mode' => $this->_('you are using the command line API'),
-			'you-superuser' => $this->_('you are logged in as a Superuser.'),
-			'install-php' => $this->_('install.php still exists.'),
-			'superuser-never' => $this->_('Superuser has never logged in.'),
-			'shown-because' => $this->_('This error message was shown because:'),
-			'unable-complete' => $this->_('Unable to complete this request due to an error.'),
-			'email-subject' => $this->_('ProcessWire Error Notification'), // email subject
-			'line-of-file' => $this->_('(line %d of %s)'), // Example: Line [123] of [file.php]
-		);
+		$this->labels = [
+      'error-logged' => $this->_('Error has been logged.'),
+      'admin-notified' => $this->_('Administrator has been notified.'),
+      'debug-mode' => $this->_('site is in debug mode.'),
+      'cli-mode' => $this->_('you are using the command line API'),
+      'you-superuser' => $this->_('you are logged in as a Superuser.'),
+      'install-php' => $this->_('install.php still exists.'),
+      'superuser-never' => $this->_('Superuser has never logged in.'),
+      'shown-because' => $this->_('This error message was shown because:'),
+      'unable-complete' => $this->_('Unable to complete this request due to an error.'),
+      'email-subject' => $this->_('ProcessWire Error Notification'),
+      // email subject
+      'line-of-file' => $this->_('(line %d of %s)'),
+  ];
 
 	}
 
@@ -293,13 +262,7 @@ class WireShutdown extends Wire {
 
 		// output HTML error
 		$html = $this->config->fatalErrorHTML ?: self::defaultFatalErrorHTML;
-		$html = str_replace(array(
-			'{message}',
-			'{why}'
-		), array(
-			nl2br(htmlspecialchars($message, ENT_QUOTES, "UTF-8", false)),
-			htmlspecialchars($why, ENT_QUOTES, "UTF-8", false)
-		), $html);
+		$html = str_replace(['{message}', '{why}'], [nl2br(htmlspecialchars($message, ENT_QUOTES, "UTF-8", false)), htmlspecialchars($why, ENT_QUOTES, "UTF-8", false)], $html);
 		
 		$html = $this->simplifyErrorMessageHTML($html);
 		
@@ -347,7 +310,7 @@ class WireShutdown extends Wire {
 		$text = str_replace('assets/cache/FileCompiler/site/', '', $text);
 
 		// remove unnecessary stack trace label
-		$text = str_replace(array('Stack trace:<', 'Stack trace:'), array('<', ''), $text);
+		$text = str_replace(['Stack trace:<', 'Stack trace:'], ['<', ''], $text);
 
 		// remove portions of path that are not needed in this output
 		$rootPath = str_replace('/wire/core/', '/', __DIR__ . '/');
@@ -369,12 +332,7 @@ class WireShutdown extends Wire {
 		
 		$spices = $this->fatalErrorResponse['words']; 
 		
-		if(empty($spices)) $spices = array(
-			'Oops', 'Darn', 'Dangit', 'Oh no', 'Ah snap', 'So sorry', 'Well well',
-			'Ouch', 'Arrgh', 'Umm', 'Snapsicles', 'Oh snizzle', 'Look', 'What the',
-			'Uff da', 'Yikes', 'Aw shucks', 'Oye', 'Rats', 'Hmm', 'Yow', 'Not again',
-			'Look out', 'Hey now', 'Breaking news', 'Excuse me', 
-		);
+		if(empty($spices)) $spices = ['Oops', 'Darn', 'Dangit', 'Oh no', 'Ah snap', 'So sorry', 'Well well', 'Ouch', 'Arrgh', 'Umm', 'Snapsicles', 'Oh snizzle', 'Look', 'What the', 'Uff da', 'Yikes', 'Aw shucks', 'Oye', 'Rats', 'Hmm', 'Yow', 'Not again', 'Look out', 'Hey now', 'Breaking news', 'Excuse me'];
 		
 		$spice = $spices[array_rand($spices)];
 		if(!ctype_punct(substr($spice, -1))) $spice .= '…';
@@ -493,12 +451,7 @@ class WireShutdown extends Wire {
 		$out = (string) preg_replace('/([\r\n]|^)[^\r\n]+' . $token . '[^\r\n]*/', '', $out);
 
 		// ensure certain tags that could interfere with error message output are closed
-		$tags = array(
-			'<pre>' => '</pre>',
-			'<pre ' => '</pre>',
-			'<table>' => '</table>',
-			'<table ' => '</table>',
-		);
+		$tags = ['<pre>' => '</pre>', '<pre ' => '</pre>', '<table>' => '</table>', '<table ' => '</table>'];
 		foreach($tags as $openTag => $closeTag) {
 			$openPos = strripos($out, $openTag);
 			if($openPos === false) continue;
@@ -541,7 +494,7 @@ class WireShutdown extends Wire {
 		$user = $this->wire()->user; /** @var User|null $user */
 		$useHTML = isset($_SERVER['HTTP_HOST']); // is this an HTTP request where we can output HTML?
 		$name = $user && $user->id ? $user->name : '?'; // user name
-		$who = array(); // who/where the error message has been sent
+		$who = []; // who/where the error message has been sent
 		$message = $this->getErrorMessage($error);
 		$url = $this->getCurrentUrl();
 		$sendOutput = $config->allowExceptions !== true;
@@ -601,7 +554,7 @@ class WireShutdown extends Wire {
 
 		$config = $this->config;
 		$user = $this->wire()->user;
-		$why = array();
+		$why = [];
 
 		if($user && $user->isSuperuser()) {
 			$why[] = $this->labels['you-superuser'];
@@ -650,7 +603,7 @@ class WireShutdown extends Wire {
 		// save to errors.txt log file if applicable
 		$config = $this->config;
 		if(!$config->paths->logs) return false;
-		$message = str_replace(array("\n", "\t"), " ", $message);
+		$message = str_replace(["\n", "\t"], " ", $message);
 		try {
 			/** @var FileLog $log */
 			$log = $this->wire(new FileLog($config->paths->logs . 'errors.txt'));
@@ -673,8 +626,8 @@ class WireShutdown extends Wire {
 	 */
 	protected function sendFatalEmail($url, $userName, $message) {
 		
-		$settings = $this->config ? $this->config->wireMail : array(); 
-		$options = array();
+		$settings = $this->config ? $this->config->wireMail : []; 
+		$options = [];
 		$user = $this->wire()->user;
 		$version = $this->config ? $this->config->versionName : '';
 		
@@ -713,8 +666,8 @@ class WireShutdown extends Wire {
 		$message = $this->seasonErrorMessage($message);
 
 		$emailBody = str_replace(
-			array('{url}', '{user}', '{message}', '{version}'),
-			array($url, $userName, str_replace("\t", "\n", $message), $version),
+			['{url}', '{user}', '{message}', '{version}'],
+			[$url, $userName, str_replace("\t", "\n", $message), $version],
 			$emailBody
 		);
 
@@ -739,13 +692,8 @@ class WireShutdown extends Wire {
 			$messageHTML = html_entity_decode($message, ENT_QUOTES, "UTF-8");
 		}
 		$emailBodyHTML = str_replace(
-			array('{url}', '{user}', '{message}', '{version}'),
-			array(
-				htmlentities($url, ENT_QUOTES, "UTF-8"),
-				htmlentities($userName, ENT_QUOTES, "UTF-8"),
-				nl2br(htmlentities($messageHTML, ENT_QUOTES, "UTF-8")),
-				htmlentities($version, ENT_QUOTES, "UTF-8"), 
-			),
+			['{url}', '{user}', '{message}', '{version}'],
+			[htmlentities($url, ENT_QUOTES, "UTF-8"), htmlentities($userName, ENT_QUOTES, "UTF-8"), nl2br(htmlentities($messageHTML, ENT_QUOTES, "UTF-8")), htmlentities($version, ENT_QUOTES, "UTF-8")],
 			$emailBodyHTML
 		);
 

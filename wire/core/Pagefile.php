@@ -73,7 +73,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @var PagefileExtra[]
 	 * 
 	 */
-	protected $extras = array(); 
+	protected $extras = []; 
 
 	/**
 	 * Extra file data
@@ -81,7 +81,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @var array
 	 * 
 	 */
-	protected $filedata = array();
+	protected $filedata = [];
 
 	/**
 	 * Custom field values indexed by field name, loaded on request
@@ -92,7 +92,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @var array
 	 * 
 	 */
-	protected $fieldValues = array();
+	protected $fieldValues = [];
 
 	/**
 	 * Created user (populated only on rquest)
@@ -154,7 +154,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 *
 	 */
 	public function __clone() {
-		$this->extras = array();
+		$this->extras = [];
 		$this->set('filesize', 0);
 		$this->set('created_users_id', 0);
 		$this->set('modified_users_id', 0);
@@ -453,7 +453,7 @@ class Pagefile extends WireData implements WireArrayItem {
 			if(($first == '{' && $last == '}') || ($first == '[' && $last == ']')) {
 				$values = json_decode($value, true);
 			} else {
-				$values = array();
+				$values = [];
 			}
 		}
 		
@@ -542,8 +542,8 @@ class Pagefile extends WireData implements WireArrayItem {
 
 		if($language === true && $value === true) {
 			// return all in array indexed by language name
-			if(!$languages) return array('default' => parent::get('description'));
-			$value = array();
+			if(!$languages) return ['default' => parent::get('description')];
+			$value = [];
 			foreach($languages as $language) {
 				/** @var Language $language */
 				$value[$language->name] = (string) parent::get("description" . ($language->isDefault() ? '' : $language->id));
@@ -590,7 +590,7 @@ class Pagefile extends WireData implements WireArrayItem {
 		} else if($language === true) {
 			// return JSON string of all languages if applicable
 			if($languages && $languages->count() > 1) {
-				$values = array(0 => parent::get("description"));
+				$values = [0 => parent::get("description")];
 				foreach($languages as $lang) {
 					/** @var Language $lang */
 					if($lang->isDefault()) continue; 
@@ -877,7 +877,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 *
 	 */
 	public function url() {
-		return $this->wire()->hooks->isHooked('Pagefile::url()') ? $this->__call('url', array()) : $this->___url();
+		return $this->wire()->hooks->isHooked('Pagefile::url()') ? $this->__call('url', []) : $this->___url();
 	}
 	
 	/**
@@ -913,7 +913,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 *
 	 */
 	public function filename() {
-		return $this->wire()->hooks->isHooked('Pagefile::filename()') ? $this->__call('filename', array()) : $this->___filename();
+		return $this->wire()->hooks->isHooked('Pagefile::filename()') ? $this->__call('filename', []) : $this->___filename();
 	}
 
 	/**
@@ -983,9 +983,9 @@ class Pagefile extends WireData implements WireArrayItem {
 		if(is_bool($value)) {
 			// return array of tags
 			$tags = parent::get('tags');
-			$tags = str_replace(array(',', '|'), ' ', $tags);
+			$tags = str_replace([',', '|'], ' ', $tags);
 			$_tags = explode(' ', $tags);
-			$tags = array();
+			$tags = [];
 			foreach($_tags as /* $key => */ $tag) {
 				$tag = trim($tag);
 				if($value === false) $tag = strtolower($tag); // force lowercase
@@ -1056,7 +1056,7 @@ class Pagefile extends WireData implements WireArrayItem {
 			$findTags = explode(',', $tag);
 			$modeAND = true;
 		} else {
-			$findTags = array($tag);
+			$findTags = [$tag];
 		}
 
 		$numTags = 0;
@@ -1116,7 +1116,7 @@ class Pagefile extends WireData implements WireArrayItem {
 		} else if(strpos($tag, ',') !== false) {
 			$addTags = explode(',', $tag);
 		} else {
-			$addTags = array($tag);
+			$addTags = [$tag];
 		}
 		$tags = $this->tags(true);	
 		$numAdded = 0;
@@ -1158,7 +1158,7 @@ class Pagefile extends WireData implements WireArrayItem {
 		} else if(strpos($tag, ',') !== false) {
 			$removeTags = explode(',', $tag); 
 		} else {
-			$removeTags = array($tag);
+			$removeTags = [$tag];
 		}
 		$numRemoved = 0;
 		foreach($removeTags as $tag) {
@@ -1329,7 +1329,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 *
 	 */
 	public function ___changed($what, $old = null, $new = null) {
-		if(in_array($what, array('description', 'tags', 'file', 'filedata')) || array_key_exists($what, $this->fieldValues)) {
+		if(in_array($what, ['description', 'tags', 'file', 'filedata']) || array_key_exists($what, $this->fieldValues)) {
 			$this->setUser(true, 'modified');
 			$this->set('modified', time()); 
 			$this->pagefiles->trackChange('item');
@@ -1494,19 +1494,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	public function __debugInfo() {
 		$filedata = $this->filedata();
 		if(empty($filedata)) $filedata = null;
-		$info = array(
-			'url' => $this->url(),
-			'filename' => $this->filename(),
-			'filesize' => $this->filesize(),
-			'description' => $this->description,
-			'tags' => $this->tags, 
-			'created' => $this->createdStr,
-			'modified' => $this->modifiedStr,
-			'created_users_id' => $this->created_users_id,
-			'modified_users_id' => $this->modified_users_id,
-			'filemtime' => $this->mtimeStr,
-			'filedata' => $filedata,
-		);
+		$info = ['url' => $this->url(), 'filename' => $this->filename(), 'filesize' => $this->filesize(), 'description' => $this->description, 'tags' => $this->tags, 'created' => $this->createdStr, 'modified' => $this->modifiedStr, 'created_users_id' => $this->created_users_id, 'modified_users_id' => $this->modified_users_id, 'filemtime' => $this->mtimeStr, 'filedata' => $filedata];
 		if(empty($info['filedata'])) unset($info['filedata']); 
 		return $info;
 	}

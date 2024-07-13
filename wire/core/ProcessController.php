@@ -64,7 +64,7 @@ class ProcessController extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $processInfo = array();
+	protected $processInfo = [];
 
 	/**
 	 * The prefix to apply to the Process name
@@ -175,7 +175,7 @@ class ProcessController extends Wire {
 		$this->hasPermission($permissionName, true); // throws exception if no permission
 		
 		if(!$this->process) {
-			$module = $modules->getModule($processName, array('returnError' => true)); 
+			$module = $modules->getModule($processName, ['returnError' => true]); 
 			if(is_string($module)) {
 				$this->processError = $module;
 				$this->process = null;
@@ -291,8 +291,8 @@ class ProcessController extends Wire {
 				$methodName = ucfirst($urlSegment1);
 				$hyphenName = $urlSegment1;
 			} else {
-				$methodName = trim($sanitizer->pascalCase($urlSegment1, array('allowUnderscore' => true)), '_');
-				$hyphenName = trim($sanitizer->hyphenCase($methodName, array('allowUnderscore' => true)), '_');
+				$methodName = trim($sanitizer->pascalCase($urlSegment1, ['allowUnderscore' => true]), '_');
+				$hyphenName = trim($sanitizer->hyphenCase($methodName, ['allowUnderscore' => true]), '_');
 			}
 			if($hyphenName != strtolower($urlSegment1) && strtolower($methodName) != strtolower($urlSegment1)) {
 				// if urlSegment changed from sanitization, likely not in valid format
@@ -424,7 +424,7 @@ class ProcessController extends Wire {
 			// lowercase hyphenated version
 			$method2 = trim(strtolower(preg_replace('/([A-Z]+)/', '-$1', $method)), '-');
 			// without a leading 'execute-' or 'execute'
-			$method3 = str_replace(array('execute-', 'execute'), '', $method2);
+			$method3 = str_replace(['execute-', 'execute'], '', $method2);
 		}
 		
 		if(is_dir($viewPath . 'views')) {
@@ -451,16 +451,19 @@ class ProcessController extends Wire {
 	
 		// look for view file in same dir as module
 		if($method == 'execute') {
-			$viewFiles = array(
-				"$className.view.php", // ModuleName.view.php
-				"$className-execute.view.php", // alt1: ModuleName-execute.view.php
-				"execute.view.php", // alt2: just execute.view.php (no ModuleName)
-			);
+			$viewFiles = [
+       "$className.view.php",
+       // ModuleName.view.php
+       "$className-execute.view.php",
+       // alt1: ModuleName-execute.view.php
+       "execute.view.php",
+   ];
 		} else {
-			$viewFiles = array(
-				"$className-$method.view.php", // ModuleName.executeSomething.view.php
-				"$method.view.php", // executeSomething.view.php
-			);
+			$viewFiles = [
+       "$className-$method.view.php",
+       // ModuleName.executeSomething.view.php
+       "$method.view.php",
+   ];
 			if($method2) {
 				$viewFiles[] = "$className-$method2.view.php"; // ModuleName-execute-something.view.php
 				$viewFiles[] = "$method2.view.php"; // execute-something.view.php
@@ -494,10 +497,7 @@ class ProcessController extends Wire {
 	 */
 	public function jsonMessage($msg, $error = false, $allowMarkup = false) {
 		if(!$allowMarkup) $msg = $this->wire()->sanitizer->entities($msg);
-		return json_encode(array(
-			'error' => (bool) $error, 
-			'message' => (string) $msg
-		)); 
+		return json_encode(['error' => (bool) $error, 'message' => (string) $msg]); 
 	}
 
 	/**

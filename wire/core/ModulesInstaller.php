@@ -60,18 +60,14 @@ class ModulesInstaller extends ModulesClass {
 	 * @throws WireException
 	 *
 	 */
-	public function install($class, $options = array()) {
+	public function install($class, $options = []) {
 
-		$defaults = array(
-			'dependencies' => true,
-			'resetCache' => true,
-			'force' => false,
-		);
+		$defaults = ['dependencies' => true, 'resetCache' => true, 'force' => false];
 
 		if(is_bool($options)) {
 			// dependencies argument allowed instead of $options, for backwards compatibility
 			$dependencies = $options;
-			$options = array('dependencies' => $dependencies);
+			$options = ['dependencies' => $dependencies];
 		}
 
 		$options = array_merge($defaults, $options);
@@ -118,9 +114,7 @@ class ModulesInstaller extends ModulesClass {
 		$pathname = $this->modules->installableFile($class);
 		
 		if(strpos($class, "\\") === false) {
-			$ns = $this->modules->info->getModuleNamespace($class, array(
-				'file' => $pathname
-			));
+			$ns = $this->modules->info->getModuleNamespace($class, ['file' => $pathname]);
 			$nsClass = $ns . $class;
 		} else {
 			$nsClass = $class;
@@ -187,7 +181,7 @@ class ModulesInstaller extends ModulesClass {
 			}
 		}
 
-		$info = $this->modules->info->getModuleInfoVerbose($class, array('noCache' => true));
+		$info = $this->modules->info->getModuleInfoVerbose($class, ['noCache' => true]);
 		$sanitizer = $this->wire()->sanitizer;
 		$permissions = $this->wire()->permissions;
 
@@ -375,21 +369,14 @@ class ModulesInstaller extends ModulesClass {
 		$basename = basename($basename, '.php');
 		$basename = basename($basename, '.module');
 
-		$files = array(
-			"$basename.module",
-			"$basename.module.php",
-			"$basename.info.php",
-			"$basename.info.json",
-			"$basename.config.php",
-			"{$basename}Config.php",
-		);
+		$files = ["$basename.module", "$basename.module.php", "$basename.info.php", "$basename.info.json", "$basename.config.php", "{$basename}Config.php"];
 
 		if($inPath) {
 			// module is in /site/modules/[ModuleName]/
 
 			$numOtherModules = 0; // num modules in dir other than this one
 			$numLinks = 0; // number of symbolic links
-			$dirs = array("$path/");
+			$dirs = ["$path/"];
 
 			do {
 				$dir = array_shift($dirs);
@@ -425,7 +412,7 @@ class ModulesInstaller extends ModulesClass {
 					if(is_dir($backupPath)) {
 						if($fileTools->rmdir($backupPath, true)) $this->message("Removed directory: $backupPath", Notice::debug);
 					}
-					$files = array();
+					$files = [];
 				} else {
 					$this->error("Failed to remove directory: $path", Notice::debug);
 				}
@@ -485,15 +472,11 @@ class ModulesInstaller extends ModulesClass {
 		}
 
 		$info = $this->modules->info->getModuleInfoVerbose($class);
-		$module = $this->modules->getModule($class, array(
-			'noPermissionCheck' => true,
-			'noInstall' => true,
-			// 'noInit' => true
-		));
+		$module = $this->modules->getModule($class, ['noPermissionCheck' => true, 'noInstall' => true]);
 		if(!$module) return false;
 
 		// remove all hooks attached to this module
-		$hooks = $module instanceof Wire ? $module->getHooks() : array();
+		$hooks = $module instanceof Wire ? $module->getHooks() : [];
 		foreach($hooks as $hook) {
 			if($hook['method'] == 'uninstall') continue;
 			$this->message("Removed hook $class => " . $hook['options']['fromClass'] . " $hook[method]", Notice::debug);
@@ -573,7 +556,7 @@ class ModulesInstaller extends ModulesClass {
 	 */
 	public function getUninstalls($class) {
 
-		$uninstalls = array();
+		$uninstalls = [];
 		$class = $this->modules->getModuleClass($class);
 		if(!$class) return $uninstalls;
 		$info = $this->modules->info->getModuleInfoVerbose($class);
@@ -610,7 +593,7 @@ class ModulesInstaller extends ModulesClass {
 
 		$class = $this->modules->getModuleClass($class);
 		$info = $this->modules->info->getModuleInfo($class);
-		$dependents = array();
+		$dependents = [];
 
 		foreach($this->modules as $module) {
 			$c = $this->modules->getModuleClass($module);
@@ -685,7 +668,7 @@ class ModulesInstaller extends ModulesClass {
 					unset($requires[$key]);
 					continue;
 				}
-				$i = $this->modules->getModuleInfo($requiresClass, array('noCache' => true));
+				$i = $this->modules->getModuleInfo($requiresClass, ['noCache' => true]);
 				$currentVersion = $i['version'];
 			} else {
 				// module is not installed
@@ -797,7 +780,7 @@ class ModulesInstaller extends ModulesClass {
 
 		$moduleName = $this->modules->getModuleClass($moduleName);
 		$info = $this->modules->getModuleInfo($moduleName);
-		$errors = array();
+		$errors = [];
 
 		if(empty($info['requires'])) return $errors;
 

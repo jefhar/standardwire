@@ -64,9 +64,7 @@ class MarkupFieldtype extends WireData implements Module {
 	 * @var array
 	 * 
 	 */
-	protected $linkableProperties = array(
-		'name', 'url', 'httpUrl', 'path', 'title',
-	);
+	protected $linkableProperties = ['name', 'url', 'httpUrl', 'path', 'title'];
 
 	/**
 	 * Construct the MarkupFieldtype
@@ -115,7 +113,7 @@ class MarkupFieldtype extends WireData implements Module {
 					// PageArray object: get array of property value from each item
 					$field = $this->wire()->fields->get($property);
 					if(is_object($field) && $field->type) {
-						$a = array();
+						$a = [];
 						foreach($value as $page) {
 							$v = $page->getFormatted($property);
 							$v = $field->type->markupValue($page, $field, $v);
@@ -128,7 +126,7 @@ class MarkupFieldtype extends WireData implements Module {
 						return $this->arrayToString($a, false);
 					} else {
 						$getMethod = strpos($property, '}') ? 'getText' : 'getFormatted';
-						$value = $value->explode($property, array('getMethod' => $getMethod));
+						$value = $value->explode($property, ['getMethod' => $getMethod]);
 					}
 					$valid = true;
 
@@ -234,7 +232,7 @@ class MarkupFieldtype extends WireData implements Module {
 				$value = $value->getFormatted($property);
 
 			} else if(WireArray::iterable($value)) {
-				$values = array();
+				$values = [];
 				foreach($value as $v) {
 					$v = $this->renderProperty($property, $v);
 					if(strlen($v)) $values[] = $v;

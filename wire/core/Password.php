@@ -21,10 +21,7 @@ class Password extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $data = array(
-		'salt' => '', 
-		'hash' => '',
-	);
+	protected $data = ['salt' => '', 'hash' => ''];
 
 	/**
 	 * @var WireRandom|null
@@ -182,7 +179,7 @@ class Password extends Wire {
 	 * @return string|array Returns only array if you specify array for $test argument, otherwise returns string
 	 *
 	 */
-	public function randomBase64String($requiredLength = 22, $options = array()) {
+	public function randomBase64String($requiredLength = 22, $options = []) {
 		return $this->random()->base64($requiredLength, $options);
 	}
 
@@ -276,7 +273,7 @@ class Password extends Wire {
 	 * @deprecated use WireRandom::alpha() instead
 	 *
 	 */
-	public function randomAlpha($qty = 1, $alphanumeric = false, $disallow = array()) {
+	public function randomAlpha($qty = 1, $alphanumeric = false, $disallow = []) {
 		$letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$digits = '0123456789';
 		if($alphanumeric) $letters .= $digits;
@@ -303,7 +300,7 @@ class Password extends Wire {
 	 * @deprecated use WireRandom::alphanumeric() instead
 	 * 
 	 */
-	public function randomAlnum($length = 0, array $options = array()) {
+	public function randomAlnum($length = 0, array $options = []) {
 		return $this->random()->alphanumeric($length, $options); 
 	}
 
@@ -317,7 +314,7 @@ class Password extends Wire {
 	 * @deprecated use WireRandom::alpha() instead.
 	 *
 	 */
-	public function randomLetters($length = 0, array $options = array()) {
+	public function randomLetters($length = 0, array $options = []) {
 		return $this->random()->alpha($length, $options);
 	}
 
@@ -331,7 +328,7 @@ class Password extends Wire {
 	 * @deprecated Use WireRandom::numeric() instead
 	 * 
 	 */
-	public function randomDigits($length = 0, array $options = array()) {
+	public function randomDigits($length = 0, array $options = []) {
 		return $this->random()->numeric($length, $options);
 	}
 
@@ -344,7 +341,7 @@ class Password extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function randomPass(array $options = array()) {
+	public function randomPass(array $options = []) {
 		return $this->random()->pass($options);
 	}
 

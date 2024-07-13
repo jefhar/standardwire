@@ -77,7 +77,7 @@ class WireInput extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $urlSegments = array();
+	protected $urlSegments = [];
 
 	/**
 	 * @var int
@@ -99,23 +99,13 @@ class WireInput extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $regexDelims = array('/', '!', '%', '#', '@');
+	protected $regexDelims = ['/', '!', '%', '#', '@'];
 
 	/**
 	 * @var array
 	 * 
 	 */
-	protected $requestMethods = array(
-		'GET' => 'GET',
-		'POST' => 'POST',
-		'HEAD' => 'HEAD',
-		'PUT' => 'PUT',
-		'DELETE' => 'DELETE',
-		'OPTIONS' => 'OPTIONS',
-		'PATCH' => 'PATCH',
-		'CONNECT' => 'CONNECT',
-		'TRACE' => 'TRACE',
-	);
+	protected $requestMethods = ['GET' => 'GET', 'POST' => 'POST', 'HEAD' => 'HEAD', 'PUT' => 'PUT', 'DELETE' => 'DELETE', 'OPTIONS' => 'OPTIONS', 'PATCH' => 'PATCH', 'CONNECT' => 'CONNECT', 'TRACE' => 'TRACE'];
 
 	/**
 	 * Construct
@@ -610,7 +600,7 @@ class WireInput extends Wire {
 		
 		$eqPos = strpos($get, '=');
 		if($eqPos !== false) $get = trim($get, '=');
-		list($matchBefore, $matchAfter) = array($eqPos === 0, $eqPos > 0);
+		list($matchBefore, $matchAfter) = [$eqPos === 0, $eqPos > 0];
 	
 		// check if $get has wildcard or regex
 		$regex = $this->patternToRegex($get);
@@ -687,7 +677,7 @@ class WireInput extends Wire {
 		if(is_null($value)) {
 			// unset
 			$n = 0;
-			$urlSegments = array();
+			$urlSegments = [];
 			foreach($this->urlSegments as $k => $v) {
 				if($k == $num) continue;
 				$urlSegments[++$n] = $v;
@@ -715,7 +705,7 @@ class WireInput extends Wire {
 	 *
 	 */
 	public function setUrlSegments(array $urlSegments) {
-		$this->urlSegments = array();
+		$this->urlSegments = [];
 		$n = 1;
 		foreach($urlSegments as $urlSegment) {
 			$this->setUrlSegment($n, $urlSegment);
@@ -768,7 +758,7 @@ class WireInput extends Wire {
 	 * @see WireInput::urlSegment()
 	 *
 	 */
-	public function urlSegmentStr($verbose = false, array $options = array()) {
+	public function urlSegmentStr($verbose = false, array $options = []) {
 		
 		if(is_array($verbose)) {
 			$options = $verbose;
@@ -912,7 +902,7 @@ class WireInput extends Wire {
 		}
 
 		$value = null;
-		$gpc = array('get', 'post', 'cookie', 'whitelist'); 
+		$gpc = ['get', 'post', 'cookie', 'whitelist']; 
 
 		if(in_array($key, $gpc)) {
 			$value = $this->$key(); 
@@ -962,13 +952,9 @@ class WireInput extends Wire {
 	 * @see WireInput::httpUrl(), Page::url()
 	 * 
 	 */
-	public function url($options = array()) {
+	public function url($options = []) {
 		
-		$defaults = array(
-			'withQueryString' => is_bool($options) ? $options : false,
-			'page' => $this->wire()->page, 
-			'pageNum' => 0, 
-		);
+		$defaults = ['withQueryString' => is_bool($options) ? $options : false, 'page' => $this->wire()->page, 'pageNum' => 0];
 
 		$options = is_array($options) ? array_merge($defaults, $options) : $defaults;
 		
@@ -1054,7 +1040,7 @@ class WireInput extends Wire {
 	 * @see WireInput::url(), Page::httpUrl()
 	 * 
 	 */
-	public function httpUrl($options = array()) {
+	public function httpUrl($options = []) {
 		return $this->httpHostUrl() . $this->url($options);
 	}
 
@@ -1072,7 +1058,7 @@ class WireInput extends Wire {
 	 * @see WireInput::httpUrl()
 	 * 
 	 */
-	public function httpsUrl($options = array()) {
+	public function httpsUrl($options = []) {
 		return $this->httpHostUrl(true) . $this->url($options);
 	}
 
@@ -1139,18 +1125,9 @@ class WireInput extends Wire {
 	 * @since 3.0.155
 	 * 
 	 */
-	public function canonicalUrl(array $options = array()) {
+	public function canonicalUrl(array $options = []) {
 		
-		$defaults = array(
-			'page' => $this->wire()->page,
-			'scheme' => '', 
-			'host' => '',
-			'urlSegments' => true, 
-			'notSegments' => array(), 
-			'pageNum' => true, 
-			'queryString' => true, 
-			'language' => true, 
-		);
+		$defaults = ['page' => $this->wire()->page, 'scheme' => '', 'host' => '', 'urlSegments' => true, 'notSegments' => [], 'pageNum' => true, 'queryString' => true, 'language' => true];
 		
 		$options = array_merge($defaults, $options);
 		$page = $options['page']; /** @var Page $page */
@@ -1161,7 +1138,7 @@ class WireInput extends Wire {
 		$language = $options['language']; /** @var Language|int|string|bool */
 		
 		if(is_string($options['notSegments'])) {
-			$options['notSegments'] = array($options['notSegments']);
+			$options['notSegments'] = [$options['notSegments']];
 		}
 
 		if($language !== true && $languages) {
@@ -1201,7 +1178,7 @@ class WireInput extends Wire {
 	
 		// URL Segments String
 		if(is_bool($options['urlSegments'])) {
-			$urlSegments = $options['urlSegments'] ? $this->urlSegments() : array();
+			$urlSegments = $options['urlSegments'] ? $this->urlSegments() : [];
 		} else if(is_array($options['urlSegments'])) {
 			$urlSegments = $options['urlSegments'];
 		} else if(is_string($options['urlSegments'])) {
@@ -1329,7 +1306,7 @@ class WireInput extends Wire {
 	 * @see WireInput::queryStringClean()
 	 * 
 	 */
-	public function queryString($overrides = array()) {
+	public function queryString($overrides = []) {
 		return $this->get()->queryString($overrides);
 	}
 
@@ -1362,26 +1339,28 @@ class WireInput extends Wire {
 	 * @since 3.0.167
 	 * 
 	 */
-	public function queryStringClean(array $options = array()) {
+	public function queryStringClean(array $options = []) {
 		
-		$defaults = array(
-			'values' => array(),
-			'overrides' => array(),
-			'validNames' => array(), 
-			'maxItems' => 20, 
-			'maxLength' => 1024, // max overall length
-			'maxNameLength' => 50,
-			'maxValueLength' => 255,
-			'allowArrays' => false, 
-			'maxArrayDepth' => 0, 
-			'maxArrayItems' => 20,
-			'sanitizeName' => 'fieldName',
-			'sanitizeValue' => 'line',
-			'sanitizeRemove' => true, 
-			'entityEncode' => true, 
-			'encType' => PHP_QUERY_RFC3986, // Spaces are '%20', for '+' use PHP_QUERY_RFC1738
-			'separator' => '&',
-		);
+		$defaults = [
+      'values' => [],
+      'overrides' => [],
+      'validNames' => [],
+      'maxItems' => 20,
+      'maxLength' => 1024,
+      // max overall length
+      'maxNameLength' => 50,
+      'maxValueLength' => 255,
+      'allowArrays' => false,
+      'maxArrayDepth' => 0,
+      'maxArrayItems' => 20,
+      'sanitizeName' => 'fieldName',
+      'sanitizeValue' => 'line',
+      'sanitizeRemove' => true,
+      'entityEncode' => true,
+      'encType' => PHP_QUERY_RFC3986,
+      // Spaces are '%20', for '+' use PHP_QUERY_RFC1738
+      'separator' => '&',
+  ];
 		
 		$options = array_merge($defaults, $options);
 		$values = empty($options['values']) ? $this->get()->getArray() : $options['values'];
@@ -1395,7 +1374,7 @@ class WireInput extends Wire {
 	
 		// only allow specific names/keys from the array
 		if(!empty($options['validNames'])) {
-			$a = array();
+			$a = [];
 			foreach($values as $name => $value) {
 				if(in_array($name, $options['validNames'], true)) $a[$name] = $value;
 			}
@@ -1411,12 +1390,7 @@ class WireInput extends Wire {
 		foreach($values as $name => $value) {
 			if(!is_array($value)) continue;
 			if($options['allowArrays']) {
-				$a = $sanitizer->arrayVal($value, array(
-					'maxItems' => $options['maxArrayItems'],
-					'maxDepth' => $maxArrayDepth, 
-					'sanitizer' => $options['sanitizeValue'], 
-					'keySanitizer' => $options['sanitizeName'],
-				));
+				$a = $sanitizer->arrayVal($value, ['maxItems' => $options['maxArrayItems'], 'maxDepth' => $maxArrayDepth, 'sanitizer' => $options['sanitizeValue'], 'keySanitizer' => $options['sanitizeName']]);
 				if($options['sanitizeRemove'] && $a != $value) {
 					unset($values[$name]);
 				} else {
@@ -1431,7 +1405,7 @@ class WireInput extends Wire {
 		if($options['sanitizeName'] || $options['maxNameLength']) {
 			$method = $options['sanitizeName'];
 			$max = $options['maxNameLength'];
-			$a = array();
+			$a = [];
 			foreach($values as $name => $value) {
 				$newName = $method ? $sanitizer->$method($name) : $name;
 				if($max && strlen($newName) > $max) {
@@ -1450,7 +1424,7 @@ class WireInput extends Wire {
 		if($options['sanitizeValue'] || $options['maxValueLength']) {
 			$method = $options['sanitizeValue'];
 			$max = $options['maxValueLength'];
-			$a = array();
+			$a = [];
 			foreach($values as $name => $value) {
 				if(is_array($value) && $options['allowArrays']) {
 					// arrays already handled earlier
@@ -1628,7 +1602,7 @@ class WireInput extends Wire {
 			$cleanValue = $fallback;
 		}
 		if($forceArray && !is_array($cleanValue)) {
-			$cleanValue = ($cleanValue === null ? array() : array($cleanValue));
+			$cleanValue = ($cleanValue === null ? [] : [$cleanValue]);
 		}
 
 		return $cleanValue;
@@ -1646,12 +1620,12 @@ class WireInput extends Wire {
 	 */
 	protected function filterValue($value, array $valid, $getArray) {
 		
-		$cleanValue = $getArray ? array() : null;
+		$cleanValue = $getArray ? [] : null;
 		
 		if($getArray) {
 			if(!is_array($value)) {
 				// array expected but input value is not an array, so convert it to one
-				$value = ($value === null ? array() : array($value));
+				$value = ($value === null ? [] : [$value]);
 			}
 		} else while(is_array($value)) {
 			$value = reset($value);
@@ -1691,7 +1665,7 @@ class WireInput extends Wire {
 		
 		$sanitizer = $this->wire()->sanitizer;
 		$sanitizers = $sanitizer->getAll(true);
-		$methods = array();
+		$methods = [];
 		
 		foreach(explode(',', $method) as $name) {
 			$name = trim($name);
@@ -1718,10 +1692,10 @@ class WireInput extends Wire {
 				// array value
 				if(!count($value)) {
 					// nothing to do with value
-					$value = array();
+					$value = [];
 				} else if($getArray && strpos($returnType, 'a') === false) {
 					// sanitize array with sanitizer that does not do arrays, 1 item at a time
-					$a = array();
+					$a = [];
 					foreach($value as $v) {
 						$cv = $sanitizer->sanitize($v, $methodName);
 						if($cv !== null) $a[] = $cv;
@@ -1743,7 +1717,7 @@ class WireInput extends Wire {
 		}
 		
 		if($getArray === true && !is_array($value)) {
-			$value = array($value);
+			$value = [$value];
 		}
 		
 		return $value; 
@@ -1772,9 +1746,9 @@ class WireInput extends Wire {
 		}
 
 		// Variables that shouldn't be unset
-		$noUnset = array('GLOBALS', '_GET', '_POST', '_COOKIE', '_REQUEST', '_SERVER', '_ENV', '_FILES');
+		$noUnset = ['GLOBALS', '_GET', '_POST', '_COOKIE', '_REQUEST', '_SERVER', '_ENV', '_FILES'];
 
-		$input = array_merge($_GET, $_POST, $_COOKIE, $_SERVER, $_ENV, $_FILES, isset($_SESSION) && is_array($_SESSION) ? $_SESSION : array());
+		$input = array_merge($_GET, $_POST, $_COOKIE, $_SERVER, $_ENV, $_FILES, isset($_SESSION) && is_array($_SESSION) ? $_SESSION : []);
 
 		foreach ($input as $k => $v) {
 			if(!in_array($k, $noUnset) && isset($GLOBALS[$k])) {
@@ -1892,8 +1866,8 @@ class WireInput extends Wire {
 			}
 			$regex = '/^' . implode('.+', $a) . '$/';
 			$regex = str_replace(
-				array('\\(', '\\)', '\\[', '\\]'), 
-				array('(', ')', '[', ']'), 
+				['\\(', '\\)', '\\[', '\\]'], 
+				['(', ')', '[', ']'], 
 				$regex
 			);
 		} else {

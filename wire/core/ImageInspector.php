@@ -43,12 +43,7 @@ class ImageInspector extends WireData {
 	 * @var array
 	 *
 	 */
-	protected $supportedImageTypes = array(
-		'gif' => \IMAGETYPE_GIF,
-		'jpg' => \IMAGETYPE_JPEG,
-		'jpeg' => \IMAGETYPE_JPEG,
-		'png' => \IMAGETYPE_PNG
-	);
+	protected $supportedImageTypes = ['gif' => \IMAGETYPE_GIF, 'jpg' => \IMAGETYPE_JPEG, 'jpeg' => \IMAGETYPE_JPEG, 'png' => \IMAGETYPE_PNG];
 
 	/**
 	 * Supported mime types
@@ -56,11 +51,7 @@ class ImageInspector extends WireData {
 	 * @var array
 	 *
 	 */
-	protected $supportedMimeTypes = array(
-		\IMAGETYPE_GIF => 'image/gif',
-		\IMAGETYPE_JPEG => 'image/jpeg',
-		\IMAGETYPE_PNG => 'image/png'
-	);
+	protected $supportedMimeTypes = [\IMAGETYPE_GIF => 'image/gif', \IMAGETYPE_JPEG => 'image/jpeg', \IMAGETYPE_PNG => 'image/png'];
 
 	/**
 	 * Construct
@@ -89,7 +80,7 @@ class ImageInspector extends WireData {
 		if(!$this->extension) $this->extension = pathinfo($this->filename, \PATHINFO_EXTENSION);
 		$this->extension = strtolower($this->extension);
 
-		$additionalInfo = array();
+		$additionalInfo = [];
 		$info = @getimagesize($filename, $additionalInfo);
 		if($info === false) return false;
 
@@ -133,7 +124,7 @@ class ImageInspector extends WireData {
 		// read appmarker metadata if present
 		$this->info['appmarker'] = $iptcRaw = null;
 		if(is_array($additionalInfo) && $parseAppmarker) {
-			$appmarker = array();
+			$appmarker = [];
 			foreach($additionalInfo as $k => $v) {
 				$appmarker[$k] = substr($v, 0, strpos($v, chr(0)));
 			}
@@ -145,13 +136,7 @@ class ImageInspector extends WireData {
 		}
 
 		// return the result
-		return array(
-			'filename' => $this->filename,
-			'extension' => $this->extension,
-			'imageType' => $imageType,
-			'info' => $this->info,
-			'iptcRaw' => $iptcRaw
-		);
+		return ['filename' => $this->filename, 'extension' => $this->extension, 'imageType' => $imageType, 'info' => $this->info, 'iptcRaw' => $iptcRaw];
 	}
 
 	/**
@@ -164,18 +149,21 @@ class ImageInspector extends WireData {
 	 */
 	protected function checkOrientation($filename) {
 		// first value is rotation-degree and second value is flip-mode: 0=NONE | 1=HORIZONTAL | 2=VERTICAL
-		$corrections = array(
-			'1' => array(0, 0),
-			'2' => array(0, 1),
-			'3' => array(180, 0),
-			'4' => array(0, 2),
-			'5' => array(90, 1),    // OLD: 270
-			'6' => array(90, 0),    // OLD: 270
-			'7' => array(270, 1),   // OLD: 90
-			'8' => array(270, 0)    // OLD: 90
-		);
-		$result = array('orientation' => 0, 'rotate' => 0, 'flip' => 0);
-		$supportedExifMimeTypes = array('image/jpeg', 'image/tiff'); // hardcoded by PHP
+		$corrections = [
+      '1' => [0, 0],
+      '2' => [0, 1],
+      '3' => [180, 0],
+      '4' => [0, 2],
+      '5' => [90, 1],
+      // OLD: 270
+      '6' => [90, 0],
+      // OLD: 270
+      '7' => [270, 1],
+      // OLD: 90
+      '8' => [270, 0],
+  ];
+		$result = ['orientation' => 0, 'rotate' => 0, 'flip' => 0];
+		$supportedExifMimeTypes = ['image/jpeg', 'image/tiff']; // hardcoded by PHP
 		$mime = isset($this->info['mime']) ? $this->info['mime'] : 'no';
 
 		if(!function_exists('exif_read_data') || !in_array($mime, $supportedExifMimeTypes)) {
@@ -190,11 +178,7 @@ class ImageInspector extends WireData {
 			return $result;
 		}
 		$correctionArray = $corrections[strval($exif['Orientation'])];
-		$result = array(
-			'orientation' => $exif['Orientation'],
-			'rotate' => $correctionArray[0],
-			'flip' => $correctionArray[1]
-		);
+		$result = ['orientation' => $exif['Orientation'], 'rotate' => $correctionArray[0], 'flip' => $correctionArray[1]];
 		return $result;
 	}
 

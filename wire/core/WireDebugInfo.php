@@ -18,7 +18,7 @@ class WireDebugInfo extends Wire {
 	 */
 	public function getDebugInfo(Wire $obj, $small = false) {
 		
-		$info = array();
+		$info = [];
 		
 		if($obj instanceof Page) {
 			$info = $this->Page($obj, $small);
@@ -48,7 +48,7 @@ class WireDebugInfo extends Wire {
 	 * 
 	 */
 	public function getHooksInfo(Wire $obj) {
-		$hooks = array();
+		$hooks = [];
 		foreach($obj->getHooks() as $hook) {
 			list($class, $priority) = explode(':', $hook['id']);
 			$key = '';
@@ -88,7 +88,7 @@ class WireDebugInfo extends Wire {
 			if(!isset($hooks[$key])) {
 				$hooks[$key] = $value;
 			} else {
-				if(!is_array($hooks[$key])) $hooks[$key] = array($hooks[$key]);
+				if(!is_array($hooks[$key])) $hooks[$key] = [$hooks[$key]];
 				$hooks[$key][] = $value;
 			}
 		}
@@ -107,14 +107,7 @@ class WireDebugInfo extends Wire {
 		
 		if($small) {
 			// minimal debug info
-			$info = array(
-				'id' => $page->id, 
-				'name' => $page->name, 
-				'parent' => $page->parent && $page->parent->id ? $page->parent->path() : '',
-				'status' => implode(', ', $page->status(true)), 
-				'template' => $page->template ? $page->template->name : '', 
-				'numChildren' => $page->numChildren(), 
-			);
+			$info = ['id' => $page->id, 'name' => $page->name, 'parent' => $page->parent && $page->parent->id ? $page->parent->path() : '', 'status' => implode(', ', $page->status(true)), 'template' => $page->template ? $page->template->name : '', 'numChildren' => $page->numChildren()];
 			
 			if(empty($info['numChildren'])) unset($info['numChildren']); 
 			if(empty($info['status'])) unset($info['status']);
@@ -135,27 +128,7 @@ class WireDebugInfo extends Wire {
 		}
 
 		// verbose debug info
-		$info = array(
-			'instanceID' => $page->instanceID,
-			'id' => $page->id, 
-			'name' => $page->name,
-			'namePrevious' => '', 
-			'path' => $page->path(), 
-			'status' => implode(', ', $page->status(true)), 
-			'statusPrevious' => 0, 
-			'template' => $page->template ? $page->template->name : '', 
-			'templatePrevious' => '', 
-			'parent' => $page->parent ? $page->parent->path : '', 
-			'parentPrevious' => '', 
-			'numChildren' => $page->numChildren(), 
-			'sort' => $page->sort,
-			'sortfield' => $page->sortfield,
-			'created' => $page->created,
-			'modified' => $page->modified,
-			'published' => $page->published, 
-			'createdUser' => $page->createdUser ? $page->createdUser->name : $page->created_users_id, 
-			'modifiedUser' => $page->modifiedUser ? $page->modifiedUser->name : $page->modified_users_id, 
-		);
+		$info = ['instanceID' => $page->instanceID, 'id' => $page->id, 'name' => $page->name, 'namePrevious' => '', 'path' => $page->path(), 'status' => implode(', ', $page->status(true)), 'statusPrevious' => 0, 'template' => $page->template ? $page->template->name : '', 'templatePrevious' => '', 'parent' => $page->parent ? $page->parent->path : '', 'parentPrevious' => '', 'numChildren' => $page->numChildren(), 'sort' => $page->sort, 'sortfield' => $page->sortfield, 'created' => $page->created, 'modified' => $page->modified, 'published' => $page->published, 'createdUser' => $page->createdUser ? $page->createdUser->name : $page->created_users_id, 'modifiedUser' => $page->modifiedUser ? $page->modifiedUser->name : $page->modified_users_id];
 
 		if($page->namePrevious) {
 			$info['namePrevious'] = $page->namePrevious;
@@ -186,7 +159,7 @@ class WireDebugInfo extends Wire {
 		$info['outputFormatting'] = (int) $page->outputFormatting();
 		if($page->quietMode) $info['quietMode'] = 1;
 
-		foreach(array('created', 'modified', 'published') as $key) {
+		foreach(['created', 'modified', 'published'] as $key) {
 			$info[$key] = wireDate($this->wire()->config->dateFormat, $info[$key]) . " " .
 				"(" . wireDate('relative', $info[$key]) . ")";
 		}

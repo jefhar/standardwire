@@ -48,25 +48,25 @@ abstract class FileValidatorModule extends WireData implements Module {
 	 * 
 	 */
 	public static function getModuleInfo() {
-		return array(
-			'title' => 'File Validator',
-			'version' => 1,
-			'author' => 'Your name here',
-			'summary' => 'Validates and/or sanitizes files of type [insert file type(s) here]',
-			'singular' => false,
-			'autoload' => false,
-			'requires' => 'ProcessWire>=2.5.24',
-
-			// Required of all FileValidator modules: specify extensions they validate as array.
-			// Extensions should be lowercase. To specify a regex, start and end with a "/" slash.
-			// If module wants to validate all file types, it should specify: "/.*/"
-				
-			'validates' => array(
-				'xyz',		// filename.xyz
-				'123',		// filename.123
-				'/^x+$/',	// filename.x, filename.xx, filename.xxx, etc.
-			)
-		);
+		return [
+      'title' => 'File Validator',
+      'version' => 1,
+      'author' => 'Your name here',
+      'summary' => 'Validates and/or sanitizes files of type [insert file type(s) here]',
+      'singular' => false,
+      'autoload' => false,
+      'requires' => 'ProcessWire>=2.5.24',
+      // Required of all FileValidator modules: specify extensions they validate as array.
+      // Extensions should be lowercase. To specify a regex, start and end with a "/" slash.
+      // If module wants to validate all file types, it should specify: "/.*/"
+      'validates' => [
+          'xyz',
+          // filename.xyz
+          '123',
+          // filename.123
+          '/^x+$/',
+      ],
+  ];
 	}
 	
 	/**
@@ -207,7 +207,7 @@ abstract class FileValidatorModule extends WireData implements Module {
 	 * @return WireLog|null
 	 *
 	 */
-	public function ___log($str = '', array $options = array()) {
+	public function ___log($str = '', array $options = []) {
 		if(empty($options['name'])) $options['name'] = 'file-validator';
 		return parent::___log($str, $options);
 	}

@@ -42,13 +42,13 @@ class RememberTfa extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $settings = array();
+	protected $settings = [];
 
 	/**
 	 * @var array
 	 * 
 	 */
-	protected $remember = array();
+	protected $remember = [];
 
 	/**
 	 * Days to remember
@@ -66,12 +66,7 @@ class RememberTfa extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $fingerprints = array(
-		'agentVL', 
-		'accept', 
-		'scheme', 
-		'host',
-	);
+	protected $fingerprints = ['agentVL', 'accept', 'scheme', 'host'];
 
 	/**
 	 * Construct
@@ -137,7 +132,7 @@ class RememberTfa extends Wire {
 	
 		$rand = new WireRandom();
 		$this->wire($rand);
-		$cookieValue = $rand->alphanumeric(0, array('minLength' => 40, 'maxLength' => 256));
+		$cookieValue = $rand->alphanumeric(0, ['minLength' => 40, 'maxLength' => 256]);
 		$qty = count($this->remember);
 		
 		if($qty > self::maxItems) {
@@ -145,16 +140,10 @@ class RememberTfa extends Wire {
 		}
 		
 		do {
-			$name = $rand->alpha(0, array('minLength' => 3, 'maxLength' => 7));
+			$name = $rand->alpha(0, ['minLength' => 3, 'maxLength' => 7]);
 		} while(isset($this->remember[$name]) || $this->getCookie($name) !== null);
 		
-		$this->remember[$name] = array(
-			'fingerprint' => $this->getFingerprintString(),
-			'created' => time(),
-			'expires' => strtotime("+$this->days DAYS"),
-			'value' => $this->serverValue($cookieValue), 
-			'page' => $this->wire()->page->id,
-		);
+		$this->remember[$name] = ['fingerprint' => $this->getFingerprintString(), 'created' => time(), 'expires' => strtotime("+$this->days DAYS"), 'value' => $this->serverValue($cookieValue), 'page' => $this->wire()->page->id];
 		
 		$this->debugNote("Enabled new remember: $name"); 
 		$this->debugNote($this->remember[$name]); 
@@ -180,7 +169,7 @@ class RememberTfa extends Wire {
 		$fingerprint = $this->getFingerprintString();
 		$valid = false;
 		$validName = '';
-		$disableNames = array();
+		$disableNames = [];
 		
 		foreach($this->remember as $name => $item) {
 		
@@ -245,7 +234,7 @@ class RememberTfa extends Wire {
 	 * 
 	 */
 	public function disable($names) {
-		if(!is_array($names)) $names = array($names); 
+		if(!is_array($names)) $names = [$names]; 
 		$qty = 0;
 		foreach($names as $name) {
 			$found = isset($this->remember[$name]);
@@ -270,7 +259,7 @@ class RememberTfa extends Wire {
 			$this->clearCookie($name);
 		}
 		// remove from user settings
-		$this->remember = array();
+		$this->remember = [];
 		$this->debugNote("Disabled all"); 
 		return $this->saveRemember();
 	}
@@ -296,11 +285,7 @@ class RememberTfa extends Wire {
 	 *
 	 */
 	protected function setCookie($cookieName, $cookieValue) {
-		$cookieOptions = array(
-			'age' => ($this->days > 0 ? $this->days * 86400 : 31536000),
-			'httponly' => true,
-			'domain' => '',
-		);
+		$cookieOptions = ['age' => ($this->days > 0 ? $this->days * 86400 : 31536000), 'httponly' => true, 'domain' => ''];
 		if($this->config->https) $cookieOptions['secure'] = true;
 		$cookieName = $this->cookieName($cookieName);
 		$this->debugNote("Setting cookie: $cookieName=$cookieValue"); 
@@ -344,7 +329,7 @@ class RememberTfa extends Wire {
 		$name = $this->cookiePrefix() . $name;
 		$cookies = $this->wire()->input->cookie;
 		if($cookies->get($name) === null) return false;
-		$cookies->set($name, null, array()); // remove
+		$cookies->set($name, null, []); // remove
 		$this->debugNote("Clearing cookie: $name"); 
 		return true;
 	}
@@ -386,17 +371,18 @@ class RememberTfa extends Wire {
 		if(isset($_SERVER['HTTP_CLIENT_IP'])) $fwip .= ' ' . $_SERVER['HTTP_CLIENT_IP'];
 		if(empty($fwip)) $fwip = 'nofwip';
 		
-		$fingerprints = array(
-			'agent' => $agent,
-			'agentVL' => preg_replace('![^a-zA-Z]!', '', $agent), // versionless agent
-			'accept' => (isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : 'noaccept'),
-			'scheme' => ($config->https ? 'HTTPS' : 'http'),
-			'host' => $config->httpHost,
-			'ip' => (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'noip'),
-			'fwip' => $fwip,
-		);
+		$fingerprints = [
+      'agent' => $agent,
+      'agentVL' => preg_replace('![^a-zA-Z]!', '', $agent),
+      // versionless agent
+      'accept' => (isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : 'noaccept'),
+      'scheme' => ($config->https ? 'HTTPS' : 'http'),
+      'host' => $config->httpHost,
+      'ip' => (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'noip'),
+      'fwip' => $fwip,
+  ];
 		
-		$fingerprint = array();
+		$fingerprint = [];
 		
 		foreach($this->fingerprints as $type) {
 			$fingerprint[$type] = $fingerprints[$type];
@@ -443,7 +429,7 @@ class RememberTfa extends Wire {
 		if(strpos($fpstr, ':') === false) return false;
 		list($types,) = explode(':', $fpstr, 2);
 		$a = explode(',', $types);
-		$types = array();
+		$types = [];
 		foreach($a as $type) $types[$type] = $type;
 		return $types;
 	}

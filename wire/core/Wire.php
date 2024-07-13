@@ -300,11 +300,11 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	public function className($options = null) {
 		
 		if(is_bool($options)) {
-			$options = array('namespace' => $options);
+			$options = ['namespace' => $options];
 		} else if(is_array($options)) {
 			if(!empty($options['lowercase'])) $options['namespace'] = false;
 		} else {
-			$options = array();
+			$options = [];
 		}
 
 		if(isset($options['namespace']) && $options['namespace'] === true) {
@@ -315,7 +315,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 		}
 
 		if(!empty($options['lowercase'])) {
-			static $cache = array();
+			static $cache = [];
 			if(isset($cache[$className])) {
 				$className = $cache[$className];
 			} else {
@@ -354,7 +354,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * Hooks that are local to this instance of the class only.
 	 *
 	 */
-	protected $localHooks = array();
+	protected $localHooks = [];
 
 	/**
 	 * @var WireHooks|null
@@ -422,7 +422,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 				$result = $this->$method($arguments[0], $arguments[1], $arguments[2]);
 				break;
 			default:
-				$result = call_user_func_array(array($this, $method), $arguments);
+				$result = call_user_func_array([$this, $method], $arguments);
 		}
 		return $result;
 	}
@@ -437,7 +437,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @return mixed
 	 * 
 	 */
-	public function _callHookMethod($method, array $arguments = array()) {
+	public function _callHookMethod($method, array $arguments = []) {
 		if(method_exists($this, $method)) {
 			return $this->_callMethod($method, $arguments);
 		}
@@ -506,7 +506,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 		$var = $this->_wire ? $this->_wire->fuel()->$method : null;
 		if(!$var) return false;
 		// requested method maps to an API variable
-		$result = array('return' => null);
+		$result = ['return' => null];
 		if(count($arguments)) {
 			$funcName = 'wire' . ucfirst($method);
 			if(__NAMESPACE__) $funcName = __NAMESPACE__ . "\\$funcName";
@@ -700,7 +700,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @see https://processwire.com/docs/modules/hooks/
 	 *
 	 */
-	public function addHook($method, $toObject, $toMethod = null, $options = array()) {
+	public function addHook($method, $toObject, $toMethod = null, $options = []) {
 		return $this->_wireHooks()->addHook($this, $method, $toObject, $toMethod, $options);
 	}
 
@@ -749,7 +749,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @see https://processwire.com/docs/modules/hooks/
 	 *
 	 */
-	public function addHookBefore($method, $toObject, $toMethod = null, $options = array()) {
+	public function addHookBefore($method, $toObject, $toMethod = null, $options = []) {
 		// This is the same as calling addHook with the 'before' option set the $options array.
 		$options['before'] = true; 
 		if(!isset($options['after'])) $options['after'] = false; 
@@ -799,7 +799,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @see https://processwire.com/docs/modules/hooks/
 	 *
 	 */
-	public function addHookAfter($method, $toObject, $toMethod = null, $options = array()) {
+	public function addHookAfter($method, $toObject, $toMethod = null, $options = []) {
 		$options['after'] = true; 
 		if(!isset($options['before'])) $options['before'] = false; 
 		return $this->_wireHooks()->addHook($this, $method, $toObject, $toMethod, $options); 
@@ -845,7 +845,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @see https://processwire.com/docs/modules/hooks/
 	 *
 	 */
-	public function addHookProperty($property, $toObject, $toMethod = null, $options = array()) {
+	public function addHookProperty($property, $toObject, $toMethod = null, $options = []) {
 		// This is the same as calling addHook with the 'type' option set to 'property' in the $options array. 
 	    // Note that descending classes that override __get must call getHook($property) and/or runHook($property).
 		$options['type'] = 'property'; 
@@ -908,7 +908,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @see https://processwire.com/docs/modules/hooks/
 	 *
 	 */
-	public function addHookMethod($method, $toObject, $toMethod = null, $options = array()) {
+	public function addHookMethod($method, $toObject, $toMethod = null, $options = []) {
 		return $this->_wireHooks()->addHook($this, $method, $toObject, $toMethod, $options);
 	}
 
@@ -983,7 +983,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @var array
 	 *
 	 */
-	private $changes = array();
+	private $changes = [];
 	
 	/**
 	 * Does the object have changes, or has the given property changed? 
@@ -1055,7 +1055,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 				$lastValue = end($this->changes[$what]); 
 			} else {
 				$lastValue = null;
-				$this->changes[$what] = array();
+				$this->changes[$what] = [];
 			}
 		
 			if(is_null($old) || is_null($new) || $lastValue !== $new) {
@@ -1134,11 +1134,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 			}
 		} else if(is_int($trackChanges)) {
 			// set bitmask
-			$allowed = array(
-				self::trackChangesOn, 
-				self::trackChangesValues, 
-				self::trackChangesOn | self::trackChangesValues
-			); 
+			$allowed = [self::trackChangesOn, self::trackChangesValues, self::trackChangesOn | self::trackChangesValues]; 
 			if(in_array($trackChanges, $allowed)) $this->trackChanges = $trackChanges; 
 		}
 		return $this; 
@@ -1173,7 +1169,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 *
 	 */
 	public function resetTrackChanges($trackChanges = true) {
-		$this->changes = array();
+		$this->changes = [];
 		return $this->setTrackChanges($trackChanges); 
 	}
 
@@ -1197,7 +1193,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 */
 	public function getChanges($getValues = false) {
 		if($getValues === 2) {
-			$changes = array();
+			$changes = [];
 			foreach($this->changes as $name => $value) {
 				if($value) {} // value ignored
 				$changes[$name] = $name;
@@ -1220,11 +1216,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @var Notices[]
 	 * 
 	 */
-	protected $_notices = array(
-		'errors' => null, 
-		'warnings' => null, 
-		'messages' => null
-	);
+	protected $_notices = ['errors' => null, 'warnings' => null, 'messages' => null];
 
 	/**
 	 * Record a Notice, internal use (contains the code for message, warning and error methods)
@@ -1429,7 +1421,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @return Notices|array|string Array of `NoticeError` errors, or string if last, first or str option was specified.
 	 * 
 	 */
-	public function errors($options = array()) {
+	public function errors($options = []) {
 		if(!is_array($options)) $options = explode(' ', strtolower($options)); 
 		$options[] = 'errors';
 		return $this->messages($options); 
@@ -1467,7 +1459,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * 
 	 *
 	 */
-	public function warnings($options = array()) {
+	public function warnings($options = []) {
 		if(!is_array($options)) $options = explode(' ', strtolower($options));
 		$options[] = 'warnings';
 		return $this->messages($options); 
@@ -1504,7 +1496,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @return Notices|array|string Array of `NoticeMessage` messages, or string if last, first or str option was specified.
 	 *
 	 */
-	public function messages($options = array()) {
+	public function messages($options = []) {
 		if(!is_array($options)) $options = explode(' ', strtolower($options)); 
 		if(in_array('errors', $options)) {
 			$type = 'errors';
@@ -1541,9 +1533,9 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 		}
 		if(in_array('array', $options) || in_array('string', $options)) {
 			if($value instanceof Notice) {
-				$value = array($value->text);
+				$value = [$value->text];
 			} else {
-				$_value = array();
+				$_value = [];
 				foreach($value as $notice) {
 					/** @var Notice $notice */
 					$_value[] = $notice->text;
@@ -1578,14 +1570,14 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @return WireLog
 	 *
 	 */
-	public function ___log($str = '', array $options = array()) {
+	public function ___log($str = '', array $options = []) {
 		$log = $this->wire()->log;
 		if($log && strlen($str)) {
 			if(isset($options['name'])) {
 				$name = $options['name'];
 				unset($options['name']);
 			} else {
-				$name = $this->className(array('lowercase' => true));
+				$name = $this->className(['lowercase' => true]);
 			}
 			$log->save($name, $str, $options);
 		}
@@ -1871,7 +1863,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 
 		$hooks = $this->_wireHooks(); /** @var WireHooks $hooks */
 		if($hooks && $hooks->isHooked($name)) { // potential property hook
-			$result = $hooks->runHooks($this, $name, array(), 'property');
+			$result = $hooks->runHooks($this, $name, [], 'property');
 			return $result['return'];
 		}
 

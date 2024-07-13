@@ -16,13 +16,13 @@ class PagesLoaderCache extends Wire {
 	 * Pages that have been cached, indexed by ID
 	 *
 	 */
-	protected $pageIdCache = array();
+	protected $pageIdCache = [];
 
 	/**
 	 * Cached selector strings and the PageArray that was found.
 	 *
 	 */
-	protected $pageSelectorCache = array();
+	protected $pageSelectorCache = [];
 
 	/**
 	 * [ 'cache group name' => [ page IDs ] ]
@@ -30,7 +30,7 @@ class PagesLoaderCache extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $cacheGroups = array();
+	protected $cacheGroups = [];
 
 	/**
 	 * @var Pages
@@ -60,11 +60,7 @@ class PagesLoaderCache extends Wire {
 	 * 
 	 */
 	public function getCacheStatus($verbose = null) {
-		$a = array(
-			'pages' => ($verbose ? $this->pageIdCache : count($this->pageIdCache)), 
-			'selectors' => ($verbose ? $this->pageSelectorCache : count($this->pageSelectorCache)), 
-			'groups' => ($verbose ? $this->cacheGroups : count($this->cacheGroups)),
-		);
+		$a = ['pages' => ($verbose ? $this->pageIdCache : count($this->pageIdCache)), 'selectors' => ($verbose ? $this->pageSelectorCache : count($this->pageSelectorCache)), 'groups' => ($verbose ? $this->cacheGroups : count($this->cacheGroups))];
 		return ($verbose === false ? "pages=$a[pages], selectors=$a[selectors], groups=$a[groups]" : $a);
 	}
 	
@@ -112,7 +108,7 @@ class PagesLoaderCache extends Wire {
 	 */
 	public function cacheGroup(Page $page, $groupName) {
 		if(!$page->id) return;
-		if(!isset($this->cacheGroups[$groupName])) $this->cacheGroups[$groupName] = array();
+		if(!isset($this->cacheGroups[$groupName])) $this->cacheGroups[$groupName] = [];
 		$this->pageIdCache[$page->id] = $page;
 		$this->cacheGroups[$groupName][] = $page->id;
 	}
@@ -128,7 +124,7 @@ class PagesLoaderCache extends Wire {
 	 * @return bool True if page was uncached, false if it didn't need to be
 	 *
 	 */
-	public function uncache($page, array $options = array()) {
+	public function uncache($page, array $options = []) {
 		if($page instanceof Page) {
 			$pageId = $page->id; 
 		} else {
@@ -155,7 +151,7 @@ class PagesLoaderCache extends Wire {
 	 * @return int Number of pages uncached
 	 *
 	 */
-	public function uncacheAll(Page $page = null, array $options = array()) {
+	public function uncacheAll(Page $page = null, array $options = []) {
 
 		if($page) {} // to ignore unused parameter inspection
 		$user = $this->wire()->user;
@@ -177,12 +173,12 @@ class PagesLoaderCache extends Wire {
 			$cnt++;
 		}
 
-		$this->pageIdCache = array();
-		$this->pageSelectorCache = array();
-		$this->cacheGroups = array();
+		$this->pageIdCache = [];
+		$this->pageSelectorCache = [];
+		$this->cacheGroups = [];
 
-		Page::$loadingStack = array();
-		Page::$instanceIDs = array();
+		Page::$loadingStack = [];
+		Page::$instanceIDs = [];
 		
 		return $cnt;
 	}
@@ -196,7 +192,7 @@ class PagesLoaderCache extends Wire {
 	 * @since 3.0.198
 	 * 
 	 */
-	public function uncacheGroup($groupName, array $options = array()) {
+	public function uncacheGroup($groupName, array $options = []) {
 		$qty = 0;
 		if(!isset($this->cacheGroups[$groupName])) return 0;
 		foreach($this->cacheGroups[$groupName] as $pageId) {
@@ -279,28 +275,15 @@ class PagesLoaderCache extends Wire {
 
 		// optimization to use consistent conventions for commonly interchanged names
 		$selector = str_replace(
-			array(
-				'path=/,',
-				'parent=/,'
-			),
-			array(
-				'id=1,',
-				'parent_id=1,'
-			),
+			['path=/,', 'parent=/,'],
+			['id=1,', 'parent_id=1,'],
 			$selector
 		);
 
 		// optimization to filter out common status checks for pages that won't be cached anyway
 		if(!empty($options['findOne'])) {
 			$selector = str_replace(
-				array(
-					'status<' . Page::statusUnpublished,
-					'status<' . Page::statusMax,
-					'start=0',
-					'limit=1',
-					',',
-					' '
-				),
+				['status<' . Page::statusUnpublished, 'status<' . Page::statusMax, 'start=0', 'limit=1', ',', ' '],
 				'',
 				$selector
 			);

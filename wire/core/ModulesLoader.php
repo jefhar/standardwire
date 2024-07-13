@@ -16,7 +16,7 @@ class ModulesLoader extends ModulesClass {
 	 * @var array
 	 *
 	 */
-	protected $autoloadOrders = array();
+	protected $autoloadOrders = [];
 	
 	/**
 	 * Array of moduleName => condition
@@ -24,19 +24,19 @@ class ModulesLoader extends ModulesClass {
 	 * Condition can be either an anonymous function or a selector string to be evaluated at ready().
 	 *
 	 */
-	protected $conditionalAutoloadModules = array();
+	protected $conditionalAutoloadModules = [];
 
 	/**
 	 * Cache of module information from DB used across multiple calls temporarily by loadPath() method
 	 *
 	 */
-	protected $modulesTableCache = array();
+	protected $modulesTableCache = [];
 	
 	/**
 	 * Module created dates indexed by module ID
 	 *
 	 */
-	protected $createdDates = array();
+	protected $createdDates = [];
 	
 	/**
 	 * Initialize all the modules that are loaded at boot
@@ -48,7 +48,7 @@ class ModulesLoader extends ModulesClass {
 	 * @param int $level
 	 *
 	 */
-	public function triggerInit($modules = null, $completed = array(), $level = 0) {
+	public function triggerInit($modules = null, $completed = [], $level = 0) {
 
 		$debugKey = null;
 		$debugKey2 = null;
@@ -58,7 +58,7 @@ class ModulesLoader extends ModulesClass {
 			$this->message("triggerInit(level=$level)");
 		}
 
-		$queue = array();
+		$queue = [];
 		
 		if($modules === null) $modules = $this->modules;
 
@@ -134,7 +134,7 @@ class ModulesLoader extends ModulesClass {
 	 * @throws \Exception Only if the `throw` option is true.
 	 *
 	 */
-	public function initModule(Module $module, array $options = array()) {
+	public function initModule(Module $module, array $options = []) {
 
 		$result = true;
 		$debugKey = null;
@@ -258,7 +258,7 @@ class ModulesLoader extends ModulesClass {
 	public function triggerConditionalAutoload() {
 
 		// conditional autoload modules that are skipped (className => 1)
-		$skipped = array();
+		$skipped = [];
 
 		// init conditional autoload modules, now that $page is known
 		foreach($this->conditionalAutoloadModules as $className => $func) {
@@ -298,7 +298,7 @@ class ModulesLoader extends ModulesClass {
 		}
 
 		// clear this out since we don't need it anymore
-		$this->conditionalAutoloadModules = array();
+		$this->conditionalAutoloadModules = [];
 
 		return $skipped;
 	}
@@ -309,14 +309,11 @@ class ModulesLoader extends ModulesClass {
 	 */
 	public function loadModulesTable() {
 
-		$this->autoloadOrders = array();
+		$this->autoloadOrders = [];
 		$database = $this->wire()->database;
 
 		// skip loading dymanic caches at this stage
-		$skipCaches = array(
-			ModulesInfo::moduleInfoCacheUninstalledName,
-			ModulesInfo::moduleInfoCacheVerboseName
-		);
+		$skipCaches = [ModulesInfo::moduleInfoCacheUninstalledName, ModulesInfo::moduleInfoCacheVerboseName];
 
 		$query = $database->query(
 		// Currently: id, class, flags, data, with created added at sysupdate 7
@@ -348,7 +345,7 @@ class ModulesLoader extends ModulesClass {
 
 			if($loadSettings) {
 				// preload config data for autoload modules since we'll need it again very soon
-				$data = $row['data'] ? json_decode($row['data'], true) : array();
+				$data = $row['data'] ? json_decode($row['data'], true) : [];
 				$this->modules->configs->configData($moduleID, $data);
 				// populate information about duplicates, if applicable
 				if($flags & Modules::flagsDuplicate) $this->modules->duplicates()->addFromConfigData($class, $data);
@@ -392,9 +389,9 @@ class ModulesLoader extends ModulesClass {
 		$config = $this->wire()->config;
 		$debugKey = $this->debug ? $this->modules->debugTimerStart("loadPath($path)") : null;
 		$installed =& $this->modulesTableCache;
-		$modulesLoaded = array();
-		$modulesDelayed = array();
-		$modulesRequired = array();
+		$modulesLoaded = [];
+		$modulesDelayed = [];
+		$modulesRequired = [];
 		$modulesFiles = $this->modules->files;
 		$rootPath = $config->paths->root;
 		$basePath = substr($path, strlen($rootPath));
@@ -409,7 +406,7 @@ class ModulesLoader extends ModulesClass {
 			$modulesFiles->moduleFileExt($moduleName, $ext === 'module' ? 1 : 2);
 			// @todo next, remove the 'file' property from verbose module info since it is redundant
 
-			$requires = array();
+			$requires = [];
 			$name = $moduleName;
 			$moduleName = $this->loadModule($path, $pathname, $requires, $installed);
 			if(!$config->paths->get($name)) $modulesFiles->setConfigPaths($name, dirname($basePath . $pathname));
@@ -418,8 +415,8 @@ class ModulesLoader extends ModulesClass {
 			if(count($requires)) {
 				// module not loaded because it required other module(s) not yet loaded
 				foreach($requires as $requiresModuleName) {
-					if(!isset($modulesRequired[$requiresModuleName])) $modulesRequired[$requiresModuleName] = array();
-					if(!isset($modulesDelayed[$moduleName])) $modulesDelayed[$moduleName] = array();
+					if(!isset($modulesRequired[$requiresModuleName])) $modulesRequired[$requiresModuleName] = [];
+					if(!isset($modulesDelayed[$moduleName])) $modulesDelayed[$moduleName] = [];
 					// queue module for later load
 					$modulesRequired[$requiresModuleName][$moduleName] = $pathname;
 					$modulesDelayed[$moduleName][] = $requiresModuleName;
@@ -429,7 +426,7 @@ class ModulesLoader extends ModulesClass {
 
 			// module was successfully loaded
 			$modulesLoaded[$moduleName] = 1;
-			$loadedNames = array($moduleName);
+			$loadedNames = [$moduleName];
 
 			// now determine if this module had any other modules waiting on it as a dependency
 			/** @noinspection PhpAssignmentInConditionInspection */
@@ -449,7 +446,7 @@ class ModulesLoader extends ModulesClass {
 					if(!$loadNow) continue;
 					// all conditions satisified to load delayed module
 					unset($modulesDelayed[$delayedName], $modulesRequired[$moduleName][$delayedName]);
-					$unused = array();
+					$unused = [];
 					$loadedName = $this->loadModule($path, $delayedPathName, $unused, $installed);
 					if(!$loadedName) continue;
 					$modulesLoaded[$loadedName] = 1;
@@ -484,7 +481,7 @@ class ModulesLoader extends ModulesClass {
 		$filename = basename($pathname);
 		$basename = basename($filename, '.php');
 		$basename = basename($basename, '.module');
-		$requires = array();
+		$requires = [];
 		$duplicates = $this->modules->duplicates();
 
 		// check if module has duplicate files, where one to use has already been specified to use first
@@ -670,10 +667,10 @@ class ModulesLoader extends ModulesClass {
 			$fast = true;
 			if(!$file) {
 				// determine module file, if not already provided to the method
-				$file = $this->modules->getModuleFile($moduleName, array('fast' => true));
+				$file = $this->modules->getModuleFile($moduleName, ['fast' => true]);
 				if(!$file) {
 					$fast = false;
-					$file = $this->modules->getModuleFile($moduleName, array('fast' => false));
+					$file = $this->modules->getModuleFile($moduleName, ['fast' => false]);
 				}
 				// still can't figure out what file is? fail
 				if(!$file) return false;
@@ -683,7 +680,7 @@ class ModulesLoader extends ModulesClass {
 				// module file failed to include(), try to identify and include file again
 				if($fast) {
 					$filePrev = $file;
-					$file = $this->modules->getModuleFile($moduleName, array('fast' => false));
+					$file = $this->modules->getModuleFile($moduleName, ['fast' => false]);
 					if($file && $file !== $filePrev) {
 						if($this->modules->files->includeModuleFile($file, $moduleName)) {
 							// module is missing a module file
@@ -701,7 +698,7 @@ class ModulesLoader extends ModulesClass {
 				$module = true;
 			} else {
 				// module in root namespace or some other namespace
-				$namespace = (string) $this->modules->info->getModuleNamespace($moduleName, array('file' => $file));
+				$namespace = (string) $this->modules->info->getModuleNamespace($moduleName, ['file' => $file]);
 				$className = trim($namespace, "\\") . "\\$moduleName";
 				if(class_exists($className, false)) {
 					// successful include module
@@ -775,12 +772,7 @@ class ModulesLoader extends ModulesClass {
 		if(!empty($info['permissionMethod'])) {
 			// module specifies a static method to call for permission
 			if(is_null($page)) $page = $this->wire()->page;
-			$data = array(
-				'wire' => $this->wire(),
-				'page' => $page,
-				'user' => $user,
-				'info' => $info,
-			);
+			$data = ['wire' => $this->wire(), 'page' => $page, 'user' => $user, 'info' => $info];
 			$method = $info['permissionMethod'];
 			$this->includeModule($moduleName);
 			
@@ -882,7 +874,7 @@ class ModulesLoader extends ModulesClass {
 	 * 
 	 */
 	public function loaded() {
-		$this->modulesTableCache = array();
+		$this->modulesTableCache = [];
 	}
 
 	/**
@@ -896,12 +888,7 @@ class ModulesLoader extends ModulesClass {
 	}
 
 	public function getDebugData() {
-		return array(
-			'autoloadOrders' => $this->autoloadOrders,
-			'conditionalAutoloadModules' => $this->conditionalAutoloadModules,
-			'modulesTableCache' => $this->modulesTableCache,
-			'createdDates' => $this->createdDates,
-		);
+		return ['autoloadOrders' => $this->autoloadOrders, 'conditionalAutoloadModules' => $this->conditionalAutoloadModules, 'modulesTableCache' => $this->modulesTableCache, 'createdDates' => $this->createdDates];
 	}
 
 }

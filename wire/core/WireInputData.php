@@ -68,7 +68,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * @var array
 	 * 
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Are we working with lazy data (data by reference)?
@@ -84,7 +84,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * @var array
 	 * 
 	 */
-	protected $unlazyKeys = array();
+	protected $unlazyKeys = [];
 
 	/**
 	 * Construct
@@ -93,7 +93,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * @param bool $lazy Use lazy loading?
 	 * 
 	 */
-	public function __construct(&$input = array(), $lazy = false) {
+	public function __construct(&$input = [], $lazy = false) {
 		parent::__construct();
 		$this->useFuel(false);
 		if(version_compare(PHP_VERSION, '5.4.0', '<') && function_exists('get_magic_quotes_gpc')) {
@@ -129,7 +129,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 */
 	public function getArray() {
 		if($this->lazy) {
-			$data = array();
+			$data = [];
 			foreach($this->data as $key => $value) {
 				if(isset($this->unlazyKeys[$key])) {
 					$data[$key] = $value;
@@ -170,7 +170,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * @since 3.0.141 You can also use __set() or set directly for compatibility with all versions
 	 * 
 	 */
-	public function set($key, $value, $options = array()) {
+	public function set($key, $value, $options = []) {
 		if($options) {} // not currently used by this class
 		$this->__set($key, $value);
 		return $this;
@@ -185,7 +185,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * @since 3.0.141 You can also get directly or use __get(), both of which are compatible with all versions
 	 * 
 	 */
-	public function get($key, $options = array()) {
+	public function get($key, $options = []) {
 		if($options) {} // not currently used by this class
 		return $this->__get($key);
 	}
@@ -202,9 +202,9 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * @since 3.0.163
 	 *
 	 */
-	public function findOne($pattern, $options = array()) {
+	public function findOne($pattern, $options = []) {
 		if(!strlen($pattern)) return null;
-		if(ctype_alnum(str_replace(array('_', '-', '.'), '', $pattern))) return $this->__get($pattern);
+		if(ctype_alnum(str_replace(['_', '-', '.'], '', $pattern))) return $this->__get($pattern);
 		$options['limit'] = 1;
 		$value = $this->find($pattern, array_merge($options, $options));
 		return array_shift($value); // returns null if empty
@@ -242,25 +242,29 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * @since 3.0.163
 	 * 
 	 */
-	public function find($pattern, array $options = array()) {
+	public function find($pattern, array $options = []) {
 		
-		$defaults = array(
-			'type' => 'name', // match on 'name' or 'value' (default='name')
-			'limit' => 0, // max allowed matches in return value
-			'values' => $this, // use these values rather than those from this input class
-			'sanitizer' => '', // sanitizer name to apply found values
-			'arrays' => false, // also find on input vars that are arrays?
-		);
+		$defaults = [
+      'type' => 'name',
+      // match on 'name' or 'value' (default='name')
+      'limit' => 0,
+      // max allowed matches in return value
+      'values' => $this,
+      // use these values rather than those from this input class
+      'sanitizer' => '',
+      // sanitizer name to apply found values
+      'arrays' => false,
+  ];
 		
-		if(!strlen($pattern)) return array();
+		if(!strlen($pattern)) return [];
 		
 		$options = array_merge($defaults, $options);
 		$sanitizer = $this->wire()->sanitizer;
-		$isRE = in_array($pattern[0], array('/', '!', '%', '#', '@'));
-		$items = array();
+		$isRE = in_array($pattern[0], ['/', '!', '%', '#', '@']);
+		$items = [];
 		$count = 0;
 		$type = $options['type'];
-		$tests = array();
+		$tests = [];
 		
 		if(strpos($pattern, '=')) {
 			// pattern indicates "value=pattern" or "name=pattern"
@@ -290,8 +294,8 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 			if($isArray && !$options['arrays']) {
 				continue;
 			} else if($isArray && $type === 'value') {
-				$v = $this->find($pattern, array_merge($options, array('values' => $value)));
-				if(count($v)) list($items[$name], $count) = array($v, $count + 1); 
+				$v = $this->find($pattern, array_merge($options, ['values' => $value]));
+				if(count($v)) list($items[$name], $count) = [$v, $count + 1]; 
 				continue;
 			} else if($type === 'value') {
 				$match = $value;
@@ -342,7 +346,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 		$maxDepth = (int) $this->wire()->config->wireInputArrayDepth;
 		if($maxDepth < 1) $maxDepth = 1;
 		
-		$clean = array();
+		$clean = [];
 		
 		foreach($a as $key => $value) {
 			if(is_array($value)) {
@@ -469,9 +473,9 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * 
 	 */
 	public function removeAll() {
-		$this->data = array();
+		$this->data = [];
 		$this->lazy = false;
-		$this->unlazyKeys = array();
+		$this->unlazyKeys = [];
 		return $this;
 	}
 
@@ -498,7 +502,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * @since 3.0.163
 	 * 
 	 */
-	public function queryString($overrides = array(), $separator = '&') {
+	public function queryString($overrides = [], $separator = '&') {
 		return http_build_query(array_merge($this->getArray(), $overrides), '', $separator); 
 	}
 
@@ -530,7 +534,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 		}
 		if(count($arguments) > 1) {
 			// more than one argument to sanitizer method
-			return call_user_func_array(array($sanitizer, $method), $arguments);
+			return call_user_func_array([$sanitizer, $method], $arguments);
 		} else {
 			// single argument, pass along to sanitize method
 			return $sanitizer->sanitize($arguments[0], $method); 

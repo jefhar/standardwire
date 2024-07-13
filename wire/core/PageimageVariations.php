@@ -60,7 +60,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 	 * 
 	 */
 	#[\ReturnTypeWillChange] 
-	public function count($options = array()) {
+	public function count($options = []) {
 		if($this->variations) {
 			$count = $this->variations->count();
 		} else {
@@ -98,14 +98,11 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 	 * @return bool|string|array Returns false if not a variation, or array (verbose) or string (non-verbose) of info if it is.
 	 *
 	 */
-	public function getInfo($basename, $options = array()) {
+	public function getInfo($basename, $options = []) {
 
-		$defaults = array(
-			'allowSelf' => false,
-			'verbose' => true,
-		);
+		$defaults = ['allowSelf' => false, 'verbose' => true];
 
-		if(!is_array($options)) $options = array('allowSelf' => (bool) $options);
+		if(!is_array($options)) $options = ['allowSelf' => (bool) $options];
 		$options = array_merge($defaults, $options);
 
 		static $level = 0;
@@ -151,7 +148,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		}
 
 		// identify parent and any parent suffixes
-		$suffixAll = array();
+		$suffixAll = [];
 		if($options['verbose']) {
 			while(($pos = strrpos($base, '.')) !== false) {
 				$part = substr($base, $pos + 1);
@@ -188,7 +185,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 			$width = (int) $matches[1];
 			$height = (int) $matches[2];
 			$crop = isset($matches[3]) ? $matches[3] : '';
-			$suffix = isset($matches[4]) ? explode('-', $matches[4]) : array();
+			$suffix = isset($matches[4]) ? explode('-', $matches[4]) : [];
 
 		} else if(preg_match($re2, $meat, $matches)) {
 
@@ -208,25 +205,28 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		$path = $this->pagefiles->path . $basename;
 		$actualInfo = $this->pageimage->getImageInfo($path);
 
-		$info = array(
-			'name' => $basename,
-			'url' => $this->pagefiles->url . $basename,
-			'path' => $path,
-			'original' => $originalName . '.' . $this->pageimage->ext(),
-			'width' => $width,
-			'height' => $height,
-			'crop' => $crop,
-			'suffix' => $suffix,
-			'suffixAll' => array(), // present only when image has a parent variation
-			'actualWidth' => $actualInfo['width'],
-			'actualHeight' => $actualInfo['height'],
-			'hidpiWidth' => $this->pageimage->hidpiWidth(0, $actualInfo['width']),
-			'hidpiHeight' => $this->pageimage->hidpiWidth(0, $actualInfo['height']),
-			'parentName' => '', // present only when image has a parent variation
-			'parent' => null, // present only when image has a parent variation
-			'webpUrl' => '',
-			'webpPath' => '',
-		);
+		$info = [
+      'name' => $basename,
+      'url' => $this->pagefiles->url . $basename,
+      'path' => $path,
+      'original' => $originalName . '.' . $this->pageimage->ext(),
+      'width' => $width,
+      'height' => $height,
+      'crop' => $crop,
+      'suffix' => $suffix,
+      'suffixAll' => [],
+      // present only when image has a parent variation
+      'actualWidth' => $actualInfo['width'],
+      'actualHeight' => $actualInfo['height'],
+      'hidpiWidth' => $this->pageimage->hidpiWidth(0, $actualInfo['width']),
+      'hidpiHeight' => $this->pageimage->hidpiWidth(0, $actualInfo['height']),
+      'parentName' => '',
+      // present only when image has a parent variation
+      'parent' => null,
+      // present only when image has a parent variation
+      'webpUrl' => '',
+      'webpPath' => '',
+  ];
 
 		foreach($this->pageimage->extras() as $name => $extra) {
 			
@@ -313,15 +313,11 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 	 *  Returns integer if count option is specified. 
 	 *
 	 */
-	public function find(array $options = array()) {
+	public function find(array $options = []) {
 
 		if(!is_null($this->variations) && empty($options)) return $this->variations;
 
-		$defaults = array(
-			'info' => false,
-			'verbose' => true,
-			'count' => false, 
-		);
+		$defaults = ['info' => false, 'verbose' => true, 'count' => false];
 
 		$options = array_merge($defaults, $options);
 		if($options['count']) {
@@ -333,7 +329,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 
 		$variations = null;
 		$dir = new \DirectoryIterator($this->pagefiles->path);
-		$infos = array();
+		$infos = [];
 		$count = 0;
 		
 		if(!$options['info'] && !$options['count']) {
@@ -342,11 +338,11 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		}
 
 		// if suffix or noSuffix option contains space, convert it to suffixes or noSuffixes array option
-		foreach(array('suffix', 'noSuffix') as $key) {
+		foreach(['suffix', 'noSuffix'] as $key) {
 			if(!isset($options[$key])) continue;
 			if(strpos(trim($options[$key]), ' ') === false) continue;
 			$keyPlural = $key . 'es';
-			$value = isset($options[$keyPlural]) ? $options[$keyPlural] : array();
+			$value = isset($options[$keyPlural]) ? $options[$keyPlural] : [];
 			$options[$keyPlural] = array_merge($value, explode(' ', trim($options[$key])));
 			unset($options[$key]);
 		}
@@ -355,7 +351,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 
 			if($file->isDir() || $file->isDot()) continue;
 			
-			$info = $this->getInfo($file->getFilename(), array('verbose' => $options['verbose']));
+			$info = $this->getInfo($file->getFilename(), ['verbose' => $options['verbose']]);
 			if(!$info) continue;
 			
 			if($options['info'] && !$options['verbose']) {
@@ -460,17 +456,17 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 	 *  - `reasons` (array): Reasons why files were skipped or had errors, associative array indexed by file name.
 	 *
 	 */
-	public function rebuild($mode = 0, array $suffix = array(), array $options = array()) {
+	public function rebuild($mode = 0, array $suffix = [], array $options = []) {
 		
 		$files = $this->wire()->files;
 
-		$skipped = array();
-		$rebuilt = array();
-		$errors = array();
-		$reasons = array();
+		$skipped = [];
+		$rebuilt = [];
+		$errors = [];
+		$reasons = [];
 		$options['forceNew'] = true;
 
-		foreach($this->find(array('info' => true)) as $info) {
+		foreach($this->find(['info' => true]) as $info) {
 
 			$o = $options;
 			unset($o['cropping']);
@@ -585,12 +581,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 			}
 		}
 
-		return array(
-			'rebuilt' => $rebuilt,
-			'skipped' => $skipped,
-			'reasons' => $reasons,
-			'errors' => $errors
-		);
+		return ['rebuilt' => $rebuilt, 'skipped' => $skipped, 'reasons' => $reasons, 'errors' => $errors];
 	}
 
 	/**
@@ -602,20 +593,17 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 	 * @return $this|array Returns $this by default, or array of deleted filenames if the `getFiles` option is specified
 	 *
 	 */
-	public function remove(array $options = array()) {
+	public function remove(array $options = []) {
 		
 		$files = $this->wire()->files;
 
-		$defaults = array(
-			'dryRun' => false,
-			'getFiles' => false
-		);
+		$defaults = ['dryRun' => false, 'getFiles' => false];
 
 		$variations = $this->find($options);
 		if(!empty($options['dryrun'])) $defaults['dryRun'] = $options['dryrun']; // case insurance
 		$options = array_merge($defaults, $options); // placement after getVariations() intended
 
-		$deletedFiles = array();
+		$deletedFiles = [];
 		
 		$this->removeExtras($this->pageimage, $deletedFiles, $options);
 

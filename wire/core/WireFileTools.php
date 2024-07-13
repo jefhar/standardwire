@@ -21,7 +21,7 @@ class WireFileTools extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Destruct
@@ -108,14 +108,11 @@ class WireFileTools extends Wire {
 	 * @return bool True on success, false on failure
 	 *
 	 */
-	public function rmdir($path, $recursive = false, $options = array()) { 
+	public function rmdir($path, $recursive = false, $options = []) { 
 		
-		$defaults = array(
-			'limitPath' => false, 
-			'throw' => false, 
-		);
+		$defaults = ['limitPath' => false, 'throw' => false];
 		
-		if(!is_array($options)) $options = array('limitPath' => $options);
+		if(!is_array($options)) $options = ['limitPath' => $options];
 		$options = array_merge($defaults, $options);
 		
 		// if there's nothing to remove, exit now
@@ -251,16 +248,11 @@ class WireFileTools extends Wire {
 	 * @throws WireException if `limitPath` option is used and either $src or $dst is not allowed
 	 *
 	 */
-	public function copy($src, $dst, $options = array()) {
+	public function copy($src, $dst, $options = []) {
 
-		$defaults = array(
-			'recursive' => true,
-			'hidden' => true, 
-			'allowEmptyDirs' => true,
-			'limitPath' => false, 
-		);
+		$defaults = ['recursive' => true, 'hidden' => true, 'allowEmptyDirs' => true, 'limitPath' => false];
 
-		if(is_bool($options)) $options = array('recursive' => $options);
+		if(is_bool($options)) $options = ['recursive' => $options];
 		$options = array_merge($defaults, $options);
 	
 		if($options['limitPath'] !== false) {
@@ -385,17 +377,11 @@ class WireFileTools extends Wire {
 	 * @since 3.0.118
 	 * 
 	 */
-	public function rename($oldName, $newName, $options = array()) {
+	public function rename($oldName, $newName, $options = []) {
 		
-		$defaults = array(
-			'limitPath' => false,
-			'throw' => false, 
-			'chmod' => true, 
-			'copy' => false, 
-			'retry' => true,
-		);
+		$defaults = ['limitPath' => false, 'throw' => false, 'chmod' => true, 'copy' => false, 'retry' => true];
 		
-		if(!is_array($options)) $options = array('limitPath' => $options);
+		if(!is_array($options)) $options = ['limitPath' => $options];
 		$options = array_merge($defaults, $options);
 	
 		// if only basename was specified for the newName then use path from oldName
@@ -435,10 +421,7 @@ class WireFileTools extends Wire {
 		}
 	
 		if(!$success && ($options['retry'] || $options['copy'])) {
-			$opt = array(
-				'limitPath' => $options['limitPath'],
-				'throw' => $options['throw'],
-			);
+			$opt = ['limitPath' => $options['limitPath'], 'throw' => $options['throw']];
 			if($this->copy($oldName, $newName, $opt)) {
 				$success = true;
 				if(is_dir($oldName)) {
@@ -478,7 +461,7 @@ class WireFileTools extends Wire {
 	 * @since 3.0.178
 	 * 
 	 */
-	public function renameCopy($oldName, $newName, $options = array()) {
+	public function renameCopy($oldName, $newName, $options = []) {
 		$options['copy'] = true;
 		return $this->rename($oldName, $newName, $options);
 	}
@@ -535,12 +518,7 @@ class WireFileTools extends Wire {
 	 */
 	public function exists($filename, $options = '') {
 		
-		$defaults = array(
-			'type' => '',
-			'readable' => false,
-			'writable' => false,
-			'writeable' => false, // alias of writable
-		);
+		$defaults = ['type' => '', 'readable' => false, 'writable' => false, 'writeable' => false];
 	
 		if($options === '') {
 			$options = $defaults;
@@ -550,7 +528,7 @@ class WireFileTools extends Wire {
 			if(!empty($options['type'])) $options['type'] = strtolower(trim($options['type']));
 			
 		} else if(is_string($options)) {
-			$types = array('file', 'link', 'dir');
+			$types = ['file', 'link', 'dir'];
 			if(strpos($options, ',') !== false) $options = str_replace(',', ' ', $options);
 			foreach(explode(' ', $options) as $option) {
 				$option = strtolower(trim($option));
@@ -600,8 +578,8 @@ class WireFileTools extends Wire {
 	 * @since 3.0.214
 	 * 
 	 */
-	public function size($path, $options = array()) {
-		if(is_bool($options)) $options = array('getString' => $options);
+	public function size($path, $options = []) {
+		if(is_bool($options)) $options = ['getString' => $options];
 		$size = 0;
 		$path = realpath($path);
 		if(!is_string($path) || $path === '' || !file_exists($path)) return 0;
@@ -744,10 +722,10 @@ class WireFileTools extends Wire {
 	 * @see WireTempDir
 	 *
 	 */
-	public function tempDir($name = '', $options = array()) {
-		static $tempDirs = array();
+	public function tempDir($name = '', $options = []) {
+		static $tempDirs = [];
 		if($name && isset($tempDirs[$name])) return $tempDirs[$name];
-		if(is_int($options)) $options = array('maxAge' => $options);
+		if(is_int($options)) $options = ['maxAge' => $options];
 		$basePath = isset($options['basePath']) ? $options['basePath'] : '';
 		$tempDir = new WireTempDir();
 		$this->wire($tempDir);
@@ -779,20 +757,12 @@ class WireFileTools extends Wire {
 	 * @since 3.0.96
 	 * 
 	 */
-	public function find($path, array $options = array()) {
+	public function find($path, array $options = []) {
 
-		$defaults = array(
-			'recursive' => 10, 
-			'extensions' => array(),
-			'excludeExtensions' => array(), 
-			'excludeDirNames' => array(),
-			'excludeHidden' => false,
-			'allowDirs' => false, 
-			'returnRelative' => false,
-		);
+		$defaults = ['recursive' => 10, 'extensions' => [], 'excludeExtensions' => [], 'excludeDirNames' => [], 'excludeHidden' => false, 'allowDirs' => false, 'returnRelative' => false];
 
 		$path = $this->unixDirName($path);
-		if(!is_dir($path) || !is_readable($path)) return array();
+		if(!is_dir($path) || !is_readable($path)) return [];
 
 		$options = array_merge($defaults, $options);
 		
@@ -805,7 +775,7 @@ class WireFileTools extends Wire {
 					$options['extensions'] = preg_replace('/[,;\.\s]+/', ' ', $options['extensions']);
 					$options['extensions'] = explode(' ', $options['extensions']); 
 				} else {
-					$options['extensions'] = array();
+					$options['extensions'] = [];
 				}
 			}
 			foreach($options['extensions'] as $k => $v) {
@@ -815,11 +785,11 @@ class WireFileTools extends Wire {
 		
 		$options['_level']++;
 		if($options['recursive'] && $options['recursive'] !== true) {
-			if($options['_level'] > $options['recursive']) return array();
+			if($options['_level'] > $options['recursive']) return [];
 		}
 			
-		$dirs = array();
-		$files = array();
+		$dirs = [];
+		$files = [];
 
 		foreach(new \DirectoryIterator($path) as $file) {
 			
@@ -905,7 +875,7 @@ class WireFileTools extends Wire {
 		if(!is_file($file)) $this->filesException(__FUNCTION__, "ZIP file does not exist");
 		if(!is_dir($dst)) $this->mkdir($dst, true);
 
-		$names = array();
+		$names = [];
 		$chmodFile = $this->wire()->config->chmodFile;
 		$chmodDir = $this->wire()->config->chmodDir;
 
@@ -974,24 +944,22 @@ class WireFileTools extends Wire {
 	 * @see WireFileTools::unzip()
 	 *
 	 */
-	public function zip($zipfile, $files, array $options = array()) {
+	public function zip($zipfile, $files, array $options = []) {
 		
 		static $depth = 0;
 
-		$defaults = array(
-			'allowHidden' => false,
-			'allowEmptyDirs' => true,
-			'overwrite' => false,
-			'maxDepth' => 0, 
-			'exclude' => array(), // files or dirs to exclude
-			'dir' => '',
-			'zip' => null, // internal use: holds ZipArchive instance for recursive use
-		);
+		$defaults = [
+      'allowHidden' => false,
+      'allowEmptyDirs' => true,
+      'overwrite' => false,
+      'maxDepth' => 0,
+      'exclude' => [],
+      // files or dirs to exclude
+      'dir' => '',
+      'zip' => null,
+  ];
 
-		$return = array(
-			'files' => array(),
-			'errors' => array(),
-		);
+		$return = ['files' => [], 'errors' => []];
 		
 		if(!empty($options['zip']) && !empty($options['dir']) && $options['zip'] instanceof \ZipArchive) {
 			// internal recursive call
@@ -1006,15 +974,15 @@ class WireFileTools extends Wire {
 			if(!is_writable($zippath)) $this->filesException(__FUNCTION__, "Path for ZIP file ($zippath) is not writable");
 			if(empty($files)) $this->filesException(__FUNCTION__, "Nothing to add to ZIP file $zipfile");
 			if(is_file($zipfile) && $options['overwrite'] && !$this->unlink($zipfile)) $this->filesException(__FUNCTION__, "Unable to overwrite $zipfile");
-			if(!is_array($files)) $files = array($files);
-			if(!is_array($options['exclude'])) $options['exclude'] = array($options['exclude']);
+			if(!is_array($files)) $files = [$files];
+			if(!is_array($options['exclude'])) $options['exclude'] = [$options['exclude']];
 			$recursive = false;
 			$zip = new \ZipArchive();
 			if($zip->open($zipfile, \ZipArchive::CREATE) !== true) $this->filesException(__FUNCTION__, "Unable to create ZIP: $zipfile");
 
 		} else {
 			$this->filesException(__FUNCTION__, "Invalid zipfile argument");
-			return array(); // not reachable
+			return []; // not reachable
 		}
 
 		$dir = strlen($options['dir']) ? rtrim($options['dir'], '/') . '/' : '';
@@ -1031,7 +999,7 @@ class WireFileTools extends Wire {
 			}
 			if(is_dir($file)) {
 				if($options['maxDepth'] > 0 && $depth >= $options['maxDepth']) continue;
-				$_files = array();
+				$_files = [];
 				foreach(new \DirectoryIterator($file) as $f) {
 					if($f->isDot()) continue; 
 					if($options['maxDepth'] > 0 && $f->isDir() && ($depth+1) >= $options['maxDepth']) continue;
@@ -1098,8 +1066,8 @@ class WireFileTools extends Wire {
 	 * @see WireHttp::sendFile()
 	 *
 	 */
-	public function send($filename, array $options = array(), array $headers = array()) {
-		$defaults = array('limitPath' => $this->wire()->getStatus() === 32, 'throw' => true);
+	public function send($filename, array $options = [], array $headers = []) {
+		$defaults = ['limitPath' => $this->wire()->getStatus() === 32, 'throw' => true];
 		$options = array_merge($defaults, $options);
 		if($filename && !$this->allowPath($filename, $options['limitPath'], $options['throw'])) return 0;
 		$http = new WireHttp();
@@ -1226,17 +1194,18 @@ class WireFileTools extends Wire {
 	 * @since 3.0.197
 	 * 
 	 */
-	public function getCSV($filename, array $options = array()) {
+	public function getCSV($filename, array $options = []) {
 		
-		$defaults = array(
-			'header' => true, // or array 
-			'length' => 0,
-			'separator' => ',',
-			'enclosure' => '"', 
-			'escape' => "\\", 
-			'convert' => false,
-			'blanks' => false, 
-		);
+		$defaults = [
+      'header' => true,
+      // or array
+      'length' => 0,
+      'separator' => ',',
+      'enclosure' => '"',
+      'escape' => "\\",
+      'convert' => false,
+      'blanks' => false,
+  ];
 		
 		$options = array_merge($defaults, $options);
 		$dataKey = "csv:$filename";
@@ -1277,11 +1246,7 @@ class WireFileTools extends Wire {
 				fclose($fp);
 			} else {
 				// store for next call
-				$this->data[$dataKey] = array(
-					'fp' => $fp,
-					'header' => $header,
-					'nextRow' => $this->fgetcsv($fp, $options)
-				);
+				$this->data[$dataKey] = ['fp' => $fp, 'header' => $header, 'nextRow' => $this->fgetcsv($fp, $options)];
 			}
 		}
 		
@@ -1295,7 +1260,7 @@ class WireFileTools extends Wire {
 		
 		if(is_array($header)) {
 			// index row by header
-			$a = array();
+			$a = [];
 			foreach($header as $key => $name) {
 				$a[$name] = isset($row[$key]) ? $row[$key] : '';	
 			}
@@ -1369,8 +1334,8 @@ class WireFileTools extends Wire {
 	 * @since 3.0.197
 	 *
 	 */
-	public function getAllCSV($filename, array $options = array()) {
-		$rows = array();
+	public function getAllCSV($filename, array $options = []) {
+		$rows = [];
 		while(false !== ($row = $this->getCSV($filename, $options))) {
 			$rows[] = $row;
 		}
@@ -1389,12 +1354,7 @@ class WireFileTools extends Wire {
 	 * 
 	 */
 	protected function fgetcsv($fp, $options) {
-		$defaults = array(
-			'length' => 0,
-			'separator' => ',',
-			'enclosure' => '"',
-			'escape' => "\\",
-		);
+		$defaults = ['length' => 0, 'separator' => ',', 'enclosure' => '"', 'escape' => "\\"];
 		$options = array_merge($defaults, $options);
 		return fgetcsv($fp, $options['length'], $options['separator'], $options['enclosure'], $options['escape']); 
 	}
@@ -1433,23 +1393,10 @@ class WireFileTools extends Wire {
 	 * @see WireFileTools::include()
 	 *
 	 */
-	public function render($filename, array $vars = array(), array $options = array()) {
+	public function render($filename, array $vars = [], array $options = []) {
 
 		$paths = $this->wire()->config->paths;
-		$defaults = array(
-			'defaultPath' => $paths->templates,
-			'autoExtension' => 'php',
-			'allowedPaths' => array(
-				$paths->templates,
-				$paths->adminTemplates,
-				$paths->modules,
-				$paths->siteModules,
-				$paths->cache
-			),
-			'allowDotDot' => false,
-			'throwExceptions' => true,
-			'cache' => 0, 
-		);
+		$defaults = ['defaultPath' => $paths->templates, 'autoExtension' => 'php', 'allowedPaths' => [$paths->templates, $paths->adminTemplates, $paths->modules, $paths->siteModules, $paths->cache], 'allowDotDot' => false, 'throwExceptions' => true, 'cache' => 0];
 
 		$options = array_merge($defaults, $options);
 		$filename = $this->unixFileName($filename);
@@ -1537,20 +1484,10 @@ class WireFileTools extends Wire {
 	 * @throws WireException if file doesn’t exist or is not allowed
 	 *
 	 */
-	public function ___include($filename, array $vars = array(), array $options = array()) {
+	public function ___include($filename, array $vars = [], array $options = []) {
 
 		$paths = $this->wire()->config->paths;
-		$defaults = array(
-			'func' => 'include',
-			'autoExtension' => 'php',
-			'allowedPaths' => array(
-				$paths->templates,
-				$paths->adminTemplates,
-				$paths->modules,
-				$paths->siteModules,
-				$paths->cache
-			)
-		);
+		$defaults = ['func' => 'include', 'autoExtension' => 'php', 'allowedPaths' => [$paths->templates, $paths->adminTemplates, $paths->modules, $paths->siteModules, $paths->cache]];
 
 		// need to use different name than $options
 		$options = array_merge($defaults, $options);
@@ -1635,7 +1572,7 @@ class WireFileTools extends Wire {
 	 * @since 3.0.96
 	 * 
 	 */
-	public function includeOnce($filename, array $vars = array(), array $options = array()) {
+	public function includeOnce($filename, array $vars = [], array $options = []) {
 		$options['func'] = 'include_once';
 		return $this->include($filename, $vars, $options);
 	}	
@@ -1704,7 +1641,7 @@ class WireFileTools extends Wire {
 		$namespacePos = strpos($data, 'namespace'); // get fresh position
 		if($namespacePos === false) return $namespace; // was likely in a comment
 		$test = substr($data, 0, $namespacePos-1);
-		$test = trim(str_replace(array('<' . '?php', '<' . '?', "\n", "\r", "\t", " "), "", $test));
+		$test = trim(str_replace(['<' . '?php', '<' . '?', "\n", "\r", "\t", " "], "", $test));
 		if(!strlen($test)) {
 			// namespace declaration is the first thing in the file (other than php tag and whitespace)
 			$namespacePos += 10; // skip over "namespace" word
@@ -1785,8 +1722,8 @@ class WireFileTools extends Wire {
 	 * @throws WireException if given invalid $file or other fatal error
 	 * 
 	 */
-	public function compile($file, array $options = array()) {
-		static $compiled = array();
+	public function compile($file, array $options = []) {
+		static $compiled = [];
 		if(strpos($file, '/modules/')) {
 			// for multi-instance support, use the same compiled version
 			// otherwise, require_once() statements in a file may not work as intended
@@ -1817,7 +1754,7 @@ class WireFileTools extends Wire {
 	 * @throws WireException if given invalid $file or other fatal error
 	 * 
 	 */
-	public function compileInclude($file, array $options = array()) {
+	public function compileInclude($file, array $options = []) {
 		$file = $this->compile($file, $options);	
 		TemplateFile::pushRenderStack($file);
 		include($file);	
@@ -1838,7 +1775,7 @@ class WireFileTools extends Wire {
 	 * @throws WireException if given invalid $file or other fatal error
 	 *
 	 */
-	public function compileIncludeOnce($file, array $options = array()) {
+	public function compileIncludeOnce($file, array $options = []) {
 		$file = $this->compile($file, $options);
 		TemplateFile::pushRenderStack($file);
 		include_once($file);
@@ -1859,7 +1796,7 @@ class WireFileTools extends Wire {
 	 * @throws WireException if given invalid $file or other fatal error
 	 * 
 	 */
-	public function compileRequire($file, array $options = array()) {
+	public function compileRequire($file, array $options = []) {
 		$file = $this->compile($file, $options);
 		TemplateFile::pushRenderStack($file); 
 		require($file);
@@ -1880,7 +1817,7 @@ class WireFileTools extends Wire {
 	 * @throws WireException if given invalid $file or other fatal error
 	 *
 	 */
-	public function compileRequireOnce($file, array $options = array()) {
+	public function compileRequireOnce($file, array $options = []) {
 		TemplateFile::pushRenderStack($file); 
 		$file = $this->compile($file, $options);
 		require_once($file);
@@ -1971,7 +1908,7 @@ class WireFileTools extends Wire {
 	public function filesError($method, $msg, $throw = false, $e = null) {
 		if(is_array($throw)) $throw = isset($throw['throw']) ? $throw['throw'] : false;
 		$msg = "$method: $msg";
-		$this->log($msg, array('name' => 'files-errors'));
+		$this->log($msg, ['name' => 'files-errors']);
 		if($throw) {
 			if($e) throw new WireFilesException($msg, $e->getCode(), $e);
 			throw new WireFilesException($msg);
@@ -2007,7 +1944,7 @@ class WireFileTools extends Wire {
 	 * @return WireLog
 	 *
 	 */
-	public function ___log($str = '', array $options = array()) {
+	public function ___log($str = '', array $options = []) {
 		if(empty($options['name'])) $options['name'] = 'files';
 		return parent::___log($str, $options);
 	}

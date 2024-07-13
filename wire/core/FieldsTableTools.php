@@ -28,16 +28,12 @@ class FieldsTableTools extends Wire {
 	 *  if the `verbose` option is true, returned value also adds a `rows` index (array) containing contents of entire matching DB rows.
 	 *
 	 */
-	public function findDuplicateRows(Field $field, array $options = array()) {
+	public function findDuplicateRows(Field $field, array $options = []) {
 
-		$defaults = array(
-			'column' => 'data',
-			'value' => false,
-			'verbose' => false,
-		);
+		$defaults = ['column' => 'data', 'value' => false, 'verbose' => false];
 
 		$options = array_merge($defaults, $options);
-		$result = array();
+		$result = [];
 
 		$database = $this->wire()->database;
 		$table = $database->escapeTable($field->getTable());
@@ -62,14 +58,14 @@ class FieldsTableTools extends Wire {
 		$query->execute();
 
 		while($row = $query->fetch(\PDO::FETCH_NUM)) {
-			$result[] = array('value' => $row[0], 'count' => (int) $row[1]);
+			$result[] = ['value' => $row[0], 'count' => (int) $row[1]];
 		}
 
 		$query->closeCursor();
 
 		if($options['verbose']) {
 			foreach($result as $key => $item) {
-				$result[$key]['rows'] = array();
+				$result[$key]['rows'] = [];
 				$sql = "SELECT * FROM $table WHERE $col=:val";
 				$query = $database->prepare($sql);
 				$query->bindValue(':val', $item['value']);
@@ -248,9 +244,9 @@ class FieldsTableTools extends Wire {
 			if($result === false && $verbose) {
 				$pageEditUrl = $this->wire()->config->urls->admin . 'page/edit/?id=';
 				$msg = $this->_('Unique index cannot be added yet because there are already non-unique row(s) present:') . ' ';
-				$rows = $this->findDuplicateRows($field, array('verbose' => true, 'column' => $col));
+				$rows = $this->findDuplicateRows($field, ['verbose' => true, 'column' => $col]);
 				foreach($rows as $row) {
-					$ids = array();
+					$ids = [];
 					foreach($row['rows'] as $a) {
 						$ids[] = '[' . $a['pages_id'] . '](' . $pageEditUrl . $a['pages_id'] . ')';
 					}
@@ -289,14 +285,9 @@ class FieldsTableTools extends Wire {
 		$table = $database->escapeTable($field->getTable());
 		$fieldtype = $field->type;
 		$schema = $fieldtype->getDatabaseSchema($field);
-		$wheres = array();
+		$wheres = [];
 		
-		$types = array(
-			'INT', 'TINYINT', 'SMALLINT', 'MEDIUMINT', 'BIGINT',
-			'TEXT', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT',
-			'DATE', 'TIME', 'DATETIME', 'TIMESTAMP',
-			'CHAR', 'VARCHAR', 
-		);
+		$types = ['INT', 'TINYINT', 'SMALLINT', 'MEDIUMINT', 'BIGINT', 'TEXT', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'DATE', 'TIME', 'DATETIME', 'TIMESTAMP', 'CHAR', 'VARCHAR'];
 		
 		unset($schema['keys'], $schema['pages_id'], $schema['xtra']);
 

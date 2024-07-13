@@ -152,7 +152,7 @@ class Role extends Page {
 		
 		$type = str_replace('page-', '', $permission->name);
 		
-		if(!in_array($type, array('view', 'edit', 'add', 'create'))) $type = 'edit';
+		if(!in_array($type, ['view', 'edit', 'add', 'create'])) $type = 'edit';
 		
 		$accessTemplate = $context instanceof Page ? $context->getAccessTemplate($type) : $context;
 		if(!$accessTemplate) return false;

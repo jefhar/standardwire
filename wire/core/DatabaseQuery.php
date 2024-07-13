@@ -34,7 +34,7 @@ abstract class DatabaseQuery extends WireData {
 	 * @var array
 	 * 
 	 */
-	protected $bindValues = array();
+	protected $bindValues = [];
 
 	/**
 	 * Bound parameter types of name => \PDO::PARAM_* type constant
@@ -44,13 +44,13 @@ abstract class DatabaseQuery extends WireData {
 	 * @var array
 	 * 
 	 */
-	protected $bindTypes = array();
+	protected $bindTypes = [];
 	
 	/**
 	 * @var array
 	 *
 	 */
-	protected $bindKeys = array();
+	protected $bindKeys = [];
 
 	/**
 	 * Method names for building DB queries
@@ -58,7 +58,7 @@ abstract class DatabaseQuery extends WireData {
 	 * @var array
 	 * 
 	 */
-	protected $queryMethods = array();
+	protected $queryMethods = [];
 
 	/**
 	 * @var int
@@ -76,11 +76,13 @@ abstract class DatabaseQuery extends WireData {
 	 * @var array
 	 * 
 	 */
-	protected $bindOptions = array(
-		'prefix' => 'pw', // prefix for auto-generated global keys
-		'suffix' => 'X', // 1-character suffix for auto-generated keys
-		'global' => false // globally unique among all bind keys in all instances?
-	);
+	protected $bindOptions = [
+     'prefix' => 'pw',
+     // prefix for auto-generated global keys
+     'suffix' => 'X',
+     // 1-character suffix for auto-generated keys
+     'global' => false,
+ ];
 	
 	/**
 	 * @var int
@@ -112,8 +114,8 @@ abstract class DatabaseQuery extends WireData {
 	 * 
 	 */
 	protected function addQueryMethod($name, $prepend = '', $split = '', $append = '') {
-		$this->queryMethods[$name] = array($prepend, $split, $append);
-		$this->set($name, array());
+		$this->queryMethods[$name] = [$prepend, $split, $append];
+		$this->set($name, []);
 	}
 	
 	/**
@@ -162,7 +164,7 @@ abstract class DatabaseQuery extends WireData {
 	 * 
 	 */
 	public function bindValueGetKey($value, $type = null) {
-		$key = $this->getUniqueBindKey(array('value' => $value)); 
+		$key = $this->getUniqueBindKey(['value' => $value]); 
 		$this->bindValue($key, $value, $type);
 		return $key;
 	}
@@ -248,7 +250,7 @@ abstract class DatabaseQuery extends WireData {
 	 * @since 3.0.156
 	 * 
 	 */
-	public function getUniqueBindKey(array $options = array()) {
+	public function getUniqueBindKey(array $options = []) {
 		
 		if(empty($options['key'])) {
 			// auto-generate key
@@ -320,13 +322,9 @@ abstract class DatabaseQuery extends WireData {
 	 *  - if `count` option specified as true then it returns a count of values instead. 
 	 * 
 	 */
-	public function getBindValues($options = array()) {
+	public function getBindValues($options = []) {
 		
-		$defaults = array(
-			'query' => is_object($options) ? $options : null, 
-			'count' => false,
-			'inSQL' => '', 
-		);
+		$defaults = ['query' => is_object($options) ? $options : null, 'count' => false, 'inSQL' => ''];
 		
 		$options = is_array($options) ? array_merge($defaults, $options) : $defaults;
 		$query = $options['query'];
@@ -370,7 +368,7 @@ abstract class DatabaseQuery extends WireData {
 	 * @since 3.0.157
 	 * 
 	 */
-	public function copyBindValuesTo($query, array $options = array()) {
+	public function copyBindValuesTo($query, array $options = []) {
 		$options['query'] = $query;
 		if(!isset($options['count'])) $options['count'] = true;
 		return $this->getBindValues($options);
@@ -387,7 +385,7 @@ abstract class DatabaseQuery extends WireData {
 	 * @since 3.0.157
 	 * 
 	 */
-	public function copyTo(DatabaseQuery $query, array $methods = array()) {
+	public function copyTo(DatabaseQuery $query, array $methods = []) {
 		
 		$numCopied = 0;
 		if($query === $this) return 0;
@@ -441,7 +439,7 @@ abstract class DatabaseQuery extends WireData {
 		if(!isset($this->queryMethods[$method])) return parent::__call($method, $args);
 		if(!count($args)) return $this;
 		$curValue = $this->get($method);
-		if(!is_array($curValue)) $curValue = array();
+		if(!is_array($curValue)) $curValue = [];
 		$value = $args[0];
 		
 		if($value instanceof DatabaseQuery) {
@@ -455,7 +453,7 @@ abstract class DatabaseQuery extends WireData {
 		} else if(is_string($value)) {
 			// value is SQL string, number or array
 			$params = isset($args[1]) ? $args[1] : null;
-			if($params !== null && !is_array($params)) $params = array($params);
+			if($params !== null && !is_array($params)) $params = [$params];
 			if(is_array($params) && count($params)) $value = $this->methodBindValues($value, $params);
 			
 		} else if(!empty($args[1])) {
@@ -508,7 +506,7 @@ abstract class DatabaseQuery extends WireData {
 					throw new WireException("No place for given param $name in: $_sql"); 
 				}
 				do {
-					$name = $this->getUniqueBindKey(array('value' => $value));
+					$name = $this->getUniqueBindKey(['value' => $value]);
 				} while(strpos($sql, $name) !== false); // highly unlikely, but just in case
 				list($a, $b) = explode('?', $sql, 2);
 				$sql = $a . $name . $b;
@@ -539,7 +537,7 @@ abstract class DatabaseQuery extends WireData {
 	 * 
 	 */
 	public function __set($key, $value) {
-		if(is_array($this->$key)) $this->__call($key, array($value)); 
+		if(is_array($this->$key)) $this->__call($key, [$value]); 
 	}
 
 	/**
@@ -601,7 +599,7 @@ abstract class DatabaseQuery extends WireData {
 		foreach($this->bindValues as $bindKey => $bindValue) {
 			if(is_string($bindValue)) $bindValue = $database->quote($bindValue);
 			if($bindKey[strlen($bindKey)-1] === $suffix) {
-				$sql = strtr($sql, array($bindKey => $bindValue));
+				$sql = strtr($sql, [$bindKey => $bindValue]);
 			} else {
 				$sql = preg_replace('/' . $bindKey . '\b/', $bindValue, $sql);
 			}
@@ -709,13 +707,9 @@ abstract class DatabaseQuery extends WireData {
 	 * @throws WireDatabaseQueryException|\PDOException
 	 *
 	 */
-	public function execute(array $options = array()) {
+	public function execute(array $options = []) {
 		
-		$defaults = array(
-			'throw' => true, 
-			'maxTries' => 3, 
-			'returnQuery' => true,
-		);
+		$defaults = ['throw' => true, 'maxTries' => 3, 'returnQuery' => true];
 	
 		$options = array_merge($defaults, $options);
 		$numTries = 0;

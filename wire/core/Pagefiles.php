@@ -75,7 +75,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @var array
 	 *
 	 */
-	protected $unlinkQueue = array();
+	protected $unlinkQueue = [];
 	
 	/**
 	 * Items to be renamed when Page is saved (oldName => newName)
@@ -83,7 +83,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @var array
 	 *
 	 */
-	protected $renameQueue = array();
+	protected $renameQueue = [];
 
 	/**
 	 * Items to be made non-temp upon page save (like duplicated files)
@@ -91,7 +91,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @var array
 	 *
 	 */
-	protected $unTempQueue = array();
+	protected $unTempQueue = [];
 
 	/**
 	 * IDs of any hooks added in this instance, used by the destructor
@@ -99,7 +99,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @var array
 	 *
 	 */
-	protected $hookIDs = array();
+	protected $hookIDs = [];
 
 	/**
 	 * Whether or not this is a formatted value
@@ -309,7 +309,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * 
 	 */
 	public function __get($name) {
-		if(in_array($name, array('page', 'field', 'url', 'path'))) return $this->get($name); 
+		if(in_array($name, ['page', 'field', 'url', 'path'])) return $this->get($name); 
 		return parent::__get($name); 
 	}
 
@@ -395,9 +395,9 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 			$item->rename($name); 
 		}
 
-		$this->unTempQueue = array();
-		$this->unlinkQueue = array();
-		$this->renameQueue = array();
+		$this->unTempQueue = [];
+		$this->unlinkQueue = [];
+		$this->renameQueue = [];
 		$this->removeHooks();
 		
 		return $this; 
@@ -501,12 +501,9 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Pagefile|bool Returns new Pagefile or boolean false on fail
 	 * 
 	 */
-	public function ___clone(Pagefile $item, array $options = array()) {
+	public function ___clone(Pagefile $item, array $options = []) {
 		
-		$defaults = array(
-			'action' => 'after', 
-			'pagefiles' => $this, 
-		);
+		$defaults = ['action' => 'after', 'pagefiles' => $this];
 	
 		$options = array_merge($defaults, $options);
 		/** @var Pagefiles $pagefiles */
@@ -586,7 +583,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 		$ext = $dot ? substr($basename, $dot) : '';
 		$basename = basename($basename, $ext);
 		while(strpos($basename, '..') !== false) $basename = str_replace('..', '', $basename);
-		$test = str_replace(array('-', '_', '.'), '', $basename);
+		$test = str_replace(['-', '_', '.'], '', $basename);
 		
 		if(!ctype_alnum($test)) {
 			if($translate) {
@@ -712,7 +709,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 		
 		if(is_bool($value)) {
 			// return array of tags
-			$tags = array();
+			$tags = [];
 			foreach($this as $pagefile) {
 				/** @var Pagefile $pagefile */
 				$tags = array_merge($tags, $pagefile->tags($value));
@@ -792,8 +789,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 		$pageID = $this->page ? $this->page->id : 0;
 		$fieldID = $this->field ? $this->field->id : 0;
 		$sessionKey = "tempFiles_{$pageID}_{$fieldID}";
-		$tempFiles = $pageID && $fieldID ? $session->get($this, $sessionKey) : array();
-		if(!is_array($tempFiles)) $tempFiles = array();
+		$tempFiles = $pageID && $fieldID ? $session->get($this, $sessionKey) : [];
+		if(!is_array($tempFiles)) $tempFiles = [];
 		
 		if($isTemp && $checkDeletable) {
 			$isTemp = false; 
@@ -864,7 +861,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * 
 	 */
 	public function deleteAllTemp() {
-		$removed = array();
+		$removed = [];
 		foreach($this as $pagefile) {
 			/** @var Pagefile $pagefile */
 			if(!$this->isTemp($pagefile, 'deletable')) continue; 
@@ -872,7 +869,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 			$this->remove($pagefile); 
 		}
 		if(count($removed) && $this->page && $this->field) {
-			$this->page->save($this->field->name, array('quiet' => true)); 
+			$this->page->save($this->field->name, ['quiet' => true]); 
 			$this->message(
 				"Removed '{$this->field->name}' temp file(s) for page {$this->page->path} - " . 
 				implode(', ', $removed), 
@@ -920,7 +917,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * 
 	 */
 	public function resetTrackChanges($trackChanges = true) {
-		$this->unlinkQueue = array();
+		$this->unlinkQueue = [];
 		if($this->page && $this->page->id && $this->field) {
 			$this->page->untrackChange($this->field->name);	
 		}
@@ -997,14 +994,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 */
 	public function __debugInfo() {
 		
-		$info = array(
-			'count' => $this->count(), 
-			'page' => $this->page ? $this->page->path() : '?',
-			'field' => $this->field ? $this->field->name : '?', 
-			'url' => $this->url(),
-			'path' => $this->path(), 
-			'items' => array(),
-		);
+		$info = ['count' => $this->count(), 'page' => $this->page ? $this->page->path() : '?', 'field' => $this->field ? $this->field->name : '?', 'url' => $this->url(), 'path' => $this->path(), 'items' => []];
 		
 		foreach($this as $key => $pagefile) {
 			/** @var Pagefile $pagefile */

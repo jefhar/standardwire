@@ -17,7 +17,7 @@ class DatabaseMysqli {
 
 	protected $config = null;	
 	protected $db = null;
-	protected $callers = array();
+	protected $callers = [];
 	
 	public function __construct(Config $config) {
 		$this->config = $config;
@@ -35,7 +35,7 @@ class DatabaseMysqli {
 	
 	public function __call($method, $arguments) {
 		$db = $this->db($method, 'method');
-		return call_user_func_array(array($db, $method), $arguments);
+		return call_user_func_array([$db, $method], $arguments);
 	}
 	
 	public function isInstantiated() {

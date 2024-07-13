@@ -45,21 +45,13 @@ class PagesPathFinder extends Wire {
 	 * - verbose: Return more verbose array that includes details on each path segment?
 	 * 
 	 */
-	protected $defaults = array(
-		'useLanguages' => true,
-		'usePagePaths' => true,
-		'useGlobalUnique' => true,
-		'useExcludeRoot' => false,
-		'useHistory' => true,
-		'verbose' => true,
-		'test' => false,
-	);
+	protected $defaults = ['useLanguages' => true, 'usePagePaths' => true, 'useGlobalUnique' => true, 'useExcludeRoot' => false, 'useHistory' => true, 'verbose' => true, 'test' => false];
 
 	/**
 	 * @var array
 	 * 
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * @var bool
@@ -71,13 +63,13 @@ class PagesPathFinder extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $methods = array();
+	protected $methods = [];
 
 	/**
 	 * @var array
 	 * 
 	 */
-	protected $result = array();
+	protected $result = [];
 
 	/**
 	 * @var Template|null
@@ -103,12 +95,15 @@ class PagesPathFinder extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $partTypes = array(
-		'pageName', // references a page name directly
-		'urlSegment', // part of urlSegmentStr after page path
-		'pageNum', // pagination number segment
-		'language', // language segment prefix
-	);
+	protected $partTypes = [
+     'pageName',
+     // references a page name directly
+     'urlSegment',
+     // part of urlSegmentStr after page path
+     'pageNum',
+     // pagination number segment
+     'language',
+ ];
 
 	/**
 	 * Construct
@@ -132,9 +127,9 @@ class PagesPathFinder extends Wire {
 		
 		$this->options = array_merge($this->defaults, $options);
 		$this->verbose = $this->options['verbose'];
-		$this->methods = array();
-		$this->useLanguages = $this->options['useLanguages'] ? $this->languages(true) : array();
-		$this->result = $this->getBlankResult(array('request' => $path));
+		$this->methods = [];
+		$this->useLanguages = $this->options['useLanguages'] ? $this->languages(true) : [];
+		$this->result = $this->getBlankResult(['request' => $path]);
 		$this->template = null;
 		$this->admin = null;
 		
@@ -226,7 +221,7 @@ class PagesPathFinder extends Wire {
 	 * @see PagesPathFinder::getPage()
 	 *
 	 */
-	public function get($path, array $options = array()) {
+	public function get($path, array $options = []) {
 		
 		$this->init($path, $options);
 		
@@ -266,16 +261,13 @@ class PagesPathFinder extends Wire {
 	 * @see PagesPathFinder::get()
 	 * 
 	 */
-	public function getPage($path, array $options = array()) {
+	public function getPage($path, array $options = []) {
 		if(!isset($options['verbose'])) $options['verbose'] = false;
 		$result = $this->get($path, $options);
 		if($result['response'] >= 400) {
 			$page = $this->pages->newNullPage();
 		} else {
-			$page = $this->pages->getOneById($result['page']['id'], array(
-				'template' => $this->getResultTemplate(),
-				'parent_id' => $result['page']['parent_id'],
-			));
+			$page = $this->pages->getOneById($result['page']['id'], ['template' => $this->getResultTemplate(), 'parent_id' => $result['page']['parent_id']]);
 		}
 		$page->setQuietly('_pagePathFinder', $result);
 		return $page;
@@ -293,10 +285,10 @@ class PagesPathFinder extends Wire {
 	
 		$database = $this->wire()->database;
 		
-		$selects = array();
-		$binds = array();
-		$joins = array();
-		$wheres = array();
+		$selects = [];
+		$binds = [];
+		$joins = [];
+		$wheres = [];
 
 		$lastTable = 'pages';
 		
@@ -316,7 +308,7 @@ class PagesPathFinder extends Wire {
 			$bindKey = "{$key}_name";
 			$binds[$bindKey] = $name;
 
-			$whereNames = array("$table.name=:$bindKey");
+			$whereNames = ["$table.name=:$bindKey"];
 
 			foreach($this->useLanguages as $lang) {
 				/** @var Language $lang */
@@ -385,8 +377,8 @@ class PagesPathFinder extends Wire {
 		$result = &$this->result;
 		
 		// array of [language name] => [ 'a', 'b', 'c' ] (from /a/b/c/)
-		$namesByLanguage = array('default' => array());
-		$statusByLanguage = array();
+		$namesByLanguage = ['default' => []];
+		$statusByLanguage = [];
 		
 		// determine which parts matched and which didn’t
 		foreach($parts as $n => $name) {
@@ -399,11 +391,7 @@ class PagesPathFinder extends Wire {
 				if(strlen($name) > $maxUrlSegmentLength) $name = substr($name, 0, $maxUrlSegmentLength);
 				$result['urlSegments'][] = $name;
 				if($this->verbose) {
-					$result['parts'][] = array(
-						'type' => 'urlSegment',
-						'value' => $name,
-						'language' => ''
-					);
+					$result['parts'][] = ['type' => 'urlSegment', 'value' => $name, 'language' => ''];
 				}
 				continue;
 			}
@@ -413,20 +401,10 @@ class PagesPathFinder extends Wire {
 			$namesByLanguage['default'][] = $nameDefault;
 
 			// this is intentionally re-populated on each iteration 
-			$result['page'] = array(
-				'id' => $id,
-				'parent_id' => (int) $row["{$key}_parent_id"],
-				'templates_id' => (int) $row["{$key}_templates_id"],
-				'status' => (int) $row["{$key}_status"],
-				'name' => $nameDefault, 
-			);
+			$result['page'] = ['id' => $id, 'parent_id' => (int) $row["{$key}_parent_id"], 'templates_id' => (int) $row["{$key}_templates_id"], 'status' => (int) $row["{$key}_status"], 'name' => $nameDefault];
 
 			if($this->verbose && $nameDefault === $name) {
-				$result['parts'][] = array(
-					'type' => 'pageName',
-					'value' => $name,
-					'language' => 'default'
-				);
+				$result['parts'][] = ['type' => 'pageName', 'value' => $name, 'language' => 'default'];
 			}
 
 			foreach($this->useLanguages as $language) {
@@ -437,17 +415,13 @@ class PagesPathFinder extends Wire {
 				$statusByLanguage[$language->name] = $statusLanguage;
 				if($nameLanguage != $nameDefault && $nameLanguage === $name) {
 					if($this->verbose) {
-						$result['parts'][] = array(
-							'type' => 'pageName',
-							'value' => $nameLanguage,
-							'language' => $language->name
-						);
+						$result['parts'][] = ['type' => 'pageName', 'value' => $nameLanguage, 'language' => $language->name];
 					}
 					// if there is a part in a non-default language, identify that as the
 					// intended language for the entire path
 					if(empty($result['language']['name'])) $this->setResultLanguage($language);
 				}
-				if(!isset($namesByLanguage[$language->name])) $namesByLanguage[$language->name] = array();
+				if(!isset($namesByLanguage[$language->name])) $namesByLanguage[$language->name] = [];
 				$namesByLanguage[$language->name][] = strlen("$nameLanguage") ? $nameLanguage : $nameDefault;
 			}
 		}
@@ -492,7 +466,7 @@ class PagesPathFinder extends Wire {
 		$maxUrlSegmentLength = $config->maxUrlSegmentLength;
 		$maxPartLength = $maxUrlSegmentLength > 128 ? $maxUrlSegmentLength : 128;
 		$maxPathLength = ($maxPartLength * $maxUrlSegmentLength) + $maxDepth;
-		$badNames = array();
+		$badNames = [];
 		$path = trim($path, '/');
 		$lastPart = '';
 		
@@ -509,7 +483,7 @@ class PagesPathFinder extends Wire {
 			$result['response'] = 414;
 			$this->addResultError('pathDepthMAX', 'Path depth exceeds config.maxUrlDepth');
 		} else if($path === '/' || $path === '' || !count($parts)) {
-			return array();
+			return [];
 		}
 		
 		foreach($parts as $n => $name) {
@@ -573,16 +547,12 @@ class PagesPathFinder extends Wire {
 		$this->setResultLanguage($language, $segment);
 		
 		if($this->verbose) {
-			$this->result['parts'][] = array(
-				'type' => 'language',
-				'value' => $segment,
-				'language' => $language->name
-			);
+			$this->result['parts'][] = ['type' => 'language', 'value' => $segment, 'language' => $language->name];
 		}
 
 		// reduce to just applicable language to limit name columns
 		// searched for by getPagesRow() method
-		$this->useLanguages = array($language);
+		$this->useLanguages = [$language];
 		
 		return $language;
 	}
@@ -597,36 +567,32 @@ class PagesPathFinder extends Wire {
 	 * @return array
 	 *
 	 */
-	protected function getBlankResult(array $result = array()) {
+	protected function getBlankResult(array $result = []) {
 
-		$blankResult = array(
-			'request' => '',
-			'response' => 0,
-			'type' => '',
-			'redirect' => '',
-			'errors' => array(),
-			'page' => array(
-				'id' => 0,
-				'parent_id' => 0,
-				'templates_id' => 0,
-				'status' => 0,
-				'path' => '',
-			),
-			'language' => array(
-				'name' => '', // intentionally blank
-				'segment' => '',
-				'status' => -1, // -1=not yet set
-			),
-			'parts' => array(),
-			'urlSegments' => array(),
-			'urlSegmentStr' => '',
-			'pageNum' => 1,
-			'pageNumPrefix' => '',
-			'pathAdd' => '', // valid URL segments, page numbers, trailing slash, etc.
-			'scheme' => '',
-			'methods' => array(),
-			'notes' => array(),
-		);
+		$blankResult = [
+      'request' => '',
+      'response' => 0,
+      'type' => '',
+      'redirect' => '',
+      'errors' => [],
+      'page' => ['id' => 0, 'parent_id' => 0, 'templates_id' => 0, 'status' => 0, 'path' => ''],
+      'language' => [
+          'name' => '',
+          // intentionally blank
+          'segment' => '',
+          'status' => -1,
+      ],
+      'parts' => [],
+      'urlSegments' => [],
+      'urlSegmentStr' => '',
+      'pageNum' => 1,
+      'pageNumPrefix' => '',
+      'pathAdd' => '',
+      // valid URL segments, page numbers, trailing slash, etc.
+      'scheme' => '',
+      'methods' => [],
+      'notes' => [],
+  ];
 
 		if(empty($result)) return $blankResult;
 
@@ -751,12 +717,7 @@ class PagesPathFinder extends Wire {
 		$config = $this->wire()->config;
 		$home = $this->getHomepage();
 		$this->template = $home->template;
-		$this->result['page'] = array_merge($this->result['page'], array(
-			'id' => $config->rootPageID,
-			'templates_id' => $this->template->id,
-			'parent_id' => 0,
-			'status' => $home->status
-		));
+		$this->result['page'] = array_merge($this->result['page'], ['id' => $config->rootPageID, 'templates_id' => $this->template->id, 'parent_id' => 0, 'status' => $home->status]);
 		$this->addMethod('resultHome', true);
 	}
 
@@ -853,11 +814,7 @@ class PagesPathFinder extends Wire {
 			array_pop($parts);
 			if($this->verbose) {
 				array_pop($result['parts']);
-				$result['parts'][] = array(
-					'type' => 'pageNum',
-					'value' => $segment,
-					'language' => (is_string($languageName) ? $languageName : 'default'),
-				);
+				$result['parts'][] = ['type' => 'pageNum', 'value' => $segment, 'language' => (is_string($languageName) ? $languageName : 'default')];
 			}
 			break;
 		}
@@ -939,20 +896,14 @@ class PagesPathFinder extends Wire {
 		if(empty($errors)) {
 			// force errors placeholder to end if there aren’t any
 			unset($result['errors']);
-			$result['errors'] = array();
+			$result['errors'] = [];
 		}
 		
 		if($this->options['test']) {
 			// add 'test' to the result that should match regardless of options (except useLanguages option)
 			$redirect = ($result['response'] >= 300 && $result['response'] < 400 ? $result['redirect'] : '');
 			$pageNumStr = ($result['pageNum'] > 1 ? "/$result[pageNumPrefix]$result[pageNum]" : '');
-			$result['test'] = array(
-				'response=' . $result['response'],
-				'page=' . $result['page']['id'], 
-				'redirect=' . $redirect,
-				'language=' . $result['language']['name'] . '[' . $result['language']['status'] . ']',
-				'uss=' . $result['urlSegmentStr'] . $pageNumStr,
-			);
+			$result['test'] = ['response=' . $result['response'], 'page=' . $result['page']['id'], 'redirect=' . $redirect, 'language=' . $result['language']['name'] . '[' . $result['language']['status'] . ']', 'uss=' . $result['urlSegmentStr'] . $pageNumStr];
 			$result['test'] = implode(', ', $result['test']); 
 		}
 		
@@ -1138,11 +1089,7 @@ class PagesPathFinder extends Wire {
 
 		if($language && $language->id) {
 			$status = $language->isDefault() ? $info['status'] : $info["status$language->id"];
-			$result['language'] = array_merge($result['language'], array(
-				'name' => $language->name,
-				'status' => ($language->status < Page::statusUnpublished ? $status : 0),
-				'segment' => $this->languageSegment($language)
-			));
+			$result['language'] = array_merge($result['language'], ['name' => $language->name, 'status' => ($language->status < Page::statusUnpublished ? $status : 0), 'segment' => $this->languageSegment($language)]);
 		}
 		
 		$this->addMethod('pagePaths', true);
@@ -1169,7 +1116,7 @@ class PagesPathFinder extends Wire {
 		if(strpos($path, '/') !== false) return false;
 
 		$name = $this->pageNameToAscii($path);
-		$columns = array('id', 'parent_id', 'templates_id', 'status');
+		$columns = ['id', 'parent_id', 'templates_id', 'status'];
 		$cols = implode(',', $columns);
 
 		$sql = "SELECT $cols FROM pages WHERE name=:name AND (parent_id=1 OR (status & $unique))";
@@ -1199,10 +1146,7 @@ class PagesPathFinder extends Wire {
 			$path = "/$path" . ($slash ? '/' : '');
 		} else {
 			// global unique, must redirect to its actual path
-			$page = $this->pages->getOneById((int) $row['id'], array(
-				'template' => (int) $row['templates_id'],
-				'autojoin' => false,
-			));
+			$page = $this->pages->getOneById((int) $row['id'], ['template' => (int) $row['templates_id'], 'autojoin' => false]);
 			if(!$page->id) return false; // not likely
 			$path = $page->path();
 		}
@@ -1225,7 +1169,7 @@ class PagesPathFinder extends Wire {
 	 */
 	protected function getShortcutPageNum(&$path) {
 
-		if(!ctype_digit(substr($path, -1))) return array(1, '');
+		if(!ctype_digit(substr($path, -1))) return [1, ''];
 
 		$pos = strrpos($path, '/');
 		$lastPart = $pos ? substr($path, $pos+1) : $path;
@@ -1245,7 +1189,7 @@ class PagesPathFinder extends Wire {
 			if($pageNum < 2) $pageNum = 1;
 		}
 
-		return array($pageNum, $pageNumPrefix);
+		return [$pageNum, $pageNumPrefix];
 	}
 
 	/**
@@ -1263,7 +1207,7 @@ class PagesPathFinder extends Wire {
 		if(!$module) return false;
 
 		$result = &$this->result;
-		$info = $module->getPathInfo($path, array('allowUrlSegments' => true));
+		$info = $module->getPathInfo($path, ['allowUrlSegments' => true]);
 
 		// if no history found return false
 		if(!$info['id']) {
@@ -1272,11 +1216,7 @@ class PagesPathFinder extends Wire {
 		}
 
 		// get page found in history
-		$page = $this->pages->getOneById((int) $info['id'], array(
-			'template' => (int) $info['templates_id'],
-			'parent_id' => $info['parent_id'],
-			'autojoin' => false,
-		));
+		$page = $this->pages->getOneById((int) $info['id'], ['template' => (int) $info['templates_id'], 'parent_id' => $info['parent_id'], 'autojoin' => false]);
 
 		if(!$page->id) {
 			$this->addMethod('pathHistory', false, 'Found row but could not match to page');
@@ -1285,7 +1225,7 @@ class PagesPathFinder extends Wire {
 
 		$path = $page->path;
 		$languageName = $this->languageName($info['language_id']);
-		$keys = array('id', 'language_id', 'templates_id', 'parent_id', 'status', 'name');
+		$keys = ['id', 'language_id', 'templates_id', 'parent_id', 'status', 'name'];
 
 		foreach($keys as $key) {
 			$result['page'][$key] = $info[$key];
@@ -1342,7 +1282,7 @@ class PagesPathFinder extends Wire {
 	protected function pageNumUrlPrefixes() {
 		$config = $this->wire()->config;
 		$a = $config->pageNumUrlPrefixes;
-		if(!is_array($a)) $a = array();
+		if(!is_array($a)) $a = [];
 		$default = $config->pageNumUrlPrefix;
 		if(empty($default)) $default = 'page';
 		if(empty($a['default'])) $a['default'] = $default;
@@ -1425,7 +1365,7 @@ class PagesPathFinder extends Wire {
 			if(!$template) return false; // may need to detect later
 			if(in_array($template->name, $config->adminTemplates, true)) {
 				$this->admin = true;
-			} else if(in_array($template->name, array('user', 'role', 'permission', 'language'))) {
+			} else if(in_array($template->name, ['user', 'role', 'permission', 'language'])) {
 				$this->admin = true;
 			} else {
 				$this->admin = false;
@@ -1588,7 +1528,7 @@ class PagesPathFinder extends Wire {
 	 * @var array
 	 *
 	 */
-	protected $languageSegments = array();
+	protected $languageSegments = [];
 
 	/**
 	 * Language names indexed by id
@@ -1596,7 +1536,7 @@ class PagesPathFinder extends Wire {
 	 * @var array
 	 *
 	 */
-	protected $languageNames = array();
+	protected $languageNames = [];
 
 	/**
 	 * Set result language by name or ID
@@ -1675,19 +1615,19 @@ class PagesPathFinder extends Wire {
 	 */
 	protected function languages($getArray = false) {
 		if(is_array($this->useLanguages) && !count($this->useLanguages)) {
-			return array();
+			return [];
 		}
 		$languages = $this->wire()->languages;
 		if(!$languages) {
-			$this->useLanguages = array();
-			return array();
+			$this->useLanguages = [];
+			return [];
 		}
 		if(!$languages->hasPageNames()) {
-			$this->useLanguages = array();
-			return array();
+			$this->useLanguages = [];
+			return [];
 		}
 		if($getArray) {
-			$a = array();
+			$a = [];
 			foreach($languages as $language) {
 				$a[$language->name] = $language;
 			}
@@ -1738,10 +1678,10 @@ class PagesPathFinder extends Wire {
 		// use cached value when available
 		if(count($this->languageSegments)) return $this->languageSegments;
 
-		$columns = array();
+		$columns = [];
 		$languages = $this->languages();
 		
-		if(!count($languages)) return array();
+		if(!count($languages)) return [];
 
 		foreach($languages as $language) {
 			$name = $language->isDefault() ? "name" : "name$language->id";

@@ -43,7 +43,7 @@ class TemplateFile extends WireData {
 	 * @var array
 	 *
 	 */
-	protected $prependFilename = array();
+	protected $prependFilename = [];
 
 	/**
 	 * Optional filenames that are appended to the render
@@ -51,7 +51,7 @@ class TemplateFile extends WireData {
 	 * @var array
 	 *
 	 */
-	protected $appendFilename = array(); 
+	protected $appendFilename = []; 
 
 	/**
 	 * The saved directory location before render() was called
@@ -132,13 +132,13 @@ class TemplateFile extends WireData {
 	 * @var array
 	 *
 	 */
-	static protected $renderStack = array();
+	static protected $renderStack = [];
 	
 	/**
 	 * DEPRECATED: Variables that will be applied globally to this and all other TemplateFile instances
 	 *
 	 */
-	static protected $globals = array();
+	static protected $globals = [];
 
 	/**
 	 * Output buffer starting level, set by first TemplateFile instance that gets created

@@ -50,7 +50,7 @@ class Fuel implements \IteratorAggregate {
 	 * @var array
 	 * 
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Array where name is item name, and value is bool as to whether it's locked or not
@@ -58,7 +58,7 @@ class Fuel implements \IteratorAggregate {
 	 * @var array
 	 * 
 	 */
-	protected $lock = array();
+	protected $lock = [];
 
 	/**
 	 * API vars that require specific interfaces
@@ -66,9 +66,7 @@ class Fuel implements \IteratorAggregate {
 	 * @var array
 	 * 
 	 */
-	protected $requiredInterfaces = array(
-		'profiler' => 'WireProfilerInterface'
-	);
+	protected $requiredInterfaces = ['profiler' => 'WireProfilerInterface'];
 
 	/**
 	 * The most common API variable names, those likely to be called multiple times in any request
@@ -76,11 +74,7 @@ class Fuel implements \IteratorAggregate {
 	 * @var array
 	 * 
 	 */
-	static protected $commonNames = array(
-		'page' => 1, 'pages' => 1, 'session' => 1, 'input' => 1, 'sanitizer' => 1, 
-		'config' => 1, 'user' => 1, 'users' => 1, 'fields' => 1, 'templates' => 1, 
-		'database' => 1, 'modules' => 1, 'hooks' => 1,
-	);
+	static protected $commonNames = ['page' => 1, 'pages' => 1, 'session' => 1, 'input' => 1, 'sanitizer' => 1, 'config' => 1, 'user' => 1, 'users' => 1, 'fields' => 1, 'templates' => 1, 'database' => 1, 'modules' => 1, 'hooks' => 1];
 	
 	/**
 	 * @param string $key API variable name to set - should be valid PHP variable name.

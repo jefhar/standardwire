@@ -19,12 +19,7 @@
 class ImageSizerEngineGD extends ImageSizerEngine {
 
 	public static function getModuleInfo() {
-		return array(
-			'title' => 'GD Image Sizer',
-			'version' => 1,
-			'summary' => "Uses PHP’s built-in GD library to resize images.",
-			'author' => 'Horst Nogajski',
-		);
+		return ['title' => 'GD Image Sizer', 'version' => 1, 'summary' => "Uses PHP’s built-in GD library to resize images.", 'author' => 'Horst Nogajski'];
 	}
 
 	/**
@@ -60,7 +55,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * 
 	 */
 	protected function validSourceImageFormats() {
-		return array('JPG', 'JPEG', 'PNG', 'GIF');
+		return ['JPG', 'JPEG', 'PNG', 'GIF'];
 	}
 
 	/**
@@ -170,7 +165,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 		(!empty($orientations[0]) || !empty($orientations[1])) ? true : false);
 
 		// check if we can load the sourceimage into ram
-		if(self::checkMemoryForImage(array($this->info['width'], $this->info['height'], $this->info['channels'])) === false) {
+		if(self::checkMemoryForImage([$this->info['width'], $this->info['height'], $this->info['channels']]) === false) {
 			throw new WireException(basename($srcFilename) . " - not enough memory to load");
 		}
 
@@ -199,7 +194,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 			$isModified = true; 
 			if(abs($degrees) == 90 || abs($degrees) == 270) {
 				// we have to swap width & height now!
-				$tmp = array($this->getWidth(), $this->getHeight());
+				$tmp = [$this->getWidth(), $this->getHeight()];
 				$this->setImageInfo($tmp[1], $tmp[0]);
 			}
 		}
@@ -227,7 +222,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 		// if there is requested to crop _before_ resize, we do it here @horst
 		if(is_array($this->cropExtra)) {
 			// check if we can load a second copy from sourceimage into ram
-			if(self::checkMemoryForImage(array($this->info['width'], $this->info['height'], 3)) === false) {
+			if(self::checkMemoryForImage([$this->info['width'], $this->info['height'], 3]) === false) {
 				throw new WireException(basename($srcFilename) . " - not enough memory to load a copy for cropExtra");
 			}
 
@@ -240,7 +235,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 			list($x, $y, $w, $h) = $this->cropExtra;
 
 			// check if we can load a cropped version into ram
-			if(self::checkMemoryForImage(array($w, $h, 3)) === false) {
+			if(self::checkMemoryForImage([$w, $h, 3]) === false) {
 				throw new WireException(basename($srcFilename) . " - not enough memory to load a cropped version for cropExtra");
 			}
 
@@ -280,7 +275,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 			}
 
 			// process JPEGs
-			if(self::checkMemoryForImage(array(imagesx($image), imagesy($image), 3)) === false) {
+			if(self::checkMemoryForImage([imagesx($image), imagesy($image), 3]) === false) {
 				throw new WireException(basename($srcFilename) . " - not enough memory to copy the final image");
 			}
 			$this->sharpening = 'none'; // we set sharpening to none, as the image only gets compressed, but not resized
@@ -292,7 +287,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 
 			// this is the case if we scale up or down _without_ cropping
 
-			if(self::checkMemoryForImage(array($finalWidth, $finalHeight, 3)) === false) {
+			if(self::checkMemoryForImage([$finalWidth, $finalHeight, 3]) === false) {
 				throw new WireException(basename($srcFilename) . " - not enough memory to resize to the final image");
 			}
 
@@ -304,7 +299,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 
 			// we have to scale up or down and to _crop_
 
-			if(self::checkMemoryForImage(array($bgWidth, $bgHeight, 3)) === false) {
+			if(self::checkMemoryForImage([$bgWidth, $bgHeight, 3]) === false) {
 				throw new WireException(basename($srcFilename) . " - not enough memory to resize to the intermediate image");
 			}
 			
@@ -328,7 +323,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 				$sourceHeight // source height
 			);
 
-			if(self::checkMemoryForImage(array($finalWidth, $finalHeight, 3)) === false) {
+			if(self::checkMemoryForImage([$finalWidth, $finalHeight, 3]) === false) {
 				throw new WireException(basename($srcFilename) . " - not enough memory to crop to the final image");
 			}
 
@@ -362,14 +357,14 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 				$h = imagesy($thumb);
 				if($this->useUSM) {
 					// calculate if there is enough memory available to apply the USM algorithm, if enabled
-					if(true === ($this->useUSM = self::checkMemoryForImage(array($w, $h, 3), array($w, $h, 3)))) {
+					if(true === ($this->useUSM = self::checkMemoryForImage([$w, $h, 3], [$w, $h, 3]))) {
 						// is needed for the USM sharpening function to calculate the best sharpening params
 						$this->usmValue = $this->calculateUSMfactor($finalWidth, $finalHeight);
 						$thumb = $this->imSharpen($thumb, $this->sharpening);
 					}
 				}
 				if(!$this->useUSM) {
-					if(false !== self::checkMemoryForImage(array($w, $h, 3))) {
+					if(false !== self::checkMemoryForImage([$w, $h, 3])) {
 						$thumb = $this->imSharpen($thumb, $this->sharpening);
 					}
 				}
@@ -473,7 +468,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	protected function imRotate($im, $degree) {
 		$degree = (is_float($degree) || is_int($degree)) && $degree > -361 && $degree < 361 ? $degree : false;
 		if($degree === false) return $im;
-		if(in_array($degree, array(-360, 0, 360))) return $im;
+		if(in_array($degree, [-360, 0, 360])) return $im;
 		$angle = 360 - $degree; // because imagerotate() expects counterclockwise angle rather than degrees
 		return @imagerotate($im, $angle, imagecolorallocate($im, 0, 0, 0));
 	}
@@ -516,7 +511,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 		// and here under GD: http://php.net/ChangeLog-5.php#5.5.11
 		$buggyPHP = (version_compare(phpversion(), '5.5.8', '>') && version_compare(phpversion(), '5.5.11', '<')) ? true : false;
 		if($buggyPHP && !$this->useUSM
-			&& self::checkMemoryForImage(array(imagesx($im), imagesy($im), 3), array(imagesx($im), imagesy($im), 3)) !== true
+			&& self::checkMemoryForImage([imagesx($im), imagesy($im), 3], [imagesx($im), imagesy($im), 3]) !== true
 		) {
 			// we have not enough memory available for USM and cannot use the other algorithm because of the buggy PHP version
 			return $im;
@@ -571,29 +566,17 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 				break;
 
 			case 'strong':
-				$sharpenMatrix = array(
-					array(-1.2, -1, -1.2),
-					array(-1, 16, -1),
-					array(-1.2, -1, -1.2)
-				);
+				$sharpenMatrix = [[-1.2, -1, -1.2], [-1, 16, -1], [-1.2, -1, -1.2]];
 				break;
 
 			case 'medium':
-				$sharpenMatrix = array(
-					array(-1.1, -1, -1.1),
-					array(-1, 20, -1),
-					array(-1.1, -1, -1.1)
-				);
+				$sharpenMatrix = [[-1.1, -1, -1.1], [-1, 20, -1], [-1.1, -1, -1.1]];
 				break;
 
 			case 'soft':
 
 			default:
-				$sharpenMatrix = array(
-					array(-1, -1, -1),
-					array(-1, 24, -1),
-					array(-1, -1, -1)
-				);
+				$sharpenMatrix = [[-1, -1, -1], [-1, 24, -1], [-1, -1, -1]];
 		}
 
 		// calculate the sharpen divisor
@@ -676,11 +659,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 		//
 		//////////////////////////////////////////////////
 		if(function_exists('imageconvolution') && !$buggyPHP) {
-			$matrix = array(
-				array(1, 2, 1),
-				array(2, 4, 2),
-				array(1, 2, 1)
-			);
+			$matrix = [[1, 2, 1], [2, 4, 2], [1, 2, 1]];
 			imagecopy($imgBlur, $img, 0, 0, 0, 0, $w, $h);
 			imageconvolution($imgBlur, $matrix, 16, 0);
 		} else {
@@ -976,11 +955,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 			$error = 'No filename to check memory for'; 
 		}
 		if(!$error) {
-			$hasEnough = self::checkMemoryForImage(array(
-				$this->info['width'],
-				$this->info['height'],
-				$this->info['channels']
-			), $double, $factor);
+			$hasEnough = self::checkMemoryForImage([$this->info['width'], $this->info['height'], $this->info['channels']], $double, $factor);
 			if($hasEnough === false) {
 				$error = sprintf($this->_('Not enough memory for “%1$s” on image file: %2$s'), $action, basename($filename));
 			}
@@ -1089,7 +1064,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 			$this->error("Image flip requires PHP 5.5 or newer");
 			return false;
 		}
-		if(!in_array($flipType, array('vertical', 'horizontal', 'both'))) {
+		if(!in_array($flipType, ['vertical', 'horizontal', 'both'])) {
 			$this->error("Image flip type must be one of: 'vertical', 'horizontal', 'both'");
 			return false;
 		}

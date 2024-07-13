@@ -142,7 +142,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @var array
 	 * 
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * True if there is an external session provider
@@ -193,7 +193,7 @@ class Session extends Wire implements \IteratorAggregate {
 			// okay, keep as-is
 		} else if(is_callable($sessionAllow)) {
 			// call function that returns boolean
-			$sessionAllow = call_user_func_array($sessionAllow, array($this));
+			$sessionAllow = call_user_func_array($sessionAllow, [$this]);
 			if(!is_bool($sessionAllow)) throw new WireException("\$config->sessionAllow callable must return boolean");
 		} else {
 			$sessionAllow = true;
@@ -203,7 +203,7 @@ class Session extends Wire implements \IteratorAggregate {
 		
 		if($sessionAllow) {
 			$this->init();
-			if(empty($_SESSION[$this->sessionKey])) $_SESSION[$this->sessionKey] = array();
+			if(empty($_SESSION[$this->sessionKey])) $_SESSION[$this->sessionKey] = [];
 			$userID = $this->get('_user', 'id');
 			if($userID) {
 				if($this->isValidSession($userID)) {
@@ -316,7 +316,7 @@ class Session extends Wire implements \IteratorAggregate {
 			if(!ini_get('session.gc_divisor')) ini_set('session.gc_divisor', 100);
 		}
 		
-		$options = array();
+		$options = [];
 		$cookieSameSite = $this->sessionCookieSameSite();
 		
 		if(PHP_VERSION_ID < 70300) {
@@ -445,7 +445,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 */
 	public function getFingerprint($mode = null, $debug = false) {
 	
-		$debugInfo = array();
+		$debugInfo = [];
 		$useFingerprint = $mode === null ? $this->config->sessionFingerprint : $mode;
 		
 		if(!$useFingerprint) return false;
@@ -656,7 +656,7 @@ class Session extends Wire implements \IteratorAggregate {
 	public function getFor($ns, $key) {
 		$ns = $this->getNamespace($ns); 
 		$data = $this->get($ns); 
-		if(!is_array($data)) $data = array();
+		if(!is_array($data)) $data = [];
 		if($key === '') return $data;
 		return isset($data[$key]) ? $data[$key] : null;
 	}
@@ -703,7 +703,7 @@ class Session extends Wire implements \IteratorAggregate {
 	public function setFor($ns, $key, $value) {
 		$ns = $this->getNamespace($ns); 
 		$data = $this->get($ns); 
-		if(!is_array($data)) $data = array();
+		if(!is_array($data)) $data = [];
 		if(is_null($value)) {
 			unset($data[$key]);
 		} else {
@@ -894,7 +894,7 @@ class Session extends Wire implements \IteratorAggregate {
 			}
 			// sanitize: if IP contains something other than digits, periods, commas, spaces, 
 			// then don't use it and instead fallback to the REMOTE_ADDR. 
-			$test = str_replace(array('.', ',', ' '), '', $ip);
+			$test = str_replace(['.', ',', ' '], '', $ip);
 			if(!ctype_digit("$test")) {
 				if(strpos($test, ':') !== false) {
 					// ipv6 allowed
@@ -922,7 +922,7 @@ class Session extends Wire implements \IteratorAggregate {
 
 		if($useClient === 2 && strpos($ip, ',') !== false) {
 			// return multiple IPs
-			$ips = array();
+			$ips = [];
 			foreach(explode(',', $ip) as $ip) {
 				if($ipv6) {
 					$ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
@@ -1128,7 +1128,7 @@ class Session extends Wire implements \IteratorAggregate {
 		if($user->isGuest() || $user->isUnpublished()) return false;
 		$xroles = $this->config->loginDisabledRoles;
 		if(!is_array($xroles) && !empty($xroles)) {
-			$xroles = array($xroles);
+			$xroles = [$xroles];
 		}
 		if(is_array($xroles)) {
 			foreach($xroles as $xrole) {
@@ -1193,10 +1193,10 @@ class Session extends Wire implements \IteratorAggregate {
 		$sessionName = session_name();
 		if($this->sessionInit) {
 			if(!$this->isExternal && !$this->isSecondary) {
-				$_SESSION = array();
+				$_SESSION = [];
 			}
 		} else {
-			$this->data = array();
+			$this->data = [];
 		}
 		$this->removeCookies();
 		$this->sessionInit = false;
@@ -1205,7 +1205,7 @@ class Session extends Wire implements \IteratorAggregate {
 			session_name($sessionName);
 			$this->init();
 			session_regenerate_id(true);
-			$_SESSION[$this->sessionKey] = array();
+			$_SESSION[$this->sessionKey] = [];
 		}
 		$user = $this->wire()->user;
 		$users = $this->wire()->users;
@@ -1247,14 +1247,7 @@ class Session extends Wire implements \IteratorAggregate {
 		}
 
 		// PHP 7.3+ supports $options array
-		return setcookie($name, $value, array(
-			'expires' => $expires,
-			'path' => $path,
-			'domain' => $domain,
-			'secure' => $secure,
-			'httponly' => $httponly,
-			'samesite' => $samesite,
-		));
+		return setcookie($name, $value, ['expires' => $expires, 'path' => $path, 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly, 'samesite' => $samesite]);
 	}
 
 
@@ -1290,7 +1283,7 @@ class Session extends Wire implements \IteratorAggregate {
 	protected function sessionCookieSameSite($value = null) {
 		$samesite = $value === null ? $this->config->sessionCookieSameSite : $value;
 		$samesite = empty($samesite) ? 'Lax' : ucfirst(strtolower($samesite));
-		if(!in_array($samesite, array('Strict', 'Lax', 'None'), true)) $samesite = 'Lax';
+		if(!in_array($samesite, ['Strict', 'Lax', 'None'], true)) $samesite = 'Lax';
 		return $samesite;
 	}
 
@@ -1307,7 +1300,7 @@ class Session extends Wire implements \IteratorAggregate {
 		$name = $this->config->sessionName;
 		$nameSecure = $this->config->sessionNameSecure;
 		if(empty($nameSecure)) $nameSecure = $this->config->sessionName . 's';
-		$a = array($name, $nameSecure); 
+		$a = [$name, $nameSecure]; 
 		if($this->config->sessionChallenge) {
 			$a[] = $name . self::challengeSuffix;
 			$a[] = $nameSecure . self::challengeSuffix;
@@ -1393,10 +1386,7 @@ class Session extends Wire implements \IteratorAggregate {
 			}
 		}
 		
-		$this->wire()->setStatus(ProcessWire::statusFinished, array(
-			'redirectUrl' => $url,
-			'redirectType' => $status, 
-		));
+		$this->wire()->setStatus(ProcessWire::statusFinished, ['redirectUrl' => $url, 'redirectType' => $status]);
 		
 		// note for 302 redirects we send no header other than 'Location: url'
 		$http = new WireHttp();
@@ -1455,8 +1445,8 @@ class Session extends Wire implements \IteratorAggregate {
 	protected function queueNoticeText($text, $type, $flags) {
 		if(!$this->sessionInit) return;
 		$items = $this->getFor('_notices', $type);
-		if(is_null($items)) $items = array();
-		$item = array('text' => $text, 'flags' => $flags); 
+		if(is_null($items)) $items = [];
+		$item = ['text' => $text, 'flags' => $flags]; 
 		$items[] = $item;
 		$this->setFor('_notices', $type, $items); 
 	}
@@ -1473,7 +1463,7 @@ class Session extends Wire implements \IteratorAggregate {
 		if(!$this->sessionInit) return;
 		$type = $notice->getName();
 		$items = $this->getFor('_notices', $type);
-		if(is_null($items)) $items = array();
+		if(is_null($items)) $items = [];
 		$items[] = $notice->getArray();
 		$this->setFor('_notices', $type, $items); 
 	}
@@ -1489,11 +1479,7 @@ class Session extends Wire implements \IteratorAggregate {
 		$notices = $this->wire()->notices;
 		if(!$notices) return;
 		
-		$types = array(
-			'messages' => 'NoticeMessage',
-			'errors' => 'NoticeError',
-			'warnings' => 'NoticeWarning',
-		);
+		$types = ['messages' => 'NoticeMessage', 'errors' => 'NoticeError', 'warnings' => 'NoticeWarning'];
 		
 		foreach($types as $type => $className) {
 			$items = $this->getFor('_notices', $type);
@@ -1587,13 +1573,9 @@ class Session extends Wire implements \IteratorAggregate {
 			if(!$sanitizer || !$input || !$page) return;
 			
 			$history = $this->get('_user', 'history');
-			if(!is_array($history)) $history = array();
+			if(!is_array($history)) $history = [];
 
-			$item = array(
-				'time' => time(),
-				'url'  => $sanitizer->entities($input->httpUrl()),
-				'page' => $page->id,
-			);
+			$item = ['time' => time(), 'url'  => $sanitizer->entities($input->httpUrl()), 'page' => $page->id];
 
 			$cnt = count($history); 
 			if($cnt) {
@@ -1604,7 +1586,7 @@ class Session extends Wire implements \IteratorAggregate {
 					if($historyCnt > 1) {
 						$history = array_slice($history, -1 * ($historyCnt - 1), null, true);
 					} else {
-						$history = array();
+						$history = [];
 					}
 				}
 			} else {
@@ -1648,7 +1630,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 */
 	public function getHistory() {
 		$value = $this->get('_user', 'history'); 
-		if(!is_array($value)) $value = array();
+		if(!is_array($value)) $value = [];
 		return $value; 
 	}
 

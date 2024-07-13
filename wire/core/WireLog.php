@@ -27,7 +27,7 @@ class WireLog extends Wire {
 	 * @var array
 	 * 
 	 */
-	protected $fileLogs = array();
+	protected $fileLogs = [];
 
 	/**
 	 * Names of logs that have been temporary silenced for this request
@@ -35,7 +35,7 @@ class WireLog extends Wire {
 	 * @var array Keys are log names, values are irrelevant
 	 * 
 	 */
-	protected $disabled = array();
+	protected $disabled = [];
 
 	/**
 	 * Record an informational or 'success' message in the message log (messages.txt)
@@ -117,23 +117,24 @@ class WireLog extends Wire {
 	 * @throws WireException
 	 * 
 	 */
-	public function ___save($name, $text, $options = array()) {
+	public function ___save($name, $text, $options = []) {
 		
 		if(isset($this->disabled[$name]) || isset($this->disabled['*'])) return false;
 		
-		$defaults = array(
-			'showUser' => true,
-			'showURL' => true,
-			'user' => null, 
-			'url' => '', // URL to show (default=blank, auto-detect)
-			'delimiter' => "\t",
-		);
+		$defaults = [
+      'showUser' => true,
+      'showURL' => true,
+      'user' => null,
+      'url' => '',
+      // URL to show (default=blank, auto-detect)
+      'delimiter' => "\t",
+  ];
 		
 		$options = array_merge($defaults, $options);
 		// showURL option was previously named showPage
 		if(isset($options['showPage'])) $options['showURL'] = $options['showPage'];
 		$log = $this->getFileLog($name, $options); 
-		$text = str_replace(array("\r", "\n", "\t"), ' ', $text);
+		$text = str_replace(["\r", "\n", "\t"], ' ', $text);
 		
 		if($options['showURL']) {
 			if($options['url']) {
@@ -217,7 +218,7 @@ class WireLog extends Wire {
 	 */
 	public function getLogs($sortNewest = false) {
 		
-		$logs = array();
+		$logs = [];
 		
 		foreach($this->getFiles() as $name => $file) {
 			
@@ -228,17 +229,12 @@ class WireLog extends Wire {
 				$sortKey = $name;
 			}
 			
-			$logs[$sortKey] = array(
-				'name' => $name,
-				'file' => $file->getPathname(),
-				'size' => $file->getSize(), 
-				'modified' => $file->getMTime(), 
-			);
+			$logs[$sortKey] = ['name' => $name, 'file' => $file->getPathname(), 'size' => $file->getSize(), 'modified' => $file->getMTime()];
 		}
 	
 		if($sortNewest) {
 			krsort($logs);
-			$a = array();
+			$a = [];
 			foreach($logs as $log) {
 				$a[$log['name']] = $log;
 			}
@@ -282,7 +278,7 @@ class WireLog extends Wire {
 		
 		$dir = new \DirectoryIterator($this->path());
 		$sanitizer = $this->wire()->sanitizer;
-		$files = array();
+		$files = [];
 
 		foreach($dir as $file) {
 			if($file->isDot() || $file->isDir()) continue;
@@ -327,7 +323,7 @@ class WireLog extends Wire {
 	 * @see WireLog::getEntries()
 	 * 
 	 */
-	public function getLines($name, array $options = array()) {
+	public function getLines($name, array $options = []) {
 		$pageNum = !empty($options['pageNum']) ? $options['pageNum'] : $this->wire()->input->pageNum;
 		unset($options['pageNum']); 
 		$log = $this->getFileLog($name); 
@@ -359,7 +355,7 @@ class WireLog extends Wire {
 	 * @see WireLog::getLines()
 	 * 
 	 */
-	public function getEntries($name, array $options = array()) {
+	public function getEntries($name, array $options = []) {
 		
 		$log = $this->getFileLog($name);
 		$limit = isset($options['limit']) ? $options['limit'] : 100; 
@@ -389,29 +385,14 @@ class WireLog extends Wire {
 		$parts = explode("\t", $line, 4);
 	
 		if(count($parts) == 2) {
-			$entry = array(
-				'date' => $parts[0],
-				'user' => '',
-				'url'  => '',
-				'text' => $parts[1]
-			);
+			$entry = ['date' => $parts[0], 'user' => '', 'url'  => '', 'text' => $parts[1]];
 		} else if(count($parts) == 3) {
 			$user = strpos($parts[1], '/') === false ? $parts[1] : '';
 			$url = strpos($parts[2], '://') ? $parts[2] : '';
 			$text = empty($url) ? $parts[2] : '';
-			$entry = array(
-				'date' => $parts[0],
-				'user' => $user,
-				'url'  => $url,
-				'text' => $text
-			);
+			$entry = ['date' => $parts[0], 'user' => $user, 'url'  => $url, 'text' => $text];
 		} else {
-			$entry = array(
-				'date' => isset($parts[0]) ? $parts[0] : '',
-				'user' => isset($parts[1]) ? $parts[1] : '',
-				'url'  => isset($parts[2]) ? $parts[2] : '',
-				'text' => isset($parts[3]) ? $parts[3] : '',
-			);
+			$entry = ['date' => isset($parts[0]) ? $parts[0] : '', 'user' => isset($parts[1]) ? $parts[1] : '', 'url'  => isset($parts[2]) ? $parts[2] : '', 'text' => isset($parts[3]) ? $parts[3] : ''];
 		}
 		
 		$entry['date'] = wireDate($this->wire('config')->dateFormat, strtotime($entry['date']));
@@ -449,7 +430,7 @@ class WireLog extends Wire {
 	 * @return array
 	 *
 	 */
-	public function get($name, $limit = 100, array $options = array()) {
+	public function get($name, $limit = 100, array $options = []) {
 		if(is_array($limit)) {
 			$options = $limit;
 		} else {
@@ -505,8 +486,8 @@ class WireLog extends Wire {
 	 */
 	public function deleteAll($throw = false) {
 		
-		$deleted = array();
-		$failed = array();
+		$deleted = [];
+		$failed = [];
 
 		foreach($this->getFiles() as $name => $file) {
 			$log = $this->getFileLog($name);
@@ -552,7 +533,7 @@ class WireLog extends Wire {
 	 * 
 	 */
 	public function pruneAll($days) {
-		$result = array();
+		$result = [];
 		foreach($this->getFiles() as $name => $filename) {
 			$result[$name] = $this->prune($name, $days);
 		}
@@ -569,7 +550,7 @@ class WireLog extends Wire {
 	 * @return FileLog
 	 * 
 	 */
-	public function getFileLog($name, array $options = array()) {
+	public function getFileLog($name, array $options = []) {
 		$delimiter = isset($options['delimiter']) ? $options['delimiter'] : "\t";
 		$filename = $this->getFilename($name);
 		$key = "$filename$delimiter";

@@ -44,7 +44,7 @@ class Templates extends WireSaveableItems {
 	 * @var array Array of Template objects indexed by id
 	 *
 	 */
-	protected $fileModTemplates = array();
+	protected $fileModTemplates = [];
 
 	/**
 	 * Cached template ID to page class names (for getPageClass method)
@@ -52,7 +52,7 @@ class Templates extends WireSaveableItems {
 	 * @var array
 	 * 
 	 */
-	protected $pageClassNames = array();
+	protected $pageClassNames = [];
 
 	/**
 	 * Construct the Templates
@@ -114,7 +114,7 @@ class Templates extends WireSaveableItems {
 	 * @since 3.0.146
 	 *
 	 */
-	public function makeItem(array $a = array()) {
+	public function makeItem(array $a = []) {
 
 		/** @var Template $template */
 		$template = $this->wire(new Template());
@@ -126,7 +126,7 @@ class Templates extends WireSaveableItems {
 			unset($a['data']);
 		}
 
-		foreach(array('id', 'name', 'fieldgroups_id', 'flags', 'cache_time') as $key) {
+		foreach(['id', 'name', 'fieldgroups_id', 'flags', 'cache_time'] as $key) {
 			if(!isset($a[$key])) continue;
 			$value = $key === 'name' ? $a[$key] : (int) $a[$key];
 			$template->setRaw($key, $value); 
@@ -199,7 +199,7 @@ class Templates extends WireSaveableItems {
 	 * @since 3.0.170
 	 * 
 	 */
-	public function add($name, array $properties = array()) {
+	public function add($name, array $properties = []) {
 
 		if(!is_string($name)) {
 			throw new WireException("You must specify the template name to add"); 
@@ -501,7 +501,7 @@ class Templates extends WireSaveableItems {
 	 *
 	 */
 	protected function encodeData(array $value) {
-		return wireEncodeJSON($value, array('slashUrls', 'compile')); 	
+		return wireEncodeJSON($value, ['slashUrls', 'compile']); 	
 	}
 
 	/**
@@ -531,9 +531,9 @@ class Templates extends WireSaveableItems {
 		if($fieldgroup) $data['fieldgroups_id'] = $fieldgroup->name;
 
 		// convert family settings to guids
-		foreach(array('parentTemplates', 'childTemplates') as $key) {
+		foreach(['parentTemplates', 'childTemplates'] as $key) {
 			if(!isset($data[$key])) continue;
-			$values = array();
+			$values = [];
 			foreach($data[$key] as $id) {
 				if(ctype_digit("$id")) $id = (int) $id;
 				$t = $this->get($id);
@@ -545,9 +545,9 @@ class Templates extends WireSaveableItems {
 		// convert roles to guids
 		if($template->useRoles) {
 			$roles = $this->wire()->roles;
-			foreach(array('roles', 'editRoles', 'addRoles', 'createRoles') as $key) {
+			foreach(['roles', 'editRoles', 'addRoles', 'createRoles'] as $key) {
 				if(!isset($data[$key])) continue;
-				$values = array();
+				$values = [];
 				foreach($data[$key] as $id) {
 					$role = $id instanceof Role ? $id : $roles->get((int) $id);
 					$values[] = $role->name;
@@ -560,7 +560,7 @@ class Templates extends WireSaveableItems {
 		if(((int) $template->cache_time) != 0) {
 			if(!empty($data['cacheExpirePages'])) {
 				$pages = $this->wire()->pages;
-				$values = array();
+				$values = [];
 				foreach($data['cacheExpirePages'] as $id) {
 					$page = $pages->get((int) $id);
 					if(!$page->id) continue;
@@ -569,7 +569,7 @@ class Templates extends WireSaveableItems {
 			}
 		}
 
-		$fieldgroupData = array('fields' => array(), 'contexts' => array());
+		$fieldgroupData = ['fields' => [], 'contexts' => []];
 		if($template->fieldgroup) $fieldgroupData = $template->fieldgroup->getExportData();
 		$data['fieldgroupFields'] = $fieldgroupData['fields'];
 		$data['fieldgroupContexts'] = $fieldgroupData['contexts'];
@@ -608,8 +608,8 @@ class Templates extends WireSaveableItems {
 		$fieldgroups = $this->wire()->fieldgroups;
 
 		$template->set('_importMode', true); 
-		$fieldgroupData = array();
-		$changes = array();
+		$fieldgroupData = [];
+		$changes = [];
 		$_data = $this->getExportData($template);
 
 		if(isset($data['fieldgroupFields'])) $fieldgroupData['fields'] = $data['fieldgroupFields'];
@@ -635,11 +635,7 @@ class Templates extends WireSaveableItems {
 				}
 				if($oldValue != $fieldgroup->name) {
 					if(!$fieldgroup->id) $newValue = "+$newValue";
-					$changes['fieldgroups_id'] = array(
-						'old' => $template->fieldgroup->name,
-						'new' => $newValue,
-						'error' => $error
-					);
+					$changes['fieldgroups_id'] = ['old' => $template->fieldgroup->name, 'new' => $newValue, 'error' => $error];
 				}
 			}
 
@@ -662,13 +658,9 @@ class Templates extends WireSaveableItems {
 					$error = $template->errors('clear');
 				} catch(\Exception $e) {
 					$this->trackException($e, false);
-					$error = array($e->getMessage());
+					$error = [$e->getMessage()];
 				}
-				$changes[$key] = array(
-					'old' => $oldValue,
-					'new' => $newValue,
-					'error' => (count($error) ? $error : array())
-				);
+				$changes[$key] = ['old' => $oldValue, 'new' => $newValue, 'error' => (count($error) ? $error : [])];
 			}
 		}
 
@@ -873,7 +865,7 @@ class Templates extends WireSaveableItems {
 		// determine if custom class available (3.0.152+)
 		if($usePageClasses) {
 			// generate a CamelCase name + 'Page' from template name, i.e. 'blog-post' => 'BlogPostPage'
-			$className = ucwords(str_replace(array('-', '_', '.'), ' ', $template->name));
+			$className = ucwords(str_replace(['-', '_', '.'], ' ', $template->name));
 			$className = __NAMESPACE__ . "\\" . str_replace(' ', '', $className) . 'Page';
 			if(class_exists($className) && wireInstanceOf($className, $corePageClass)) {
 				$pageClass = $className;
@@ -896,7 +888,7 @@ class Templates extends WireSaveableItems {
 	 * 
 	 */
 	public function ___getTags($getTemplateNames = false) {
-		$tags = array();
+		$tags = [];
 		foreach($this as $template) {
 			/** @var Template $template */
 			$templateTags = $template->tags;
@@ -905,7 +897,7 @@ class Templates extends WireSaveableItems {
 			foreach($templateTags as $tag) {
 				if(empty($tag)) continue;
 				if($getTemplateNames) {
-					if(!isset($tags[$tag])) $tags[$tag] = array();
+					if(!isset($tags[$tag])) $tags[$tag] = [];
 					$tags[$tag][$template->name] = $template->name;
 				} else {
 					$tags[$tag] = $tag;
@@ -937,7 +929,7 @@ class Templates extends WireSaveableItems {
 
 		if(!$template->useRoles) throw new WireException("Template $template does not have access control enabled"); 
 
-		$defaultPermissions = array('page-view', 'page-edit', 'page-create', 'page-add');
+		$defaultPermissions = ['page-view', 'page-edit', 'page-create', 'page-add'];
 		$updated = false;
 
 		if(is_string($role) || is_int($role)) $role = $this->wire()->roles->get($role);
@@ -972,8 +964,8 @@ class Templates extends WireSaveableItems {
 
 		} else if($permission instanceof Permission) {
 			$rolesPermissions = $template->get('rolesPermissions');
-			if(!is_array($rolesPermissions)) $rolesPermissions = array();
-			$rolePermissions = isset($rolesPermissions["$role->id"]) ? $rolesPermissions["$role->id"] : array();
+			if(!is_array($rolesPermissions)) $rolesPermissions = [];
+			$rolePermissions = isset($rolesPermissions["$role->id"]) ? $rolesPermissions["$role->id"] : [];
 			$_rolePermissions = $rolePermissions;
 			if($revoke) {
 				$key = array_search("$permission->id", $rolePermissions);
@@ -1033,7 +1025,7 @@ class Templates extends WireSaveableItems {
 				$template->save();
 			}
 		}
-		$this->fileModTemplates = array();
+		$this->fileModTemplates = [];
 	}
 
 	/**

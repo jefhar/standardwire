@@ -125,7 +125,7 @@ class Pages extends Wire {
 	 * Runtime debug log of Pages class activities, see getDebugLog()
 	 *
 	 */
-	protected $debugLog = array();
+	protected $debugLog = [];
 
 	/**
 	 * @var PagesLoader
@@ -187,7 +187,7 @@ class Pages extends Wire {
 	 * @var PagesType[]
 	 * 
 	 */
-	protected $types = array();
+	protected $types = [];
 
 	/**
 	 * Create the Pages object
@@ -240,7 +240,7 @@ class Pages extends Wire {
 	 * @see Pages::find()
 	 *
 	 */
-	public function count($selector = '', $options = array()) {
+	public function count($selector = '', $options = []) {
 		return $this->loader->count($selector, $options);
 	}
 
@@ -285,7 +285,7 @@ class Pages extends Wire {
 	 * @see Pages::findOne(), Pages::findMany(), Pages::get()
 	 *
 	 */
-	public function ___find($selector, $options = array()) {
+	public function ___find($selector, $options = []) {
 		return $this->loader->find($selector, $options);
 	}
 
@@ -311,7 +311,7 @@ class Pages extends Wire {
 	 * @see Pages::get(), Pages::find(), Pages::findMany()
 	 *
 	 */
-	public function findOne($selector, $options = array()) {
+	public function findOne($selector, $options = []) {
 		return $this->loader->findOne($selector, $options);
 	}
 
@@ -349,7 +349,7 @@ class Pages extends Wire {
 	 * @see Pages::find(), Pages::findOne()
 	 *
 	 */
-	public function findMany($selector, $options = array()) {
+	public function findMany($selector, $options = []) {
 		$debug = $this->debug;
 		if($debug) $this->debug(false);
 		$options['lazy'] = true;
@@ -403,16 +403,16 @@ class Pages extends Wire {
 	 * @since 3.0.172
 	 * 
 	 */
-	public function findJoin($selector, $joinFields, $options = array()) {
+	public function findJoin($selector, $joinFields, $options = []) {
 		
 		$fields = $this->wire()->fields;
 	
 		if($joinFields === false) {
 			$name = 'none';
 			while($fields->get($name)) $name .= 'X';
-			$joinFields = array($name);
+			$joinFields = [$name];
 		} else if(empty($joinFields)) {
-			$joinFields = array();
+			$joinFields = [];
 		} else if(!is_array($joinFields)) {
 			$joinFields = (string) $joinFields;
 			if(strpos($joinFields, ',') !== false) {
@@ -420,7 +420,7 @@ class Pages extends Wire {
 			} else if(strpos($joinFields, '|') !== false) {
 				$joinFields = explode('|', $joinFields);
 			} else {
-				$joinFields = array($joinFields);
+				$joinFields = [$joinFields];
 			}
 		}
 		
@@ -473,12 +473,12 @@ class Pages extends Wire {
 	 * @since 3.0.46
 	 * 
 	 */
-	public function findIDs($selector, $options = array()) {
+	public function findIDs($selector, $options = []) {
 		$verbose = false;
 		if(!is_array($options)) {
 			// verbose option specified in $options array
 			$verbose = $options;
-			$options = array();
+			$options = [];
 		}
 		if(isset($options['verbose'])) {
 			$verbose = $options['verbose'];
@@ -492,7 +492,7 @@ class Pages extends Wire {
 		/** @var array $ids */
 		$ids = $this->find($selector, $options);
 		if(!empty($options['indexed'])) {
-			$a = array();
+			$a = [];
 			foreach($ids as $value) {
 				$id = $verbose ? $value['id'] : $value;
 				$a[$id] = $value;
@@ -594,7 +594,7 @@ class Pages extends Wire {
 	 * @since 3.0.172
 	 *
 	 */
-	public function findRaw($selector, $field = '', $options = array()) {
+	public function findRaw($selector, $field = '', $options = []) {
 		return $this->raw()->find($selector, $field, $options); 
 	}
 
@@ -622,7 +622,7 @@ class Pages extends Wire {
 	 * @see Pages::findOne(), Pages::find()
 	 * 
 	 */
-	public function get($selector, $options = array()) {
+	public function get($selector, $options = []) {
 		return $this->loader->get($selector, $options); 
 	}
 	
@@ -644,7 +644,7 @@ class Pages extends Wire {
 	 * @return array
 	 *
 	 */
-	public function getRaw($selector, $field = '', $options = array()) {
+	public function getRaw($selector, $field = '', $options = []) {
 		return $this->raw()->get($selector, $field, $options);
 	}
 	
@@ -674,7 +674,7 @@ class Pages extends Wire {
 	 * @since 3.0.172
 	 *
 	 */
-	public function getFresh($selectorOrPage, $options = array()) {
+	public function getFresh($selectorOrPage, $options = []) {
 		return $this->loader()->getFresh($selectorOrPage, $options);
 	}
 
@@ -694,7 +694,7 @@ class Pages extends Wire {
 	 * @since 3.0.156
 	 *
 	 */
-	public function getID($selector, $options = array()) {
+	public function getID($selector, $options = []) {
 		if(is_array($options)) {
 			if(empty($options['caller'])) $options['caller'] = 'pages.getID';
 			$verbose = false;
@@ -704,7 +704,7 @@ class Pages extends Wire {
 			}
 		} else {
 			$verbose = $options;
-			$options = array();
+			$options = [];
 		}
 		return $this->loader->has($selector, $verbose, $options);
 	}
@@ -738,7 +738,7 @@ class Pages extends Wire {
 	 * @since 3.0.156 Previous versions can use $pages->getById() for similar behavior 
 	 *
 	 */
-	public function getByIDs($ids, array $options = array()) {
+	public function getByIDs($ids, array $options = []) {
 		
 		$template = empty($options['template']) ? null : $options['template'];
 		$parent = empty($options['parent']) ? null : $options['parent'];
@@ -836,7 +836,7 @@ class Pages extends Wire {
 	 * @see Page::save(), Pages::saveField()
 	 *
 	 */
-	public function ___save(Page $page, $options = array()) {
+	public function ___save(Page $page, $options = []) {
 		return $this->editor()->save($page, $options);
 	}
 
@@ -863,7 +863,7 @@ class Pages extends Wire {
 	 * @see Page::save(), Page::setAndSave(), Pages::save()
 	 *
 	 */
-	public function ___saveField(Page $page, $field, $options = array()) {
+	public function ___saveField(Page $page, $field, $options = []) {
 		return $this->editor()->saveField($page, $field, $options);
 	}
 
@@ -902,7 +902,7 @@ class Pages extends Wire {
 	 * @see Pages::new(), Pages::newPage()
 	 *
 	 */
-	public function ___add($template, $parent, $name = '', array $values = array()) {
+	public function ___add($template, $parent, $name = '', array $values = []) {
 		return $this->editor()->add($template, $parent, $name, $values);
 	}
 
@@ -1013,7 +1013,7 @@ class Pages extends Wire {
 	 * @throws WireException|\Exception on fatal error
 	 *
 	 */
-	public function ___clone(Page $page, Page $parent = null, $recursive = true, $options = array()) {
+	public function ___clone(Page $page, Page $parent = null, $recursive = true, $options = []) {
 		return $this->editor()->_clone($page, $parent, $recursive, $options);
 	}
 
@@ -1043,7 +1043,7 @@ class Pages extends Wire {
 	 * @see Pages::trash()
 	 * 
 	 */
-	public function ___delete(Page $page, $recursive = false, array $options = array()) {
+	public function ___delete(Page $page, $recursive = false, array $options = []) {
 		return $this->editor()->delete($page, $recursive, $options);
 	}
 
@@ -1122,7 +1122,7 @@ class Pages extends Wire {
 	 * @see Pages::trash(), Pages::restore()
 	 *
 	 */
-	public function ___emptyTrash(array $options = array()) {
+	public function ___emptyTrash(array $options = []) {
 		return $this->trasher()->emptyTrash($options);
 	}
 	
@@ -1206,7 +1206,7 @@ class Pages extends Wire {
 	 * @since 3.0.186
 	 * 
 	 */
-	public function getOneById($id, array $options = array()) {
+	public function getOneById($id, array $options = []) {
 		$options['getOne'] = true;
 		return $this->loader->getById((int) $id, $options);
 	}	
@@ -1239,7 +1239,7 @@ class Pages extends Wire {
 	 * @see Page::path()
 	 *
 	 */
-	public function getPath($id, $options = array()) {
+	public function getPath($id, $options = []) {
 		return $this->loader->getPath($id, $options);
 	}
 
@@ -1298,7 +1298,7 @@ class Pages extends Wire {
 	 * @since 3.0.6
 	 *
 	 */
-	public function getByPath($path, $options = array()) {
+	public function getByPath($path, $options = []) {
 		return $this->loader->getByPath($path, $options);
 	}
 
@@ -1383,7 +1383,7 @@ class Pages extends Wire {
 	 * @return array
 	 * 
 	 */
-	public function getInfoByPath($path, array $options = array()) {
+	public function getInfoByPath($path, array $options = []) {
 		return $this->pathFinder()->get($path, $options);
 	}
 	
@@ -1419,7 +1419,7 @@ class Pages extends Wire {
 	 * @return string If a name was generated it is returned. If no name was generated blank is returned. 
 	 * 
 	 */
-	public function ___setupPageName(Page $page, array $options = array()) {
+	public function ___setupPageName(Page $page, array $options = []) {
 		return $this->editor()->setupPageName($page, $options);
 	}
 
@@ -1548,7 +1548,7 @@ class Pages extends Wire {
 	 * @return bool True if saveable, False if not
 	 *
 	 */
-	public function isSaveable(Page $page, &$reason, $fieldName = '', array $options = array()) {
+	public function isSaveable(Page $page, &$reason, $fieldName = '', array $options = []) {
 		return $this->editor()->isSaveable($page, $reason, $fieldName, $options);
 	}
 	
@@ -1612,7 +1612,7 @@ class Pages extends Wire {
 	 * @return int Number of pages uncached
 	 *
 	 */
-	public function uncache($page = null, array $options = array()) {
+	public function uncache($page = null, array $options = []) {
 		$cnt = 0;
 		if(is_null($page)) {
 			$cnt = $this->cacher->uncacheAll(null, $options);
@@ -1661,7 +1661,7 @@ class Pages extends Wire {
 	 * @return int Number of pages uncached
 	 *
 	 */
-	public function uncacheAll(Page $page = null, array $options = array()) {
+	public function uncacheAll(Page $page = null, array $options = []) {
 		return $this->cacher->uncacheAll($page, $options);
 	}
 
@@ -1775,12 +1775,7 @@ class Pages extends Wire {
 	 */
 	public function debugLog($action = '', $details = '', $result = '') {
 		if(!$this->debug) return;
-		$this->debugLog[] = array(
-			'time' => microtime(),
-			'action' => (string) $action, 
-			'details' => (string) $details, 
-			'result' => (string) $result
-		);
+		$this->debugLog[] = ['time' => microtime(), 'action' => (string) $action, 'details' => (string) $details, 'result' => (string) $result];
 	}
 
 	/**
@@ -1795,9 +1790,9 @@ class Pages extends Wire {
 	 *
 	 */
 	public function getDebugLog($action = '') {
-		if(!$this->wire()->config->debug) return array();
+		if(!$this->wire()->config->debug) return [];
 		if(!$action) return $this->debugLog; 
-		$debugLog = array();
+		$debugLog = [];
 		foreach($this->debugLog as $item) if($item['action'] == $action) $debugLog[] = $item; 
 		return $debugLog; 
 	}
@@ -1841,7 +1836,7 @@ class Pages extends Wire {
 	 * @return PageArray
 	 * 
 	 */
-	public function newPageArray(array $options = array()) {
+	public function newPageArray(array $options = []) {
 		if(!empty($options['pageArray']) && $options['pageArray'] instanceof PageArray) {
 			$this->wire($options['pageArray']);
 			return $options['pageArray'];
@@ -1905,7 +1900,7 @@ class Pages extends Wire {
 	 * @return Page
 	 *
 	 */
-	public function newPage($options = array()) {
+	public function newPage($options = []) {
 		
 		if(empty($options)) return $this->wire(new Page());
 
@@ -2005,7 +2000,7 @@ class Pages extends Wire {
 	public function log($str, Page $page) {
 		if(!in_array('pages', $this->wire()->config->logs)) return parent::___log();
 		if($this->wire()->process != 'ProcessPageEdit') $str .= " [From URL: " . $this->wire()->input->url() . "]";
-		$options = array('name' => 'pages', 'url' => $page->path); 
+		$options = ['name' => 'pages', 'url' => $page->path]; 
 		return parent::___log($str, $options); 
 	}
 
@@ -2172,7 +2167,7 @@ class Pages extends Wire {
 	 * @see Pages::savedPageOrField(), Pages::savedField()
 	 *
 	 */
-	public function ___saved(Page $page, array $changes = array(), $values = array()) { 
+	public function ___saved(Page $page, array $changes = [], $values = []) { 
 		$str = "Saved page";
 		if(count($changes)) $str .= " (Changes: " . implode(', ', $changes) . ")";
 		$this->log($str, $page);
@@ -2286,7 +2281,7 @@ class Pages extends Wire {
 	 *
 	 */
 	public function ___saveReady(Page $page) {
-		$data = array();
+		$data = [];
 		foreach($this->types as $manager) {
 			if(!$manager->hasValidTemplate($page)) continue;
 			$a = $manager->saveReady($page);
@@ -2307,7 +2302,7 @@ class Pages extends Wire {
 	 * @param array $options Options passed to delete method (since 3.0.163)
 	 *
 	 */
-	public function ___deleteReady(Page $page, array $options = array()) {
+	public function ___deleteReady(Page $page, array $options = []) {
 		if($options) {} // ignore
 		foreach($this->types as $manager) {
 			if($manager->hasValidTemplate($page)) $manager->deleteReady($page);
@@ -2323,7 +2318,7 @@ class Pages extends Wire {
 	 * @param array $options Options passed to delete method (since 3.0.163)
 	 *
 	 */
-	public function ___deleted(Page $page, array $options = array()) { 
+	public function ___deleted(Page $page, array $options = []) { 
 		if($options) {}
 		if(empty($options['_deleteBranch'])) $this->log("Deleted page", $page); 
 		$this->wire()->cache->maintenance($page);
@@ -2446,16 +2441,16 @@ class Pages extends Wire {
 		if($isPublished && (!$wasPublished || $isInserted)) $this->published($page);
 		if(!$isPublished && $wasPublished) $this->unpublished($page);
 	
-		$from = array();
-		$to = array();
+		$from = [];
+		$to = [];
 		foreach(Page::getStatuses() as $name => $flag) {
 			if($flag == Page::statusUnpublished) continue; // logged separately
 			if($statusPrevious & $flag) $from[] = $name;
 			if($status & $flag) $to[] = $name; 
 		}
 		if(count($from) || count($to)) {
-			$added = array();
-			$removed = array();
+			$added = [];
+			$removed = [];
 			foreach($from as $name) if(!in_array($name, $to)) $removed[] = $name;
 			foreach($to as $name) if(!in_array($name, $from)) $added[] = $name;
 			$str = '';
@@ -2591,6 +2586,6 @@ class Pages extends Wire {
 	 * @see Pages::saved(), Pages::savedField()
 	 *
 	 */
-	public function ___savedPageOrField(Page $page, array $changes = array()) { }
+	public function ___savedPageOrField(Page $page, array $changes = []) { }
 
 }

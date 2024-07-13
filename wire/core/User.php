@@ -211,7 +211,7 @@ class User extends Page {
 		}
 		
 		if($context === true || $context === 'templates') {
-			$addedTemplates = array();
+			$addedTemplates = [];
 			foreach($this->wire()->templates as $t) {
 				if(!$t->useRoles) continue;
 				$has = $hook ? $this->hasTemplatePermission($name, $t) : $this->___hasTemplatePermission($name, $t);
@@ -555,7 +555,7 @@ class User extends Page {
 	 * @return string URL for editing this user
 	 *
 	 */
-	public function editUrl($options = array()) {
+	public function editUrl($options = []) {
 		return str_replace('/page/edit/', '/access/users/edit/', parent::editUrl($options));
 	}
 

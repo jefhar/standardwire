@@ -34,7 +34,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * Array where get/set properties are stored
 	 *
 	 */
-	protected $data = array(); 
+	protected $data = []; 
 
 	/**
 	 * Set a value to this object’s data
@@ -263,7 +263,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 			$key = array_shift($keys); // get first item
 		} else {
 			// dot not present
-			$keys = array();
+			$keys = [];
 		}
 		if($from->wire($key) !== null) return null; // don't allow API vars to be retrieved this way
 		if($from instanceof WireData) {
@@ -288,7 +288,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 					if($key == 'count') {
 						$value = count($value);
 					} else {
-						$a = array();
+						$a = [];
 						foreach($value as $v) $a[] = $v->get($key); 	
 						$value = $a; 
 					}

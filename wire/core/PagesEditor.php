@@ -69,7 +69,7 @@ class PagesEditor extends Wire {
 	 * @throws WireException When some criteria prevents the page from being saved.
 	 *
 	 */
-	public function add($template, $parent, $name = '', array $values = array()) {
+	public function add($template, $parent, $name = '', array $values = []) {
 
 		// the $values may optionally be the 3rd argument
 		if(is_array($name)) {
@@ -82,7 +82,7 @@ class PagesEditor extends Wire {
 			if(!$template) throw new WireException("Unknown template");
 		}
 
-		$options = array('template' => $template, 'parent' => $parent);
+		$options = ['template' => $template, 'parent' => $parent];
 		if(isset($values['pageClass'])) {
 			$options['pageClass'] = $values['pageClass'];
 			unset($values['pageClass']);
@@ -147,11 +147,11 @@ class PagesEditor extends Wire {
 	 * @return bool True if saveable, False if not
 	 *
 	 */
-	public function isSaveable(Page $page, &$reason, $fieldName = '', array $options = array()) {
+	public function isSaveable(Page $page, &$reason, $fieldName = '', array $options = []) {
 
 		$saveable = false;
 		$outputFormattingReason = "Call \$page->of(false); before getting/setting values that will be modified and saved.";
-		$corrupted = array();
+		$corrupted = [];
 
 		if($fieldName && is_object($fieldName)) {
 			/** @var Field $fieldName */
@@ -165,7 +165,7 @@ class PagesEditor extends Wire {
 				if(isset($corruptedFields[$change])) $corrupted[] = $change;
 			}
 			// if focused on a specific field... 
-			if($fieldName && !in_array($fieldName, $corrupted)) $corrupted = array();
+			if($fieldName && !in_array($fieldName, $corrupted)) $corrupted = [];
 		}
 
 		if($page instanceof NullPage) {
@@ -401,7 +401,7 @@ class PagesEditor extends Wire {
 	 * @return string If a name was generated it is returned. If no name was generated blank is returned.
 	 *
 	 */
-	public function setupPageName(Page $page, array $options = array()) {
+	public function setupPageName(Page $page, array $options = []) {
 		return $this->pages->names()->setupNewPageName($page, isset($options['format']) ? $options['format'] : '');
 	}
 	
@@ -428,17 +428,9 @@ class PagesEditor extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	public function save(Page $page, $options = array()) {
+	public function save(Page $page, $options = []) {
 
-		$defaultOptions = array(
-			'uncacheAll' => true,
-			'resetTrackChanges' => true,
-			'adjustName' => true,
-			'forceID' => 0,
-			'ignoreFamily' => false,
-			'noHooks' => false, 
-			'noFields' => false, 
-		);
+		$defaultOptions = ['uncacheAll' => true, 'resetTrackChanges' => true, 'adjustName' => true, 'forceID' => 0, 'ignoreFamily' => false, 'noHooks' => false, 'noFields' => false];
 
 		if(is_string($options)) $options = Selectors::keyValueStringToArray($options);
 		$options = array_merge($defaultOptions, $options);
@@ -513,20 +505,14 @@ class PagesEditor extends Wire {
 			$extraData = $this->pages->saveReady($page); 
 			$this->pages->savePageOrFieldReady($page);
 		} else {
-			$extraData = array();
+			$extraData = [];
 		}
 
 		if($this->pages->names()->isUntitledPageName($page->name)) {
 			$this->pages->setupPageName($page);
 		}
 
-		$data = array(
-			'parent_id' => (int) $page->parent_id,
-			'templates_id' => (int) $page->template->id,
-			'name' => $sanitizer->pageName($page->name, Sanitizer::toAscii),
-			'status' => (int) $page->status,
-			'sort' =>  ($page->sort > -1 ? (int) $page->sort : 0)
-		);
+		$data = ['parent_id' => (int) $page->parent_id, 'templates_id' => (int) $page->template->id, 'name' => $sanitizer->pageName($page->name, Sanitizer::toAscii), 'status' => (int) $page->status, 'sort' =>  ($page->sort > -1 ? (int) $page->sort : 0)];
 
 		if(is_array($extraData)) foreach($extraData as $column => $value) {
 			$column = $database->escapeCol($column);
@@ -699,8 +685,8 @@ class PagesEditor extends Wire {
 		if(!$page->isChanged() && !$isNew) {
 			$this->pages->debugLog('save', '[not-changed]', true);
 			if(empty($options['noHooks'])) {
-				$this->pages->saved($page, array());
-				$this->pages->savedPageOrField($page, array());
+				$this->pages->saved($page, []);
+				$this->pages->savedPageOrField($page, []);
 			}
 			return true;
 		}
@@ -713,7 +699,7 @@ class PagesEditor extends Wire {
 		$page->of(false);
 
 		// when a page is statusCorrupted, it records what fields are corrupted in _statusCorruptedFields array
-		$corruptedFields = $page->hasStatus(Page::statusCorrupted) ? $page->_statusCorruptedFields : array();
+		$corruptedFields = $page->hasStatus(Page::statusCorrupted) ? $page->_statusCorruptedFields : [];
 
 		// save each individual Fieldtype data in the fields_* tables
 		foreach($page->fieldgroup as $field) {
@@ -851,7 +837,7 @@ class PagesEditor extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	public function saveField(Page $page, $field, $options = array()) {
+	public function saveField(Page $page, $field, $options = []) {
 
 		$reason = '';
 		if(is_string($options)) $options = Selectors::keyValueStringToArray($options);
@@ -901,7 +887,7 @@ class PagesEditor extends Wire {
 			$return = true;
 			if(empty($options['noHooks'])) {
 				$this->pages->savedField($page, $field);
-				$this->pages->savedPageOrField($page, array($field->name));
+				$this->pages->savedPageOrField($page, [$field->name]);
 			}
 		} else {
 			$return = false;
@@ -1014,7 +1000,7 @@ class PagesEditor extends Wire {
 			
 		} else if($multi) {
 			// multiple page IDs without recursive option, can be handled in one query
-			$ids = array();
+			$ids = [];
 			foreach($pageID as $id) {
 				$id = (int) "$id";
 				if($id > 0) $ids[$id] = $id;
@@ -1036,7 +1022,7 @@ class PagesEditor extends Wire {
 		if(!$recursive) return $rowCount;
 		
 		// recursive mode assumed from this point forward
-		$parentIDs = array($pageID);
+		$parentIDs = [$pageID];
 
 		do {
 			$parentID = array_shift($parentIDs);
@@ -1090,15 +1076,15 @@ class PagesEditor extends Wire {
 	 * @throws WireException on fatal error
 	 *
 	 */
-	public function delete(Page $page, $recursive = false, array $options = array()) {
+	public function delete(Page $page, $recursive = false, array $options = []) {
 		
-		$defaults = array(
-			'uncacheAll' => false, 
-			'recursive' => is_bool($recursive) ? $recursive : false,
-			// internal use properties:
-			'_level' => 0,
-			'_deleteBranch' => false,
-		);
+		$defaults = [
+      'uncacheAll' => false,
+      'recursive' => is_bool($recursive) ? $recursive : false,
+      // internal use properties:
+      '_level' => 0,
+      '_deleteBranch' => false,
+  ];
 
 		if(is_array($recursive)) $options = $recursive; 	
 		$options = array_merge($defaults, $options);
@@ -1163,13 +1149,9 @@ class PagesEditor extends Wire {
 	 * @throws WireException|\Exception on fatal error
 	 *
 	 */
-	public function _clone(Page $page, Page $parent = null, $recursive = true, $options = array()) {
+	public function _clone(Page $page, Page $parent = null, $recursive = true, $options = []) {
 		
-		$defaults = array(
-			'forceID' => 0, 
-			'set' => array(), 
-			'recursionLevel' => 0, // recursion level (internal use only)
-		);
+		$defaults = ['forceID' => 0, 'set' => [], 'recursionLevel' => 0];
 
 		if(is_string($options)) $options = Selectors::keyValueStringToArray($options);
 		$options = array_merge($defaults, $options);
@@ -1178,10 +1160,7 @@ class PagesEditor extends Wire {
 		if(count($options['set']) && !empty($options['set']['name'])) {
 			$name = $options['set']['name'];
 		} else {
-			$name = $this->pages->names()->uniquePageName(array(
-				'name' => $page->name, 
-				'parent' => $parent
-			));
+			$name = $this->pages->names()->uniquePageName(['name' => $page->name, 'parent' => $parent]);
 		}
 		
 		$of = $page->of();
@@ -1264,9 +1243,7 @@ class PagesEditor extends Wire {
 				$numChildren = $children->count();
 				foreach($children as $child) {
 					/** @var Page $child */
-					$childCopy = $this->pages->clone($child, $copy, true, array(
-						'recursionLevel' => $options['recursionLevel'] + 1,
-					));
+					$childCopy = $this->pages->clone($child, $copy, true, ['recursionLevel' => $options['recursionLevel'] + 1]);
 					if($childCopy->id) $numChildrenCopied++;
 				}
 				$start += $limit;
@@ -1321,18 +1298,14 @@ class PagesEditor extends Wire {
 	 */
 	public function touch($pages, $options = null, $type = 'modified') {
 		
-		$defaults = array(
-			'time' => (is_string($options) || is_int($options) ? $options : null),
-			'type' => $type,
-			'user' => false,
-		);
+		$defaults = ['time' => (is_string($options) || is_int($options) ? $options : null), 'type' => $type, 'user' => false];
 
 		$options = is_array($options) ? array_merge($defaults, $options) : $defaults;
 		$database = $this->wire()->database;
 		$time = $options['time']; 
 		$type = $options['type'];
 		$user = $options['user'] === true ? $this->wire()->user : $options['user'];
-		$ids = array();
+		$ids = [];
 		
 		if($time === 'modified' || $time === 'created' || $time === 'published') {
 			// time argument was omitted and type supplied here instead
@@ -1416,7 +1389,7 @@ class PagesEditor extends Wire {
 	 * @throws WireException if given parent does not exist, or move is not allowed
 	 *
 	 */
-	public function move(Page $child, $parent, array $options = array()) {
+	public function move(Page $child, $parent, array $options = []) {
 		
 		if(is_string($parent) || is_int($parent)) $parent = $this->pages->get($parent); 
 		if(!$parent instanceof Page || !$parent->id) throw new WireException('Unable to locate parent for move');
@@ -1542,7 +1515,7 @@ class PagesEditor extends Wire {
 		
 		if(!$parent->id || !$parent->numChildren) return 0;
 		$database = $this->wire()->database;
-		$sorts = array();
+		$sorts = [];
 		$sort = 0;
 		
 		if($parent->sortfield() == 'sort') {
@@ -1565,7 +1538,7 @@ class PagesEditor extends Wire {
 			// children of $parent don't currently use "sort" as sort property
 			// so we will update the "sort" of children to be consistent with that
 			// of whatever sort property is in use. 
-			$o = array('findIDs' => 1, 'cache' => false);
+			$o = ['findIDs' => 1, 'cache' => false];
 			foreach($parent->children('include=all', $o) as $id) {
 				$id = (int) $id;
 				$sorts[] = "($id,$sort)";	
@@ -1613,19 +1586,11 @@ class PagesEditor extends Wire {
 		$newPage->parent = $parent;
 		$newPage->templatePrevious = $prevTemplate;
 
-		$this->clear($oldPage, array(
-			'clearParents' => false, 
-			'clearAccess' => $prevTemplate->id != $newPage->template->id, 
-			'clearSortfield' => false,
-		)); 
+		$this->clear($oldPage, ['clearParents' => false, 'clearAccess' => $prevTemplate->id != $newPage->template->id, 'clearSortfield' => false]); 
 		
-		$binds = array(
-			':id' => $id, 
-			':parent_id' => $parent->id, 
-			':prev_id' => $prevId, 
-		);
+		$binds = [':id' => $id, ':parent_id' => $parent->id, ':prev_id' => $prevId];
 		
-		$sqls = array();
+		$sqls = [];
 		$sqls[] = 'UPDATE pages SET id=:id, parent_id=:parent_id WHERE id=:prev_id';
 	
 		foreach($newPage->template->fieldgroup as $field) {
@@ -1661,21 +1626,22 @@ class PagesEditor extends Wire {
 	 * @since 3.0.189
 	 * 
 	 */
-	public function clear(Page $page, array $options = array()) {
+	public function clear(Page $page, array $options = []) {
 		
-		$defaults = array(
-			'clearMethod' => 'delete', // 'delete' or 'empty'
-			'haltOnError' => false,
-			'clearFields' => true,
-			'clearFiles' => true, 
-			'clearMeta' => true, 
-			'clearAccess' => true, 
-			'clearSortfield' => true,
-			'clearParents' => true,
-		);
+		$defaults = [
+      'clearMethod' => 'delete',
+      // 'delete' or 'empty'
+      'haltOnError' => false,
+      'clearFields' => true,
+      'clearFiles' => true,
+      'clearMeta' => true,
+      'clearAccess' => true,
+      'clearSortfield' => true,
+      'clearParents' => true,
+  ];
 
 		$options = array_merge($defaults, $options);
-		$errors = array();
+		$errors = [];
 		$halt = false;
 
 		if($options['clearFields']) {
@@ -1765,7 +1731,7 @@ class PagesEditor extends Wire {
 	 */
 	public function newPageOptions($options) {
 		
-		if(empty($options)) return array(); 
+		if(empty($options)) return []; 
 
 		$template = null; /** @var Template|null $template */
 		$parent = null;
@@ -1777,22 +1743,22 @@ class PagesEditor extends Wire {
 			if(strpos($options, '=') !== false) {
 				$selectors = new Selectors($options);
 				$this->wire($selectors);
-				$options = array();
+				$options = [];
 				foreach($selectors as $selector) {
 					$options[$selector->field()] = $selector->value;
 				}
 			} else if(strpos($options, '/') === 0) {
-				$options = array('path' => $options);
+				$options = ['path' => $options];
 			} else {
-				$options = array('template' => $options);
+				$options = ['template' => $options];
 			}
 		} else if(is_object($options)) {
-			$options = $options instanceof Template ? array('template' => $options) : array();
+			$options = $options instanceof Template ? ['template' => $options] : [];
 		} else if(is_int($options)) {
 			$template = $this->wire()->templates->get($options);
-			$options = $template ? array('template' => $template) : array();
+			$options = $template ? ['template' => $template] : [];
 		} else {
-			$options = array();
+			$options = [];
 		}
 
 		// only use property 'parent' rather than 'parent_id'

@@ -57,25 +57,9 @@ class WireRandom extends Wire {
 	 * @since 3.0.111
 	 *
 	 */
-	public function alphanumeric($length = 0, array $options = array()) {
+	public function alphanumeric($length = 0, array $options = []) {
 
-		$defaults = array(
-			'alpha' => true,
-			'upper' => true,
-			'lower' => true,
-			'numeric' => true,
-			'strict' => false,
-			'allow' => '',
-			'disallow' => array(),
-			'extras' => array(),
-			'require' => array(),
-			'minLength' => 10,
-			'maxLength' => 40,
-			'noRepeat' => false,
-			'noStart' => array(),
-			'noEnd' => array(),
-			'fast' => $this->cryptoSecure(),
-		);
+		$defaults = ['alpha' => true, 'upper' => true, 'lower' => true, 'numeric' => true, 'strict' => false, 'allow' => '', 'disallow' => [], 'extras' => [], 'require' => [], 'minLength' => 10, 'maxLength' => 40, 'noRepeat' => false, 'noStart' => [], 'noEnd' => [], 'fast' => $this->cryptoSecure()];
 
 		$alphaUpperChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$alphaLowerChars = 'abcdefghijklmnopqrstuvwxyz';
@@ -89,18 +73,18 @@ class WireRandom extends Wire {
 		}
 
 		// some options can be specified as strings, but we want them as arrays
-		foreach(array('disallow', 'extras', 'require', 'noStart', 'noEnd') as $name) {
+		foreach(['disallow', 'extras', 'require', 'noStart', 'noEnd'] as $name) {
 			$val = $options[$name];
 			if(is_array($val)) continue;
 			if(strlen($val)) {
 				$options[$name] = str_split($val);
 			} else {
-				$options[$name] = array();
+				$options[$name] = [];
 			}
 		}
 
 		// some options can be specified as arrays, but we want them as strings
-		foreach(array('allow', 'noStart', 'noEnd') as $name) {
+		foreach(['allow', 'noStart', 'noEnd'] as $name) {
 			if(is_array($options[$name])) $options[$name] = implode('', $options[$name]);
 		}
 
@@ -178,9 +162,7 @@ class WireRandom extends Wire {
 	 * 
 	 */
 	protected function string1($length, $allowed, array $options) {
-		$defaults = array(
-			'noRepeat' => false,
-		);
+		$defaults = ['noRepeat' => false];
 		$options = array_merge($defaults, $options);
 		$value = '';
 		$lastChar = '';
@@ -209,19 +191,13 @@ class WireRandom extends Wire {
 	 */
 	protected function string2($length, $allowed, array $options) {
 		
-		$defaults = array(
-			'extras' => array(),
-			'alpha' => true,
-			'lower' => true, 
-			'upper' => true, 
-			'noRepeat' => false,
-		);
+		$defaults = ['extras' => [], 'alpha' => true, 'lower' => true, 'upper' => true, 'noRepeat' => false];
 		
 		$options = array_merge($defaults, $options);
 		$qty = 0;
 		$value = '';
 		$numExtras = count($options['extras']);
-		$base64Extras = array('slash' => '/', 'period' => '.');
+		$base64Extras = ['slash' => '/', 'period' => '.'];
 		
 		do {
 			$baseLen = strlen($allowed) < 50 ? $length * 3 : $length * 2;
@@ -283,7 +259,7 @@ class WireRandom extends Wire {
 	 * @since 3.0.111
 	 *
 	 */
-	public function alpha($length = 0, array $options = array()) {
+	public function alpha($length = 0, array $options = []) {
 		if(!isset($options['numeric'])) $options['numeric'] = false;
 		return $this->alphanumeric($length, $options);
 	}
@@ -297,7 +273,7 @@ class WireRandom extends Wire {
 	 * @since 3.0.111
 	 *
 	 */
-	public function numeric($length = 0, array $options = array()) {
+	public function numeric($length = 0, array $options = []) {
 		$options['alpha'] = false;
 		return $this->alphanumeric($length, $options);
 	}
@@ -314,12 +290,9 @@ class WireRandom extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	public function integer($min = 0, $max = PHP_INT_MAX, array $options = array()) {
+	public function integer($min = 0, $max = PHP_INT_MAX, array $options = []) {
 
-		$defaults = array(
-			'info' => false,
-			'cryptoSecure' => false,
-		);
+		$defaults = ['info' => false, 'cryptoSecure' => false];
 		
 		if(is_array($min)) {
 			$options = $min;
@@ -362,7 +335,7 @@ class WireRandom extends Wire {
 			$type = 'mt_rand';
 		}
 
-		if($options['info']) return array($value, $type);
+		if($options['info']) return [$value, $type];
 
 		return $value;
 	}
@@ -386,18 +359,14 @@ class WireRandom extends Wire {
 	 * @return mixed|array|null
 	 * 
 	 */
-	protected function arrayItem(array $a, array $options = array()) {
+	protected function arrayItem(array $a, array $options = []) {
 		
-		$defaults = array(
-			'qty' => 1, 
-			'getKey' => false, 
-			'getArray' => null,  // null=not specified
-		);
+		$defaults = ['qty' => 1, 'getKey' => false, 'getArray' => null];
 	
 		$options = array_merge($defaults, $options);
 		$count = count($a);
 		$keys = array_keys($a);
-		$items = array();
+		$items = [];
 		$keepKeys = true;
 
 		// if getArray option not specified, auto determine from qty
@@ -406,7 +375,7 @@ class WireRandom extends Wire {
 		}
 		
 		// if given an empty array, return an empty value
-		if(!$count) return $options['getArray'] ? array() : null;
+		if(!$count) return $options['getArray'] ? [] : null;
 	
 		// if impossible qty requested, adjust according to what is present
 		if($options['qty'] < 1) $options['qty'] = $count;
@@ -463,7 +432,7 @@ class WireRandom extends Wire {
 	 * 
 	 */
 	public function arrayValues(array $a, $qty = 0) {
-		return $this->arrayItem($a, array('getArray' => true, 'qty' => $qty)); 
+		return $this->arrayItem($a, ['getArray' => true, 'qty' => $qty]); 
 	}
 
 	/**
@@ -474,7 +443,7 @@ class WireRandom extends Wire {
 	 * 
 	 */
 	public function arrayKey(array $a) {
-		return $this->arrayItem($a, array('getKey' => true));
+		return $this->arrayItem($a, ['getKey' => true]);
 	}
 
 	/**
@@ -486,7 +455,7 @@ class WireRandom extends Wire {
 	 * 
 	 */
 	public function arrayKeys(array $a, $qty = 0) {
-		return $this->arrayItem($a, array('getKey' => true, 'getArray' => true, 'qty' => $qty));
+		return $this->arrayItem($a, ['getKey' => true, 'getArray' => true, 'qty' => $qty]);
 	}
 
 	/**
@@ -509,7 +478,7 @@ class WireRandom extends Wire {
 		
 		if(!$isArray) {
 			if(function_exists('mb_substr')) {
-				$a = array();
+				$a = [];
 				for($n = 0; $n < mb_strlen($value); $n++) {
 					$c = mb_substr($value, $n, 1);
 					$a[] = $c;
@@ -548,21 +517,9 @@ class WireRandom extends Wire {
 	 * @return string
 	 *
 	 */
-	public function pass(array $options = array()) {
+	public function pass(array $options = []) {
 
-		$defaults = array(
-			'minLength' => 7,
-			'maxLength' => 15,
-			'minUpper' => 1,
-			'maxUpper' => 3,
-			'minLower' => 1,
-			'minDigits' => 1,
-			'maxDigits' => 0,
-			'minSymbols' => 0,
-			'maxSymbols' => 3,
-			'useSymbols' => array('@', '#', '$', '%', '^', '*', '_', '-', '+', '?', '(', ')', '!', '.', '=', '/'),
-			'disallow' => array('O', '0', 'I', '1', 'l'),
-		);
+		$defaults = ['minLength' => 7, 'maxLength' => 15, 'minUpper' => 1, 'maxUpper' => 3, 'minLower' => 1, 'minDigits' => 1, 'maxDigits' => 0, 'minSymbols' => 0, 'maxSymbols' => 3, 'useSymbols' => ['@', '#', '$', '%', '^', '*', '_', '-', '+', '?', '(', ')', '!', '.', '=', '/'], 'disallow' => ['O', '0', 'I', '1', 'l']];
 		
 		$options = array_merge($defaults, $options);
 		
@@ -585,9 +542,9 @@ class WireRandom extends Wire {
 	protected function passCreate(array $options) {
 		
 		$length = $this->integer($options['minLength'], $options['maxLength']);
-		$base64Symbols = array('/' , '.');
+		$base64Symbols = ['/', '.'];
 		$disallow = $options['disallow'];
-		$disallowCase = array(); // with both upper and lower versions
+		$disallowCase = []; // with both upper and lower versions
 
 		foreach($disallow as $c) {
 			$c = strtolower($c);
@@ -607,7 +564,7 @@ class WireRandom extends Wire {
 			do {
 				$pos = strpos($value, $char);
 				if($pos === false) break;
-				$value[$pos] = $this->alphanumeric(1, array('disallow' => $disallow));
+				$value[$pos] = $this->alphanumeric(1, ['disallow' => $disallow]);
 			} while(1);
 		}
 
@@ -643,7 +600,7 @@ class WireRandom extends Wire {
 				$test = $this->wire()->sanitizer->alpha($value);
 				if(strlen($test) < $numUpper) {
 					// there aren't enough characters present to meet requirements, so add some	
-					$value .= $this->alpha($numUpper - strlen($test), array('disallow' => $disallow));
+					$value .= $this->alpha($numUpper - strlen($test), ['disallow' => $disallow]);
 				}
 				for($i = 0; $i < strlen($value); $i++) {
 					$c = strtoupper($value[$i]);
@@ -653,7 +610,7 @@ class WireRandom extends Wire {
 					if(!$numUpper) break;
 				}
 				// still need more? append new characters as needed
-				if($numUpper) $value .= strtoupper($this->alpha($numUpper, array('disallow' => $disallowCase)));
+				if($numUpper) $value .= strtoupper($this->alpha($numUpper, ['disallow' => $disallowCase]));
 			}
 
 		} else if($options['maxUpper'] < 0) {
@@ -666,7 +623,7 @@ class WireRandom extends Wire {
 			$test = preg_replace('/[^a-z]/', '', $value);
 			if(strlen($test) < $options['minLower']) {
 				// needs more lowercase
-				$value .= strtolower($this->alpha($options['minLower'] - strlen($test), array('disallow' => $disallowCase)));
+				$value .= strtolower($this->alpha($options['minLower'] - strlen($test), ['disallow' => $disallowCase]));
 			}
 		}
 
@@ -676,7 +633,7 @@ class WireRandom extends Wire {
 			$test = str_replace($options['disallow'], '', $test);
 			$numDigits = $options['minDigits'] - strlen($test);
 			if($numDigits > 0) {
-				$value .= $this->numeric($numDigits, array('disallow' => $disallow));
+				$value .= $this->numeric($numDigits, ['disallow' => $disallow]);
 			}
 		}
 
@@ -689,7 +646,7 @@ class WireRandom extends Wire {
 				if($isDigit) $numDigits++;
 				if($isDigit && $numDigits > $options['maxDigits']) {
 					// convert digit to alpha
-					$value[$n] = strtolower($this->alpha(1, array('disallow' => $disallowCase)));
+					$value[$n] = strtolower($this->alpha(1, ['disallow' => $disallowCase]));
 				}
 			}
 		}
@@ -702,13 +659,13 @@ class WireRandom extends Wire {
 				if($pos === false) break;
 				if(ctype_digit($char)) {
 					// find a different digit
-					$c = $this->numeric(1, array('disallow' => $disallow));
+					$c = $this->numeric(1, ['disallow' => $disallow]);
 				} else if(strtoupper($char) === $char) {
 					// find a different uppercase char
-					$c = strtoupper($this->alpha(1, array('disallow' => $disallowCase)));
+					$c = strtoupper($this->alpha(1, ['disallow' => $disallowCase]));
 				} else {
 					// find a different lowercase char
-					$c = strtolower($this->alpha(1, array('disallow' => $disallowCase)));
+					$c = strtolower($this->alpha(1, ['disallow' => $disallowCase]));
 				}
 				while(in_array($c, $disallow)) {
 					// insurance fallback, not likely (impossible?) to occur
@@ -734,12 +691,7 @@ class WireRandom extends Wire {
 	 */
 	protected function passTrunc($value, array $options) {
 		
-		$chars = array(
-			'minLower' => array(),
-			'minUpper' => array(),
-			'minDigits' => array(),
-			'minSymbols' => array(),
-		);
+		$chars = ['minLower' => [], 'minUpper' => [], 'minDigits' => [], 'minSymbols' => []];
 
 		$value = str_split($value);
 
@@ -790,12 +742,9 @@ class WireRandom extends Wire {
 	 * @return string|array Returns only array if you specify array for $test argument, otherwise returns string
 	 *
 	 */
-	public function base64($requiredLength = 22, $options = array()) {
+	public function base64($requiredLength = 22, $options = []) {
 
-		$defaults = array(
-			'fast' => false,
-			'test' => false,
-		);
+		$defaults = ['fast' => false, 'test' => false];
 
 		if(is_array($options)) {
 			$options = array_merge($defaults, $options);
@@ -806,7 +755,7 @@ class WireRandom extends Wire {
 
 		$buffer = '';
 		$valid = false;
-		$tests = array();
+		$tests = [];
 		$test = $options['test'];
 
 		if($options['fast'] && !$test) {

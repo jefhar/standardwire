@@ -73,23 +73,26 @@ class PagesParents extends Wire {
 	 * @since 3.0.156
 	 *
 	 */
-	public function getParents($page, array $options = array()) {
+	public function getParents($page, array $options = []) {
 
-		$defaults = array(
-			'column' => '', // get 1 column
-			'columns' => array(),  // get array multiple columns
-			'joinQty' => 4,
-			'indexBy' => '', // id or parent_id or blank
-			'includePage' => false,
-			'noHome' => false,
-		);
+		$defaults = [
+      'column' => '',
+      // get 1 column
+      'columns' => [],
+      // get array multiple columns
+      'joinQty' => 4,
+      'indexBy' => '',
+      // id or parent_id or blank
+      'includePage' => false,
+      'noHome' => false,
+  ];
 
 		$options = array_merge($defaults, $options);
-		$values = array();
-		$columns = array();
+		$values = [];
+		$columns = [];
 		$joinQty = (int) $options['joinQty'];
-		$joins = array();
-		$selects = array('pages.parent_id AS parent_id');
+		$joins = [];
+		$selects = ['pages.parent_id AS parent_id'];
 		$indexBy = $options['indexBy'] ?: 'id';
 		$lastTable = 'pages';
 		$database = $this->wire('database');
@@ -98,7 +101,7 @@ class PagesParents extends Wire {
 		$getPages = empty($options['columns']) && empty($options['column']);
 		$id = (int) "$page";
 		$lastParentID = $id;
-		$blankReturn = $getPages ? $this->pages->newPageArray() : array();
+		$blankReturn = $getPages ? $this->pages->newPageArray() : [];
 
 		if($id <= 0 || (!$options['includePage'] && $id <= 1)) return $blankReturn;
 
@@ -160,7 +163,7 @@ class PagesParents extends Wire {
 			if(!$n && !$options['includePage']) {
 				// skip first
 			} else if(count($columns)) {
-				$value = array("id" => $lastParentID, "parent_id" => $parentID);
+				$value = ["id" => $lastParentID, "parent_id" => $parentID];
 				foreach($columns as $col) {
 					$value[$col] = $row["$col$key"];
 				}
@@ -183,7 +186,7 @@ class PagesParents extends Wire {
 		if(!count($values)) return $blankReturn;
 
 		if($getPath) {
-			$names = array();
+			$names = [];
 			foreach(array_reverse($values, true) as $key => $value) {
 				$name = $value['id'] > 1 ? $value['name'] : '';
 				if($name) $names[] = $name;
@@ -194,17 +197,17 @@ class PagesParents extends Wire {
 		if($getPages) {
 			$values = $this->pages->loader()->getById($values);
 		} else if($getOneCol) {
-			$a = array();
+			$a = [];
 			foreach($values as $key => $value) {
 				$index = empty($options['indexBy']) ? $key : $value[$indexBy];
 				$a[$index] = $value[$getOneCol];
 			}
 			$values = $a;
 		} else {
-			$a = array();
+			$a = [];
 			foreach($values as $key => $value) {
 				$index = empty($options['indexBy']) ? $key : $value[$indexBy];
-				$a[$index] = array();
+				$a[$index] = [];
 				foreach($options['columns'] as $col) {
 					if(isset($value[$col])) $a[$index][$col] = $value[$col];
 				}
@@ -223,36 +226,46 @@ class PagesParents extends Wire {
 	 * @since 3.0.156
 	 * 
 	 */
-	public function findParents(array $options = array()) {
+	public function findParents(array $options = []) {
 		
 		$database = $this->wire()->database;
 		
 		static $calls = 0;
 		
-		$defaults = array(
-			'minChildren' => 1, // min children to match
-			'maxChildren' => 0, // max children to match
-			'numChildren' => 0, // exact children to match 
-			'parent' => 0, // start from this parent, or negative int for minimum parent ID
-			'recursive' => true, // recursively find all (when combined with parent option)
-			'start' => 0,
-			'limit' => 0, 
-			'column' => '', // get this 1 column (native columns only)
-			'columns' => array(), // get these columns (native columns only)
-			'sortByID' => false, 
-			'indexByID' => false, // return value should be indexed by page ID? 
-			'useIndexTable' => true, // allow use of pages_parents index table? (much faster)
-			'debug' => false, // debug mode makes it also return a debug index w/additional info
-			'_level' => 0, // recursion level (internal)
-		);
+		$defaults = [
+      'minChildren' => 1,
+      // min children to match
+      'maxChildren' => 0,
+      // max children to match
+      'numChildren' => 0,
+      // exact children to match
+      'parent' => 0,
+      // start from this parent, or negative int for minimum parent ID
+      'recursive' => true,
+      // recursively find all (when combined with parent option)
+      'start' => 0,
+      'limit' => 0,
+      'column' => '',
+      // get this 1 column (native columns only)
+      'columns' => [],
+      // get these columns (native columns only)
+      'sortByID' => false,
+      'indexByID' => false,
+      // return value should be indexed by page ID?
+      'useIndexTable' => true,
+      // allow use of pages_parents index table? (much faster)
+      'debug' => false,
+      // debug mode makes it also return a debug index w/additional info
+      '_level' => 0,
+  ];
 		
 		$options = array_merge($defaults, $options);
 		$parentID = isset($options['parent']) ? (int) "$options[parent]" : 0;
-		$sql = array();
-		$bind = array();
+		$sql = [];
+		$bind = [];
 		$column = $options['column'];
 		$columns = $options['columns'];
-		if(empty($columns) && strlen($column)) $columns = array($column);
+		if(empty($columns) && strlen($column)) $columns = [$column];
 		$getPages = empty($columns) && !$options['_level'] && !$options['debug']; 
 		$forceRecursive = $options['recursive'] && !$options['useIndexTable']; 
 		$indexByID = $getPages || $forceRecursive ? true : $options['indexByID'];
@@ -295,7 +308,7 @@ class PagesParents extends Wire {
 		
 		$sql['group'] = "GROUP BY pages.id";
 		
-		foreach(array('minChildren' => '>=', 'maxChildren' => '<=', 'numChildren' => '=') as $key => $op) {
+		foreach(['minChildren' => '>=', 'maxChildren' => '<=', 'numChildren' => '='] as $key => $op) {
 			$value = (int) $options[$key];
 			if(empty($value)) continue;
 			if($key === 'minChildren' && $value === 1) continue; // already implied
@@ -318,7 +331,7 @@ class PagesParents extends Wire {
 			$query->bindValue($key, $value, \PDO::PARAM_INT);
 		}
 		$database->execute($query);
-		$values = array();
+		$values = [];
 
 		/** @noinspection PhpAssignmentInConditionInspection */
 		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
@@ -328,17 +341,13 @@ class PagesParents extends Wire {
 				$value = isset($row[$column]) ? $row[$column] : null;
 			} else if(!empty($columns)) {
 				// multiple columns
-				$value = array();
+				$value = [];
 				foreach($columns as $col) {
 					if(isset($row[$col])) $value[$col] = $row[$col];
 				}
 			} else if($getPages) {
 				// get pages
-				$value = array(
-					'id' => $id, 
-					'templates_id' => (int) $row['templates_id'],
-					'numChildren' => (int) $row['numChildren']
-				);
+				$value = ['id' => $id, 'templates_id' => (int) $row['templates_id'], 'numChildren' => (int) $row['numChildren']];
 			} else {
 				// undefined
 				$value = $row;
@@ -367,10 +376,10 @@ class PagesParents extends Wire {
 		}
 		
 		if($getPages) {
-			$pageArray = $this->pages->loader()->getById($values, array(
-				// since we already have numChildren, we don't need getByID to spend time finding it
-				'getNumChildren' => false, 
-			)); 
+			$pageArray = $this->pages->loader()->getById($values, [
+       // since we already have numChildren, we don't need getByID to spend time finding it
+       'getNumChildren' => false,
+   ]); 
 			foreach($pageArray as $page) {
 				$page->setQuietly('numChildren', $values[$page->id]['numChildren']); 
 			}
@@ -378,15 +387,11 @@ class PagesParents extends Wire {
 		} else {
 			if($debug && !$options['_level']) {
 				$hash = md5(print_r($values, true)); 
-				$debugInfo = array(
-					'calls' => $calls, 
-					'timer' => Debug::timer($timer), 
-					'hash' => $hash,
-				);
+				$debugInfo = ['calls' => $calls, 'timer' => Debug::timer($timer), 'hash' => $hash];
 				$calls = 0;
 				// add in breadcrumb debug property
 				foreach($values as $id => $value) {
-					if(!isset($value['breadcrumb'])) $value['breadcrumb'] = array();
+					if(!isset($value['breadcrumb'])) $value['breadcrumb'] = [];
 					$pid = $value['parent_id'];
 					while(isset($values[$pid])) {
 						$name = $values[$pid]['name'];
@@ -442,7 +447,7 @@ class PagesParents extends Wire {
 		if($minParentID) $fromParent = 0;
 		
 		if($parents == null) {
-			$parents = array();
+			$parents = [];
 			$sql = "
 				SELECT parents.id, parents.parent_id 
 				FROM pages 
@@ -461,7 +466,7 @@ class PagesParents extends Wire {
 	
 		if($fromParent) {
 			// filter out parents not descendents of $fromParent
-			$a = array();
+			$a = [];
 			$level++;
 			foreach(array_keys($parents, $fromParent) as $id) {
 				$a[$id] = $fromParent;
@@ -535,7 +540,7 @@ class PagesParents extends Wire {
 
 		$pages_id = (int) $page->id;
 		$database = $this->wire()->database;
-		$inserts = array();
+		$inserts = [];
 		$rowCount = 0;
 
 		if(!$page->isNew()) $this->clear($page);
@@ -613,7 +618,7 @@ class PagesParents extends Wire {
 		$query->bindValue(':pages_id', $page->id, \PDO::PARAM_INT);
 		$query->execute();
 	
-		$ids = array($page->id => $page->id);
+		$ids = [$page->id => $page->id];
 		while($row = $query->fetch(\PDO::FETCH_NUM)) {
 			$id = (int) $row[0];
 			$ids[$id] = $id;
@@ -621,7 +626,7 @@ class PagesParents extends Wire {
 		
 		$query->closeCursor();
 		
-		$inserts = array();
+		$inserts = [];
 
 		foreach($ids as $id) {
 			foreach($newParentIds as $parentId) {
@@ -695,13 +700,13 @@ class PagesParents extends Wire {
 		$database = $this->wire()->database;
 		$numRows = 0;
 		$pageId = (int) $page->id;
-		$inserts = array();
+		$inserts = [];
 		
 		// identify parents to store for $page
 		foreach($page->parents() as $parent) {
 			$parentId = (int) $parent->id;
 			if($parentId < 2) continue;
-			$inserts[] = array('pages_id' => $pageId, 'parents_id' => $parentId); 
+			$inserts[] = ['pages_id' => $pageId, 'parents_id' => $parentId]; 
 		}
 		
 		if(!count($inserts)) return 0;
@@ -744,7 +749,7 @@ class PagesParents extends Wire {
 	public function rebuildAll($fromParent = null) {
 
 		$database = $this->wire()->database;
-		$inserts = array();
+		$inserts = [];
 		$parents = $this->findParentIDs($fromParent ?: -2); // find parents within children
 		$rowCount = 0; 
 	
@@ -832,40 +837,7 @@ class PagesParents extends Wire {
 		$path = $page->path;
 		$database = $this->wire()->database;
 		
-		$tests = array(
-			'query-for-parents-of-page' => array(
-				'notes' => "Query DB for parents of $path. Result will exclude homepage.", 
-				'query' => "SELECT parents_id FROM pages_parents WHERE pages_id=$id",
-				'timer' => '',
-				'count' => 0, 
-				'pages' => array(),
-				'type' => 'database.query',
-			),
-			'query-for-pages-having-parent' => array(
-				'notes' => "Query DB for pages having parent $path. Result will exclude pages that are not themselves parents.", 
-				'query' => "SELECT pages_id FROM pages_parents WHERE parents_id=$id",
-				'timer' => '',
-				'count' => 0,
-				'pages' => array(),
-				'type' => 'database.query',
-			),
-			'pages-find-descendents' => array(
-				'notes' => "Use \$pages->find() with selector to find all descendents of $path with no exclusions.",
-				'query' => "has_parent=$id, sort=parent_id, sort=id, include=all", 
-				'timer' => '',
-				'count' => 0, 
-				'pages' => array(),
-				'type' => 'pages.find',
-			),
-			'page-children-descendents' => array(
-				'notes' => "Use recursive \$page->children() to manually reproduce result from previous test (the two should match)", 
-				'query' => "include=all, sort=id", 
-				'timer' => '',
-				'count' => 0, 
-				'pages' => array(),
-				'type' => 'descendents',
-			),
-		);
+		$tests = ['query-for-parents-of-page' => ['notes' => "Query DB for parents of $path. Result will exclude homepage.", 'query' => "SELECT parents_id FROM pages_parents WHERE pages_id=$id", 'timer' => '', 'count' => 0, 'pages' => [], 'type' => 'database.query'], 'query-for-pages-having-parent' => ['notes' => "Query DB for pages having parent $path. Result will exclude pages that are not themselves parents.", 'query' => "SELECT pages_id FROM pages_parents WHERE parents_id=$id", 'timer' => '', 'count' => 0, 'pages' => [], 'type' => 'database.query'], 'pages-find-descendents' => ['notes' => "Use \$pages->find() with selector to find all descendents of $path with no exclusions.", 'query' => "has_parent=$id, sort=parent_id, sort=id, include=all", 'timer' => '', 'count' => 0, 'pages' => [], 'type' => 'pages.find'], 'page-children-descendents' => ['notes' => "Use recursive \$page->children() to manually reproduce result from previous test (the two should match)", 'query' => "include=all, sort=id", 'timer' => '', 'count' => 0, 'pages' => [], 'type' => 'descendents']];
 		
 		foreach($tests as $key => $test) {
 			$timer = Debug::timer();

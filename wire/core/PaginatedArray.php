@@ -202,12 +202,12 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 *
 	 */
 	public function getProperty($property) {
-		static $properties = array(
-			// property => method to map to
-			'total' => 'getTotal',
-			'start' => 'getStart',
-			'limit' => 'getLimit',
-		);
+		static $properties = [
+      // property => method to map to
+      'total' => 'getTotal',
+      'start' => 'getStart',
+      'limit' => 'getLimit',
+  ];
 		if(!in_array($property, $properties)) return parent::getProperty($property);
 		$func = $properties[$property];
 		return $this->$func();
@@ -257,15 +257,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 */
 	public function getPaginationString($label = '', $usePageNum = false) {
 		
-		$options = array(
-			'label' => is_string($label) ? $label : '',
-			'zeroLabel' => '',
-			'usePageNum' => is_bool($usePageNum) ? $usePageNum : false,
-			'count' => -1,
-			'start' => -1,
-			'limit' => -1, 
-			'total' => -1
-		);
+		$options = ['label' => is_string($label) ? $label : '', 'zeroLabel' => '', 'usePageNum' => is_bool($usePageNum) ? $usePageNum : false, 'count' => -1, 'start' => -1, 'limit' => -1, 'total' => -1];
 		
 		if(is_array($label)) $options = array_merge($options, $label);
 		if(is_array($usePageNum)) $options = array_merge($options, $usePageNum);
@@ -316,13 +308,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 		$count = $this->count();
 		$total = $this->getTotal();
 		if($limit || $total > $count) {
-			$info = array(
-				'count' => $count,
-				'total' => $total,
-				'start' => $this->getStart(),
-				'limit' => $limit, 
-				'pager' => $this->getPaginationString(), 
-			);
+			$info = ['count' => $count, 'total' => $total, 'start' => $this->getStart(), 'limit' => $limit, 'pager' => $this->getPaginationString()];
 			$info = array_merge($info, parent::__debugInfo());
 		} else {
 			$info = parent::__debugInfo();

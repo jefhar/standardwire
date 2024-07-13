@@ -56,7 +56,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @var array
 	 * 
 	 */
-	protected $finderOptions = array();
+	protected $finderOptions = [];
 
 	/**
 	 * Is this a lazy-loaded PageArray?
@@ -72,7 +72,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @var array
 	 * 
 	 */
-	protected $keyIndex = array();
+	protected $keyIndex = [];
 
 	/**
 	 * Template method that descendant classes may use to validate items added to this WireArray
@@ -131,7 +131,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 			}
 			// if this (maybe unreachable) point is reached, then index needs to 
 			// be rebuilt because either item is no longer here, or has moved 
-			$this->keyIndex = array();
+			$this->keyIndex = [];
 			foreach($this->data as $key => $page) {
 				$this->keyIndex[$page->id] = $key;
 			}
@@ -193,7 +193,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 *
 	 */
 	public function import($items) {
-		if($items instanceof Page) $items = array($items); 
+		if($items instanceof Page) $items = [$items]; 
 		if(!self::iterable($items)) return $this; 
 		foreach($items as $page) $this->add($page); 
 		if($items instanceof PageArray) {
@@ -557,7 +557,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 *
 	 */
 	protected function filterDataSelectors(Selectors $selectors) { 
-		$disallowed = array('include', 'check_access', 'checkAccess');
+		$disallowed = ['include', 'check_access', 'checkAccess'];
 		foreach($selectors as $selector) {
 			if(in_array($selector->field(), $disallowed)) {
 				$selectors->remove($selector);

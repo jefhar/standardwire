@@ -126,7 +126,7 @@ class WireDataDB extends WireData implements \Countable {
 	 * 
 	 */
 	public function reset() {
-		$this->data = array();
+		$this->data = [];
 		$this->fullyLoaded = false;
 		return $this;
 	}
@@ -177,10 +177,10 @@ class WireDataDB extends WireData implements \Countable {
 		try {
 			$query->execute();
 		} catch(\Exception $e) {
-			return $name === true ? array() : null;
+			return $name === true ? [] : null;
 		}
 		if($query->rowCount()) {
-			$meta = array();
+			$meta = [];
 			while($row = $query->fetch(\PDO::FETCH_NUM)) {
 				list($key, $data) = $row;
 				$meta[$key] = json_decode($data, true);
@@ -314,14 +314,7 @@ class WireDataDB extends WireData implements \Countable {
 	 * 
 	 */
 	protected function schema() {
-		return array(
-			"source_id INT UNSIGNED NOT NULL",
-			"name VARCHAR(128) NOT NULL",
-			"data MEDIUMTEXT NOT NULL",
-			"PRIMARY KEY (source_id, name)",
-			"INDEX name (name)",
-			"FULLTEXT KEY data (data)"
-		);
+		return ["source_id INT UNSIGNED NOT NULL", "name VARCHAR(128) NOT NULL", "data MEDIUMTEXT NOT NULL", "PRIMARY KEY (source_id, name)", "INDEX name (name)", "FULLTEXT KEY data (data)"];
 	}
 
 	/**

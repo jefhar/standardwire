@@ -24,7 +24,7 @@ class Database extends \mysqli implements WireDatabase {
 	 * Log of all queries performed in this instance
 	 *
 	 */
-	protected $queryLog = array();
+	protected $queryLog = [];
 
 	/**
 	 * Should WireDatabaseException be thrown on error?
@@ -143,7 +143,7 @@ class Database extends \mysqli implements WireDatabase {
 		if($wire) {
 			return $wire->database->queryLog();
 		} else {
-			$log = array();
+			$log = [];
 			foreach(ProcessWire::getInstances() as $wire) {
 				$log = array_merge($log, $wire->database->queryLog());
 			}
@@ -174,7 +174,7 @@ class Database extends \mysqli implements WireDatabase {
 	 *
 	 */
 	public function getTables() {
-		static $tables = array();
+		static $tables = [];
 
 		if(!count($tables)) {
 			$result = $this->query("SHOW TABLES"); 			
@@ -192,7 +192,7 @@ class Database extends \mysqli implements WireDatabase {
 	 *
 	 */
 	public function isOperator($str) {
-		return in_array($str, array('=', '<', '>', '>=', '<=', '<>', '!=', '&', '~', '|', '^', '<<', '>>'));
+		return in_array($str, ['=', '<', '>', '>=', '<=', '<>', '!=', '&', '~', '|', '^', '<<', '>>']);
 	}
 
 	/**

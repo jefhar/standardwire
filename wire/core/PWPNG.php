@@ -16,8 +16,8 @@
 // to be used for png image inspection in ProcessWire 3+ (http://processwire.com/)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 class PWPNG {
-	public $info = array();
-	public $errors = array();
+	public $info = [];
+	public $errors = [];
 	protected $extended;
 	public function __construct($extended = false) {
 		$this->extended = $extended;
@@ -88,12 +88,12 @@ class PWPNG {
 				// Read transparency info
 				$t = $this->_readstream($f,$n);
 				if($ct == 0) {
-					$trns = array(ord(substr($t,1,1)));
+					$trns = [ord(substr($t,1,1))];
 				} else if($ct == 2) {
-					$trns = array(ord(substr($t, 1, 1)), ord(substr($t, 3, 1)), ord(substr($t, 5, 1)));
+					$trns = [ord(substr($t, 1, 1)), ord(substr($t, 3, 1)), ord(substr($t, 5, 1))];
 				} else {
 					$pos = strpos($t, chr(0));
-					if($pos !== false) $trns = array($pos);
+					if($pos !== false) $trns = [$pos];
 				}
 				$this->_readstream($f, 4);
 
@@ -108,19 +108,7 @@ class PWPNG {
 		} while($n);
 		if($colspace == 'Indexed' && empty($pal)) $this->Error('Missing palette in '.$file);
 
-		$this->info = array(
-			'width' => $w,
-			'height' => $h,
-			'colspace' => $colspace,
-			'channels' => $ct,
-			'bits' => $bpc,
-			'dp' => $dp,
-			'palette' => (function_exists('mb_convert_encoding') ? mb_convert_encoding($pal, 'UTF-8', 'ISO-8859-1') : $pal),
-			'trans' => $trns,
-			'alpha' => $ct >= 4 ? true : false,
-			'interlace' => $interlaced,
-			'errors' => $this->errors
-		);
+		$this->info = ['width' => $w, 'height' => $h, 'colspace' => $colspace, 'channels' => $ct, 'bits' => $bpc, 'dp' => $dp, 'palette' => (function_exists('mb_convert_encoding') ? mb_convert_encoding($pal, 'UTF-8', 'ISO-8859-1') : $pal), 'trans' => $trns, 'alpha' => $ct >= 4 ? true : false, 'interlace' => $interlaced, 'errors' => $this->errors];
 
 		return true;
 	}

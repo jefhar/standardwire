@@ -119,10 +119,7 @@ class Pageimage extends Pagefile {
 	 * @var array
 	 * 
 	 */
-	private $imageInfo = array(
-		'width' => 0, 
-		'height' => 0, 
-	);
+	private $imageInfo = ['width' => 0, 'height' => 0];
 
 	/**
 	 * @var PageimageDebugInfo|null
@@ -144,7 +141,7 @@ class Pageimage extends Pagefile {
 	 * @var array
 	 * 
 	 */
-	protected $sizeOptions = array();
+	protected $sizeOptions = [];
 
 	/**
 	 * Construct a new Pageimage
@@ -192,7 +189,7 @@ class Pageimage extends Pagefile {
 	public function url() {
 		$hooks = $this->wire()->hooks;
 		if($hooks->isHooked('Pagefile::url()') || $hooks->isHooked('Pageimage::url()')) { 
-			return $this->__call('url', array()); 
+			return $this->__call('url', []); 
 		} else { 
 			return $this->___url();
 		}
@@ -209,7 +206,7 @@ class Pageimage extends Pagefile {
 	public function filename() {
 		$hooks = $this->wire()->hooks;
 		if($hooks->isHooked('Pagefile::filename()') || $hooks->isHooked('Pageimage::filename()')) { 
-			return $this->__call('filename', array()); 
+			return $this->__call('filename', []); 
 		} else { 
 			return $this->___filename();
 		}
@@ -231,7 +228,7 @@ class Pageimage extends Pagefile {
 		if(strlen($s)) {
 			return $info ? in_array($s, $info['suffix']) : false;
 		} else {
-			return $info ? $info['suffix'] : array();
+			return $info ? $info['suffix'] : [];
 		}
 	}
 
@@ -274,8 +271,8 @@ class Pageimage extends Pagefile {
 		if(is_string($top) && $left === null) { 
 			if(strpos($top, '=')) {
 				// SET string "top=25%, left=70%, zoom=0%"
-				$a = array('top' => 50, 'left' => 50, 'zoom' => 0);
-				$parts = explode(',', str_replace(array(' ', '%'), '', $top));
+				$a = ['top' => 50, 'left' => 50, 'zoom' => 0];
+				$parts = explode(',', str_replace([' ', '%'], '', $top));
 				foreach($parts as $part) {
 					if(!strpos($part, '=')) continue;
 					list($name, $pct) = explode('=', $part);
@@ -302,13 +299,7 @@ class Pageimage extends Pagefile {
 			if(!is_array($focus) || empty($focus)) {
 				// use default
 				if($top === true) return false;
-				$focus = array(
-					'top' => 50, 
-					'left' => 50,
-					'zoom' => 0,
-					'default' => true, 
-					'str' => '50 50 0',
-				);
+				$focus = ['top' => 50, 'left' => 50, 'zoom' => 0, 'default' => true, 'str' => '50 50 0'];
 			} else {
 				// use custom
 				if($top === true) return true;
@@ -351,11 +342,7 @@ class Pageimage extends Pagefile {
 				// if matches defaults, then no reason to store in filedata
 				$this->filedata(false, 'focus');
 			} else {
-				$this->filedata('focus', array(
-					'top' => round($top, 1),
-					'left' => round($left, 1),
-					'zoom' => $zoom
-				));
+				$this->filedata('focus', ['top' => round($top, 1), 'left' => round($left, 1), 'zoom' => $zoom]);
 			}
 		}
 		
@@ -570,10 +557,7 @@ class Pageimage extends Pagefile {
 		if($width < 1) $width = '100%';
 		if($height < 1) $height = '100%';
 		
-		return array(
-			'width' => $width, 
-			'height' => $height
-		); 
+		return ['width' => $width, 'height' => $height]; 
 	}
 	
 	/**
@@ -681,7 +665,7 @@ class Pageimage extends Pagefile {
 	 *  If the specified dimensions/options are the same as the original, then the original will be returned.
 	 *
 	 */
-	public function size($width, $height = 0, $options = array()) {
+	public function size($width, $height = 0, $options = []) {
 		
 		if(is_array($height)) {
 			$options = $height;
@@ -698,7 +682,7 @@ class Pageimage extends Pagefile {
 		}
 
 		if($this->wire()->hooks->isHooked('Pageimage::size()')) {
-			$result = $this->__call('size', array($width, $height, $options)); 
+			$result = $this->__call('size', [$width, $height, $options]); 
 		} else {  
 			$result = $this->___size($width, $height, $options);
 		}
@@ -735,29 +719,38 @@ class Pageimage extends Pagefile {
 		$requestOptions = $options;
 	
 		// default options
-		$defaultOptions = array(
-			'upscaling' => true,
-			'cropping' => true,
-			'interlace' => false, 
-			'sharpening' => 'soft',
-			'quality' => 90,
-			'hidpiQuality' => 40, 
-			'webpQuality' => 90,
-			'webpAdd' => false,
-			'webpName' => '', // use this for the webp file basename rather than mirroring from the jpg/png
-			'webpOnly' => false, // only keep the webp version (requires webpAdd option)
-			'suffix' => array(), // can be array of suffixes or string of 1 suffix
-			'forceNew' => false,  // force it to create new image even if already exists
-			'hidpi' => false, 
-			'cleanFilename' => false, // clean filename of historial resize information
-			'rotate' => 0,
-			'flip' => '', 
-			'nameWidth' => null, // override width to use for filename, int when populated
-			'nameHeight' => null,  // override height to use for filename, int when populated
-			'focus' => true, // allow single dimension resizes to use focus area?
-			'zoom' => null, // zoom override, used only if focus is applicable, int when populated
-			'allowOriginal' => false, // Return original image if already at requested dimensions? (must be only specified option)
-		);
+		$defaultOptions = [
+      'upscaling' => true,
+      'cropping' => true,
+      'interlace' => false,
+      'sharpening' => 'soft',
+      'quality' => 90,
+      'hidpiQuality' => 40,
+      'webpQuality' => 90,
+      'webpAdd' => false,
+      'webpName' => '',
+      // use this for the webp file basename rather than mirroring from the jpg/png
+      'webpOnly' => false,
+      // only keep the webp version (requires webpAdd option)
+      'suffix' => [],
+      // can be array of suffixes or string of 1 suffix
+      'forceNew' => false,
+      // force it to create new image even if already exists
+      'hidpi' => false,
+      'cleanFilename' => false,
+      // clean filename of historial resize information
+      'rotate' => 0,
+      'flip' => '',
+      'nameWidth' => null,
+      // override width to use for filename, int when populated
+      'nameHeight' => null,
+      // override height to use for filename, int when populated
+      'focus' => true,
+      // allow single dimension resizes to use focus area?
+      'zoom' => null,
+      // zoom override, used only if focus is applicable, int when populated
+      'allowOriginal' => false,
+  ];
 
 		$files = $this->wire()->files;
 		$config = $this->wire()->config;
@@ -769,7 +762,7 @@ class Pageimage extends Pagefile {
 		
 		if(!empty($webpOptions['quality'])) $defaultOptions['webpQuality'] = $webpOptions['quality'];
 		
-		if(!is_array($configOptions)) $configOptions = array();
+		if(!is_array($configOptions)) $configOptions = [];
 		$options = array_merge($defaultOptions, $configOptions, $options); 
 		if($options['cropping'] === 1) $options['cropping'] = true;
 
@@ -790,14 +783,14 @@ class Pageimage extends Pagefile {
 			// crop to focus area
 			$focus = $this->focus();
 			if(is_int($options['zoom'])) $focus['zoom'] = $options['zoom']; // override
-			$options['cropping'] = array("$focus[left]%", "$focus[top]%", "$focus[zoom]"); 
+			$options['cropping'] = ["$focus[left]%", "$focus[top]%", "$focus[zoom]"]; 
 			$crop = ''; // do not add suffix	
 			
 		} else if(is_string($options['cropping'])
 			&& strpos($options['cropping'], 'x') === 0
 			&& preg_match('/^x(\d+)[yx](\d+)/', $options['cropping'], $matches)) {
 			$options['cropping'] = true; 
-			$options['cropExtra'] = array((int) $matches[1], (int) $matches[2], $width, $height); 
+			$options['cropExtra'] = [(int) $matches[1], (int) $matches[2], $width, $height]; 
 			$crop = '';
 			
 		} else {
@@ -806,10 +799,10 @@ class Pageimage extends Pagefile {
 	
 		if(!is_array($options['suffix'])) {
 			// convert to array
-			$options['suffix'] = empty($options['suffix']) ? array() : explode(' ', $options['suffix']); 
+			$options['suffix'] = empty($options['suffix']) ? [] : explode(' ', $options['suffix']); 
 		}
 
-		if($options['rotate'] && !in_array(abs((int) $options['rotate']), array(90, 180, 270))) {
+		if($options['rotate'] && !in_array(abs((int) $options['rotate']), [90, 180, 270])) {
 			$options['rotate'] = 0;
 		}
 		if($options['rotate']) {
@@ -952,15 +945,7 @@ class Pageimage extends Pagefile {
 					);
 					
 					if(!$this->error) {
-						$createdVariationHookData = array(
-							'width' => $width,
-							'height' => $height,
-							'options' => $options,
-							'filenameUnvalidated' => $filenameUnvalidated,
-							'filenameFinal' => $filenameFinal,
-							'filenameUnvalidatedWebp' => $filenameUnvalidatedWebp,
-							'filenameFinalWebp' => $filenameFinalWebp,
-						);
+						$createdVariationHookData = ['width' => $width, 'height' => $height, 'options' => $options, 'filenameUnvalidated' => $filenameUnvalidated, 'filenameFinal' => $filenameFinal, 'filenameUnvalidatedWebp' => $filenameUnvalidatedWebp, 'filenameFinalWebp' => $filenameFinalWebp];
 					}
 					
 				} catch(\Exception $e) {
@@ -1002,16 +987,16 @@ class Pageimage extends Pagefile {
 		if(is_string($options)) {
 			// optionally allow a string to be specified with crop direction, for shorter syntax
 			if(strpos($options, ',') !== false) $options = explode(',', $options); // 30,40
-			$options = array('cropping' => $options);
+			$options = ['cropping' => $options];
 		} else if(is_int($options)) {
 			// optionally allow an integer to be specified with quality, for shorter syntax
-			$options = array('quality' => $options);
+			$options = ['quality' => $options];
 		} else if(is_bool($options)) {
 			// optionally allow a boolean to be specified with upscaling toggle on/off
-			$options = array('upscaling' => $options);
+			$options = ['upscaling' => $options];
 		} else {
 			// unknown options type
-			$options = array();
+			$options = [];
 		}
 		return $options;
 	}
@@ -1027,7 +1012,7 @@ class Pageimage extends Pagefile {
 	 * @return Pageimage
 	 *
 	 */
-	public function hidpiSize($width, $height = 0, $options = array()) {
+	public function hidpiSize($width, $height = 0, $options = []) {
 		if(is_array($height)) {
 			$height['hidpi'] = true;
 		} else {
@@ -1050,7 +1035,7 @@ class Pageimage extends Pagefile {
 	 * @throws WireException If given a $name that is not present in $config->imageSizes
 	 * 
 	 */
-	public function sizeName($name, array $options = array()) {
+	public function sizeName($name, array $options = []) {
 		$sizes = $this->wire()->config->imageSizes; 
 		if(!isset($sizes[$name])) throw new WireException("Unknown image size '$name' (not in \$config->imageSizes)"); 
 		$size = $sizes[$name];
@@ -1085,7 +1070,7 @@ class Pageimage extends Pagefile {
 	 * @return Pageimage
 	 *
 	 */
-	public function ___crop($x, $y, $width, $height, $options = array()) {
+	public function ___crop($x, $y, $width, $height, $options = []) {
 		
 		$x = (int) $x;
 		$y = (int) $y;
@@ -1093,13 +1078,13 @@ class Pageimage extends Pagefile {
 		$height = (int) $height;
 		
 		if(empty($options['suffix'])) {
-			$options['suffix'] = array();
+			$options['suffix'] = [];
 		} else if(!is_array($options['suffix'])) {
-			$options['suffix'] = array($options['suffix']); 
+			$options['suffix'] = [$options['suffix']]; 
 		}
 		
 		$options['suffix'][] = "cropx{$x}y{$y}"; 
-		$options['cropExtra'] = array($x, $y, $width, $height);
+		$options['cropExtra'] = [$x, $y, $width, $height];
 		$options['cleanFilename'] = true; 
 		
 		return $this->size($width, $height, $options);
@@ -1127,7 +1112,7 @@ class Pageimage extends Pagefile {
 	 * @return int|Pageimage Returns width (in px) when given no arguments, or Pageimage when given a width argument.
 	 *
 	 */
-	public function width($n = 0, $options = array()) {
+	public function width($n = 0, $options = []) {
 		if($n) return $this->size($n, 0, $options); 	
 		$info = $this->getImageInfo();
 		return $info['width']; 
@@ -1155,7 +1140,7 @@ class Pageimage extends Pagefile {
 	 * @return int|Pageimage Returns height (in px) when given no arguments, or Pageimage when given a height argument.
 	 *
 	 */
-	public function height($n = 0, $options = array()) {
+	public function height($n = 0, $options = []) {
 		if($n) return $this->size(0, $n, $options); 	
 		$info = $this->getImageInfo();
 		return $info['height']; 
@@ -1175,7 +1160,7 @@ class Pageimage extends Pagefile {
 	 * @return int|Pageimage|string
 	 * 
 	 */	
-	public function hidpiWidth($width = 0, $options = array()) {
+	public function hidpiWidth($width = 0, $options = []) {
 
 		if(is_string($width)) {
 			if(ctype_digit("$width")) {
@@ -1198,7 +1183,7 @@ class Pageimage extends Pagefile {
 			return ceil($width * $scale); 
 		} else if($width && is_int($width)) {
 			// resize intended
-			if(!is_array($options)) $options = array();
+			if(!is_array($options)) $options = [];
 			return $this->hidpiSize((int) $width, 0, $options);
 		}
 
@@ -1219,7 +1204,7 @@ class Pageimage extends Pagefile {
 	 * @return int|Pageimage
 	 *
 	 */	
-	public function hidpiHeight($height = 0, $options = array()) {
+	public function hidpiHeight($height = 0, $options = []) {
 		if(is_float($height) || $height < 1) {
 			// return hidpi height intended: scale omitted or provided in $height argument
 			$scale = $height;
@@ -1229,7 +1214,7 @@ class Pageimage extends Pagefile {
 			return ceil($height * $scale);
 		} else if($height) {
 			// resize intended
-			if(!is_array($options)) $options = array();
+			if(!is_array($options)) $options = [];
 			return $this->hidpiSize(0, (int) $height, $options);
 		}
 		return 0; // not possible to reach but pleases the inspection
@@ -1251,7 +1236,7 @@ class Pageimage extends Pagefile {
 	 * @return Pageimage
 	 *
 	 */
-	public function maxWidth($n, array $options = array()) {
+	public function maxWidth($n, array $options = []) {
 		$options['upscaling'] = false;
 		if($this->width() > $n) return $this->width($n, $options); 
 		return $this;
@@ -1273,7 +1258,7 @@ class Pageimage extends Pagefile {
 	 * @return Pageimage
 	 *
 	 */
-	public function maxHeight($n, array $options = array()) {
+	public function maxHeight($n, array $options = []) {
 		$options['upscaling'] = false;
 		if($this->height() > $n) return $this->height($n, $options); 
 		return $this;
@@ -1291,13 +1276,9 @@ class Pageimage extends Pagefile {
 	 * @return Pageimage
 	 * 
 	 */
-	public function maxSize($width, $height, $options = array()) {
+	public function maxSize($width, $height, $options = []) {
 		
-		$defaults = array(
-			'allowOriginal' => false,
-			'upscaling' => false,
-			'cropping' => false
-		);
+		$defaults = ['allowOriginal' => false, 'upscaling' => false, 'cropping' => false];
 		
 		$options = array_merge($defaults, $options);
 		$adjustedWidth = $width < 1 || $this->width() <= $width ? 0 : $width;
@@ -1316,8 +1297,8 @@ class Pageimage extends Pagefile {
 		
 		if($this->wire()->config->installed > 1513336849) { 
 			// New installations from 2017-12-15 forward use an "ms" suffix for images from maxSize() method
-			$suffix = isset($options['suffix']) ? $options['suffix'] : array();
-			if(!is_array($suffix)) $suffix = array();
+			$suffix = isset($options['suffix']) ? $options['suffix'] : [];
+			if(!is_array($suffix)) $suffix = [];
 			$suffix[] = 'ms';
 			$options['suffix'] = $suffix;
 		}
@@ -1389,7 +1370,7 @@ class Pageimage extends Pagefile {
 	 *  Only returns regular array if provided `$options['info']` is true.
 	 *
 	 */
-	public function getVariations(array $options = array()) {
+	public function getVariations(array $options = []) {
 		return $this->variations()->find($options);
 	}
 
@@ -1423,7 +1404,7 @@ class Pageimage extends Pagefile {
 	 *  - `reasons` (array): Reasons why files were skipped or had errors, associative array indexed by file name. 
 	 * 
 	 */
-	public function ___rebuildVariations($mode = 0, array $suffix = array(), array $options = array()) {
+	public function ___rebuildVariations($mode = 0, array $suffix = [], array $options = []) {
 		return $this->variations()->rebuild($mode, $suffix, $options);
 	}
 
@@ -1457,7 +1438,7 @@ class Pageimage extends Pagefile {
 	 * @return bool|string|array Returns false if not a variation, or array (verbose) or string (non-verbose) of info if it is.
 	 *
 	 */
-	public function ___isVariation($basename, $options = array()) {
+	public function ___isVariation($basename, $options = []) {
 		return $this->variations()->getInfo($basename, $options);
 	}
 
@@ -1472,7 +1453,7 @@ class Pageimage extends Pagefile {
 	 * @return PageImageVariations|array Returns $this by default, or array of deleted filenames if the `getFiles` option is specified
 	 *
 	 */
-	public function removeVariations(array $options = array()) {
+	public function removeVariations(array $options = []) {
 		return $this->variations()->remove($options);
 	}
 
@@ -1610,7 +1591,7 @@ class Pageimage extends Pagefile {
 	 * @since 3.0.126
 	 * 
 	 */
-	public function ___render($markup = '', $options = array()) {
+	public function ___render($markup = '', $options = []) {
 		
 		if(is_array($markup) || ($markup && strpos($markup, '}') === false)) {
 			$options = $markup;
@@ -1630,21 +1611,17 @@ class Pageimage extends Pagefile {
 			if(ctype_digit(str_ireplace('x', '', $options))) {
 				if(stripos($options, 'x') === false) $options .= 'x0';
 				list($w, $h) = explode('x', strtolower($options));
-				$options = array('width' => (int) $w, 'height' => (int) $h);
+				$options = ['width' => (int) $w, 'height' => (int) $h];
 			} else {
-				$options = array();
+				$options = [];
 			}
 		}
 
 		$sanitizer = $this->wire()->sanitizer;
 		$image = $this;
 		$original = null;
-		$replacements = array();
-		$properties = array(
-			'url', 'src', 'httpUrl', 'URL', 'HTTPURL',
-			'description', 'alt', 'tags', 'ext', 'class',
-			'width', 'height', 'hidpiWidth', 'hidpiHeight',
-		);
+		$replacements = [];
+		$properties = ['url', 'src', 'httpUrl', 'URL', 'HTTPURL', 'description', 'alt', 'tags', 'ext', 'class', 'width', 'height', 'hidpiWidth', 'hidpiHeight'];
 		
 		if(!empty($options['width']) || !empty($options['height'])) {
 			$w = isset($options['width']) ? (int) $options['width'] : 0;
@@ -1746,11 +1723,7 @@ class Pageimage extends Pagefile {
 			// we are the original
 			// create a file with same name as original but with .webp extension
 			$original = $this;
-			$options = array(
-				'allowOriginal' => false, 
-				'webpName' => $webp->useSrcExt ? $this->basename() : basename($this->basename(), ".$this->ext"),
-				'webpOnly' => true
-			);
+			$options = ['allowOriginal' => false, 'webpName' => $webp->useSrcExt ? $this->basename() : basename($this->basename(), ".$this->ext"), 'webpOnly' => true];
 			$width = $this->width;
 			$height = 0;
 		}
@@ -1862,7 +1835,7 @@ class Pageimage extends Pagefile {
 	 * @since 3.0.132
 	 *
 	 */
-	public function getDebugInfo($options = array(), $returnType = 'string') {
+	public function getDebugInfo($options = [], $returnType = 'string') {
 		return $this->debugInfo->getVerboseDebugInfo($options, $returnType);
 	}
 
