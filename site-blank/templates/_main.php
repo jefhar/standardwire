@@ -7,11 +7,11 @@
 // When the Markup Regions feature is used, template files can prepend, append,
 // replace or delete any element defined here that has an "id" attribute. 
 // https://processwire.com/docs/front-end/output/markup-regions/
-	
+
 /** @var Page $page */
 /** @var Pages $pages */
 /** @var Config $config */
-	
+
 $home = $pages->get('/'); /** @var HomePage $home */
 
 ?><!DOCTYPE html>
@@ -27,29 +27,29 @@ $home = $pages->get('/'); /** @var HomePage $home */
 		<p id="topnav">
 			<?php echo $home->and($home->children)->implode(" / ", "<a href='{url}'>{title}</a>"); ?>
 		</p>
-		
+
 		<hr />
-		
+
 		<h1 id="headline">
 			<?php if($page->parents->count()): // breadcrumbs ?>
 				<?php echo $page->parents->implode(" &gt; ", "<a href='{url}'>{title}</a>"); ?> &gt;
-			<?php endif; ?>
+<?php endif; ?>
 			<?php echo $page->title; // headline ?>
 		</h1>
-		
+
 		<div id="content">
 			Default content
 		</div>
-	
+
 		<?php if($page->hasChildren): ?>
 		<ul> 
 			<?php echo $page->children->each("<li><a href='{url}'>{title}</a></li>"); // subnav ?>
 		</ul>	
-		<?php endif; ?>
-		
+<?php endif; ?>
+
 		<?php if($page->editable()): ?>
 		<p><a href='<?php echo $page->editUrl(); ?>'>Edit this page</a></p>
 		<?php endif; ?>
-	
+
 	</body>
 </html>

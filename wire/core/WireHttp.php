@@ -1466,11 +1466,11 @@ class WireHttp extends Wire {
 	 *
 	 */
 	protected function setResponseHeader(array $responseHeader) {
-		
+
 		$this->responseHeader = $responseHeader;
 		$httpText = '';
 		$httpCode = 0;
-		
+
 		if(!empty($responseHeader[0])) {
 			list(/*HTTP*/, $httpCode) = explode(' ', trim($responseHeader[0]), 2); 
 			$httpCode = trim($httpCode);
@@ -1478,9 +1478,9 @@ class WireHttp extends Wire {
 			$httpCode = (int) $httpCode;
 			if(strlen($httpText)) $httpText = preg_replace('/[^-_.;() a-zA-Z0-9]/', ' ', $httpText); 
 		}
-	
+
 		$this->setHttpCode((int) $httpCode, $httpText);
-		
+
 		if($this->httpCode >= 400 && isset($this->httpCodes[$this->httpCode])) {
 			$this->error[] = $this->httpCodes[$this->httpCode];
 		}
@@ -1488,7 +1488,7 @@ class WireHttp extends Wire {
 		// parsed version
 		$this->responseHeaders = array();
 		$this->responseHeaderArrays = array();
-		
+
 		foreach($responseHeader as $header) {
 			$pos = strpos($header, ':');
 			if($pos !== false) {
@@ -1505,7 +1505,7 @@ class WireHttp extends Wire {
 				$this->responseHeaderArrays[$key][] = $value;
 			}
 		}
-	
+
 		/*
 		if(self::debug && count($responseHeader)) {
 			$this->message("httpCode: $this->httpCode, message: $message"); 

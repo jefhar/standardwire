@@ -14,7 +14,7 @@
  */
 
 class SelectableOption extends WireData { // implements LanguagesValueInterface {
-	
+
 	static protected $defaults = array(
 		'id' => 0, 
 		'sort' => 0,
@@ -29,14 +29,14 @@ class SelectableOption extends WireData { // implements LanguagesValueInterface 
 	 * 
 	 */
 	protected $of = false;
-	
+
 	public function __construct() {
 		parent::__construct();
 		foreach(self::$defaults as $property => $value) {
 			$this->set($property, $value); 
 		}
 	}
-	
+
 	static public function isProperty($property) {
 		return array_key_exists($property, self::$defaults); 
 	}
@@ -53,15 +53,15 @@ class SelectableOption extends WireData { // implements LanguagesValueInterface 
 		$this->of = $of ? true : false; 
 		return $this->of; 
 	}
-	
+
 	public function get($key) {
-		
+
 		if($this->of && $key == 'title') return $this->getTitle();
 		if($this->of && $key == 'value') return $this->getValue();
-		
+
 		return parent::get($key); 	
 	}
-	
+
 	public function set($key, $value) {
 		if(strpos($key, 'title') === 0 || strpos($key, 'value') === 0) {
 			if(strpos($value, '|') !== false) {
@@ -71,7 +71,7 @@ class SelectableOption extends WireData { // implements LanguagesValueInterface 
 		}
 		return parent::set($key, $value); 
 	}
-	
+
 	/**
 	 * Return all values stored in this SelectableOption
 	 * 
@@ -141,11 +141,11 @@ class SelectableOption extends WireData { // implements LanguagesValueInterface 
 	public function getTitle() {
 		return $this->getProperty('title'); 
 	}
-	
+
 	public function __toString() {
 		return (string) $this->id;
 	}
-	
+
 	public function debugInfoSmall() {
 		return array(
 			'id' => $this->id,

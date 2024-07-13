@@ -141,7 +141,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 			if(!$database->isOperator($selector->operator)) {
 				throw new WireException("Operator '$selector->operator' may not be used in {$this->className}::load()");
 			}
-			
+
 			if(isset($functionFields[$selector->field])) {
 				$functionFields[$selector->field] = $selector->value;
 				continue;
@@ -876,13 +876,13 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 			$item = $this->initItem($row, $items);
 			if($debug) $item->setQuietly('_lazy', '*');
 		}
-		
+
 		if($sortable) $items->sort('name'); // a-z
 
 		$this->lazyItems = array();
 		$this->lazyNameIndex = array();
 		$this->lazyIdIndex = array();
-		
+
 		// if you want to identify what triggered a “load all”, uncomment one of below:
 		// bd(Debug::backtrace());
 		// $this->warning(Debug::backtrace());

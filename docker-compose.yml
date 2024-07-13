@@ -1,0 +1,4 @@
+---
+name: wire
+# Put your configuration in docker-compose.override.yml
+...

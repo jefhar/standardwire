@@ -349,14 +349,14 @@ class AdminThemeRenoHelpers extends AdminThemeDefaultHelpers {
 	 */
 	
 	public function getDisplayName(User $user) {
-        
+
         $out = '';
-        
+
         $adminTheme = $this->wire('adminTheme');
         $field_name = "userFields_". $user->template->name;
         trim("$adminTheme->$field_name") == '' ? $adminTheme->$field_name = 'name' : ''; // force to name field if empty
         $userFields = explode(',', "$adminTheme->$field_name");
-        
+
         foreach($userFields as $f){
             $f = trim($f);
             if ($f == 'name'){

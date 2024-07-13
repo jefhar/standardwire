@@ -93,7 +93,7 @@ class PagefilesManager extends Wire {
 	 *
 	 */
 	protected $url = null;
-	
+
 	/**
 	 * Construct the PagefilesManager and ensure all needed paths are created
 	 *
@@ -149,7 +149,7 @@ class PagefilesManager extends Wire {
 		}
 		return $files; 
 	}
-	
+
 	/**
 	 * Get the Pagefile object containing the given filename.
 	 * 
@@ -203,10 +203,10 @@ class PagefilesManager extends Wire {
 		$numCopied = 0;
 		$fromPath = rtrim($fromPath, '/') . '/';
 		$toPath = rtrim($toPath, '/') . '/';
-	
+
 		foreach(new \DirectoryIterator($fromPath) as $file) {
 			if($file->isDot()) continue; 
-			
+
 			if($file->isDir()) {
 				$fromDir = $file->getPathname();
 				$toDir = $toPath . $file->getFilename() . '/';
@@ -217,7 +217,7 @@ class PagefilesManager extends Wire {
 					$numCopied += $this->_copyFiles($fromDir, $toDir, $rename); 
 					if($rename) wireRmdir($fromDir, true); // this line not likely to ever be executed
 				}
-				
+
 			} else if($file->isFile()) {
 				$fromFile = $file->getPathname();
 				$toFile = $toPath . $file->getFilename();
@@ -380,7 +380,7 @@ class PagefilesManager extends Wire {
 	public function path() {
 		return $this->wire()->hooks->isHooked('PagefilesManager::path()') ? $this->__call('path', array()) : $this->___path();
 	}
-	
+
 	/**
 	 * Get the published path (for use with hooks)
 	 * 
@@ -457,7 +457,7 @@ class PagefilesManager extends Wire {
 		$this->path = null;
 		// $this->page = null;
 	}
-	
+
 	/**
 	 * Handle non-function versions of some properties
 	 * 
@@ -543,10 +543,10 @@ class PagefilesManager extends Wire {
 
 		$config = $page->wire()->config;
 		$path = $config->paths->files; 
-		
+
 		$securePrefix = $config->pagefileSecurePathPrefix; 
 		if(!strlen($securePrefix)) $securePrefix = self::defaultSecurePathPrefix;
-		
+
 		if($extended) {
 			$publicPath = $path . self::_dirExtended($page->id); 
 			$securePath = $path . self::_dirExtended($page->id, $securePrefix); 
@@ -554,9 +554,9 @@ class PagefilesManager extends Wire {
 			$publicPath = $path . $page->id . '/';
 			$securePath = $path . $securePrefix . $page->id . '/';
 		}
-		
+
 		$secureFiles = $page->secureFiles();
-		
+
 		if($secureFiles === false) {
 			// use the public path, renaming a secure path to public if it exists
 			if(is_dir($securePath) && !is_dir($publicPath)) {
@@ -564,10 +564,10 @@ class PagefilesManager extends Wire {
 				self::$numRenamedPaths++;
 			}
 			$filesPath = $publicPath;
-			
+
 		} else if($secureFiles === null) {
 			$filesPath = $publicPath;
-			
+
 		} else {
 			// use the secure path, renaming the public to secure if it exists
 			$hasSecurePath = is_dir($securePath);
@@ -591,12 +591,12 @@ class PagefilesManager extends Wire {
 			}
 			$filesPath = $securePath;
 		}
-		
+
 		if(!$extended && $config->pagefileExtendedPaths && !is_dir($filesPath)) {
 			// if directory doesn't exist and extended mode is possible, specify use of the extended one
 			$filesPath = self::_path($page, true); 
 		}
-		
+
 		return $filesPath; 
 	}
 
@@ -614,9 +614,9 @@ class PagefilesManager extends Wire {
 		$useSecure = $page->secureFiles();
 		$useExtended = $config->pagefileExtendedPaths;
 		$useUnique = $config->pagefileUnique && $page->hasStatus(Page::statusUnique);
-		
+
 		if(!strlen($securePrefix)) $securePrefix = self::defaultSecurePathPrefix;
-		
+
 		$paths = array(
 			'current' => '',
 			'normal' => $path . "$page->id/",
@@ -630,16 +630,16 @@ class PagefilesManager extends Wire {
 		if($useUnique) {
 			// use unique page name paths
 			$paths['current'] = ($useSecure ? $paths['secureUnique'] : $paths['unique']); 
-			
+
 		} else if($useSecure) {
 			// use secure files
 			$paths['current'] = ($useExtended ? $paths['secureExtended'] : $paths['secure']);
-			
+
 		} else {
 			// use normal path
 			$paths['current'] = ($useExtended ? $paths['extended'] : $paths['normal']);
 		}
-		
+
 		return $paths;	
 	}
 	 */
@@ -697,7 +697,7 @@ class PagefilesManager extends Wire {
 	 *
 	 */
 	static public function _dirExtended($id, $securePrefix = '') {
-		
+
 		$len = strlen($id);
 
 		if($len > 3) {
@@ -713,7 +713,7 @@ class PagefilesManager extends Wire {
 		} else {
 			$path = $securePrefix . $id;
 		}
-		
+
 		return self::extendedDirName . $path . '/';	
 	}
 
