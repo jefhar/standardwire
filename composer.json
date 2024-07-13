@@ -21,6 +21,14 @@
     "symfony/var-dumper": "^7.1.2"
   },
   "autoload": {
-    "files": [ "wire/core/ProcessWire.php" ]
+    "files": [
+      "wire/core/ProcessWire.php"
+    ],
+    "psr-4": {
+      "ProcessWire\\": ["wire/core", "wire/modules"]
+    }
+  },
+  "config": {
+    "sort-packages": true
   }
 }
