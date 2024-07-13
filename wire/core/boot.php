@@ -19,8 +19,6 @@ if(PROCESSWIRE < 300) die("Please update your /index.php file for ProcessWire 3.
  */
 $corePreloads = array(
 	'Fuel.php',
-	'Interfaces.php',
-	'Exceptions.php',
 	'Wire.php',
 	'WireHooks.php',
 	'WireData.php',
