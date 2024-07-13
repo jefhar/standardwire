@@ -67,9 +67,9 @@ $extras = $adminTheme->getExtraMarkup();
 </head>
 
 <body class="<?php echo $helpers->renderBodyClass(); ?>">
-	
+
 	<div id="wrap">
-		
+
 		<div id='branding'>
 			<a id="logo" href="<?php echo $config->urls->admin?>">
 				<img src="<?php echo $config->urls->adminTemplates?>styles/images/logo.png" alt="ProcessWire" />
@@ -78,9 +78,9 @@ $extras = $adminTheme->getExtraMarkup();
 		</div>
 
 		<a href="#" class='main-nav-toggle'><i class="fa fa-bars"></i></a>
-		
+
 		<div id="masthead" class="pw-masthead masthead ui-helper-clearfix">
-			
+
 			<?php echo $extras['masthead']; ?>
 
 			<ul id="topnav">
@@ -99,12 +99,12 @@ $extras = $adminTheme->getExtraMarkup();
 		</div>
 
 		<div id="main">
-			
+
 			<?php 
 			echo $helpers->renderAdminNotices($notices);
 			echo $extras['notices'];
 			?>
-		
+
 			<div id="breadcrumbs">
 				<ul class="nav"><?php echo $helpers->renderBreadcrumbs(false); ?></ul>
 			</div>
@@ -136,7 +136,7 @@ $extras = $adminTheme->getExtraMarkup();
 						ProcessWire <?php echo $config->versionName . ' <!--v' . $config->systemVersion; ?>--> &copy; <?php echo date("Y"); ?>
 					<?php endif; ?>
 				</p>
-				
+
 				<?php
 				echo $extras['footer'];
 				if($config->debug && $user->isSuperuser()) include($config->paths->root . "wire/templates-admin/debug.inc"); 

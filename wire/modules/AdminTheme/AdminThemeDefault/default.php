@@ -34,12 +34,12 @@ $version = $config->version;
 $config->styles->prepend($config->urls->root . "wire/templates-admin/styles/AdminTheme.css?v=$version"); 
 $config->styles->prepend($config->urls->adminTemplates . "styles/" . ($adminTheme->colors ? "main-$adminTheme->colors" : "main-classic") . ".css?v=$version"); 
 $config->styles->append($config->urls->root . "wire/templates-admin/styles/font-awesome/css/font-awesome.min.css?v=$version"); 
-	
+
 $ext = $config->debug ? "js" : "min.js";
 $config->scripts->append($config->urls->root . "wire/templates-admin/scripts/inputfields.$ext?v=$version");
 $config->scripts->append($config->urls->root . "wire/templates-admin/scripts/main.$ext?v=$version"); 
 $config->scripts->append($config->urls->adminTemplates . "scripts/main.$ext?v=$version");
-	
+
 require_once(dirname(__FILE__) . "/AdminThemeDefaultHelpers.php");
 /** @var AdminThemeDefaultHelpers $helpers */
 $helpers = $this->wire(new AdminThemeDefaultHelpers());
@@ -62,7 +62,7 @@ $extras = $adminTheme->getExtraMarkup();
 	<?php foreach($config->styles->urls() as $file) echo "\n\t<link type='text/css' href='$file' rel='stylesheet' />"; ?>
 
 	<?php foreach($config->scripts->urls() as $file) echo "\n\t<script type='text/javascript' src='$file'></script>"; ?>
-	
+
 	<?php echo $extras['head']; ?>
 
 </head>

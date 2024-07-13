@@ -1,2 +1,36 @@
-$ cat .gitattributes
 *.module linguist-language=PHP
+# Set the default behavior, in case people don't have core.autocrlf set.
+# Auto detect text files and perform LF normalization
+*         text=auto
+
+# PHP files
+*.php     text eol=lf diff=php
+*.phpt    text eol=lf diff=php
+*.phtml   text eol=lf diff=html
+*.twig    text eol=lf
+*.phar    binary
+*.md       text diff=markdown
+
+# Configuration
+phpcs.xml    text eol=lf
+phpunit.xml  text eol=lf
+phpstan.neon text eol=lf
+psalm.xml    text eol=lf
+
+# Graphics
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.tif      binary
+*.tiff     binary
+*.ico      binary
+# SVG treated as text by default.
+*.svg      text
+
+# Serialisation
+*.json     text
+*.toml     text
+*.xml      text
+*.yaml     text
+*.yml      text

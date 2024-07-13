@@ -52,9 +52,9 @@ $logoOptions = array('height' => '40px');
 							</ul>
 						</li>
 					</ul>	
-				
+
 					<?php $adminTheme->includeFile('_search-form.php'); ?>
-					
+
 				</div>
 				<?php endif; // loggedin ?>
 			</nav>

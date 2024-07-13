@@ -590,7 +590,7 @@ class AdminThemeUikitConfigHelper extends Wire {
 		$form = $inputfields->getForm();
 		if($form) {
 			$form->action .= '&tests=1';
-			$this->wire('session')->addHookBefore('redirect', function(HookEvent $event) {
+			$this->wire('session')->addHookBefore('redirect', function(HookEvent $event): void {
 				$url = $event->arguments(0);
 				$url .= '&tests=1';
 				$event->arguments(0, $url);

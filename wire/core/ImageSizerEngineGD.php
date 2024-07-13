@@ -271,7 +271,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 			// this is the case if the original size is requested or a greater size but upscaling is set to false
 
 			// current version is already the desired result, we only may have to compress JPEGs but leave GIF and PNG as is:
-			
+
 			if(!$isModified && !$this->webpOnly && !$this->webpAdd && ($this->imageType == \IMAGETYPE_PNG || $this->imageType == \IMAGETYPE_GIF)) {
 				$result = @copy($srcFilename, $dstFilename);
 				if(isset($image) && is_resource($image)) @imagedestroy($image); // clean up

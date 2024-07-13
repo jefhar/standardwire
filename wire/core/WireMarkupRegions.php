@@ -374,7 +374,7 @@ class WireMarkupRegions extends Wire {
 		/*	
 		} else if($c === '[' && $z === ']') {
 			// find any attribute (not currently used by markup regions)
-			
+
 			if(strpos($find, '=') === false) {
 				// match an attribute only
 				$attr = trim($find, '[]*+');

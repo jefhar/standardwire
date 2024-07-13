@@ -1,7 +1,7 @@
 <?php namespace ProcessWire;
 
 if(!defined("PROCESSWIRE")) die(); 
-	
+
 /** @var AdminThemeUikit $adminTheme */
 /** @var Paths $urls */
 /** @var Config $config */
@@ -37,24 +37,24 @@ $panes = array(
 	'tree' => "<iframe id='pw-admin-tree' name='tree' class='pane ui-layout-$treePaneLocation' " . 
 		"src='{$urls->admin}page/?layout=sidenav-tree'></iframe>",
 );
-	
-	
+
+
 ?><!DOCTYPE html> 
 <html class="pw" lang="<?php echo $adminTheme->_('en');
 	/* this intentionally on a separate line */ ?>">
 <head>
 	<title></title><?php /* this title is populated dynamically by JS */ ?>
-	
+
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="robots" content="noindex, nofollow" />
 	<meta name="google" content="notranslate" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
+
 	<link rel="stylesheet" href="<?php echo $themeURL; ?>layout/source/stable/layout-default.css">
-	
+
 	<?php $adminTheme->includeFile('_head.php', array('layout' => $layout)); ?>
-	
+
 	<style type='text/css'>
 		html, body {
 			width: 100%;
@@ -77,7 +77,7 @@ $panes = array(
 			overflow: visible;
 		}
 	</style>
-	
+
 	<script src="<?php echo $themeURL; ?>layout/source/stable/jquery.layout.js"></script>
 	<script src="<?php echo $themeURL; ?>layout/source/stable/plugins/jquery.layout.state.js"></script>
 </head>
@@ -100,11 +100,11 @@ $panes = array(
 		}
 		?>
 	</div>	
-    
+
 	<script>
 		var isPresent = true; // required
 		var mobileWidth = 959;
-		
+
 		function pwInitLayout() {
 			var windowWidth = $(window).width();
 			var sidePaneWidth = windowWidth / 4;
@@ -155,20 +155,20 @@ $panes = array(
 
 			// populate title and url from main pane to this window 
 			$('#pw-admin-main').on('load', function() {
-				
+
 				var main = $('#pw-admin-main')[0].contentWindow;
 				var title = main.document.title;
 				var href = main.location.href;
-				
+
 				if(href.search(/^http[s]?:\/\/<?php echo preg_quote($config->httpHost); ?>/i) !== 0) {
 					console.log('Invalid main frame http host: ' + href);
 					return;
 				}
-				
+
 				if(href.indexOf('layout=')) {
 					href = href.replace(/([?&]layout)=[-_a-z0-9]+/g, ''); 
 				}
-				
+
 				window.history.pushState('obj', 'newtitle', href);
 				$('title').text(title);
 			});
@@ -200,7 +200,7 @@ $panes = array(
 					if(from) $('#' + from).parent('li').addClass('uk-active');
 				});
 			});
-	
+
 			// collapse offcanvas nav when link within it clicked, if it changes the main pane URL
 			$('#offcanvas-nav').on('click', 'a', function() {
 				var t, w1 = $('#pw-admin-main')[0].contentWindow.document.location.href;
@@ -210,16 +210,16 @@ $panes = array(
 					t = false;
 				}, 1000); 
 			}); 
-			
+
 			return layout;
 		}
-		
+
 		var layout;
-		
+
 		$(document).ready(function() {
 			layout = pwInitLayout();
 		});
-		
+
 		/**
 		 * Are we currently at mobile width?
 		 *
@@ -228,7 +228,7 @@ $panes = array(
 			var width = $(window).width();
 			return width <= mobileWidth;
 		}
-		
+
 		/**
 		 * Toggle navigation sidebar pane open/closed
 		 * 
@@ -236,7 +236,7 @@ $panes = array(
 		function toggleSidebarPane() {
 			layout.toggle('<?php echo $sidePaneLocation; ?>');
 		}
-		
+
 		/**
 		 * Toggle tree sidebar pane open/closed
 		 *
@@ -254,7 +254,7 @@ $panes = array(
 				layout.close('<?php echo $treePaneLocation; ?>'); 	
 			}
 		}
-		
+
 		/**
 		 * Hide the tree pane
 		 *
@@ -264,7 +264,7 @@ $panes = array(
 				layout.hide('<?php echo $treePaneLocation; ?>');
 			}
 		}
-		
+
 		/**
 		 * Open the tree pane
 		 *
@@ -274,7 +274,7 @@ $panes = array(
 				layout.open('<?php echo $treePaneLocation; ?>');
 			}
 		}
-		
+
 		/**
 		 * Show the tree pane (if hidden)
 		 *
@@ -284,7 +284,7 @@ $panes = array(
 				layout.show('<?php echo $treePaneLocation; ?>');
 			}
 		}
-		
+
 		/**
 		 * Is the tree pane currently closed? 
 		 * 
@@ -292,7 +292,7 @@ $panes = array(
 		function treePaneClosed() {
 			<?php echo "return layout.state.$treePaneLocation.isClosed;"; ?>
 		}
-		
+
 		/**
 		 * Is the tree pane currently hidden?
 		 *
@@ -300,7 +300,7 @@ $panes = array(
 		function treePaneHidden() {
 			<?php echo "return layout.state.$treePaneLocation.isHidden;"; ?>
 		}
-		
+
 		/**
 		 * Is the sidebar pane currently closed?
 		 *

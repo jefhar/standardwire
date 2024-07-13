@@ -2,7 +2,12 @@
   "name": "processwire/processwire",
   "type": "library",
   "description": "ProcessWire CMS/CMF",
-  "keywords": [ "processwire", "cms","cmf", "content management system" ],
+  "keywords": [
+    "processwire",
+    "cms",
+    "cmf",
+    "content management system"
+  ],
   "license": "MPL-2.0",
   "homepage": "https://processwire.com",
   "authors": [
@@ -14,14 +19,26 @@
     }
   ],
   "require": {
-    "php": ">=5.5",
-    "ext-gd": "*"
+    "php": "^8.3",
+    "ext-ctype": "*",
+    "ext-gd": "*",
+    "ext-mysqli": "*",
+    "ext-pdo": "*"
   },
   "require-dev": {
     "rector/rector": "^1.2",
     "symfony/var-dumper": "^7.1"
   },
   "autoload": {
-    "files": [ "wire/core/ProcessWire.php" ]
+    "files": [
+      "wire/core/ProcessWire.php"
+    ],
+    "psr-4": {
+      "ProcessWire\\": "wire/core",
+      "ProcessWire\\Modules\\": "wire/modules"
+    }
+  },
+  "config": {
+    "sort-packages": true
   }
 }

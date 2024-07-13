@@ -39,41 +39,41 @@ if(!isset($content)) $content = '';
 	<?php
 	if($layout == 'sidenav') {
 		$adminTheme->includeFile('_sidenav-masthead.php');
-		
+
 	} else if($layout == 'sidenav-tree' || $layout == 'sidenav-tree-alt') {
 		// masthead not rendered in this frame
 		echo $adminTheme->renderNotices($notices);
 		echo "<div class='uk-margin-small'></div>";
-		
+
 	} else if($layout == 'modal') {
 		// no masthead
 		echo $adminTheme->renderNotices($notices);
-		
+
 	} else {
 		$adminTheme->includeFile('_masthead.php');
 	}
-	
+
 	$headline = $adminTheme->getHeadline();
 	$headlinePos = strpos($content, "$headline</h1>");
 	if($headlinePos && $headlinePos > 500) $headline = '';
-	
+
 	$adminTheme->includeFile('_content.php', array(
 		'headline' => $headline, 
 		'content' => &$content, 
 		'layout' => $layout
 	));
-	
+
 	if(!$adminTheme->isModal) {
 		$adminTheme->includeFile('_footer.php');
 		if($adminTheme->isLoggedIn && strpos($layout, 'sidenav') !== 0) {
 			$adminTheme->includeFile('_offcanvas.php');
 		}
 	}
-	
+
 	echo $adminTheme->renderExtraMarkup('body');
 	$adminTheme->includeFile('_body-scripts.php', array('layout' => $layout));
 	?>
-	
+
 </body>
 </html><?php
 

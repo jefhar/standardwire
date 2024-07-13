@@ -903,10 +903,10 @@ class CommentForm extends Wire implements CommentFormInterface {
 		// $sessionData = array(); 
 
 		foreach(array('cite', 'email', 'website', 'stars', 'text') as $key) {
-			
+
 			if($key == 'website' && (!$this->commentsField || !$this->commentsField->useWebsite)) continue;
 			if($key == 'stars' && (!$this->commentsField || !$this->commentsField->useStars)) continue;
-			
+
 			if($this->options['presetsEditable'] || !isset($this->options['presets'][$key]) || $this->options['presets'][$key] === null) {
 				$comment->$key = $data->$key; // Comment performs sanitization/validation
 			} else {

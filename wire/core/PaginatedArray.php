@@ -285,7 +285,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 			$str = $options['zeroLabel'];
 
 		} else if($usePageNum) {
-			
+
 			$pageNum = $start ? ($start / $limit) + 1 : 1;
 			$totalPages = ceil($total / $limit); 
 			if(!$totalPages) $pageNum = 0;
