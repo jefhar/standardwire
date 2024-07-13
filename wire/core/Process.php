@@ -386,11 +386,11 @@ abstract class Process extends WireData implements Module {
 		$page = $parent->child("include=all, name=$name"); // does it already exist?
 		if($page->id && "$page->process" == "$this") return $page; // return existing copy
 		if($languages) $languages->setDefault();
-		$page = $pages->newPage($template ? $template : 'admin');
+		$page = $pages->newPage($template ?: 'admin');
 		$page->name = $name; 
 		$page->parent = $parent; 
 		$page->process = $this;
-		$page->title = $title ? $title : $info['title'];
+		$page->title = $title ?: $info['title'];
 		foreach($extras as $key => $value) $page->set($key, $value); 
 		if($languages) $languages->unsetDefault();
 		$pages->save($page, array('adjustName' => true)); 

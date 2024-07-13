@@ -324,7 +324,7 @@ abstract class Notice extends WireData {
 		} else {
 			$flag = array_search($name, array_map('strtolower', self::$flagNames));
 		}
-		return $flag ? $flag : 0;
+		return $flag ?: 0;
 	}
 
 	/**

@@ -721,7 +721,7 @@ class PageTraversal {
 			$scheme = strtolower($options['scheme']);
 			if(strpos($scheme, '://') === false) $scheme .= '://';
 			if($scheme === 'https://' && $config->noHTTPS) $scheme = 'http' . '://';
-			$host = $options['host'] ? $options['host'] : $config->httpHost;
+			$host = $options['host'] ?: $config->httpHost;
 			$url = "$scheme$host$url";
 
 		} else if($options['http'] || $options['host']) {
@@ -731,7 +731,7 @@ class PageTraversal {
 				case 1: $scheme = 'https'; break;
 				default: $scheme = $config->https ? 'https' : 'http';
 			}
-			$host = $options['host'] ? $options['host'] : $config->httpHost;
+			$host = $options['host'] ?: $config->httpHost;
 			$url = "$scheme://$host$url";
 		}
 

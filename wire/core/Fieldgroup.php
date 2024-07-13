@@ -321,7 +321,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 *
 	 */
 	public function getFieldContext($key, $namespace = '') {
-		return $this->getField($key, $namespace ? $namespace : true); 
+		return $this->getField($key, $namespace ?: true); 
 	}
 
 	/**

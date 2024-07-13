@@ -292,7 +292,7 @@ class WireShutdown extends Wire {
 		}
 
 		// output HTML error
-		$html = $this->config->fatalErrorHTML ? $this->config->fatalErrorHTML : self::defaultFatalErrorHTML;
+		$html = $this->config->fatalErrorHTML ?: self::defaultFatalErrorHTML;
 		$html = str_replace(array(
 			'{message}',
 			'{why}'
@@ -350,7 +350,7 @@ class WireShutdown extends Wire {
 		$text = str_replace(array('Stack trace:<', 'Stack trace:'), array('<', ''), $text);
 
 		// remove portions of path that are not needed in this output
-		$rootPath = str_replace('/wire/core/', '/', dirname(__FILE__) . '/');
+		$rootPath = str_replace('/wire/core/', '/', __DIR__ . '/');
 		$rootPath2 = $this->config ? $this->config->paths->root : '';
 		$text = str_replace($rootPath, '/', $text);
 		if($rootPath2 && $rootPath2 != $rootPath) $text = str_replace($rootPath2, '/', $text);
@@ -391,7 +391,7 @@ class WireShutdown extends Wire {
 	 * 
 	 */
 	protected function sendFatalHeader() {
-		include_once(dirname(__FILE__) . '/WireHttp.php');
+		include_once(__DIR__ . '/WireHttp.php');
 		$http = new WireHttp();
 		$codes = $http->getHttpCodes();
 		$code = 500;

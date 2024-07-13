@@ -1823,7 +1823,7 @@ class PagesPathFinder extends Wire {
 	protected function segmentLanguage($segment, $getLanguageId = false) {
 		$segments = $this->languageSegments();
 		$languageId = array_search($segment, $segments); 	
-		if($getLanguageId) return $languageId ? $languageId : 0;
+		if($getLanguageId) return $languageId ?: 0;
 		return $languageId ? $this->language($languageId) : null;
 	}
 	

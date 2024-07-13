@@ -1350,7 +1350,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 			/** @var Inputfield $child */
 			foreach($child->getErrors($clear) as $e) {
 				$label = $child->getSetting('label');
-				$msg = $label ? $label : $child->attr('name'); 
+				$msg = $label ?: $child->attr('name'); 
 				$errors[] = $msg . " - $e";
 			}
 		}

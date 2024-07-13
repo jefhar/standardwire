@@ -217,7 +217,7 @@ class PagesNames extends Wire {
 		);
 		
 		$options = array_merge($defaults, $options);
-		$parent = $options['parent'] ? $options['parent'] : $page->parent();
+		$parent = $options['parent'] ?: $page->parent();
 		$format = ''; 
 
 		if($parent && $parent->id && $parent->template->childNameFormat) {
@@ -817,7 +817,7 @@ class PagesNames extends Wire {
 		
 		$query->closeCursor();
 		
-		return $reason ? $reason : false;
+		return $reason ?: false;
 	}
 
 	/**

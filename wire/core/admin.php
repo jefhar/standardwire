@@ -102,7 +102,7 @@ function _checkForMaxInputVars(WireInput $input) {
 
 // fallback theme if one not already present
 if(empty($adminTheme)) {
-	$adminTheme = $modules->get($config->defaultAdminTheme ? $config->defaultAdminTheme : 'AdminThemeUikit');
+	$adminTheme = $modules->get($config->defaultAdminTheme ?: 'AdminThemeUikit');
 	if(empty($adminTheme)) $adminTheme = $modules->get('AdminThemeUikit');
 	if($adminTheme) $wire->wire('adminTheme', $adminTheme);
 }

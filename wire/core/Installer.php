@@ -162,7 +162,7 @@ class Installer {
 			'templates/admin.php',
 			'install/install.sql',
 		);
-		foreach(new \DirectoryIterator(dirname(__FILE__)) as $dir) {
+		foreach(new \DirectoryIterator(__DIR__) as $dir) {
 			if($dir->isDot() || !$dir->isDir()) continue; 
 			$name = $dir->getBasename();
 			$path = rtrim($dir->getPathname(), '/') . '/';
@@ -268,7 +268,7 @@ class Installer {
 			
 			$profiles = $this->findProfiles();
 			$profile = $this->post('profile', 'name'); 
-			if(empty($profile) || !isset($profiles[$profile]) || !is_dir(dirname(__FILE__) . "/$profile")) {
+			if(empty($profile) || !isset($profiles[$profile]) || !is_dir(__DIR__ . "/$profile")) {
 				$this->alertErr("Profile not found");
 				$this->selectProfile();
 				$this->btnContinue();
@@ -1151,7 +1151,7 @@ class Installer {
 	 */
 	protected function getRemoveableItems($getMarkup = false, $removeNow = false) {
 
-		$root = dirname(__FILE__) . '/';
+		$root = __DIR__ . '/';
 		$isPost = $this->post('remove_items') !== null;
 		$postItems = $this->post('remove_items', 'array');
 		$out = '';

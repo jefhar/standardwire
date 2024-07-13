@@ -940,7 +940,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 		
 		switch($key) {
 			case 'parent':
-				$value = $this->_parent ? $this->_parent : $this->parent();
+				$value = $this->_parent ?: $this->parent();
 				break;
 			case 'parent_id':
 				$value = $this->_parent ? $this->_parent->id : 0; 

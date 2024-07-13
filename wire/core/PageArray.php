@@ -545,7 +545,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 			}
 			if($foundPage) break;
 		}
-		return $foundPage ? $foundPage : $this->wire()->pages->newNullPage();
+		return $foundPage ?: $this->wire()->pages->newNullPage();
 	}
 
 	/**

@@ -1687,7 +1687,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 *
 	 */
 	public function getWire() {
-		return $this->_wire ? $this->_wire : null;
+		return $this->_wire ?: null;
 	}
 
 	/**

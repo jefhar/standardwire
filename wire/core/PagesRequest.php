@@ -496,7 +496,7 @@ class PagesRequest extends Wire {
 	 * 
 	 */
 	public function ___getClosestPage() {
-		return $this->closestPage ? $this->closestPage : $this->pages->newNullPage();
+		return $this->closestPage ?: $this->pages->newNullPage();
 	}
 
 	/**
@@ -921,7 +921,7 @@ class PagesRequest extends Wire {
 			$pageNum = (int) $this->pageNum;
 			
 			if($pageNum > 1 && $page->template->allowPageNum) {
-				$prefix = $this->pageNumPrefix ? $this->pageNumPrefix : $config->pageNumUrlPrefix;
+				$prefix = $this->pageNumPrefix ?: $config->pageNumUrlPrefix;
 				if(!$prefix) $prefix = 'page';
 				$url = rtrim($url, '/') . "/$prefix$pageNum";
 				if($page->template->slashPageNum) {

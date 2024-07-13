@@ -1522,7 +1522,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 */
 	public function escapeOperator($operator, $operatorType = self::operatorTypeComparison, $default = '=') {
 		$operator = $this->isOperator($operator, $operatorType, true); 
-		return $operator ? $operator : $default;
+		return $operator ?: $default;
 	}
 
 	/**
@@ -1697,7 +1697,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			}
 			if($serverType) break;
 		}
-		return $serverType ? $serverType : 'MySQL';
+		return $serverType ?: 'MySQL';
 	}
 	
 	/**

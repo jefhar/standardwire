@@ -329,7 +329,7 @@ function wireSanitizer($name = '', $value = '') {
  */
 function wireDatetime($format = '', $value = '') {
 	$datetime = wire()->datetime;
-	return strlen($format) ? $datetime->formatDate($value ? $value : time(), $format) : $datetime;
+	return strlen($format) ? $datetime->formatDate($value ?: time(), $format) : $datetime;
 }
 
 /**

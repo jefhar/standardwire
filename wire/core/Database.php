@@ -72,7 +72,7 @@ class Database extends \mysqli implements WireDatabase {
 			$pass = $config->dbPass; 
 			$db = $config->dbName; 
 			$port = $config->dbPort; 
-			$socket = $config->dbSocket ? $config->dbSocket : null;
+			$socket = $config->dbSocket ?: null;
 		} else $config = null;
 
 		@parent::__construct($host, $user, $pass, $db, $port, $socket);

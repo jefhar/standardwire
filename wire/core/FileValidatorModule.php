@@ -150,7 +150,7 @@ abstract class FileValidatorModule extends WireData implements Module {
 	 * 
 	 */
 	public function getPage() {
-		$page = $this->_page ? $this->_page : null;
+		$page = $this->_page ?: null;
 		if(!$page && $this->_pagefile) $page = $this->_pagefile->page;
 		return $page;
 	}
@@ -164,7 +164,7 @@ abstract class FileValidatorModule extends WireData implements Module {
 	 *
 	 */
 	public function getField() {
-		$field = $this->_field ? $this->_field : null;
+		$field = $this->_field ?: null;
 		if(!$field && $this->_pagefile) return $this->_pagefile->field;
 		return $field;
 	}
@@ -178,7 +178,7 @@ abstract class FileValidatorModule extends WireData implements Module {
 	 * 
 	 */
 	public function getPagefile() {
-		$pagefile = $this->_pagefile ? $this->_pagefile : null;
+		$pagefile = $this->_pagefile ?: null;
 		return $pagefile;
 	}
 	

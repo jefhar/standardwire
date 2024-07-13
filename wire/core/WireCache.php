@@ -1231,7 +1231,7 @@ class WireCache extends Wire {
 		$options = array_merge($defaults, $options);
 		$mtime = filemtime($filename);
 		$name = str_replace($paths->root, '', $filename);
-		$ns = 'cache.' . ($options['name'] ? $options['name'] : 'renderFile');
+		$ns = 'cache.' . ($options['name'] ?: 'renderFile');
 		$cacheName = $this->cacheName($name, $ns);
 
 		if($mtime === false) {

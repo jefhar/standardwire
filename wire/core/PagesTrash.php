@@ -200,12 +200,12 @@ class PagesTrash extends Wire {
 			$info['notes'][] = 'Page name does not contain previous parent or sort info';
 		}
 
-		$info['parent'] = $newParent ? $newParent : $this->pages->newNullPage();
+		$info['parent'] = $newParent ?: $this->pages->newNullPage();
 		$info['parent_id'] = $parentID;
 		$info['sort'] = $sort;
 		
 		$namePrevious = $name;
-		$nameParent = $newParent ? $newParent : $page->parent;
+		$nameParent = $newParent ?: $page->parent;
 
 		if($newParent || $this->pages->count("parent=$nameParent, name=$name, id!=$page->id, include=all")) {
 			// check if there is already a page at the restore location with the same name

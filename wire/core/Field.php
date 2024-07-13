@@ -628,7 +628,7 @@ class Field extends WireData implements Saveable, Exportable {
 			} else {
 				$error = $this->errors('last');
 			}
-			$changes[$key]['error'] = $error ? $error : '';
+			$changes[$key]['error'] = $error ?: '';
 		}
 		$this->errors('clear all');
 

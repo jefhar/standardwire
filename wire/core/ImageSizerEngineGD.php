@@ -194,7 +194,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 		}
 
 		if($this->rotate || $needRotation) { // @horst
-			$degrees = $this->rotate ? $this->rotate : $orientations[0];
+			$degrees = $this->rotate ?: $orientations[0];
 			$image = $this->imRotate($image, $degrees);
 			$isModified = true; 
 			if(abs($degrees) == 90 || abs($degrees) == 270) {
@@ -1115,7 +1115,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 		$degrees = (int) $degrees;
 		$angle = 360 - $degrees; // imagerotate is anti-clockwise
 		$imgNew = imagerotate($img, $angle, 0);
-		return $imgNew ? $imgNew : false;
+		return $imgNew ?: false;
 	}
 	
 	private function _processActionGreyscale(&$img, $unused) {

@@ -105,7 +105,7 @@ class FieldSelectorInfo extends Wire {
 
 		$info = $this->infoTemplate; 
 		$info['name'] = $field->name; 
-		$info['label'] = $field->label ? $field->label : $field->name; 
+		$info['label'] = $field->label ?: $field->name; 
 		$schema = $field->type->getDatabaseSchema($field);
 
 		foreach($schema as $name => $schemaType) {

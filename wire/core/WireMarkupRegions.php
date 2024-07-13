@@ -806,7 +806,7 @@ class WireMarkupRegions extends Wire {
 		
 		$info = array(
 			'id' => $id,
-			'pwid' => $pwid ? $pwid : $id, 
+			'pwid' => $pwid ?: $id, 
 			'name' => $tagName, 
 			'classes' => $classes,
 			'attrs' => $attrs, 

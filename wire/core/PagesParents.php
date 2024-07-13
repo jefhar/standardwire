@@ -90,7 +90,7 @@ class PagesParents extends Wire {
 		$joinQty = (int) $options['joinQty'];
 		$joins = array();
 		$selects = array('pages.parent_id AS parent_id');
-		$indexBy = $options['indexBy'] ? $options['indexBy'] : 'id';
+		$indexBy = $options['indexBy'] ?: 'id';
 		$lastTable = 'pages';
 		$database = $this->wire('database');
 		$getOneCol = empty($options['columns']) ? $options['column'] : '';
@@ -129,7 +129,7 @@ class PagesParents extends Wire {
 		}
 
 		for($n = 0; $n <= $joinQty; $n++) {
-			$key = $n ? $n : '';
+			$key = $n ?: '';
 			$table = "pages$key";
 			$selects[] = "$table.parent_id AS parent_id$key";
 			foreach($columns as $col) {
@@ -154,7 +154,7 @@ class PagesParents extends Wire {
 		$parentID = $id;
 
 		for($n = 0; $n <= $joinQty; $n++) {
-			$key = $n ? $n : '';
+			$key = $n ?: '';
 			$lastParentID = $parentID;
 			$parentID = (int) $row["parent_id$key"];
 			if(!$n && !$options['includePage']) {
@@ -745,7 +745,7 @@ class PagesParents extends Wire {
 
 		$database = $this->wire()->database;
 		$inserts = array();
-		$parents = $this->findParentIDs($fromParent ? $fromParent : -2); // find parents within children
+		$parents = $this->findParentIDs($fromParent ?: -2); // find parents within children
 		$rowCount = 0; 
 	
 		foreach($parents as $pages_id => $parents_id) {

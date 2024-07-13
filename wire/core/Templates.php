@@ -419,7 +419,7 @@ class Templates extends WireSaveableItems {
 			$config = $this->wire()->config;
 			$files = $this->wire()->files;
 			$path = $config->paths->templates; 
-			$ext = $config->templateExtension ? $config->templateExtension : 'php';
+			$ext = $config->templateExtension ?: 'php';
 			$file = "$path$item->name.$ext";
 			if($original->filenameExists() && is_writable($path) && !$files->exists($file)) { 
 				if($files->copy($original->filename, $file)) $item->filename = $file;
@@ -796,7 +796,7 @@ class Templates extends WireSaveableItems {
 	 * 
 	 */
 	public function getParentPages(Template $template, $checkAccess = false, $maxStatus = 0) {
-		$getAll = $maxStatus ? $maxStatus : true;
+		$getAll = $maxStatus ?: true;
 		return $this->getParentPage($template, $checkAccess, $getAll);
 	}
 

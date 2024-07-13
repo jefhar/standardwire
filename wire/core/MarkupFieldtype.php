@@ -390,7 +390,7 @@ class MarkupFieldtype extends WireData implements Module {
 	
 	public function setPage(Page $page) { $this->_page = $page;  }
 	public function setField(Field $field) { $this->_field = $field;  }
-	public function getPage() { return $this->_page ? $this->_page : $this->wire()->pages->newNullPage(); }
+	public function getPage() { return $this->_page ?: $this->wire()->pages->newNullPage(); }
 	public function getField() { return $this->_field; }
 
 	/**

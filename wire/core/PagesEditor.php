@@ -549,8 +549,8 @@ class PagesEditor extends Wire {
 			$data['modified_users_id'] = (int) $userID;
 		} else {
 			// quiet option, use existing values already populated to page, when present
-			$data['modified_users_id'] = (int) ($page->modified_users_id ? $page->modified_users_id : $userID);
-			$data['created_users_id'] = (int) ($page->created_users_id ? $page->created_users_id : $userID);
+			$data['modified_users_id'] = (int) ($page->modified_users_id ?: $userID);
+			$data['created_users_id'] = (int) ($page->created_users_id ?: $userID);
 			if($page->modified > 0) {
 				$data['modified'] = date('Y-m-d H:i:s', $page->modified);
 			} else if($isNew) {

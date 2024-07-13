@@ -759,7 +759,7 @@ class ModulesLoader extends ModulesClass {
 			$moduleName = wireClassName($moduleName, false);
 		}
 
-		$info = $this->modules->getModuleInfo($module ? $module : $moduleName);
+		$info = $this->modules->getModuleInfo($module ?: $moduleName);
 		
 		if(empty($info['permission']) && empty($info['permissionMethod'])) {
 			return ($strict ? false : true);

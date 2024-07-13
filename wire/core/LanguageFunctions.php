@@ -125,7 +125,7 @@ function __($text, $textdomain = null, $context = '') {
 			if($option === 'replacements' || $option === 'translations') {
 				// setting or getting global 'replacements' or 'translations'
 				// if not given any values to set then return current value
-				if(!is_array($values)) return $options[$option] ? $options[$option] : array();
+				if(!is_array($values)) return $options[$option] ?: array();
 				// merge with existing 'replacements' or 'translations'
 				$options[$option] = $options[$option] === false ? $values : array_merge($options[$option], $values);
 				// return current value

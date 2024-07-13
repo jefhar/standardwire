@@ -1383,7 +1383,7 @@ class PageFinder extends Wire {
 		} else if($quote == '(') {
 			// selector contains an OR group (quoted selector)
 			// at least one (quoted selector) must match for each field specified in front of it
-			$groupName = $selector->group ? $selector->group : $selector->getField('string');
+			$groupName = $selector->group ?: $selector->getField('string');
 			$groupName = $this->sanitizer->fieldName($groupName);
 			if(!$groupName) $groupName = 'none';
 			if(!isset($this->extraOrSelectors[$groupName])) $this->extraOrSelectors[$groupName] = array();
@@ -1813,7 +1813,7 @@ class PageFinder extends Wire {
 				}
 
 				// use actual table name if first instance, if second instance of table then add a number at the end
-				$tableAlias = $field->table . ($fieldCnt[$field->table] ? $fieldCnt[$field->table] : '');
+				$tableAlias = $field->table . ($fieldCnt[$field->table] ?: '');
 				$tableAlias = $database->escapeTable($tableAlias);
 
 				$join = '';
@@ -2468,7 +2468,7 @@ class PageFinder extends Wire {
 				
 				if($value == 'parent') {
 					$useParent = true;
-					$value = $subValue ? $subValue : 'title'; // needs a custom field, not "name"
+					$value = $subValue ?: 'title'; // needs a custom field, not "name"
 					$subValue = 'data';
 					$idColumn = 'parent_id';
 				} else {
@@ -2549,7 +2549,7 @@ class PageFinder extends Wire {
 					
 				} else {
 					// regular field, just sort by data column
-					$value = "$tableAlias." . ($subValue ? $subValue : "data");
+					$value = "$tableAlias." . ($subValue ?: "data");
 				}
 			}
 	
@@ -3557,7 +3557,7 @@ class PageFinder extends Wire {
 		// determine include=mode
 		$include = $selectors->getSelectorByField('include');
 		$include = $include ? $include->value : '';
-		if(!$include) $include = $this->includeMode ? $this->includeMode : 'hidden'; 
+		if(!$include) $include = $this->includeMode ?: 'hidden'; 
 		
 		$selectorString = "templates_id=$templateIDs, include=$include, get_total=0";
 	

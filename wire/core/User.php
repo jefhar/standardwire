@@ -307,7 +307,7 @@ class User extends Page {
 					if($accessTemplate && !in_array($role->id, $accessTemplate->createRoles)) continue;
 				} else {
 					// some other page-* permission, check against context of access template
-					$context = $accessTemplate ? $accessTemplate : $page;
+					$context = $accessTemplate ?: $page;
 				}
 			}
 

@@ -675,7 +675,7 @@ class WireHooks {
 		
 		if($options['allInstances'] || $options['fromClass']) {
 			// hook all instances of this class
-			$hookClass = $options['fromClass'] ? $options['fromClass'] : $object->className();
+			$hookClass = $options['fromClass'] ?: $object->className();
 			if(!isset($this->staticHooks[$hookClass])) $this->staticHooks[$hookClass] = array();
 			$hooks =& $this->staticHooks[$hookClass];
 			$options['allInstances'] = true;

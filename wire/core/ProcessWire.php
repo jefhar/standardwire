@@ -1169,7 +1169,7 @@ class ProcessWire extends Wire {
 		} 
 
 		if(isset($_SERVER['HTTP_HOST'])) {
-			$host = $httpHost ? $httpHost : strtolower($_SERVER['HTTP_HOST']);
+			$host = $httpHost ?: strtolower($_SERVER['HTTP_HOST']);
 
 			// when serving pages from a web server
 			if(is_null($_rootURL)) $rootURL = rtrim(dirname($_SERVER['SCRIPT_NAME']), "/\\") . '/';

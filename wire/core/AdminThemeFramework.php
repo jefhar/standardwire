@@ -719,7 +719,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 			$replacements = array(
 				'{class}' => $class,
 				'{remove}' => '', 
-				'{icon}' => $this->renderNavIcon($notice->icon ? $notice->icon : $icon),
+				'{icon}' => $this->renderNavIcon($notice->icon ?: $icon),
 				'{text}' => $text,
 			);
 			
