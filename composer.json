@@ -17,6 +17,10 @@
     "php": ">=5.5",
     "ext-gd": "*"
   },
+  "require-dev": {
+    "rector/rector": "^1.2",
+    "symfony/var-dumper": "^7.1"
+  },
   "autoload": {
     "files": [ "wire/core/ProcessWire.php" ]
   }
