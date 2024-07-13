@@ -171,7 +171,7 @@ class Users extends PagesType {
 	 */
 	public function getPageClass() {
 		$pageClass = parent::getPageClass();
-		if($pageClass !== 'User' && $pageClass !== 'ProcessWire\User' && $pageClass !== $this->validPageClass) {
+		if($pageClass !== 'User' && $pageClass !== \ProcessWire\User::class && $pageClass !== $this->validPageClass) {
 			if(wireInstanceOf($pageClass, 'User')) {
 				$this->validPageClass = $pageClass;
 			} else {

@@ -366,7 +366,7 @@ class ProcessWire extends Wire {
 		$config->versionName = trim($version . " " . self::versionSuffix);
 		$config->moduleServiceKey .= str_replace('.', '', $version);
 		
-		if($config->useFunctionsAPI && !function_exists("\\ProcessWire\\pages")) {
+		if($config->useFunctionsAPI && !function_exists(\ProcessWire\pages::class)) {
 			$file = $config->paths->core . 'FunctionsAPI.php';
 			/** @noinspection PhpIncludeInspection */
 			include_once($file);

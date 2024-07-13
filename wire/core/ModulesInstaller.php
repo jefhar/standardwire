@@ -37,7 +37,7 @@ class ModulesInstaller extends ModulesClass {
 		if(!array_key_exists($class, $installableFiles)) return false;
 		if(!wireInstanceOf($class, 'Module')) {
 			$nsClass = $this->modules->getModuleClass($class, true);
-			if(!wireInstanceOf($nsClass, 'ProcessWire\\Module')) return false;
+			if(!wireInstanceOf($nsClass, \ProcessWire\Module::class)) return false;
 		}
 		if($now) {
 			$requires = $this->getRequiresForInstall($class);

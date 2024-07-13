@@ -2667,7 +2667,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * 
 	 */
 	public static function __callStatic($name, $arguments) {
-		$class = get_called_class();
+		$class = static::class;
 		if($name === 'new') {
 			$n = count($arguments);
 			if($n === 0) {
@@ -2704,7 +2704,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * 
 	 */
 	public static function newInstance($items = null, $class = '') {
-		if(empty($class)) $class = get_called_class();
+		if(empty($class)) $class = static::class;
 		/** @var WireArray $a */
 		$a = new $class();
 		if($items instanceof WireArray) {
