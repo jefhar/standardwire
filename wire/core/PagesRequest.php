@@ -620,7 +620,7 @@ class PagesRequest extends Wire {
 			// request is not for a file
 			return false;
 		}
-		
+
 		// request is for file in site/assets/files/...
 		$idAndFile = substr($url, strlen($config->urls->files));
 
@@ -631,7 +631,7 @@ class PagesRequest extends Wire {
 			// tell caller that this should be a 404
 			return $pages->newNullPage();
 		}
-		
+
 		// request is consistent with those that would match to a file
 		$idPath = trim($matches[1], '/');
 		$file = trim($matches[2], '.');

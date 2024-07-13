@@ -510,7 +510,7 @@ abstract class AdminTheme extends WireData implements Module {
 	}
 	
 	public function ___uninstall() { 
-	
+
 		$defaultAdminTheme = $this->wire()->config->defaultAdminTheme;
 		if($defaultAdminTheme == $this->className()) {
 			throw new WireException(

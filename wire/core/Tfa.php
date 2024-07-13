@@ -333,23 +333,23 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 
 		/** @var User $user */
 		$user = $this->wire()->users->get('name=' . $sanitizer->selectorValue($name));
-		
+
 		// unknown user
 		if(!$user || !$user->id) return false;
-		
+
 		// check if user is not allowed to login
 		if(!$session->allowLogin($user->name, $user)) return false;
-		
+
 		// check if user exists but does not have 2FA enabled
 		$tfaModule = $this->getModule($user); /** @var Tfa $tfaModule */
 		if(!$tfaModule) return true;
-		
+
 		$settings = $tfaModule->getUserSettings($user);
 		if(!$tfaModule->enabledForUser($user, $settings)) return true;
-		
+
 		// check if user name and pass authenticate
 		if(!$session->authenticate($user, $pass)) return false;
-		
+
 		if($tfaModule->rememberDays && $tfaModule->remember($user, $settings)->remembered()) {
 			if($this->wire()->config->debug) {
 				$this->message($this->rememberSkipLabel, Notice::noGroup);
@@ -365,7 +365,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 			$this->error($this->sendCodeErrorLabel); // Error creating or sending authentication code'
 			$this->redirect($this->startUrl);
 		}
-		
+
 		return false; // note: statement cannot be reached due to redirects above
 	}
 

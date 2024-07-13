@@ -159,7 +159,7 @@ if($page->process && $page->process != 'ProcessPageView') {
 		if($modal) $session->addHookBefore('redirect', null, '_hookSessionRedirectModal'); 
 		$content = $controller->execute();
 		$process = $controller->wire('process');
-		
+
 		if(!$ajax && !$modal && !$demo && $user->isLoggedin()) _checkForTwoFactorAuth($session);
 		if($process) {} // ignore
 

@@ -1176,7 +1176,7 @@ class Pageimage extends Pagefile {
 	 * 
 	 */	
 	public function hidpiWidth($width = 0, $options = array()) {
-		
+
 		if(is_string($width)) {
 			if(ctype_digit("$width")) {
 				$width = (int) $width;
@@ -1186,7 +1186,7 @@ class Pageimage extends Pagefile {
 				$width = (float) $width;
 			}
 		}
-		
+
 		if(is_float($width) || $width < 1) {
 			// return hidpi width intended: scale omitted or provided in $width argument
 			$scale = $width;
@@ -1201,7 +1201,7 @@ class Pageimage extends Pagefile {
 			if(!is_array($options)) $options = array();
 			return $this->hidpiSize((int) $width, 0, $options);
 		}
-		
+
 		return 0; // not possible to reach, but pleases the inspection
 	}
 

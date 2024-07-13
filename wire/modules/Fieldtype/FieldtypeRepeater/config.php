@@ -451,7 +451,7 @@ class FieldtypeRepeaterConfigHelper extends Wire {
 	 *
 	 */
 	public function saveConfigInputfields(Template $template) {
-		
+
 		$input = $this->wire()->input;
 		$fields = $this->wire()->fields;
 

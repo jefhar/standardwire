@@ -16,4 +16,4 @@ if(!defined("PROCESSWIRE")) die();
 <div id='pw-content-body'>
 	<?php echo $page->get('body') . $content; ?>
 </div>	
-	
+

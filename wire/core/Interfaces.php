@@ -730,7 +730,7 @@ interface InputfieldHasSelectableOptions {
  * 
  */
 interface WireCacheInterface {
-	
+
 	/**
 	 * Find caches by names and/or expirations and return requested values
 	 * 
@@ -760,7 +760,7 @@ interface WireCacheInterface {
 	 *
 	 */
 	public function find(array $options);
-	
+
 	/**
 	 * Save a cache
 	 *
@@ -780,7 +780,7 @@ interface WireCacheInterface {
 	 * 
 	 */
 	public function delete($name);
-	
+
 	/**
 	 * Delete all caches (except those reserved by the system)
 	 *
@@ -788,7 +788,7 @@ interface WireCacheInterface {
 	 *
 	 */
 	public function deleteAll();
-	
+
 	/**
 	 * Expire all caches (except those that should never expire)
 	 *

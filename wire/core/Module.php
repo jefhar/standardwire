@@ -429,7 +429,7 @@ interface Module {
 	 * public function ___uninstall();
 	 * 
 	 */
-	
+
 	/**
 	 * Called when a version change is detected on the module
 	 * 

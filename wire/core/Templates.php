@@ -37,7 +37,7 @@ class Templates extends WireSaveableItems {
 	 *
 	 */
 	protected $templatesArray = null;
-	
+
 	/**
 	 * Templates that had changed files during this request
 	 *
@@ -86,7 +86,7 @@ class Templates extends WireSaveableItems {
 		if($this->useLazy()) $this->loadAllLazyItems();
 		return $this->getWireArray();
 	}
-	
+
 	/**
 	 * Get WireArray container that items are stored in
 	 * 
@@ -119,27 +119,27 @@ class Templates extends WireSaveableItems {
 		/** @var Template $template */
 		$template = $this->wire(new Template());
 		$template->loaded(false);
-	
+
 		if(!empty($a['data'])) { 
 			if(is_string($a['data'])) $a['data'] = $this->decodeData($a['data']);
 		} else {
 			unset($a['data']);
 		}
-		
+
 		foreach(array('id', 'name', 'fieldgroups_id', 'flags', 'cache_time') as $key) {
 			if(!isset($a[$key])) continue;
 			$value = $key === 'name' ? $a[$key] : (int) $a[$key];
 			$template->setRaw($key, $value); 
 			unset($a[$key]);
 		}
-		
+
 		foreach($a as $key => $value) {
 			$template->set($key, $value);
 		}
-		
+
 		$template->loaded(true);
 		$template->resetTrackChanges(true);
-		
+
 		return $template;
 	}
 
@@ -200,41 +200,41 @@ class Templates extends WireSaveableItems {
 	 * 
 	 */
 	public function add($name, array $properties = array()) {
-		
+
 		if(!is_string($name)) {
 			throw new WireException("You must specify the template name to add"); 
 		}
-		
+
 		$saniName = $this->wire()->sanitizer->templateName($name);
-		
+
 		if(empty($saniName)) {
 			throw new WireException("Invalid template name: $name"); 
 		}
-		
+
 		$name = $saniName;
 		$template = $this->get($name);
-		
+
 		if($template) {
 			throw new WireException("Template '$name' cannot be added because it already exists");
 		}
-	
+
 		$fieldgroups = $this->wire()->fieldgroups;
 		$fieldgroup = $fieldgroups->get($name);
-		
+
 		if(!$fieldgroup) {
 			$fieldgroup = new Fieldgroup();
 			$this->wire($fieldgroup);
 			$fieldgroup->name = $name;
 			$fieldgroups->save($fieldgroup);
 		}
-		
+
 		$template = new Template();
 		$this->wire($template);
 		$template->name = $name;
 		$template->fieldgroup = $fieldgroup;
 		foreach($properties as $key => $value) $template->set($key, $value);
 		$this->save($template);
-		
+
 		return $template;
 	}
 
@@ -265,7 +265,7 @@ class Templates extends WireSaveableItems {
 	 *
 	 */
 	public function ___save(Saveable $item) {
-		
+
 		// If the template's fieldgroup has changed, then we delete data that's no longer applicable to the new fieldgroup. 
 
 		$isNew = $item->id < 1; 
@@ -287,7 +287,7 @@ class Templates extends WireSaveableItems {
 				throw new WireException("Template '$item' is used by the homepage and thus must have the 'guest' role assigned.");
 			}
 		}
-		
+
 		if(!$item->isChanged('modified')) $item->modified = time();
 
 		$result = parent::___save($item); 
@@ -324,7 +324,7 @@ class Templates extends WireSaveableItems {
 			$access = $this->wire(new PagesAccess());
 			$access->updateTemplate($item); 
 		}
-	
+
 		$cache = $this->wire()->cache;
 		$cache->maintenance($item);
 
@@ -340,16 +340,16 @@ class Templates extends WireSaveableItems {
 	 *
 	 */
 	public function ___delete(Saveable $item) {
-		
+
 		$name = $item->name;
 		$id = $item->id;
-		
+
 		if($item->flags & Template::flagSystem) {
 			throw new WireException("Can't delete template '$name' because it is a system template.");
 		}
-		
+
 		$cnt = $item->getNumPages();
-		
+
 		if($cnt > 0) {
 			throw new WireException("Can't delete template '$name' because it is used by $cnt pages.");
 		}
@@ -369,10 +369,10 @@ class Templates extends WireSaveableItems {
 				if(!$cnt) $fieldgroups->delete($fieldgroup);
 			}
 		}
-		
+
 		$cache = $this->wire()->cache;
 		$cache->maintenance($item); 
-		
+
 		return $return;
 	}
 
@@ -442,22 +442,22 @@ class Templates extends WireSaveableItems {
 	 * 
 	 */
 	public function rename(Template $template, $name) {
-		
+
 		$config = $this->wire()->config;
 		$saniName = $this->wire()->sanitizer->templateName($name);
-		
+
 		if(empty($saniName)) throw new WireException("Invalid template name: $name");
-	
+
 		$name = $saniName;
 		$basename = "$template->name.$config->templateExtension";
 		$filename = $template->filenameExists() ? $template->filename() : '';
 		$fieldgroup = $template->fieldgroup;
 		$t = $this->get($name);
-		
+
 		if($t instanceof Template && $t->id != $template->id) {
 			throw new WireException("Template '$name' already exists");
 		}
-		
+
 		if($fieldgroup->name === $template->name) {
 			// rename fieldgroup too
 			$fg = $this->wire()->fieldgroups->get($name);
@@ -465,10 +465,10 @@ class Templates extends WireSaveableItems {
 			$fieldgroup->name = $name;
 			$this->wire()->fieldgroups->save($fieldgroup);
 		}
-		
+
 		$template->name = $name;
 		$this->save($template);
-		
+
 		if($filename && basename($filename) === $basename) { 
 			$newFilename = $config->paths->templates . $name . $config->templateExtension;
 			if(is_readable($filename) && is_writable($filename) && !file_exists($newFilename)) {
@@ -604,7 +604,7 @@ class Templates extends WireSaveableItems {
 	 *
 	 */
 	public function ___setImportData(Template $template, array $data) {
-		
+
 		$fieldgroups = $this->wire()->fieldgroups;
 
 		$template->set('_importMode', true); 
@@ -704,10 +704,10 @@ class Templates extends WireSaveableItems {
 	 *
 	 */
 	public function getParentPage(Template $template, $checkAccess = false, $getAll = false) {
-		
+
 		$pages = $this->wire()->pages;
 		$user = $this->wire()->user;
-		
+
 		$foundParent = null;
 		$foundParents = $getAll ? $pages->newPageArray() : null;
 		$foundParentQty = 0;
@@ -772,17 +772,17 @@ class Templates extends WireSaveableItems {
 			$foundParent = $parentPage;
 			if($foundParentQty > 1) break;
 		}
-		
+
 		if($checkAccess && $getAll && $foundParents && $foundParents->count()) {
 			$p = $pages->newPage($template);
 			foreach($foundParents as $parentPage) {
 				if(!$parentPage->addable($p)) $foundParents->remove($parentPage);
 			}
 		}
-		
+
 		if($getAll) return $foundParents;
 		if($foundParentQty > 1) return $pages->newNullPage();
-		
+
 		return $foundParent;
 	}
 
@@ -799,7 +799,7 @@ class Templates extends WireSaveableItems {
 		$getAll = $maxStatus ? $maxStatus : true;
 		return $this->getParentPage($template, $checkAccess, $getAll);
 	}
-	
+
 	/**
 	 * Get class name to use for pages using given Template
 	 * 
@@ -823,7 +823,7 @@ class Templates extends WireSaveableItems {
 
 		$corePageClass = __NAMESPACE__ . "\\Page";
 		$cacheable = true;
-		
+
 		// first check for class defined with Template 'pageClass' setting
 		$pageClass = $template->pageClass;
 
@@ -848,7 +848,7 @@ class Templates extends WireSaveableItems {
 				$cacheable = false; 
 			}
 		}
-	
+
 		$config = $this->wire()->config;
 		$usePageClasses = $config->usePageClasses;
 
@@ -881,7 +881,7 @@ class Templates extends WireSaveableItems {
 		}
 
 		if($cacheable && $template->id) $this->pageClassNames[$template->id] = $pageClass;
-		
+
 		if(!$withNamespace) $pageClass = wireClassName($pageClass, false);
 
 		return $pageClass;
@@ -936,7 +936,7 @@ class Templates extends WireSaveableItems {
 	public function setTemplatePermissionByRole(Template $template, $permission, $role, $revoke = false, $test = false) {
 
 		if(!$template->useRoles) throw new WireException("Template $template does not have access control enabled"); 
-		
+
 		$defaultPermissions = array('page-view', 'page-edit', 'page-create', 'page-add');
 		$updated = false;
 
@@ -994,7 +994,7 @@ class Templates extends WireSaveableItems {
 		} else {
 			throw new WireException("Unknown permission for Templates::setPermissionByRole");
 		}
-		
+
 		return $updated; 
 	}
 
@@ -1017,7 +1017,7 @@ class Templates extends WireSaveableItems {
 		}
 		$this->fileModTemplates[$template->id] = $template;
 	}
-	
+
 	/**
 	 * Saves templates that had modified files to update 'modified' and 'ns' properties after the request is complete
 	 *
@@ -1056,16 +1056,16 @@ class Templates extends WireSaveableItems {
 	 * @throws WireException if given invalid argument
 	 *
 	public function allowRelationship($parent, $child, array $options = array()) {
-		
+
 		$defaults = array(
 			'verbose' => true, 
 			'strict' => false, 
 		);
-	
+
 		$options = array_merge($defaults, $options);
 		$parentPage = null;
 		$childPage = null;
-		
+
 		if($child instanceof Template) {
 			$childTemplate = $child;
 		} else if($child instanceof Page) {
@@ -1074,7 +1074,7 @@ class Templates extends WireSaveableItems {
 		} else {
 			throw new WireException('Invalid argument for child');
 		}
-		
+
 		if($parent instanceof Template) {
 			$parentTemplate = $parent;
 		} else if($parent instanceof Page) {
@@ -1088,7 +1088,7 @@ class Templates extends WireSaveableItems {
 		$reasonsYes = array();
 		$isAlreadyParent = $parentPage && $childPage && $childPage->parent_id == $parentPage->id;
 		$isAlreadyParentNote = "parent/child allowed because relationship already exists";
-		
+
 		if($isAlreadyParent) {
 			if($options['strict']) {
 				// in strict mode, existing relationships are ignored and we stick only to the rules
@@ -1106,7 +1106,7 @@ class Templates extends WireSaveableItems {
 				$reasonsNo[] = $reason;
 			}
 		}
-		
+
 		if($childTemplate->noMove) {
 			$reason = "Child template “$childTemplate” specifies “no move”";
 			if($isAlreadyParent) {
@@ -1115,7 +1115,7 @@ class Templates extends WireSaveableItems {
 				$reasonsNo[] = $reason;
 			}
 		}
-		
+
 		if($childTemplate->noParents > 0) {
 			$reason = "Child template “$childTemplate” specifies “no parents” option";
 			if($isAlreadyParent) {
@@ -1124,7 +1124,7 @@ class Templates extends WireSaveableItems {
 				$reasonsNo[] = $reason;
 			}
 		} 
-		
+
 		if(count($parentTemplate->childTemplates)) { 
 			if(in_array($childTemplate->id, $parentTemplate->childTemplates)) {
 				$reasonsYes[] = "Parent template “$parentTemplate” specifically allows children of “$childTemplate”";
@@ -1132,7 +1132,7 @@ class Templates extends WireSaveableItems {
 				$reasonsNo[] = "Parent template “$parentTemplate” does not allow children using template “$childTemplate”";
 			}
 		} 
-		
+
 		if(count($childTemplate->parentTemplates)) { 
 			if(in_array($parentTemplate->id, $childTemplate->parentTemplates)) {
 				$reasonsYes[] = "Child template “$childTemplate” specifically allows parents using template “$parentTemplate”";
@@ -1142,14 +1142,14 @@ class Templates extends WireSaveableItems {
 		}
 
 		$allowed = count($reasonsNo) ? false : true;
-		
+
 		if($options['verbose']) {
 			return array(
 				'allowed' => $allowed,
 				'reasons' => $allowed ? $reasonsYes : $reasonsNo, 
 			);
 		}
-		
+
 		return $allowed; 
 	}
 	 */

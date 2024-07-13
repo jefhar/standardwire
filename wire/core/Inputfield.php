@@ -171,7 +171,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * 
 	 */
 	const collapsedPopulated = 5;
-	
+
 	/**
 	 * Not collapsed, value visible but not editable
 	 * #pw-group-collapsed-constants
@@ -228,7 +228,7 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	const collapsedTab = 20;
-	
+
 	/**
 	 * Collapsed into a separate tab and AJAX loaded
 	 * #pw-group-collapsed-constants
@@ -244,7 +244,7 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	const collapsedTabLocked = 22;
-	
+
 	/**
 	 * Don't skip the label (default)
 	 * #pw-group-skipLabel-constants
@@ -258,14 +258,14 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	const skipLabelFor = true;
-	
+
 	/**
 	 * Don't show a visible header (likewise, do not show the label)
 	 * #pw-group-skipLabel-constants
 	 *
 	 */
 	const skipLabelHeader = 2;
-	
+
 	/**
 	 * Skip rendering of the label when it is blank
 	 * #pw-group-skipLabel-constants
@@ -294,14 +294,14 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	const textFormatBasic = 4;
-	
+
 	/**
 	 * Full markdown support with HTML also allowed
 	 * #pw-group-textFormat-constants
 	 *
 	 */
 	const textFormatMarkdown = 8;
-	
+
 	/**
 	 * Render flags: place first in render
 	 * #pw-group-render-constants
@@ -322,14 +322,14 @@ abstract class Inputfield extends WireData implements Module {
 	 * 
 	 */
 	const renderValueMinimal = 2;
-	
+
 	/**
 	 * Indicates a parent InputfieldWrapper is not required when rendering value. 
 	 * #pw-group-renderValue-constants
 	 *
 	 */
 	const renderValueNoWrap = 4;
-	
+
 	/**
 	 * If there are multiple items, only render the first (where supported by the Inputfield). 
 	 * #pw-group-renderValue-constants
@@ -433,7 +433,7 @@ abstract class Inputfield extends WireData implements Module {
 
 		$value = $this instanceof InputfieldHasArrayValue ? array() : null;
 		$this->setAttribute('value', $value); 
-		
+
 		parent::__construct();
 	}
 
@@ -497,24 +497,24 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	public function set($key, $value) {
-		
+
 		if($key === 'parent') { 
 			if($value instanceof InputfieldWrapper) return $this->setParent($value);
 
 		} else if($key === 'collapsed') {
 			if($value === true) $value = self::collapsedYes; 
 			$value = (int) $value;
-			
+
 		} else if(array_key_exists($key, $this->attributes)) {
 			return $this->setAttribute($key, $value);
-			
+
 		} else if($key === 'required' && $value && !is_object($value)) {
 			$this->addClass('required');
-			
+
 		} else if($key === 'columnWidth') {
 			$value = (int) $value; 
 			if($value < 10 || $value > 99) $value = '';
-			
+
 		} else if($key === 'addClass') {
 			if(is_string($value) && !ctype_alnum($value)) {
 				$test = str_replace(array(' ', ':', ',', '-', '+', '=', '!', '_', '.', '@', "\n"), '', $value);
@@ -522,7 +522,7 @@ abstract class Inputfield extends WireData implements Module {
 			}
 			$this->addClass($value);
 		}
-		
+
 		return parent::set($key, $value); 
 	}
 
@@ -740,7 +740,7 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	public function setAttribute($key, $value) {
-		
+
 		if(is_array($key)) {
 			$keys = $key;
 		} else if(strpos($key, '+') !== false) {
@@ -750,7 +750,7 @@ abstract class Inputfield extends WireData implements Module {
 		} else {
 			$keys = array($key);
 		}
-	
+
 		if(is_bool($value) && !in_array($key, array('name', 'id', 'class', 'value', 'type'))) {
 			$booleanValue = $value;
 		} else {
@@ -758,10 +758,10 @@ abstract class Inputfield extends WireData implements Module {
 		}
 
 		foreach($keys as $key) {
-			
+
 			if(!ctype_alpha("$key")) $key = $this->wire('sanitizer')->attrName($key);
 			if(empty($key)) continue;
-		
+
 			if($booleanValue !== null) {
 				if($booleanValue === true) {
 					// boolean true attribute sets value as attribute name (i.e. checked='checked')
@@ -772,7 +772,7 @@ abstract class Inputfield extends WireData implements Module {
 					continue;
 				}
 			}
-			
+
 			if($key === 'name' && strlen($value)) {
 				$idAttr = $this->getAttribute('id'); 
 				$nameAttr = $this->getAttribute('name'); 
@@ -792,7 +792,7 @@ abstract class Inputfield extends WireData implements Module {
 				// and stack any newly added values into the array.
 				// Examples would be stacking of class attributes, or stacking of value attributes for 
 				// an Inputfield that carries multiple values
-				
+
 				$this->attributes[$key][] = $value; 
 
 			} else {
@@ -918,7 +918,7 @@ abstract class Inputfield extends WireData implements Module {
 		if($value === null) return $this->getAttribute('value');
 		return $this->setAttribute('value', $value);
 	}
-	
+
 	/**
 	 * If method call resulted in no handler, this hookable method is called.
 	 * 
@@ -951,7 +951,7 @@ abstract class Inputfield extends WireData implements Module {
 		}
 		return parent::___callUnknown($method, $arguments);
 	}
-	
+
 	/**
 	 * Get all attributes specified for this Inputfield
 	 * 
@@ -1082,7 +1082,7 @@ abstract class Inputfield extends WireData implements Module {
 
 		$force = strpos($property, '=') === 0; // force set, skip processing by addClassString
 		if($force) $property = ltrim($property, '='); 
-		
+
 		if(is_string($class) && !ctype_alnum($class) && !$force) { 
 			if(strpos($class, ':') || strpos($class, "\n") || strpos($class, ",")) {
 				return $this->addClassString($class, $property);
@@ -1091,26 +1091,26 @@ abstract class Inputfield extends WireData implements Module {
 
 		$property = $this->getClassProperty($property);
 		$classes = $this->getClassArray($property, true);
-		
+
 		// addClasses is array of classes being added
 		$addClasses = is_array($class) ? $class : explode(' ', $class); 
-	
+
 		// add to $classes array
 		foreach($addClasses as $addClass) {
 			$addClass = trim($addClass); 
 			if(strlen($addClass)) $classes[$addClass] = $addClass;
 		}
-		
+
 		// convert back to string
 		$value = trim(implode(' ', $classes)); 
-	
+
 		// set back to Inputfield
 		if($property === 'class') {
 			$this->attributes['class'] = $value;
 		} else {
 			$this->set($property, $value); 
 		}
-		
+
 		return $this;
 	}
 
@@ -1152,20 +1152,20 @@ abstract class Inputfield extends WireData implements Module {
 	 * 
 	 */
 	protected function addClassString($class, $property = 'class') {
-		
+
 		if(ctype_alnum($class)) return $this->addClass($class, $property);
-		
+
 		$typeNames = array('wrap', 'header', 'content', 'input', 'class'); 
 		$class = trim($class);
 		if(strpos($class, "\n")) $class = str_replace("\n", ",", $class);
 		$groups = strpos($class, ',') ? explode(',', $class) : array($class);
-		
+
 		foreach($groups as $group) {
-			
+
 			$type = $property;
 			$group = trim($group);
 			$classes = explode(' ', $group);
-			
+
 			foreach($classes as $class) {
 				if(empty($class)) continue;
 				if(strpos($class, ':')) {
@@ -1187,7 +1187,7 @@ abstract class Inputfield extends WireData implements Module {
 				}
 			}
 		}
-		
+
 		return $this;
 	}
 
@@ -1226,7 +1226,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * 
 	 */
 	public function hasClass($class, $property = 'class') {
-		
+
 		if(is_string($class)) $class = trim($class);
 
 		// checking multiple classes
@@ -1241,10 +1241,10 @@ abstract class Inputfield extends WireData implements Module {
 			// return whether it had all the given classes
 			return $n === count($classes); 	
 		}
-	
+
 		// checking single class
 		$classes = $this->getClassArray($property, true);
-	
+
 		return isset($classes[$class]); 
 	}
 
@@ -1321,21 +1321,21 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	public function removeClass($class, $property = 'class') {
-	
+
 		$property = $this->getClassProperty($property);
 		$classes = $this->getClassArray($property, true);
 		$removeClasses = is_array($class) ? $class : explode(' ', $class); 
-		
+
 		foreach($removeClasses as $removeClass) {
 			if(strlen($removeClass)) unset($classes[$removeClass]);
 		}
-		
+
 		if($property === 'class') {
 			$this->attributes['class'] = implode(' ', $classes);
 		} else {
 			$this->set($property, implode(' ', $classes));
 		}
-		
+
 		return $this;
 	}
 
@@ -1376,16 +1376,16 @@ abstract class Inputfield extends WireData implements Module {
 		}
 
 		foreach($attributes as $attr => $value) {
-			
+
 			if(is_array($value)) {
 				// if an attribute has multiple values (like class), then bundle them into a string separated by spaces
 				$value = implode(' ', $value);
-				
+
 			} else if(is_bool($value)) {
 				// boolean attribute uses only attribute name when true, or omit when false
 				if($value === true) $str .= "$attr ";
 				continue;
-				
+
 			} else if(!strlen("$value") && strpos($attr, 'data-') !== 0) {
 				// skip over empty non-data attributes that are not arrays
 				// if(!$value = $this->attr($attr))) continue; // was in 3.0.132 and earlier
@@ -1432,7 +1432,7 @@ abstract class Inputfield extends WireData implements Module {
 		}
 		return $out; 
 	}
-	
+
 	/**
 	 * Method called right before Inputfield markup is rendered, so that any dependencies can be loaded as well.
 	 * 
@@ -1483,7 +1483,7 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	public function hookRender($event) {  }
-	
+
 	/**
 	 * Process input for this Inputfield directly from the POST (or GET) variables 
 	 * 
@@ -1518,13 +1518,13 @@ abstract class Inputfield extends WireData implements Module {
 			$this->error("Expected an array value and did not receive it"); 
 			return $this;
 		}
-		
+
 		$previousValue = $this->attr('value');
 
 		if(is_array($value)) {
 			// an array value was provided in the input
 			// note: only arrays one level deep are allowed
-			
+
 			if(!$this instanceof InputfieldHasArrayValue) {
 				$this->error("Received an unexpected array value"); 
 				return $this; 
@@ -1678,7 +1678,7 @@ abstract class Inputfield extends WireData implements Module {
 
 		$value = (int) $this->getSetting('columnWidth');
 		if($value < 10 || $value >= 100) $value = 100;
-		
+
 		$f = $inputfields->InputfieldInteger;
 		$f->label = sprintf($this->_('Column width (%d%%)'), $value);
 		$f->icon = 'arrows-h';
@@ -1704,7 +1704,7 @@ abstract class Inputfield extends WireData implements Module {
 			$f->description = $this->_("If checked, a value will be required for this field.");
 			$f->collapsed = $this->getSetting('required') ? Inputfield::collapsedNo : Inputfield::collapsedYes; 
 			$inputfields->add($f);
-	
+
 			$requiredAttr = $this->getSetting('requiredAttr'); 
 			if($requiredAttr !== null) {
 				// Inputfield must have set requiredAttr to some non-null value before this will appear as option in config
@@ -1719,7 +1719,7 @@ abstract class Inputfield extends WireData implements Module {
 				if($requiredAttr) $f->attr('checked', 'checked');
 				$inputfields->add($f);
 			}
-		
+
 			$f = $inputfields->InputfieldText;
 			$f->label = $this->_('Required only if');
 			$f->icon = 'asterisk';
@@ -1731,7 +1731,7 @@ abstract class Inputfield extends WireData implements Module {
 			$f->showIf = "required>0"; 
 			$inputfields->add($f); 
 		}
-		
+
 		if($this->hasFieldtype === false || $this->wire()->config->advanced) {
 			$f = $inputfields->InputfieldTextarea;
 			$f->attr('name', 'addClass');
@@ -1751,7 +1751,7 @@ abstract class Inputfield extends WireData implements Module {
 			$f->val($this->getSetting('addClass'));
 			$inputfields->add($f);
 		}
-	
+
 		return $inputfields; 
 	}
 
@@ -1819,7 +1819,7 @@ abstract class Inputfield extends WireData implements Module {
 			'showIf'
 		);
 	}
-	
+
 	/**
 	 * Export configuration values for external consumption
 	 *
@@ -1927,7 +1927,7 @@ abstract class Inputfield extends WireData implements Module {
 		}
 		return $errors; 
 	}
-	
+
 	/**
 	 * Clear errors from this Inputfield
 	 * 
@@ -2025,16 +2025,16 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	public function entityEncode($str, $markdown = false) {
-		
+
 		$sanitizer = $this->wire()->sanitizer;
-		
+
 		$str = (string) $str; 
-		
+
 		// if already encoded, then un-encode it
 		if(strpos($str, '&') !== false && preg_match('/&(#\d+|[a-zA-Z]+);/', $str)) {
 			$str = $sanitizer->unentities($str);
 		}
-		
+
 		if($markdown && $markdown !== self::textFormatNone) {
 			if(is_int($markdown)) {
 				$textFormat = $markdown;
@@ -2052,11 +2052,11 @@ abstract class Inputfield extends WireData implements Module {
 				// nothing allowed, text fully entity encoded regardless of $markdown request
 				$str = $sanitizer->entities($str);
 			}
-			
+
 		} else {
 			$str = $sanitizer->entities($str);
 		}
-		
+
 		return $str;
 	}
 
@@ -2099,7 +2099,7 @@ abstract class Inputfield extends WireData implements Module {
 		$info = array_merge($info, parent::__debugInfo());
 		return $info;
 	}
-	
+
 	/**
 	 * Set custom html render, see $this->html at top for reference.
 	 *
@@ -2125,20 +2125,20 @@ abstract class Inputfield extends WireData implements Module {
 	public function getHTML($attr = array()) { 
 		if(!strlen($this->html) || empty($attr) || strpos($this->html, '{') === false) return $this->html;
 		$html = $this->html;
-		
+
 		if(strpos($html, '{attr}')) {
-			
+
 			$html = str_replace('{attr}', $this->getAttributesString($attr), $html);	
-			
+
 			// @todo remove any other {tags} that might be present
-			
+
 		} else {
-			
+
 			// a version of html where the {tags} get replaced with blanks
 			// used for testing if more attributes present without possibility
 			// of those attributes being injected
 			// $_html = $html;
-			
+
 			// extract value so that a substitution can't result in input-injected tags
 			if(isset($attr['value'])) {
 				$value = $attr['value'];

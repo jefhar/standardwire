@@ -572,7 +572,7 @@ class ModulesInfo extends ModulesClass {
 			foreach($this->infoNullReplacements as $key => $value) {
 				if($info[$key] === null) $info[$key] = $value;
 			}
-			
+
 			if(!empty($info['requiresVersions'])) $info['requires'] = array_keys($info['requiresVersions']);
 			if($moduleName === 'SystemUpdater') $info['configurable'] = 1; // fallback, just in case
 
@@ -936,7 +936,7 @@ class ModulesInfo extends ModulesClass {
 				$this->trackException($e, false, true);
 			}
 		}
-		
+
 		$installableFiles = $this->modules->installableFiles;
 
 		foreach(array(true, false) as $installed) {

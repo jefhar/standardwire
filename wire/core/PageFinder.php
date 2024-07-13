@@ -1981,7 +1981,7 @@ class PageFinder extends Wire {
 	 * 
 	 */
 	protected function postProcessQuery($parentQuery) {
-		
+
 		if(count($this->extraOrSelectors)) {
 			// there were embedded OR selectors where one of them must match
 			// i.e. id>0, field=(selector string), field=(selector string)
@@ -2021,7 +2021,7 @@ class PageFinder extends Wire {
 				$parentQuery->where("(\n$sql\n)"); 
 			}
 		}
-	
+
 		/* Possibly move existing subselectors to work like this rather than how they currently are
 		if(count($this->extraSubSelectors)) {
 			$sqls = array();
@@ -2728,7 +2728,7 @@ class PageFinder extends Wire {
 				list($field, $subfield) = explode('.', $field);
 				$subfield = $sanitizer->fieldName($subfield);
 			}
-			
+
 			$field = $sanitizer->fieldName($field);
 			if($field == 'sort' && $subfield) $subfield = '';
 			if($field == 'child') $field = 'children';
@@ -2737,7 +2737,7 @@ class PageFinder extends Wire {
 				$subfield = $field;
 				$field = '_pages';
 			}
-			
+
 			$isParent = $field === 'parent' || $field === 'parent_id';
 			$isChildren = $field === 'children';
 			$isPages = $field === '_pages';
@@ -2815,7 +2815,7 @@ class PageFinder extends Wire {
 					$operator = '=';
 					$IDs = $values;
 				}
-				
+
 			} else {
 				// primary field is not 'parent', 'children' or 'pages'
 			}
@@ -2844,7 +2844,7 @@ class PageFinder extends Wire {
 					$field = 'templates_id';
 					if(count($values) == 1 && $operator === '=') $this->templates_id = reset($values);
 					if(!ctype_digit("$value")) $value = (($template = $this->templates->get($value)) ? $template->id : 0); 
-					
+
 				} else if(in_array($field, array('created', 'modified', 'published'))) {
 					// prepare value for created, modified or published date fields
 					if(!ctype_digit("$value")) {
@@ -2858,11 +2858,11 @@ class PageFinder extends Wire {
 					} else {
 						$value = date('Y-m-d H:i:s', $value);
 					}
-					
+
 				} else if(in_array($field, array('id', 'parent_id', 'templates_id', 'sort'))) {
 					$value = (int) $value; 
 				}
-				
+
 				$isName = $field === 'name' || strpos($field, 'name') === 0; 
 				$isPath = $field === 'path' || $field === 'url';
 				$isNumChildren = $field === 'num_children' || $field === 'numChildren';
@@ -2894,7 +2894,7 @@ class PageFinder extends Wire {
 					}
 					$bindKey = $query->bindValueGetKey($value);
 					$s = "$table.$field LIKE $bindKey";
-						
+
 				} else if(($isPath && $isPartialOperator) || $isNumChildren) {
 					// match some other property that we need to launch a separate find to determine the IDs
 					// used for partial match of path (used when original selector is parent.path%=...), parent.property, etc.
@@ -2905,7 +2905,7 @@ class PageFinder extends Wire {
 					} else {
 						$s = "$table.id=-1"; // force non-match
 					}
-					
+
 				} else if(!$database->isOperator($operator)) {
 					$s = '';
 					$this->syntaxError("Operator '$operator' is not supported for '$field'.");
@@ -2917,7 +2917,7 @@ class PageFinder extends Wire {
 				} else if(!$this->pagesColumnExists($field)) {
 					$s = '';
 					$this->syntaxError("Field '$field' is not a known field, column or selector modifier"); 
-					
+
 				} else {
 					$not = false;
 					if($isName) $value = $sanitizer->pageName($value, Sanitizer::toAscii);
@@ -2937,7 +2937,7 @@ class PageFinder extends Wire {
 						$s = "$table.$field" . $operator . $bindKey;
 						if($not) $s = "NOT ($s)";
 					}
-				
+
 					if($field === 'status' && strpos($operator, '<') === 0 && $value >= Page::statusHidden && count($options['alwaysAllowIDs'])) {
 						// support the 'alwaysAllowIDs' option for specific page IDs when requested but would
 						// not otherwise appear in the results due to hidden or unpublished status
@@ -2948,7 +2948,7 @@ class PageFinder extends Wire {
 				}
 
 				if($selector->not) $s = "NOT ($s)";
-				
+
 				if($operator == '!=' || $selector->not) {
 					$sql .= $sql ? " AND $s": "$s"; 
 				} else {
@@ -3017,7 +3017,7 @@ class PageFinder extends Wire {
 		$wheres = array();
 		$parent_ids = $selector->value;
 		if(!is_array($parent_ids)) $parent_ids = array($parent_ids); 
-		
+
 		foreach($parent_ids as $parent_id) {
 
 			if(!ctype_digit("$parent_id")) {
@@ -3064,7 +3064,7 @@ class PageFinder extends Wire {
 				")" . 
 			")";
 		}
-		
+
 		$andor = $selector->operator == '!=' ? ' AND ' : ' OR ';
 		$query->where('(' . implode($andor, $wheres) . ')'); 
 

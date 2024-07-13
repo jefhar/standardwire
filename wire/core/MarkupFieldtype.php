@@ -131,7 +131,7 @@ class MarkupFieldtype extends WireData implements Module {
 						$value = $value->explode($property, array('getMethod' => $getMethod));
 					}
 					$valid = true;
-					
+
 				} else if($value instanceof WireArray) {
 					// WireArray object: get array of property value from each item
 					$value = $value->explode($property);
@@ -156,25 +156,25 @@ class MarkupFieldtype extends WireData implements Module {
 						$languageID = 0;
 					}
 					$value = $languageID ? $value->getLanguageValue($languageID) : (string) $value; 
-					
+
 				} else if($value instanceof WireData) {
 					// WireData object
 					$value = $value->get($property);
 					$valid = true;
-					
+
 				} else if($value instanceof Wire) {
 					// Wire object
 					$value = $value->$property;
 					$valid = true; 
 				}
-			
+
 				// make sure the property returned is a safe one
 				if(!is_null($value) && parent::get($property) !== null) {
 					// this is an API variable or something that we don't want to allow
 					$this->warning("Disallowed property: $property", Notice::debug); 
 					$value = null;
 				}
-				
+
 				if($valid) $property = ''; // already retrieved
 				
 			} else {
