@@ -1,4 +1,4 @@
-<?php namespace ProcessWire;
+<?php namespace ProcessWire\Interfaces;
 
 /**
  * For classes that contain lookup items, as used by WireSaveableItemsLookup

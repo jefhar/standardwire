@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\FieldtypePageTitleCompatible;
+
 require_once(dirname(__FILE__) . '/FieldtypeTextLanguage.module'); 
 
 /**

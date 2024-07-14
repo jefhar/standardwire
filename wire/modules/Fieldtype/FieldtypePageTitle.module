@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\FieldtypePageTitleCompatible;
+
 /**
  * ProcessWire Title Fieldtype
  *
@@ -90,4 +92,3 @@ class FieldtypePageTitle extends FieldtypeText implements FieldtypePageTitleComp
 	public static $languageSupport = false;
 
 }
-

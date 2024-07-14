@@ -2,6 +2,7 @@
 
 use Override;
 use ProcessWire\Interfaces\Exportable;
+use ProcessWire\Interfaces\HasLookupItems;
 
 /**
  * ProcessWire Fieldgroup

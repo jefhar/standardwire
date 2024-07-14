@@ -2,6 +2,8 @@
 
 use Override;
 use PDO;
+use ProcessWire\Interfaces\HasLookupItems;
+
 /**
  * ProcessWire WireSaveableItemsLookup
  *
