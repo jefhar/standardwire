@@ -460,7 +460,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 */ 
 	public function deleteAll() {
 		foreach($this as $item) {
-			$this->delete($item); 
+			$this->delete(); 
 		}
 
 		return $this; 

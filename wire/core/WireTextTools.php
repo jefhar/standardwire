@@ -101,7 +101,7 @@ class WireTextTools extends Wire {
 		if(strpos($str, '>') !== false) {
 
 			// strip out everything up to and including </head>, if present
-			if(strpos($str, '</head>') !== false) list(, $str) = explode('</head>', $str);
+			if(strpos($str, '</head>') !== false) [, $str] = explode('</head>', $str);
 
 			// ensure tags are separated by whitespace
 			$str = str_replace('><', '> <', $str);
@@ -1097,7 +1097,7 @@ class WireTextTools extends Wire {
 			throw new WireException('$data argument must be associative array, WireData or WireInputData');
 		}
 	
-		list($tagOpen, $tagClose) = [preg_quote($options['tagOpen']), preg_quote($options['tagClose'])]; 
+		[$tagOpen, $tagClose] = [preg_quote($options['tagOpen']), preg_quote($options['tagClose'])]; 
 		
 		$regex = '/OPEN([-_.a-z0-9]+)(:[_,a-z0-9]+CLOSE|CLOSE)/i';
 		$regex = str_replace(['OPEN', 'CLOSE'], [$tagOpen, $tagClose], $regex); 
@@ -1129,8 +1129,8 @@ class WireTextTools extends Wire {
 
 		// piece it back together manually so values in $data cannot introduce more placeholders
 		foreach($replacements as $item) {
-			list($placeholder, $value) = $item;
-			list($before, $after) = explode($placeholder, $str, 2);
+			[$placeholder, $value] = $item;
+			[$before, $after] = explode($placeholder, $str, 2);
 			$parts[] = $before . $value;
 			$str = $after;
 		}
@@ -1237,13 +1237,13 @@ class WireTextTools extends Wire {
 		
 		/** @var Sanitizer $sanitizer */
 		$sanitizer = $this->wire('sanitizer');
-		list($old, $new) = ["$old", "$new"]; // enforce as string
+		[$old, $new] = ["$old", "$new"]; // enforce as string
 		$options = array_merge($defaults, $options);
 		$oldArray = preg_split("!($options[split])!", $old, 0, PREG_SPLIT_DELIM_CAPTURE);
 		$newArray = preg_split("!($options[split])!", $new, 0, PREG_SPLIT_DELIM_CAPTURE);
 		$diffArray = $this->diffArray($oldArray, $newArray);
-		list(,$delClose) = explode('{out}', $options['del'], 2);
-		list($insOpen,) = explode('{out}', $options['ins'], 2); 
+		[, $delClose] = explode('{out}', $options['del'], 2);
+		[$insOpen, ] = explode('{out}', $options['ins'], 2); 
 		$out = '';
 		
 		foreach($diffArray as $diff) {

@@ -600,7 +600,7 @@ class WireInput extends Wire {
 		
 		$eqPos = strpos($get, '=');
 		if($eqPos !== false) $get = trim($get, '=');
-		list($matchBefore, $matchAfter) = [$eqPos === 0, $eqPos > 0];
+		[$matchBefore, $matchAfter] = [$eqPos === 0, $eqPos > 0];
 	
 		// check if $get has wildcard or regex
 		$regex = $this->patternToRegex($get);
@@ -1790,7 +1790,7 @@ class WireInput extends Wire {
 	public function ___callUnknown($method, $arguments) {
 		if(strpos($method, 'urlSegment') === 0) {
 			// Allow for method calls: urlSegment1(), urlSegment2('sort-*'), urlSegmentLast(), etc. 
-			list(,$num) = explode('urlSegment', $method, 2);
+			[, $num] = explode('urlSegment', $method, 2);
 			if(ctype_digit($num)) $num = (int) $num;
 			if($num === 'Last') $num = -1;
 			if($num === 'First') $num = 1; 

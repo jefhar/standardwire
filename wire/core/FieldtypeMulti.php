@@ -32,7 +32,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * TODO sanitize set() values from ever containing this separator
 	 *
 	 */
-	const multiValueSeparator = "\0,";
+	public const multiValueSeparator = "\0,";
 
 	/**
 	 * For internal use to count the number of calls to getMatchQuery

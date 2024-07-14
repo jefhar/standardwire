@@ -26,7 +26,7 @@ class WireDebugInfo extends Wire {
 			// if other classes extend and implement their own class-specific methods
 			$className = $obj->className();
 			if(method_exists($this, $className)) {
-				$info = $this->$className($obj, $small);
+				$info = $this->$className($obj);
 			}
 		}
 
@@ -50,7 +50,7 @@ class WireDebugInfo extends Wire {
 	public function getHooksInfo(Wire $obj) {
 		$hooks = [];
 		foreach($obj->getHooks() as $hook) {
-			list($class, $priority) = explode(':', $hook['id']);
+			[$class, $priority] = explode(':', $hook['id']);
 			$key = '';
 			$value = '';
 			if($hook['options']['before']) $key .= "before ";

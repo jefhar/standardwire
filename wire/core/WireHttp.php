@@ -34,7 +34,7 @@
 
 class WireHttp extends Wire {
 	
-	const debug = false;
+	public const debug = false;
 
 	/**
 	 * Default timeout seconds for send() methods: GET, POST, etc.
@@ -42,7 +42,7 @@ class WireHttp extends Wire {
 	 * #pw-internal
 	 * 
 	 */
-	const defaultTimeout = 4.5;
+	public const defaultTimeout = 4.5;
 
 	/**
 	 * Default timeout seconds for download() methods. 
@@ -50,13 +50,13 @@ class WireHttp extends Wire {
 	 * #pw-internal
 	 *
 	 */
-	const defaultDownloadTimeout = 50;
+	public const defaultDownloadTimeout = 50;
 
 	/**
 	 * Default content-type header for POST requests
 	 * 
 	 */
-	const defaultPostContentType = 'application/x-www-form-urlencoded; charset=utf-8';
+	public const defaultPostContentType = 'application/x-www-form-urlencoded; charset=utf-8';
 
 	/**
 	 * Default value for request $headers, when reset
@@ -1328,9 +1328,9 @@ class WireHttp extends Wire {
 		$httpCode = 0;
 
 		if(!empty($responseHeader[0])) {
-			list(/*HTTP*/, $httpCode) = explode(' ', trim($responseHeader[0]), 2); 
+			[, $httpCode] = explode(' ', trim($responseHeader[0]), 2); 
 			$httpCode = trim($httpCode);
-			if(strpos($httpCode, ' ')) list($httpCode, $httpText) = explode(' ', $httpCode, 2);
+			if(strpos($httpCode, ' ')) [$httpCode, $httpText] = explode(' ', $httpCode, 2);
 			$httpCode = (int) $httpCode;
 			if(strlen($httpText)) $httpText = preg_replace('/[^-_.;() a-zA-Z0-9]/', ' ', $httpText); 
 		}
@@ -1541,7 +1541,7 @@ class WireHttp extends Wire {
 		$rangeEnd = $filesize - 1;
 
 		// client has provided an HTTP_RANGE header containing a byte range
-		list($rangeType, $rangeBytes) = explode('=', $rangeStr, 2);
+		[$rangeType, $rangeBytes] = explode('=', $rangeStr, 2);
 		
 		if(strtolower($rangeType) !== 'bytes') return null; // unrecognized range type prefix
 		if(strpos($rangeBytes, ',') !== false) return null; // unsupported multibyte range

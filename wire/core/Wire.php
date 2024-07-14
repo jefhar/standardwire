@@ -957,7 +957,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * #pw-group-changes
 	 *
 	 */
-	const trackChangesOn = 2;
+	public const trackChangesOn = 2;
 	
 	/**
 	 * For setTrackChanges() method flags: track names and values.
@@ -965,7 +965,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * #pw-group-changes
 	 *
 	 */
-	const trackChangesValues = 4;
+	public const trackChangesValues = 4;
 	
 	/**
 	 * Track changes mode

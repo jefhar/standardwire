@@ -401,7 +401,7 @@ class ModulesLoader extends ModulesClass {
 			$pathname = trim($pathname);
 			if(empty($pathname)) continue;
 			$basename = basename($pathname);
-			list($moduleName, $ext) = explode('.', $basename, 2); // i.e. "module.php" or "module"
+			[$moduleName, $ext] = explode('.', $basename, 2); // i.e. "module.php" or "module"
 
 			$modulesFiles->moduleFileExt($moduleName, $ext === 'module' ? 1 : 2);
 			// @todo next, remove the 'file' property from verbose module info since it is redundant
@@ -513,7 +513,7 @@ class ModulesLoader extends ModulesClass {
 
 		// if the filename doesn't end with .module or .module.php, then stop and move onto the next
 		if(strpos($filename, '.module') === false) return false;
-		list(, $ext) = explode('.module', $filename, 2);
+		[, $ext] = explode('.module', $filename, 2);
 		if(!empty($ext) && $ext !== '.php') return false;
 
 		//  if the filename doesn't start with the requested path, then skip

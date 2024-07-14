@@ -232,7 +232,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 			imagedestroy($image); // release the initial image
 
 			// get crop values and create a new initial image
-			list($x, $y, $w, $h) = $this->cropExtra;
+			[$x, $y, $w, $h] = $this->cropExtra;
 
 			// check if we can load a cropped version into ram
 			if(self::checkMemoryForImage([$w, $h, 3]) === false) {

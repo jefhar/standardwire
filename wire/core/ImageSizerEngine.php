@@ -912,7 +912,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 
 		if(array_keys($value) === range(0, count($value) - 1)) {
 			// we have a zerobased sequential array, we assume this order: x y w h
-			list($x, $y, $w, $h) = $value;
+			[$x, $y, $w, $h] = $value;
 		} else {
 			// check for associative array
 			foreach(['x', 'y', 'w', 'h'] as $v) {
@@ -1809,7 +1809,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 *
 	 */
 	protected function getResizeMethod(&$gdWidth, &$gdHeight, &$targetWidth, &$targetHeight, &$x1, &$y1) {
-		list($gdWidth, $gdHeight, $targetWidth, $targetHeight) = $this->getResizeDimensions($targetWidth, $targetHeight);
+		[$gdWidth, $gdHeight, $targetWidth, $targetHeight] = $this->getResizeDimensions($targetWidth, $targetHeight);
 		$x1 = ($gdWidth / 2) - ($targetWidth / 2);
 		$y1 = ($gdHeight / 2) - ($targetHeight / 2);
 		$this->getCropDimensions($x1, $y1, $gdWidth, $targetWidth, $gdHeight, $targetHeight);

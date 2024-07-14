@@ -926,7 +926,7 @@ class PagesPathFinder extends Wire {
 		$path = trim($path, '/'); 
 		
 		// check for pagination segment, which we don’t want in our path here
-		list($pageNum, $pageNumPrefix) = $this->getShortcutPageNum($path);
+		[$pageNum, $pageNumPrefix] = $this->getShortcutPageNum($path);
 		
 		if(strpos($path, '/') === false) {
 			// single directory off root
@@ -1013,7 +1013,7 @@ class PagesPathFinder extends Wire {
 		$path = trim($path, '/');
 		
 		if(strpos($path, '/')) {
-			list($segment,) = explode('/', $path, 2);
+			[$segment, ] = explode('/', $path, 2);
 		} else {
 			$segment = $path;
 		}
@@ -1904,7 +1904,7 @@ class PagesPathFinder extends Wire {
 		foreach($segments as $segment) {
 			if($segment === null || !strlen($segment)) continue;
 			if($path !== "/$segment" && strpos($path, "/$segment/") !== 0) continue;
-			list(,$path) = explode("/$segment", $path, 2); 
+			[, $path] = explode("/$segment", $path, 2); 
 			if($path === '') $path = '/';
 			break;
 		}

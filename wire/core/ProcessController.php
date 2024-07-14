@@ -24,7 +24,7 @@ class ProcessController extends Wire {
 	 * The default method called upon when no method is specified in the request
 	 *
 	 */
-	 const defaultProcessMethodName = 'execute';
+	 public const defaultProcessMethodName = 'execute';
 
 	/**
 	 * The Process instance to execute
@@ -226,7 +226,7 @@ class ProcessController extends Wire {
 	protected function hasMethodPermission($method, $throw = true) {
 		// i.e. executeHelloWorld => helloWorld
 		$urlSegment = $method;
-		if(strpos($method, 'execute') === 0) list(,$urlSegment) = explode('execute', $method, 2);
+		if(strpos($method, 'execute') === 0) [, $urlSegment] = explode('execute', $method, 2);
 		$urlSegment = $this->wire()->sanitizer->hyphenCase($urlSegment); 
 		if(!$this->hasUrlSegmentPermission($urlSegment, $throw)) return false;
 		return true;
@@ -251,7 +251,7 @@ class ProcessController extends Wire {
 			if(empty($navItem['permission'])) continue;
 			$navSegment = strtolower(trim($navItem['url'], './'));
 			if(empty($navSegment)) continue;
-			if(strpos($navSegment, '/') !== false) list($navSegment,) = explode($navSegment, '/', 2);
+			if(strpos($navSegment, '/') !== false) [$navSegment, ] = explode($navSegment, '/', 2);
 			$navSegmentAlt = str_replace('-', '', $navSegment);
 			if($urlSegment === $navSegment || $urlSegment === $navSegmentAlt) {
 				$hasPermission = $this->hasPermission($navItem['permission'], $throw);

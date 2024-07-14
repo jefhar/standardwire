@@ -44,7 +44,7 @@ class PageValues extends Wire {
 
 			// k is key without brackets (if any were present) 
 			if(strpos($k, '[')) {
-				list($k, $index) = explode('[', $k, 2);
+				[$k, $index] = explode('[', $k, 2);
 				$index = rtrim($index, ']');
 				if(ctype_digit($index)) $index = (int) $index;
 			}
@@ -131,11 +131,11 @@ class PageValues extends Wire {
 		$getIterable = true;
 
 		$key = rtrim($key, ']');
-		list($key, $index) = explode('[', $key, 2);
+		[$key, $index] = explode('[', $key, 2);
 
 		if(strpos($index, '][')) {
 			// i.e. field[selector][0]
-			list($selector, $index) = explode('][', $index);
+			[$selector, $index] = explode('][', $index);
 		}
 
 		if(ctype_digit($index)) {
@@ -1027,7 +1027,7 @@ class PageValues extends Wire {
 		// if the page is not yet loaded and a '__' field was set, then we queue it so that the loaded() method can 
 		// instantiate all those fields knowing that all parts of them are present for wakeup. 
 		if(!$isLoaded && strpos($key, '__')) {
-			list($key, $subKey) = explode('__', $key, 2);
+			[$key, $subKey] = explode('__', $key, 2);
 			$fieldData = $page->fieldDataQueue($key);
 			if($fieldData === null) $fieldData = [];
 			$fieldData[$subKey] = $value;

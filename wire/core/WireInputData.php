@@ -268,7 +268,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 		
 		if(strpos($pattern, '=')) {
 			// pattern indicates "value=pattern" or "name=pattern"
-			list($type, $pattern) = explode('=', $pattern, 2);
+			[$type, $pattern] = explode('=', $pattern, 2);
 		}
 		
 		if(!$isRE && strpos($pattern, '*') !== false) {
@@ -295,7 +295,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 				continue;
 			} else if($isArray && $type === 'value') {
 				$v = $this->find($pattern, array_merge($options, ['values' => $value]));
-				if(count($v)) list($items[$name], $count) = [$v, $count + 1]; 
+				if(count($v)) [$items[$name], $count] = [$v, $count + 1]; 
 				continue;
 			} else if($type === 'value') {
 				$match = $value;

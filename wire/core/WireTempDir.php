@@ -14,7 +14,7 @@ class WireTempDir extends Wire {
 	 * File automatically placed in created temp dirs for verification, contains timestamp
 	 * 
 	 */
-	const hiddenFileName = '.wtd';
+	public const hiddenFileName = '.wtd';
 
 	/**
 	 * True when remove method has been called at least once

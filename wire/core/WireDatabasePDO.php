@@ -50,9 +50,9 @@
  */
 class WireDatabasePDO extends Wire implements WireDatabase {
 
-	const operatorTypeComparison = 0;
-	const operatorTypeBitwise = 1;
-	const operatorTypeAny = 2;
+	public const operatorTypeComparison = 0;
+	public const operatorTypeBitwise = 1;
+	public const operatorTypeAny = 2;
 
 	/**
 	 * Log of all queries performed in this instance
@@ -433,7 +433,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 					$modes = trim($modes);
 					if(empty($modes)) continue;
 					$action = 'set';
-					if(strpos($modes, ':')) list($action, $modes) = explode(':', $modes);
+					if(strpos($modes, ':')) [$action, $modes] = explode(':', $modes);
 					$this->sqlMode(trim($action), trim($modes), $minVersion, $pdo);
 				}
 			}
@@ -1031,7 +1031,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			return $columns;
 		}
 		$getColumn = $verbose && is_string($verbose) ? $verbose : '';
-		if(strpos($table, '.')) list($table, $getColumn) = explode('.', $table, 2);
+		if(strpos($table, '.')) [$table, $getColumn] = explode('.', $table, 2);
 		$sql = "SHOW COLUMNS FROM $table " . ($getColumn ? 'WHERE Field=:column' : '');
 		$query = $this->prepare($sql);
 		if($getColumn) $query->bindValue(':column', $getColumn);
@@ -1073,7 +1073,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		$indexes = [];
 		$getIndex = $verbose && is_string($verbose) ? $verbose : '';
 		if($verbose === 'primary') $verbose = 'PRIMARY';
-		if(strpos($table, '.')) list($table, $getIndex) = explode('.', $table, 2);
+		if(strpos($table, '.')) [$table, $getIndex] = explode('.', $table, 2);
 		$table = $this->escapeTable($table);
 		$sql = "SHOW INDEX FROM `$table` " . ($getIndex ? 'WHERE Key_name=:name' : '');
 		$query = $this->prepare($sql);
@@ -1178,7 +1178,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 */
 	public function columnExists($table, $column = '', $getInfo = false) {
 		if(strpos($table, '.')) {
-			list($table, $col) = explode('.', $table, 2);
+			[$table, $col] = explode('.', $table, 2);
 			if(empty($column) || !is_string($column)) $column = $col;
 		}
 		if(empty($column)) throw new WireDatabaseException('No column specified');
@@ -1453,7 +1453,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 */
 	public function escapeTableCol($str) {
 		if(strpos($str, '.') === false) return $this->escapeTable($str); 
-		list($table, $col) = explode('.', $str, 2);
+		[$table, $col] = explode('.', $str, 2);
 		$col = $this->escapeCol($col);
 		$table = $this->escapeTable($table);
 		if(!strlen($table)) throw new WireDatabaseException('Invalid table');
@@ -1598,7 +1598,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		$query->bindValue(':name', $name);
 		$query->execute();
 		if($query->rowCount()) {
-			list(,$value) = $query->fetch(\PDO::FETCH_NUM);
+			[, $value] = $query->fetch(\PDO::FETCH_NUM);
 			$this->variableCache[$name] = $value;
 		} else {
 			$value = null;
@@ -1667,7 +1667,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	public function getRegexEngine() {
 		$version = $this->getVersion();
 		$name = 'MySQL';
-		if(strpos($version, '-')) list($version, $name) = explode('-', $version, 2);
+		if(strpos($version, '-')) [$version, $name] = explode('-', $version, 2);
 		if(strpos($name, 'mariadb') === false) {
 			if(version_compare($version, '8.0.4', '>=')) return 'ICU';
 		}

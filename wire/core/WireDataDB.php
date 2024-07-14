@@ -182,7 +182,7 @@ class WireDataDB extends WireData implements \Countable {
 		if($query->rowCount()) {
 			$meta = [];
 			while($row = $query->fetch(\PDO::FETCH_NUM)) {
-				list($key, $data) = $row;
+				[$key, $data] = $row;
 				$meta[$key] = json_decode($data, true);
 				parent::set($key, $meta[$key]);
 				if($name !== true) break;

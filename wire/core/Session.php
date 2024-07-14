@@ -52,19 +52,19 @@ class Session extends Wire implements \IteratorAggregate {
 	 * Fingerprint bitmask: Use remote addr (recommended)
 	 * 
 	 */
-	const fingerprintRemoteAddr = 2;
+	public const fingerprintRemoteAddr = 2;
 	
 	/**
 	 * Fingerprint bitmask: Use client provided addr
 	 *
 	 */
-	const fingerprintClientAddr = 4;
+	public const fingerprintClientAddr = 4;
 	
 	/**
 	 * Fingerprint bitmask: Use user agent (recommended)
 	 *
 	 */
-	const fingerprintUseragent = 8;
+	public const fingerprintUseragent = 8;
 	
 	/**
 	 * Fingerprint bitmask: Use “accept” content-types header
@@ -72,7 +72,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @since 3.0.159
 	 *
 	 */
-	const fingerprintAccept = 16;
+	public const fingerprintAccept = 16;
 
 	/**
 	 * Suffix applied to challenge cookies
@@ -80,7 +80,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @since 3.0.141
 	 * 
 	 */
-	const challengeSuffix = '_challenge';
+	public const challengeSuffix = '_challenge';
 
 	/**
 	 * Reference to ProcessWire $config object
@@ -890,7 +890,7 @@ class Session extends Wire implements \IteratorAggregate {
 			}
 			// It's possible for X_FORWARDED_FOR to have more than one CSV separated IP address, per @tuomassalo
 			if(strpos($ip, ',') !== false && $useClient !== 2) {
-				list($ip) = explode(',', $ip);
+				[$ip] = explode(',', $ip);
 			}
 			// sanitize: if IP contains something other than digits, periods, commas, spaces, 
 			// then don't use it and instead fallback to the REMOTE_ADDR. 
@@ -1078,7 +1078,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * 
 	 */
 	public function forceLogin($user) {
-		return $this->login($user, '', true);
+		return $this->login();
 	}
 
 	/**
@@ -1415,7 +1415,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * 
 	 */
 	public function location($url, $status = 302) {
-		$this->redirect($url, $status); 
+		$this->redirect(); 
 	}
 
 	/**

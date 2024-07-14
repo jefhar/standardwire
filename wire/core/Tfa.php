@@ -82,7 +82,7 @@
  */
 class Tfa extends WireData implements Module, ConfigurableModule {
 	
-	const userFieldName = 'tfa_type';
+	public const userFieldName = 'tfa_type';
 
 	/**
 	 * Name used for GET variable when TFA is active
@@ -285,7 +285,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 */
 	protected function redirect($url) {
 		if(strpos($url, '/') === false) $url = $this->url($url);
-		$this->session->redirect($url, false);
+		$this->session->redirect();
 	}
 
 	/**
@@ -1134,7 +1134,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 			if(is_object($module)) {
 				$moduleName = $module->className();
 			} else {
-				list($moduleName, $module) = [$module, null];
+				[$moduleName, $module] = [$module, null];
 			}
 		}
 		
@@ -1250,7 +1250,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		foreach($fieldset->getAll() as $f) {
 			/** @var Inputfield $f */
 			$name = $f->attr('name');
-			if(strpos($name, '_tfa_') === 0) list(,$name) = explode('_tfa_', $name);
+			if(strpos($name, '_tfa_') === 0) [, $name] = explode('_tfa_', $name);
 			$f->attr('name', "_tfa_$name");
 		}
 		
@@ -1294,7 +1294,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		foreach($fieldset->getAll() as $f) {
 			/** @var Inputfield $f */
 			$name = $f->attr('name');
-			if(strpos($name, '_tfa_') === 0) list(,$name) = explode('_tfa_', $name);
+			if(strpos($name, '_tfa_') === 0) [, $name] = explode('_tfa_', $name);
 			$settings[$name] = $f->val();
 		}
 

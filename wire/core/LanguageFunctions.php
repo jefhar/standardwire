@@ -124,7 +124,7 @@ function __($text, $textdomain = null, $context = '') {
 			$text = reset($textArray);
 		} else if($text === true && $textdomain !== null) {
 			// setting (or getting) custom option
-			list($option, $values) = [$textdomain, $context];
+			[$option, $values] = [$textdomain, $context];
 			if($option === 'replacements' || $option === 'translations') {
 				// setting or getting global 'replacements' or 'translations'
 				// if not given any values to set then return current value
@@ -156,7 +156,7 @@ function __($text, $textdomain = null, $context = '') {
 		// array for replacement means only apply to named context, ie. 'text' => [ 'replacement', 'context' ]
 		if(is_array($value)) $value = isset($value[1]) && $value[1] === $context ? $value[0] : $text;
 		// false for $language on the next line ensures the $text value is returned in next if() statement
-		if($value !== $text) list($text, $language) = [$value, false]; 
+		if($value !== $text) [$text, $language] = [$value, false]; 
 	}
 
 	// if multi-language not installed or not available then just return given text

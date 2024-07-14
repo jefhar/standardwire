@@ -57,8 +57,8 @@
 
 class WireDatabaseBackup {
 	
-	const fileHeader = '--- WireDatabaseBackup';
-	const fileFooter = '--- /WireDatabaseBackup';
+	public const fileHeader = '--- WireDatabaseBackup';
+	public const fileFooter = '--- /WireDatabaseBackup';
 
 	/**
 	 * ProcessWire instance, when applicable
@@ -315,7 +315,7 @@ class WireDatabaseBackup {
 	public function setDatabase($database) {
 		$query = $database->prepare('SELECT DATABASE()'); 
 		$query->execute();
-		list($dbName) = $query->fetch(\PDO::FETCH_NUM); 
+		[$dbName] = $query->fetch(\PDO::FETCH_NUM); 
 		if($dbName) $this->databaseConfig['dbName'] = $dbName; 
 		$this->database = $database;
 	}

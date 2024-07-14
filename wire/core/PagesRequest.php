@@ -194,7 +194,7 @@ class PagesRequest extends Wire {
 		if((strpos($dirtyUrl, '?it=') !== false || strpos($dirtyUrl, '&it='))) {
 			// the request URL included a user-inserted 'it' variable in query string
 			// force to use path in request url rather than contents of 'it' var
-			list($it, /*query-string*/) = explode('?', $dirtyUrl, 2);
+			[$it, ] = explode('?', $dirtyUrl, 2);
 			$rootUrl = $this->config->urls->root;
 			if(strlen($rootUrl) > 1) {
 				// root url is a subdirectory, like /pwsite/
@@ -290,7 +290,7 @@ class PagesRequest extends Wire {
 		$this->setRequestPath($path);
 
 		// determine if original URL had anything filtered out of path that will suggest a redirect
-		list($dirtyUrl,) = explode('?', "$this->dirtyUrl?", 2); // exclude query string
+		[$dirtyUrl, ] = explode('?', "$this->dirtyUrl?", 2); // exclude query string
 		if(stripos($dirtyUrl, 'index.php') !== false && stripos($path, 'index.php') === false) {
 			// force pathFinder to detect a redirect condition without index.php
 			$dirtyUrl = strtolower(rtrim($dirtyUrl, '/'));
@@ -521,7 +521,7 @@ class PagesRequest extends Wire {
 			// abnormal request, something about request URL made .htaccess skip it, or index.php called directly
 			$rootUrl = $config->urls->root;
 			$shit = trim($_SERVER['REQUEST_URI']);
-			if(strpos($shit, '?') !== false) list($shit,) = explode('?', $shit, 2);
+			if(strpos($shit, '?') !== false) [$shit, ] = explode('?', $shit, 2);
 			if($rootUrl != '/') {
 				if(strpos($shit, $rootUrl) === 0) {
 					// remove root URL from request
@@ -636,7 +636,7 @@ class PagesRequest extends Wire {
 
 		if(strpos($file, '/') !== false) {
 			// file in subdirectory (for instance ProDrafts uses subdirectories for draft files)
-			list($subdir, $file) = explode('/', $file, 2);
+			[$subdir, $file] = explode('/', $file, 2);
 
 			if(strpos($file, '/') !== false) {
 				// there is more than one subdirectory, which we do not allow
@@ -729,8 +729,8 @@ class PagesRequest extends Wire {
 		} else if(strlen($redirectLogin)) {
 			// redirect URL provided in template.redirectLogin
 			$redirectUrl = str_replace('{id}', $page->id, $redirectLogin);
-			list($path, $query) = [$redirectUrl, ''];
-			if(strpos($redirectUrl, '?') !== false) list($path, $query) = explode('?', $redirectUrl, 2);
+			[$path, $query] = [$redirectUrl, ''];
+			if(strpos($redirectUrl, '?') !== false) [$path, $query] = explode('?', $redirectUrl, 2);
 			if(strlen($path) && strpos($path, '/') === 0 && strpos($path, '//') === false) {
 				// attempt to match to page so we can use URL with scheme and relative to installation url
 				$p = $this->wire()->pages->get($path);

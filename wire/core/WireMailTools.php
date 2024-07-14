@@ -281,7 +281,7 @@ class WireMailTools extends Wire {
 			$headers = [];
 			foreach($_headers as $header) {
 				if(!strpos($header, ':')) continue;
-				list($key, $val) = explode(':', $header, 2);
+				[$key, $val] = explode(':', $header, 2);
 				$headers[trim($key)] = trim($val);
 			}
 		}
@@ -457,7 +457,7 @@ class WireMailTools extends Wire {
 				if($email === $line) $inBlacklist = $line;
 			} else if(strpos($line, '.') === 0) {
 				// any hostname at domain (.domain.com)
-				list(,$emailDomain) = explode('@', $email);
+				[, $emailDomain] = explode('@', $email);
 				if($emailDomain === ltrim($line, '.')) {
 					$inBlacklist = $line;
 				} else if($tt->substr($emailDomain, -1 * $tt->strlen($line)) === $line ) {
@@ -473,8 +473,8 @@ class WireMailTools extends Wire {
 		if(!$inBlacklist && strpos($email, '+')) {
 			// leading part of email contains a plus, so check again without the "+portion"
 			// i.e. ryan+test@domain.com
-			list($prefix, $rest) = explode('+', $email, 2);
-			list(,$hostname) = explode('@', $rest, 2);
+			[$prefix, $rest] = explode('+', $email, 2);
+			[, $hostname] = explode('@', $rest, 2);
 			$email = "$prefix@$hostname";
 			$inBlacklist = $this->isBlacklistEmail($email, $options);
 		}

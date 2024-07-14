@@ -529,7 +529,7 @@ class Fields extends WireSaveableItems {
 			$query->bindValue(':field_id', $field_id, \PDO::PARAM_INT);
 			$query->bindValue(':fieldgroup_id', $fieldgroup_id, \PDO::PARAM_INT);
 			$query->execute();
-			list($existingData) = $query->fetch(\PDO::FETCH_NUM);
+			[$existingData] = $query->fetch(\PDO::FETCH_NUM);
 			$existingData = strlen($existingData) ? json_decode($existingData, true) : [];
 			if(!is_array($existingData)) $existingData = [];
 			foreach($data as $k => $v) {
@@ -894,7 +894,7 @@ class Fields extends WireSaveableItems {
 			} else if($useRowCount) {
 				$return = (int) $query->rowCount();
 			} else {
-				list($return) = $query->fetch(\PDO::FETCH_NUM);
+				[$return] = $query->fetch(\PDO::FETCH_NUM);
 				$return = (int) $return;
 			}
 		} catch(\Exception $e) {

@@ -202,7 +202,7 @@ class DatabaseQuerySelect extends DatabaseQuery {
 		$limit = $this->limit; 
 		$limit = reset($limit);
 		if(strpos($limit, ',') !== false) {
-			list($start, $limit) = explode(',', $limit);
+			[$start, $limit] = explode(',', $limit);
 			$start = (int) trim($start);
 			$limit = (int) trim($limit); 
 			$limit = "$start,$limit";

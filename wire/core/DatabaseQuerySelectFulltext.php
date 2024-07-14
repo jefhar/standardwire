@@ -34,7 +34,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * Max length that we allow for a query
 	 *
 	 */
-	const maxQueryValueLength = 500;
+	public const maxQueryValueLength = 500;
 
 	/**
 	 * @var DatabaseQuerySelect|PageFinderDatabaseQuerySelect
@@ -1257,9 +1257,9 @@ class DatabaseQuerySelectFulltext extends Wire {
 		} else {
 			// given value can match at beginning of any word boundary in value
 			if($this->wire()->database->getRegexEngine() === 'ICU') {
-				list($a, $b) = ["\\b", "\\b"]; 
+				[$a, $b] = ["\\b", "\\b"]; 
 			} else {
-				list($a, $b) = ['[[:<:]]', '[[:>:]]']; 
+				[$a, $b] = ['[[:<:]]', '[[:>:]]']; 
 			}
 
 			$likeValue = "($a|[[:blank:]]|[[:punct:]]|[[:space:]]|^|[-]|>|‘|“|„|«|‹|¿|¡)" . $likeValue;

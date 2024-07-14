@@ -49,7 +49,7 @@
  */
 class Notices extends WireArray {
 	
-	const logAllNotices = false;  // for debugging/dev purposes
+	public const logAllNotices = false;  // for debugging/dev purposes
 
 	/**
 	 * Initialize Notices API var
@@ -475,7 +475,7 @@ class Notices extends WireArray {
 	 */
 	protected function strToNotice($str) {
 		if(substr_count($str, ';') < 5) return null;
-		list($type, $flags, $timestamp, $class, $icon, $text) = explode(';', $str, 6);
+		[$type, $flags, $timestamp, $class, $icon, $text] = explode(';', $str, 6);
 		$type = __NAMESPACE__ . "\\Notice$type";
 		if(!wireClassExists($type)) return null;
 		/** @var Notice $item */

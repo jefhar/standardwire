@@ -106,21 +106,21 @@ class Sanitizer extends Wire {
 	 * Constant used for the $beautify argument of name sanitizer methods to indicate transliteration may be used. 
 	 *
 	 */
-	const translate = 2;
+	public const translate = 2;
 
 	/**
 	 * Beautify argument for pageName() to IDN encode UTF8 to ascii
 	 * #pw-internal
 	 * 
 	 */
-	const toAscii = 4;
+	public const toAscii = 4;
 
 	/**
 	 * Beautify argument for pageName() to allow decode IDN ascii to UTF8
 	 * #pw-internal
 	 * 
 	 */
-	const toUTF8 = 8;
+	public const toUTF8 = 8;
 
 	/**
 	 * Beautify argument for pageName() to indicate that UTF8 (in whitelist) is allowed
@@ -129,7 +129,7 @@ class Sanitizer extends Wire {
 	 * #pw-internal
 	 * 
 	 */
-	const okUTF8 = 16;
+	public const okUTF8 = 16;
 
 	/**
 	 * Caches the status of multibyte support.
@@ -1346,7 +1346,7 @@ class Sanitizer extends Wire {
 			unset($options['checkDNS']);
 			$valueASCII = $this->email($value, array_merge($options, ['getASCII' => true]));
 			if(strpos($valueASCII, '@') === false) return $valueASCII; // fail
-			list(,$host) = explode('@', $value, 2);
+			[, $host] = explode('@', $value, 2);
 			$dns = dns_get_record($host, DNS_MX | DNS_A | DNS_CNAME | DNS_AAAA);
 			if(empty($dns)) return ($debug ? 'Failed DNS check' : ''); 
 			if($options['getASCII']) return $valueASCII;
@@ -1360,7 +1360,7 @@ class Sanitizer extends Wire {
 		if(strpos($value, ' ')) $value = str_replace(' ', '', $value);
 		
 		if($options['getUTF8'] && strpos($value, 'xn-') !== false && function_exists('\idn_to_utf8')) {
-			list($addr, $host) = explode('@', $value, 2);
+			[$addr, $host] = explode('@', $value, 2);
 			if(strpos($host, 'xn-') !== false) {
 				$host = idn_to_utf8($host);
 				if($host !== false) $value = "$addr@$host";
@@ -1372,8 +1372,8 @@ class Sanitizer extends Wire {
 		$pos = strpos($value, '<');
 		if($pos !== false && strpos($value, '>') > $pos+3) {
 			// John Smith <jsmith@domain.com> => jsmith@domain.com
-			list(,$value) = explode('<', $value, 2);
-			list($value,) = explode('>', $value, 2);
+			[, $value] = explode('<', $value, 2);
+			[$value, ] = explode('>', $value, 2);
 			return $this->email($value, $options);
 		}
 		
@@ -1385,7 +1385,7 @@ class Sanitizer extends Wire {
 		if(count($parts) !== 2) return ($debug ? 'More than one at symbol' : '');
 
 		$tt = $this->getTextTools();
-		list($addr, $host) = $parts;
+		[$addr, $host] = $parts;
 		if($tt->strlen($addr) > 64) return ($debug ? 'Local part exceeds 64 max length' : '');
 		if($tt->strlen($host) > 255) return ($debug ? 'Host part exceeds 255 max length' : '');
 		
@@ -2079,7 +2079,7 @@ class Sanitizer extends Wire {
 
 		// separate scheme+domain+path from query string temporarily
 		if(strpos($value, '?') !== false) {
-			list($domainPath, $queryString) = explode('?', $value, 2);
+			[$domainPath, $queryString] = explode('?', $value, 2);
 			if(!$options['allowQuerystring']) $queryString = '';
 		} else {
 			$domainPath = $value;
@@ -2162,7 +2162,7 @@ class Sanitizer extends Wire {
 		if($pathIsEncoded && strlen($value)) {
 			// restore to non-encoded, UTF-8 version 
 			if(strpos($value, '?') !== false) {
-				list($domainPath, $queryString) = explode('?', $value);
+				[$domainPath, $queryString] = explode('?', $value);
 			} else {
 				$domainPath = $value;
 				$queryString = '';
@@ -2181,7 +2181,7 @@ class Sanitizer extends Wire {
 			// tel: scheme is not supported by filter_var 
 			$value = str_replace(' ', '', $value);
 			/** @noinspection PhpUnusedLocalVariableInspection */
-			list($tel, $num) = explode(':', $value);
+			[$tel, $num] = explode(':', $value);
 			$value = 'tel:';
 			if(strpos($num, '+') === 0) $value .= '+';
 			$value .= preg_replace('/[^\d]/', '', $num);
@@ -2208,7 +2208,7 @@ class Sanitizer extends Wire {
 		}
 		
 		if($options['reduceScheme']) {
-			list($scheme, $value) = explode('://', $value, 2);
+			[$scheme, $value] = explode('://', $value, 2);
 			$value = "$scheme:$value";
 		}
 		
@@ -2273,7 +2273,7 @@ class Sanitizer extends Wire {
 
 		// extract scheme
 		if(strpos($_url, '//') !== false) {
-			list($scheme, $_url) = explode('//', $_url, 2);
+			[$scheme, $_url] = explode('//', $_url, 2);
 			$scheme .= '//';
 		} else {
 			$scheme = '';
@@ -2281,7 +2281,7 @@ class Sanitizer extends Wire {
 
 		// extract domain, and everything else (rest)
 		if(strpos($_url, '/') > 0) {
-			list($domain, $rest) = explode('/', $_url, 2);
+			[$domain, $rest] = explode('/', $_url, 2);
 			$rest = "/$rest";
 		} else {
 			$domain = $_url;
@@ -3038,7 +3038,7 @@ class Sanitizer extends Wire {
 				$id = '';
 				if(strlen($attr)) {
 					foreach(explode('.', $attr) as $c) {
-						if(strpos($c, '#') !== false) list($c, $id) = explode('#', $c, 2);
+						if(strpos($c, '#') !== false) [$c, $id] = explode('#', $c, 2);
 						if(!empty($c)) $class .= "$c ";
 					}
 				}
@@ -4096,7 +4096,7 @@ class Sanitizer extends Wire {
 		if($max === null) {
 			$max = is_float($value) && defined('PHP_FLOAT_MAX') ? constant('PHP_FLOAT_MAX') : PHP_INT_MAX;
 		}
-		if($min > $max) list($min, $max) = [$max, $min]; // swap args if necessary
+		if($min > $max) [$min, $max] = [$max, $min]; // swap args if necessary
 		if($value < $min) {
 			$value = $min;
 		} else if($value > $max) {
@@ -4342,7 +4342,7 @@ class Sanitizer extends Wire {
 		
 		$defaults = ['maxItems' => 0, 'maxDepth' => 0, 'csv' => true, 'delimiter' => null, 'delimiters' => ['|', ','], 'enclosure' => '"', 'trim' => true, 'sanitizer' => null, 'keySanitizer' => null];
 		
-		if(is_array($sanitizer) && empty($options)) list($options, $sanitizer) = [$sanitizer, null];
+		if(is_array($sanitizer) && empty($options)) [$options, $sanitizer] = [$sanitizer, null];
 		if(empty($sanitizer) && !empty($options['sanitizer'])) $sanitizer = $options['sanitizer'];
 		
 		$options = array_merge($defaults, $options);
@@ -4661,7 +4661,7 @@ class Sanitizer extends Wire {
 				// not an array value
 				if($hasStringKey) {
 					// associative key
-					list($n, $kk) = [0, $key];
+					[$n, $kk] = [0, $key];
 					// this while loop likely is not needed
 					while(isset($flat[$kk])) $kk = "$key-" . (++$n);
 					$flat[$kk] = $val;
@@ -4881,7 +4881,7 @@ class Sanitizer extends Wire {
 		
 		if($hasPeriod && preg_match_all('!(\b|\d*)\.(\d+)\b!', $value, $matches)) {
 			// keep floating point numbers together
-			list($n, $decimal) = [0, "0{$prefix}DEC0X"];
+			[$n, $decimal] = [0, "0{$prefix}DEC0X"];
 			while(strpos($value, $decimal) !== false && ++$n) $decimal = "{$n}{$prefix}DEC{$n}X";
 			foreach($matches[1] as $key => $n1) {
 				$n2 = $matches[2][$key];
@@ -4892,7 +4892,7 @@ class Sanitizer extends Wire {
 		
 		if($hasMinus && preg_match_all('!([-−])(\d+)!', $value, $matches)) {
 			// prevent negative numbers from losing their minus sign
-			list($n, $minus) = [0, "0{$prefix}MIN0"];
+			[$n, $minus] = [0, "0{$prefix}MIN0"];
 			while(strpos($value, $minus) !== false && ++$n) $minus = "{$n}{$prefix}MIN{$n}";
 			foreach($matches[2] as $key => $digits) {
 				$sign = $matches[1][$key];
@@ -4904,7 +4904,7 @@ class Sanitizer extends Wire {
 		
 		if($hasComma && preg_match_all('!(\d*,)(\d+)!', $value, $matches)) {
 			// keep commas that appear around digits
-			list($n, $comma) = [0, "0{$prefix}COM0"];
+			[$n, $comma] = [0, "0{$prefix}COM0"];
 			while(strpos($value, $comma) !== false && ++$n) $comma = "{$n}{$prefix}COM{$n}";
 			foreach($matches[1] as $key => $digits1) {
 				$digits1 = rtrim($digits1, ',');

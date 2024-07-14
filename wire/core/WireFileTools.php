@@ -662,7 +662,7 @@ class WireFileTools extends Wire {
 			$pathname = str_replace(DIRECTORY_SEPARATOR, '/', $pathname);
 			if(is_string($limitPath)) $limitPath = str_replace(DIRECTORY_SEPARATOR, '/', $limitPath);
 			$testname = $pathname;
-			if(strpos($pathname, ':')) list(,$testname) = explode(':', $pathname, 2); // reduce to no drive letter, if present
+			if(strpos($pathname, ':')) [, $testname] = explode(':', $pathname, 2); // reduce to no drive letter, if present
 		} else {
 			$testname = $pathname;
 		}

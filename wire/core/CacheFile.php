@@ -18,14 +18,14 @@
  */
 class CacheFile extends Wire {
 
-	const cacheFileExtension = ".cache";
-	const globalExpireFilename = "lastgood";
+	public const cacheFileExtension = ".cache";
+	public const globalExpireFilename = "lastgood";
 
 	/**
 	 * Max secondaryID cache files that will be allowed in a directory before it starts removing them. 
 	 *
 	 */
-	const maxCacheFiles = 999;
+	public const maxCacheFiles = 999;
 
 	protected $path; 
 	protected $primaryID = '';

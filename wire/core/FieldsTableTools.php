@@ -297,8 +297,8 @@ class FieldsTableTools extends Wire {
 		$type = strtoupper($schema[$col]);
 		$allowNull = strpos($type, 'NOT NULL') === false;
 		
-		if(strpos($type, ' ')) list($type,) = explode(' ', $type, 2);
-		if(strpos($type, '(')) list($type,) = explode('(', $type, 2);
+		if(strpos($type, ' ')) [$type, ] = explode(' ', $type, 2);
+		if(strpos($type, '(')) [$type, ] = explode('(', $type, 2);
 		
 		if(!in_array(trim($type), $types)) return false; // if not in allowed col types, fail
 		

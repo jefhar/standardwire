@@ -392,10 +392,10 @@ class WireInputDataCookie extends WireInputData {
 		}
 
 		// remove port from domain, as it is not compatible with setcookie()
-		if(strpos($domain, ':') !== false) list($domain,) = explode(':', $domain, 2);
+		if(strpos($domain, ':') !== false) [$domain, ] = explode(':', $domain, 2);
 
 		// check if cookie should be deleted
-		if($remove) list($value, $expires) = ['', 1]; 
+		if($remove) [$value, $expires] = ['', 1]; 
 
 		// set the cookie
 		if(PHP_VERSION_ID < 70300) {

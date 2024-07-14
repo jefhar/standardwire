@@ -1405,7 +1405,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 
 		$pos = strpos($property, '.');
 		if($pos) {
-			list($property, $subProperty) = explode('.', $property, 2);
+			[$property, $subProperty] = explode('.', $property, 2);
 		}
 
 		foreach($data as $item) {

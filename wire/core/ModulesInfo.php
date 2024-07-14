@@ -19,31 +19,31 @@ class ModulesInfo extends ModulesClass {
 	 * Filename for module info cache file
 	 *
 	 */
-	const moduleInfoCacheName = 'Modules.info';
+	public const moduleInfoCacheName = 'Modules.info';
 
 	/**
 	 * Filename for verbose module info cache file
 	 *
 	 */
-	const moduleInfoCacheVerboseName = 'ModulesVerbose.info';
+	public const moduleInfoCacheVerboseName = 'ModulesVerbose.info';
 
 	/**
 	 * Filename for uninstalled module info cache file
 	 *
 	 */
-	const moduleInfoCacheUninstalledName = 'ModulesUninstalled.info';
+	public const moduleInfoCacheUninstalledName = 'ModulesUninstalled.info';
 
 	/**
 	 * Cache name for module version change cache
 	 *
 	 */
-	const moduleLastVersionsCacheName = 'ModulesVersions.info';
+	public const moduleLastVersionsCacheName = 'ModulesVersions.info';
 
 	/**
 	 * Default namespace 
 	 * 
 	 */
-	const defaultNamespace = "\\ProcessWire\\";
+	public const defaultNamespace = "\\ProcessWire\\";
 
 
 	protected $debug = false;
@@ -555,7 +555,7 @@ class ModulesInfo extends ModulesClass {
 			foreach($info['requires'] as $key => $class) {
 				if(!ctype_alnum($class)) {
 					// has a version string
-					list($class, $operator, $version) = $this->extractModuleOperatorVersion($class);
+					[$class, $operator, $version] = $this->extractModuleOperatorVersion($class);
 					$info['requires'][$key] = $class; // convert to just class
 				} else {
 					// no version string
@@ -792,7 +792,7 @@ class ModulesInfo extends ModulesClass {
 		if(!$operator) return [$require, '', 0];
 
 		// extract class and version
-		list($class, $version) = explode($operator, $require);
+		[$class, $version] = explode($operator, $require);
 
 		// make version an integer if possible
 		if(ctype_digit("$version")) $version = (int) $version;

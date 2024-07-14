@@ -753,7 +753,7 @@ class PageFinder extends Wire {
 	public function ___find($selectors, array $options = []) {
 		
 		if(is_string($selectors) || is_array($selectors)) {
-			list($s, $selectors) = [$selectors, $this->wire(new Selectors())]; 
+			[$s, $selectors] = [$selectors, $this->wire(new Selectors())]; 
 			/** @var Selectors $selectors */
 			$selectors->init($s);
 		} else if(!$selectors instanceof Selectors) {
@@ -852,7 +852,7 @@ class PageFinder extends Wire {
 				$stmt = $query->execute();
 				$errorInfo = $stmt->errorInfo();
 				if($stmt->errorCode() > 0) throw new PageFinderException($errorInfo[2]);
-				list($this->total) = $stmt->fetch(\PDO::FETCH_NUM); 
+				[$this->total] = $stmt->fetch(\PDO::FETCH_NUM); 
 				$stmt->closeCursor();
 			} else {
 				$this->total = (int) $database->query("SELECT FOUND_ROWS()")->fetchColumn();
@@ -1490,7 +1490,7 @@ class PageFinder extends Wire {
 			foreach($fields as $fieldName) {
 				if(strpos($fieldName, '.') !== false) {
 					/** @noinspection PhpUnusedLocalVariableInspection */
-					list($unused, $fieldName) = explode('.', $fieldName);
+					[$unused, $fieldName] = explode('.', $fieldName);
 				}
 				$field = $this->fields->get($fieldName);
 				if(!$field) continue;
@@ -1547,7 +1547,7 @@ class PageFinder extends Wire {
 				if(strpos($fieldName, '.') !== false) {
 					// reduce fieldName to just field name without subfield name
 					/** @noinspection PhpUnusedLocalVariableInspection */
-					list($fieldName, $subname) = explode('.', $fieldName); // subname intentionally unused
+					[$fieldName, $subname] = explode('.', $fieldName); // subname intentionally unused
 				}
 				$field = $this->isPageField($fieldName);
 				if(is_string($field) && in_array($field, $natives)) {
@@ -1729,9 +1729,9 @@ class PageFinder extends Wire {
 				// if a specific DB field from the table has been specified, then get it, otherwise assume 'data'
 				if(strpos($fieldName, '.')) {
 					// if fieldName is "a.b.c" $subfields (plural) retains "b.c" while $subfield is just "b"
-					list($fieldName, $subfields) = explode('.', $fieldName, 2);
+					[$fieldName, $subfields] = explode('.', $fieldName, 2);
 					if(strpos($subfields, '.')) {
-						list($subfield) = explode('.', $subfields); // just the first
+						[$subfield] = explode('.', $subfields); // just the first
 					} else {
 						$subfield = $subfields;
 					}
@@ -2333,9 +2333,9 @@ class PageFinder extends Wire {
 			if($this->lastOptions['reverseSort']) $descending = !$descending;
 
 			if(strpos($value, ".")) {
-				list($value, $subValue) = explode(".", $value, 2); // i.e. some_field.title
+				[$value, $subValue] = explode(".", $value, 2); // i.e. some_field.title
 				if(strpos($subValue, ".")) {
-					list($subValue, $terValue) = explode(".", $subValue, 2);
+					[$subValue, $terValue] = explode(".", $subValue, 2);
 					$terValue = $this->sanitizer->fieldName($terValue);
 					if(strpos($terValue, ".")) $this->syntaxError("$value.$subValue.$terValue not supported");
 				}
@@ -2658,7 +2658,7 @@ class PageFinder extends Wire {
 			$sql = '';
 
 			if(strpos($field, '.')) {
-				list($field, $subfield) = explode('.', $field);
+				[$field, $subfield] = explode('.', $field);
 				$subfield = $sanitizer->fieldName($subfield);
 			}
 
@@ -3224,7 +3224,7 @@ class PageFinder extends Wire {
 			
 		} else if(is_string($fieldName) && strpos($fieldName, '.')) {
 			// check if this is a multi-part field name
-			list($fieldName, $subfieldName) = explode('.', $fieldName, 2);
+			[$fieldName, $subfieldName] = explode('.', $fieldName, 2);
 			if($subfieldName === 'id') {
 				// id property is fine and can be ignored
 			} else {
@@ -3445,7 +3445,7 @@ class PageFinder extends Wire {
 		
 		if(empty($subfields)) $this->syntaxError("When using owner a subfield is required");
 
-		list($ownerFieldName,) = explode('__owner', $fieldName);
+		[$ownerFieldName, ] = explode('__owner', $fieldName);
 		$ownerField = $this->fields->get($ownerFieldName);
 		if(!$ownerField) return false;
 		
@@ -3494,7 +3494,7 @@ class PageFinder extends Wire {
 			$subfields = [$subfields];
 			foreach($fields as $name) {
 				if(strpos($name, "$fieldName.") === 0) {
-					list(,$name) = explode('__owner.', $name); 	
+					[, $name] = explode('__owner.', $name); 	
 					$subfields[] = $name;
 				} else {
 					$this->syntaxError(
@@ -3607,7 +3607,7 @@ class PageFinder extends Wire {
 		}
 
 		if($fieldName !== null) {
-			if(strpos($fieldName, '.')) list($fieldName,) = explode('.', $fieldName, 2);
+			if(strpos($fieldName, '.')) [$fieldName, ] = explode('.', $fieldName, 2);
 			if($this->fields->isNative($fieldName)) return true;
 		}
 

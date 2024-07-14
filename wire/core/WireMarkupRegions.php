@@ -16,13 +16,13 @@ class WireMarkupRegions extends Wire {
 	 * Debug during development of this class
 	 * 
 	 */
-	const debug = false;
+	public const debug = false;
 
 	/**
 	 * Markup landmark where debug notes should be placed
 	 * 
 	 */
-	const debugLandmark = "<!--PW-REGION-DEBUG-->";
+	public const debugLandmark = "<!--PW-REGION-DEBUG-->";
 
 	/**
 	 * @var array
@@ -307,7 +307,7 @@ class WireMarkupRegions extends Wire {
 		
 		if(strpos($find, '.') > 0) {
 			// i.e. "div.myclass"
-			list($findTag, $_find) = explode('.', $find, 2);
+			[$findTag, $_find] = explode('.', $find, 2);
 			if($this->wire()->sanitizer->alphanumeric($findTag) === $findTag) {
 				$find = ".$_find";
 			} else {
@@ -385,10 +385,10 @@ class WireMarkupRegions extends Wire {
 			// some other specified attribute in attr=value format
 			if(strpos($find, '[') !== false && $z === ']') {
 				// i.e. div[attr=value]
-				list($findTag, $find) = explode('[', $find, 2);
+				[$findTag, $find] = explode('[', $find, 2);
 				$find = rtrim($find, ']');
 			}
-			list($attr, $val) = explode('=', $find);
+			[$attr, $val] = explode('=', $find);
 			if(strlen($val)) {
 				$finds = [" $attr=\"$val\"", " $attr='$val'", " $attr=$val", " $attr=$val>"];
 			} else {
@@ -688,16 +688,16 @@ class WireMarkupRegions extends Wire {
 				unset($attrs[$name]);
 			} else if($pwpos === 0) {
 				// action attribute
-				list($prefix, $action) = explode('-', $name, 2); 
+				[$prefix, $action] = explode('-', $name, 2); 
 				if($prefix) {} // ignore
 			} else if(strpos($name, 'data-pw-') === 0) {
 				// action data attribute
-				list($ignore, $prefix, $action) = explode('-', $name, 3); 
+				[$ignore, $prefix, $action] = explode('-', $name, 3); 
 				if($ignore && $prefix) {} // ignore
 			}
 			if($action && !$actionTarget) {
 				if(strpos($action, '-')) {
-					list($action, $actionTarget) = explode('-', $action, 2);
+					[$action, $actionTarget] = explode('-', $action, 2);
 				} else {
 					$actionTarget = $value;
 				}
@@ -716,8 +716,8 @@ class WireMarkupRegions extends Wire {
 		// if action was not specified as an attribute, see if action is specified as a class name
 		if(!$action) foreach($classes as $key => $class) {
 			if(strpos($class, 'pw-') !== 0) continue;
-			list($prefix, $action) = explode('-', $class, 2);
-			if(strpos($action, '-')) list($action, $actionTarget) = explode('-', $action, 2);
+			[$prefix, $action] = explode('-', $class, 2);
+			if(strpos($action, '-')) [$action, $actionTarget] = explode('-', $action, 2);
 			if($prefix && $actionTarget) {} // ignore
 			if(in_array($action, $this->actions)) {
 				// valid action, remove action from classes and class attribute

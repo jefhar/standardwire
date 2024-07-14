@@ -16,13 +16,13 @@ class FileLog extends Wire {
 	 * Default size of chunks used for reading from logs
 	 * 
 	 */
-	const defaultChunkSize = 12288;
+	public const defaultChunkSize = 12288;
 
 	/**
 	 * Debug mode used during development of this class
 	 * 
 	 */
-	const debug = false;
+	public const debug = false;
 
 	/**
 	 * Chunk size used when reading from logs and not overridden
@@ -259,7 +259,7 @@ class FileLog extends Wire {
 			
 			// check if line also indicates a previous quantity that we should add to our quantity
 			if(strpos($chunkLine, ' ^+') !== false) {
-				list($chunkLine, $n) = explode(' ^+', $chunkLine, 2); 
+				[$chunkLine, $n] = explode(' ^+', $chunkLine, 2); 
 				if(ctype_digit($n)) $x += (int) $n;
 			}
 			

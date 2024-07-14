@@ -298,7 +298,7 @@ class WireMail extends WireData implements WireMailInterface {
 
 			} else if(strpos($value, '<') !== false && strpos($value, '>') !== false) {
 				// toName supplied as: "User Name <user@example.com"
-				list($toEmail, $toName) = $this->extractEmailAndName($value); 
+				[$toEmail, $toName] = $this->extractEmailAndName($value); 
 
 			} else {
 				// just an email address, possibly with name as a function arg
@@ -348,7 +348,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 */
 	public function from($email, $name = null) {
 		if(is_null($name)) {
-			list($email, $name) = $this->extractEmailAndName($email);
+			[$email, $name] = $this->extractEmailAndName($email);
 		} else {
 			$email = $this->sanitizeEmail($email);
 		}
@@ -383,7 +383,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 */
 	public function replyTo($email, $name = null) {
 		if(is_null($name)) {
-			list($email, $name) = $this->extractEmailAndName($email);
+			[$email, $name] = $this->extractEmailAndName($email);
 		} else {
 			$email = $this->sanitizeEmail($email);
 		}

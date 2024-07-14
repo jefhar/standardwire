@@ -32,15 +32,15 @@ class Punycode {
 	 * Bootstring parameter values
 	 *
 	 */
-	const BASE = 36;
-	const TMIN = 1;
-	const TMAX = 26;
-	const SKEW = 38;
-	const DAMP = 700;
-	const INITIAL_BIAS = 72;
-	const INITIAL_N = 128;
-	const PREFIX = 'xn--';
-	const DELIMITER = '-';
+	public const BASE = 36;
+	public const TMIN = 1;
+	public const TMAX = 26;
+	public const SKEW = 38;
+	public const DAMP = 700;
+	public const INITIAL_BIAS = 72;
+	public const INITIAL_N = 128;
+	public const PREFIX = 'xn--';
+	public const DELIMITER = '-';
 	/**
 	 * Encode table
 	 *

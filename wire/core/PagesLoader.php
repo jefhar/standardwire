@@ -1213,7 +1213,7 @@ class PagesLoader extends Wire {
 			if($result) {
 				/** @noinspection PhpAssignmentInConditionInspection */
 				while($row = $query->fetch(\PDO::FETCH_NUM)) {
-					list($id, $templates_id) = $row;
+					[$id, $templates_id] = $row;
 					$id = (int) $id;
 					$templates_id = (int) $templates_id;
 					if(!isset($idsByTemplate[$templates_id])) $idsByTemplate[$templates_id] = [];
@@ -1666,7 +1666,7 @@ class PagesLoader extends Wire {
 			$rootName = trim($rootUrl, '/');
 			if(strpos($rootName, '/')) {
 				// root URL has multiple levels of subdirectories, remove them from path
-				list(,$path) = explode(rtrim($rootUrl, '/'), $path, 2);
+				[, $path] = explode(rtrim($rootUrl, '/'), $path, 2);
 			} else {
 				// one subdirectory, see if a page has the same name
 				$query = $database->prepare('SELECT id FROM pages WHERE parent_id=1 AND name=:name');
@@ -1676,7 +1676,7 @@ class PagesLoader extends Wire {
 					// leave subdirectory in path because page in site also matches subdirectory name
 				} else {
 					// remove root URL subdirectory from path 
-					list(,$path) = explode(rtrim($rootUrl, '/'), $path, 2);
+					[, $path] = explode(rtrim($rootUrl, '/'), $path, 2);
 				}
 				$query->closeCursor();
 			}
@@ -1743,7 +1743,7 @@ class PagesLoader extends Wire {
 			$numRows = $query->rowCount();
 			if($numRows == 1) {
 				// if only 1 page matches then we’ve found what we’re looking for
-				list($pageID, $templatesID, $parentID) = $query->fetch(\PDO::FETCH_NUM);
+				[$pageID, $templatesID, $parentID] = $query->fetch(\PDO::FETCH_NUM);
 			} else if($numRows == 0) {
 				// no page can possibly match last segment
 			} else if($numRows > 1) {
@@ -1802,7 +1802,7 @@ class PagesLoader extends Wire {
 			if($rowCount === 1) {
 				// just one page matched
 				$row = $query->fetch(\PDO::FETCH_NUM); 
-				list($pageID, $templatesID, $parentID, ) = $row;
+				[$pageID, $templatesID, $parentID, ] = $row;
 				
 			} else if($rowCount > 1 && $isRootParent) {
 				// multiple pages matched off root
@@ -1815,7 +1815,7 @@ class PagesLoader extends Wire {
 					break;
 				}
 				$row = reset($rows);
-				list($pageID, $templatesID, $parentID) = [$row['id'], $row['templates_id'], $row['parent_id']]; 
+				[$pageID, $templatesID, $parentID] = [$row['id'], $row['templates_id'], $row['parent_id']]; 
 				
 			} else if($rowCount > 1) {
 				// multiple pages matched somewhere in site, we need a stronger tool (pagesPathFinder)

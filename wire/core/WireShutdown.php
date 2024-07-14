@@ -78,13 +78,13 @@ class WireShutdown extends Wire {
 	 * Can be overridden with $config->fatalErrorHTML in /site/config.php
 	 * 
 	 */
-	const defaultFatalErrorHTML = '<p><b>{message}</b><br /><small>{why}</small></p>';
+	public const defaultFatalErrorHTML = '<p><b>{message}</b><br /><small>{why}</small></p>';
 
 	/**
 	 * Default email body for emailed fatal errors
 	 * 
 	 */
-	const defaultEmailBody = "URL: {url}\nUser: {user}\nVersion: {version}\n\n{message}";
+	public const defaultEmailBody = "URL: {url}\nUser: {user}\nVersion: {version}\n\n{message}";
 	
 	/**
 	 * Construct and register shutdown function

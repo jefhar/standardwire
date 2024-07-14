@@ -227,7 +227,7 @@ class PagesTrash extends Wire {
 			$langName = (string) $page->get($langKey);
 			if(!strlen($langName)) continue;
 			if(strpos($langName, $trashPrefix) === 0) {
-				list(,$langName) = explode('_', $langName);
+				[, $langName] = explode('_', $langName);
 			}
 			$langNamePrevious = $langName;
 			if($this->pages->count("parent=$nameParent, $langKey=$langName, id!=$page->id, include=all")) {
@@ -263,7 +263,7 @@ class PagesTrash extends Wire {
 		
 		if($matches[2]) {
 			// matches[2] contains ".parentID.sort"
-			list(, $parentID, $sort) = explode('.', $matches[2]);
+			[, $parentID, $sort] = explode('.', $matches[2]);
 			$info['parent_id'] = (int) $parentID;
 			$info['sort'] = (int) $sort;
 		} else {

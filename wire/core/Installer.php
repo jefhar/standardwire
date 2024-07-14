@@ -14,31 +14,31 @@ class Installer {
 	 * If false, we attempt a faster rename of directories instead.
 	 *
 	 */
-	const FORCE_COPY = true; 
+	public const FORCE_COPY = true; 
 
 	/**
 	 * Replace existing database tables if already present?
 	 *
 	 */
-	const REPLACE_DB = true; 
+	public const REPLACE_DB = true; 
 
 	/**
 	 * Minimum required PHP version to install ProcessWire
 	 *
 	 */
-	const MIN_REQUIRED_PHP_VERSION = '5.3.8';
+	public const MIN_REQUIRED_PHP_VERSION = '5.3.8';
 
 	/**
 	 * Test mode for installer development, non destructive
 	 *
 	 */
-	const TEST_MODE = false;
+	public const TEST_MODE = false;
 
 	/**
 	 * Default profile name
 	 * 
 	 */
-	const DEFAULT_PROFILE = 'site-blank';
+	public const DEFAULT_PROFILE = 'site-blank';
 
 	/**
 	 * File permissions, determined in the dbConfig function
@@ -603,7 +603,7 @@ class Installer {
 		if(isset($timezones[$timezone])) {
 			$value = $timezones[$timezone]; 
 			if(strpos($value, '|')) {
-				list($label, $value) = explode('|', $value);
+				[$label, $value] = explode('|', $value);
 				if($label) {} // ignore
 			}
 			$values['timezone'] = $value; 
@@ -680,7 +680,7 @@ class Installer {
 		// check if MySQL is new enough to support InnoDB with fulltext indexes
 		if($options['dbEngine'] == 'InnoDB') {
 			$query = $database->query("SELECT VERSION()");
-			list($dbVersion) = $query->fetch(\PDO::FETCH_NUM);
+			[$dbVersion] = $query->fetch(\PDO::FETCH_NUM);
 			if(version_compare($dbVersion, "5.6.4", "<")) {
 				$options['dbEngine'] = 'MyISAM';
 				$values['dbEngine'] = 'MyISAM';
@@ -1434,7 +1434,7 @@ class Installer {
 	 */
 	public function icon($name, $fw = true) {
 		if(strpos($name, 'icon-') === 0 || strpos($name, 'fa-') === 0) {
-			list(,$name) = explode('-', $name, 2);
+			[, $name] = explode('-', $name, 2);
 		}
 		$class = 'fa' . ($fw ? ' fa-fw' : '');
 		return "<i class='$class fa-$name'></i>";
@@ -1451,7 +1451,7 @@ class Installer {
 	protected function iconize($label, $icon = '') {
 		if(empty($icon)) {
 			if(strpos($label, 'fa-') === 0 || strpos($label, 'icon-') === 0) {
-				list($icon, $label) = explode(' ', $label, 2);
+				[$icon, $label] = explode(' ', $label, 2);
 			}
 		}
 		if($icon) {
@@ -1608,7 +1608,7 @@ class Installer {
 		echo "\n\t<select class='uk-select' name='timezone'>";
 		foreach($this->timezones() as $key => $timezone) {
 			$label = $timezone;
-			if(strpos($label, '|')) list($label, $timezone) = explode('|', $label);
+			if(strpos($label, '|')) [$label, $timezone] = explode('|', $label);
 			$selected = $timezone == $value ? "selected='selected'" : '';
 			$label = str_replace('_', ' ', $label);
 			echo "\n\t\t<option value=\"$key\" $selected>$label</option>";

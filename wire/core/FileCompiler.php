@@ -633,7 +633,7 @@ class FileCompiler extends Wire {
 
 			if(strpos($fileMatch, '?' . '>')) {
 				// move closing PHP tag out of the fileMatch and into the close
-				list($fileMatch, $fileMatchExtra) = explode('?' . '>', $fileMatch);
+				[$fileMatch, $fileMatchExtra] = explode('?' . '>', $fileMatch);
 				$close = '?' . '>' . $fileMatchExtra . $close;
 				$fileMatch = trim($fileMatch);
 			}
@@ -835,7 +835,7 @@ class FileCompiler extends Wire {
 			
 			if(__NAMESPACE__ && strpos($class, __NAMESPACE__ . '\\') !== 0) continue; // limit only to ProcessWire classes/interfaces
 			if(strpos($class, '\\') !== false) {
-				list($ns, $class) = explode('\\', $class, 2); // reduce to just class without namespace
+				[$ns, $class] = explode('\\', $class, 2); // reduce to just class without namespace
 			} else {
 				$ns = '';
 			}
@@ -886,7 +886,7 @@ class FileCompiler extends Wire {
 			
 			if(__NAMESPACE__) {
 				if(stripos($function, __NAMESPACE__ . '\\') !== 0) continue; // limit only to ProcessWire functions
-				list($ns, $function) = explode('\\', $function, 2); // reduce to just function name
+				[$ns, $function] = explode('\\', $function, 2); // reduce to just function name
 				$functionName = '\\' . __NAMESPACE__ . '\\' . $function;
 			} else {
 				if(stripos($function, '\\') !== 0) continue;

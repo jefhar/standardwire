@@ -253,7 +253,7 @@ class ModulesDuplicates extends Wire {
 
 		/** @noinspection PhpAssignmentInConditionInspection */
 		while($row = $query->fetch(\PDO::FETCH_NUM)) {
-			list($class, $flags) = $row;
+			[$class, $flags] = $row;
 			if(empty($this->duplicates[$class])) {
 				$flags = $flags & ~Modules::flagsDuplicate;
 				$removals[$class] = $flags;

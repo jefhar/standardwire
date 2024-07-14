@@ -56,7 +56,7 @@ class ModulesFlags extends ModulesClass {
 		$query->bindValue(':id', $id, \PDO::PARAM_INT);
 		$query->execute();
 		if(!$query->rowCount()) return false;
-		list($flags) = $query->fetch(\PDO::FETCH_NUM);
+		[$flags] = $query->fetch(\PDO::FETCH_NUM);
 		$flags = (int) $flags;
 		$this->moduleFlags[$id] = $flags;
 		return $flags;

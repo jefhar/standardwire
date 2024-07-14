@@ -16,8 +16,8 @@
 
 abstract class PageProperties {
 	
-	const typePage = 1;
-	const typePageArray = 2;
+	public const typePage = 1;
+	public const typePageArray = 2;
 	
 	/**
 	 * Page class helper object instances (one of each helper per ProcessWire instance, lazy loaded)

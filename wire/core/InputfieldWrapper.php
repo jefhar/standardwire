@@ -79,7 +79,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * #pw-internal
 	 * 
 	 */
-	const debugPropertyAccess = false;
+	public const debugPropertyAccess = false;
 	
 	/**
 	 * Markup used during the render() method - customize with InputfieldWrapper::setMarkup($array)
@@ -736,7 +736,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 				if($skip && !empty($parents)) continue;
 			}
 			
-			list($markup, $classes) = [$_markup, $_classes];
+			[$markup, $classes] = [$_markup, $_classes];
 			$this->attributeInputfield($inputfield, $markup, $classes);
 			
 			$renderValueMode = $this->getSetting('renderValueMode'); 

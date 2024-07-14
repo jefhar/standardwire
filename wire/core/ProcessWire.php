@@ -67,43 +67,43 @@ class ProcessWire extends Wire {
 	 * Major version number
 	 * 
 	 */
-	const versionMajor = 3;
+	public const versionMajor = 3;
 	
 	/**
 	 * Minor version number
 	 * 
 	 */
-	const versionMinor = 0;
+	public const versionMinor = 0;
 	
 	/**
 	 * Reversion revision number
 	 * 
 	 */
-	const versionRevision = 229;
+	public const versionRevision = 229;
 
 	/**
 	 * Version suffix string (when applicable)
 	 * 
 	 */
-	const versionSuffix = '';
+	public const versionSuffix = '';
 
 	/**
 	 * Minimum required index.php version, represented by the PROCESSWIRE define
 	 * 
 	 */
-	const indexVersion = 300;
+	public const indexVersion = 300;
 
 	/**
 	 * Minimum required .htaccess file version
 	 * 
 	 */
-	const htaccessVersion = 301;
+	public const htaccessVersion = 301;
 
 	/**
 	 * Status prior to boot (no API variables available)
 	 * 
 	 */
-	const statusNone = 0;
+	public const statusNone = 0;
 
 	/**
 	 * Status when system is booting
@@ -111,7 +111,7 @@ class ProcessWire extends Wire {
 	 * API variables available: $wire, $hooks, $config, $classLoader 
 	 * 
 	 */
-	const statusBoot = 1;
+	public const statusBoot = 1;
 
 	/**
 	 * Status when system and modules are initializing
@@ -119,7 +119,7 @@ class ProcessWire extends Wire {
 	 * All API variables available except for $page
 	 * 
 	 */
-	const statusInit = 2;
+	public const statusInit = 2;
 
 	/**
 	 * Status when system, $page and all API variables are ready
@@ -127,7 +127,7 @@ class ProcessWire extends Wire {
 	 * All API variables available
 	 * 
 	 */
-	const statusReady = 4;
+	public const statusReady = 4;
 
 	/**
 	 * Status when the current $page’s template file is being rendered, set right before render
@@ -135,7 +135,7 @@ class ProcessWire extends Wire {
 	 * All API variables available
 	 * 
 	 */
-	const statusRender = 8;
+	public const statusRender = 8;
 
 	/**
 	 * Status when current request will send a file download to client and exit (rather than rendering a page template file)
@@ -143,7 +143,7 @@ class ProcessWire extends Wire {
 	 * All API variables available
 	 * 
 	 */
-	const statusDownload = 32;
+	public const statusDownload = 32;
 
 	/**
 	 * Status when the request has been fully delivered (but before a redirect)
@@ -151,7 +151,7 @@ class ProcessWire extends Wire {
 	 * All API variables available
 	 * 
 	 */
-	const statusFinished = 128;
+	public const statusFinished = 128;
 
 	/**
 	 * Status when the request has finished abnormally (like a manual exit)
@@ -159,7 +159,7 @@ class ProcessWire extends Wire {
 	 * @since 3.0.180
 	 *
 	 */
-	const statusExited = 256;
+	public const statusExited = 256;
 
 	/**
 	 * Status when the request failed due to an Exception or 404
@@ -167,7 +167,7 @@ class ProcessWire extends Wire {
 	 * API variables should be checked for availability before using. 
 	 * 
 	 */
-	const statusFailed = 1024;
+	public const statusFailed = 1024;
 
 	/**
 	 * Current status/state
@@ -1122,9 +1122,9 @@ class ProcessWire extends Wire {
 		
 		if($rootURL && strpos($rootURL, '://')) {
 			// rootURL is specifying scheme and hostname
-			list($scheme, $httpHost) = explode('://', $rootURL);
+			[$scheme, $httpHost] = explode('://', $rootURL);
 			if(strpos($httpHost, '/')) {
-				list($httpHost, $rootURL) = explode('/', $httpHost, 2);	
+				[$httpHost, $rootURL] = explode('/', $httpHost, 2);	
 				$rootURL = "/$rootURL";
 			} else {
 				$rootURL = '/';

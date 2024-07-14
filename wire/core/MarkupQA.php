@@ -24,7 +24,7 @@
 
 class MarkupQA extends Wire {
 	
-	const errorLogName = 'markup-qa-errors';
+	public const errorLogName = 'markup-qa-errors';
 
 	/**
 	 * @var string
@@ -359,7 +359,7 @@ class MarkupQA extends Wire {
 			if(strpos($href, '//')) {
 				// scheme and hostname present
 				/** @noinspection PhpUnusedLocalVariableInspection */
-				list($x, $host) = explode('//', $href);
+				[$x, $host] = explode('//', $href);
 				if($host != $config->httpHost && !in_array($host, $config->httpHosts)) {
 					$counts['external']++;
 					if($debug) $this->message("MarkupQA sleepLinks skipping because hostname: $host");
@@ -501,13 +501,13 @@ class MarkupQA extends Wire {
 		foreach($matches[2] as $key => $pwid) {
 			
 			if(strpos($pwid, '/')) {
-				list($pwid, $urlSegmentStr) = explode('/', $pwid, 2);
+				[$pwid, $urlSegmentStr] = explode('/', $pwid, 2);
 			} else {
 				$urlSegmentStr = '';
 			}
 			
 			if(strpos($pwid, '-')) {
-				list($pageID, $languageID) = explode('-', $pwid);
+				[$pageID, $languageID] = explode('-', $pwid);
 			} else {
 				$pageID = $pwid;
 				$languageID = 0;
@@ -767,7 +767,7 @@ class MarkupQA extends Wire {
 		foreach($attrStrings as $attr) {
 
 			if(!strpos($attr, '=')) continue;
-			list($name, $val) = explode('=', $attr);
+			[$name, $val] = explode('=', $attr);
 
 			$name = strtolower($name);
 			$val = trim($val, "\"'> ");

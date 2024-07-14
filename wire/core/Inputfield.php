@@ -142,84 +142,84 @@ abstract class Inputfield extends WireData implements Module {
 	 * #pw-group-collapsed-constants
 	 * 
 	 */	
-	const collapsedNo = 0;
+	public const collapsedNo = 0;
 
 	/**
 	 * Collapsed unless opened
 	 * #pw-group-collapsed-constants
 	 * 
 	 */
-	const collapsedYes = 1; 
+	public const collapsedYes = 1; 
 
 	/**
 	 * Collapsed only when blank
 	 * #pw-group-collapsed-constants
 	 * 
 	 */
-	const collapsedBlank = 2;
+	public const collapsedBlank = 2;
 
 	/**
 	 * Hidden, not rendered in the form at all
 	 * #pw-group-collapsed-constants
 	 * 
 	 */
-	const collapsedHidden = 4;
+	public const collapsedHidden = 4;
 
 	/**
 	 * Collapsed only when populated
 	 * #pw-group-collapsed-constants
 	 * 
 	 */
-	const collapsedPopulated = 5;
+	public const collapsedPopulated = 5;
 
 	/**
 	 * Not collapsed, value visible but not editable
 	 * #pw-group-collapsed-constants
 	 *
 	 */
-	const collapsedNoLocked = 6;
+	public const collapsedNoLocked = 6;
 
 	/**
 	 * Collapsed when blank, value visible but not editable
 	 * #pw-group-collapsed-constants
 	 * 
 	 */
-	const collapsedBlankLocked = 7;
+	public const collapsedBlankLocked = 7;
 
 	/**
 	 * Collapsed unless opened (value becomes visible but not editable)
 	 * #pw-group-collapsed-constants
 	 * 
 	 */
-	const collapsedYesLocked = 8;
+	public const collapsedYesLocked = 8;
 
 	/**
 	 * Same as collapsedYesLocked, for backwards compatibility
 	 * #pw-internal
 	 * 
 	 */
-	const collapsedLocked = 8;
+	public const collapsedLocked = 8;
 
 	/**
 	 * Never collapsed, and not collapsible
 	 * #pw-group-collapsed-constants
 	 * 
 	 */
-	const collapsedNever = 9;
+	public const collapsedNever = 9;
 
 	/**
 	 * Collapsed and dynamically loaded by AJAX when opened
 	 * #pw-group-collapsed-constants
 	 * 
 	 */
-	const collapsedYesAjax = 10; 
+	public const collapsedYesAjax = 10; 
 
 	/**
 	 * Collapsed only when blank, and dynamically loaded by AJAX when opened
 	 * #pw-group-collapsed-constants
 	 * 
 	 */
-	const collapsedBlankAjax = 11;
+	public const collapsedBlankAjax = 11;
 
 	/**
 	 * Collapsed into a separate tab
@@ -227,7 +227,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * @since 3.0.201
 	 *
 	 */
-	const collapsedTab = 20;
+	public const collapsedTab = 20;
 
 	/**
 	 * Collapsed into a separate tab and AJAX loaded
@@ -235,7 +235,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * @since 3.0.201
 	 *
 	 */
-	const collapsedTabAjax = 21;
+	public const collapsedTabAjax = 21;
 
 	/**
 	 * Collapsed into a separate tab and locked (not editable)
@@ -243,35 +243,35 @@ abstract class Inputfield extends WireData implements Module {
 	 * @since 3.0.201
 	 *
 	 */
-	const collapsedTabLocked = 22;
+	public const collapsedTabLocked = 22;
 
 	/**
 	 * Don't skip the label (default)
 	 * #pw-group-skipLabel-constants
 	 *
 	 */
-	const skipLabelNo = false;
+	public const skipLabelNo = false;
 
 	/**
 	 * Don't use a "for" attribute with the <label>
 	 * #pw-group-skipLabel-constants
 	 *
 	 */
-	const skipLabelFor = true;
+	public const skipLabelFor = true;
 
 	/**
 	 * Don't show a visible header (likewise, do not show the label)
 	 * #pw-group-skipLabel-constants
 	 *
 	 */
-	const skipLabelHeader = 2;
+	public const skipLabelHeader = 2;
 
 	/**
 	 * Skip rendering of the label when it is blank
 	 * #pw-group-skipLabel-constants
 	 *
 	 */
-	const skipLabelBlank = 4;
+	public const skipLabelBlank = 4;
 
 	/**
 	 * Do not render any markup for the header/label at all 
@@ -279,63 +279,63 @@ abstract class Inputfield extends WireData implements Module {
 	 * @since 3.0.139
 	 * 
 	 */
-	const skipLabelMarkup = 8;
+	public const skipLabelMarkup = 8;
 
 	/**
 	 * Plain text: no type of markdown or HTML allowed
 	 * #pw-group-textFormat-constants
 	 * 
 	 */
-	const textFormatNone = 2;
+	public const textFormatNone = 2;
 
 	/**
 	 * Only allow basic/inline markdown, and no HTML (default)
 	 * #pw-group-textFormat-constants
 	 *
 	 */
-	const textFormatBasic = 4;
+	public const textFormatBasic = 4;
 
 	/**
 	 * Full markdown support with HTML also allowed
 	 * #pw-group-textFormat-constants
 	 *
 	 */
-	const textFormatMarkdown = 8;
+	public const textFormatMarkdown = 8;
 
 	/**
 	 * Render flags: place first in render
 	 * #pw-group-render-constants
 	 *
 	 */
-	const renderFirst = 1;
+	public const renderFirst = 1;
 
 	/**
 	 * Render flags: place last in render
 	 * #pw-group-render-constants
 	 *
 	 */
-	const renderLast = 2;
+	public const renderLast = 2;
 
 	/**
 	 * Render only the minimum output when in "renderValue" mode.
 	 * #pw-group-renderValue-constants
 	 * 
 	 */
-	const renderValueMinimal = 2;
+	public const renderValueMinimal = 2;
 
 	/**
 	 * Indicates a parent InputfieldWrapper is not required when rendering value. 
 	 * #pw-group-renderValue-constants
 	 *
 	 */
-	const renderValueNoWrap = 4;
+	public const renderValueNoWrap = 4;
 
 	/**
 	 * If there are multiple items, only render the first (where supported by the Inputfield). 
 	 * #pw-group-renderValue-constants
 	 *
 	 */
-	const renderValueFirst = 8;
+	public const renderValueFirst = 8;
 
 	/**
 	 * The total number of Inputfield instances, kept as a way of generating unique 'id' attributes
@@ -1170,7 +1170,7 @@ abstract class Inputfield extends WireData implements Module {
 				if(empty($class)) continue;
 				if(strpos($class, ':')) {
 					// setting new element type i.e. wrap:myclass or +foo:myclass
-					list($typeName, $className) = explode(':', $class, 2);
+					[$typeName, $className] = explode(':', $class, 2);
 					$typeName = trim($typeName);
 					if(in_array($typeName, $typeNames) || strpos($typeName, '+') === 0) {
 						// accepted as element/type for adding classes

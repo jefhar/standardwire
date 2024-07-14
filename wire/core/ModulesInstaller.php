@@ -637,7 +637,7 @@ class ModulesInstaller extends ModulesClass {
 		// quick exit if arguments permit it 
 		if(!$onlyMissing) {
 			if($versions) foreach($requires as $key => $value) {
-				list($operator, $version) = $info['requiresVersions'][$value];
+				[$operator, $version] = $info['requiresVersions'][$value];
 				if(empty($version)) continue;
 				if(ctype_digit("$version")) $version = $this->modules->formatVersion($version);
 				if(!empty($version)) $requires[$key] .= "$operator$version";
@@ -653,7 +653,7 @@ class ModulesInstaller extends ModulesClass {
 				unset($requires[$key]);
 			}
 
-			list($operator, $requiresVersion) = $info['requiresVersions'][$requiresClass];
+			[$operator, $requiresVersion] = $info['requiresVersions'][$requiresClass];
 			$installed = true;
 
 			if($requiresClass == 'PHP') {
@@ -791,7 +791,7 @@ class ModulesInstaller extends ModulesClass {
 				$error = $requiresName;
 
 			} else if(!empty($info['requiresVersions'][$requiresName])) {
-				list($operator, $version) = $info['requiresVersions'][$requiresName];
+				[$operator, $version] = $info['requiresVersions'][$requiresName];
 				$info2 = $this->modules->getModuleInfo($requiresName);
 				$requiresVersion = $info2['version'];
 				if(!empty($version) && !$this->versionCompare($requiresVersion, $version, $operator)) {

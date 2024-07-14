@@ -99,13 +99,13 @@ class Pages extends Wire {
 	 * Max length for page name
 	 * 
 	 */
-	const nameMaxLength = 128;
+	public const nameMaxLength = 128;
 
 	/**
 	 * Default name for the root/home page
 	 * 
 	 */
-	const defaultRootName = 'home';
+	public const defaultRootName = 'home';
 
 	/**
 	 * Instance of PagesSortfields
@@ -430,7 +430,7 @@ class Pages extends Wire {
 				if(!$field) continue;
 				$name = $field->name;
 			} else if(strpos($name, '.') !== false) {
-				list($name,) = explode('.', $name, 2); // subfields not allowed
+				[$name, ] = explode('.', $name, 2); // subfields not allowed
 			}
 			$joinFields[$key] = trim($name);
 		}

@@ -20,7 +20,7 @@
  */
 class Permissions extends PagesType {
 	
-	const cacheName = 'Permissions.names';
+	public const cacheName = 'Permissions.names';
 
 	/**
 	 * Array of permissions name => id, for runtime caching purposes

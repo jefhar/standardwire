@@ -46,7 +46,7 @@ class Selectors extends WireArray {
 	 * Maximum length for a selector operator
 	 *
 	 */
-	const maxOperatorLength = 10; 
+	public const maxOperatorLength = 10; 
 
 	/**
 	 * Static array of Selector types of $operator => $className
@@ -574,7 +574,7 @@ class Selectors extends WireArray {
 						$inDoubleQuote = false;
 					} else {
 						// potentially applicable double quote
-						list($on, $op) = [$n, '', ''];
+						[$on, $op] = [$n, '', ''];
 						// check if an operator came before the quote
 						while($on > 0 && isset(self::$operatorChars[$str[--$on]])) {
 							$op = self::$operatorChars[$str[$on]] . $op;
@@ -652,7 +652,7 @@ class Selectors extends WireArray {
 	public function parseValue($value) {
 		if(!preg_match('/^\$?[_a-zA-Z0-9]+(?:\.[_a-zA-Z0-9]+)?$/', $value)) return null;
 		$property = '';
-		if(strpos($value, '.')) list($value, $property) = explode('.', $value); 
+		if(strpos($value, '.')) [$value, $property] = explode('.', $value); 
 		if(!in_array($value, $this->allowedParseVars)) return null; 
 		$value = $this->wire($value); 
 		if(is_null($value)) return null; // does not resolve to API var
@@ -710,7 +710,7 @@ class Selectors extends WireArray {
 	public function valueHasVar($value) {
 		if(self::stringHasOperator($value)) return false;
 		if(strpos($value, '.') !== false) {
-			list($name, $subname) = explode('.', $value);
+			[$name, $subname] = explode('.', $value);
 		} else {
 			$name = $value;
 			$subname = '';
@@ -734,7 +734,7 @@ class Selectors extends WireArray {
 			if(!is_array($field)) $field = [$field];
 			foreach($field as $f) {
 				if(!$subfields && strpos($f, '.')) {
-					list($f, $subfield) = explode('.', $f, 2);
+					[$f, $subfield] = explode('.', $f, 2);
 					if($subfield) {} // ignore
 				}
 				$fields[$f] = $f;
@@ -1013,7 +1013,7 @@ class Selectors extends WireArray {
 			$value = [];
 			
 			if(count($data) == 4) {
-				list($field, $operator, $value, $_sanitize) = $data;
+				[$field, $operator, $value, $_sanitize] = $data;
 				$operators = $this->extractOperators($operator); 
 				if(is_array($_sanitize)) {
 					$whitelist = $_sanitize;
@@ -1022,11 +1022,11 @@ class Selectors extends WireArray {
 				}
 
 			} else if(count($data) == 3) {
-				list($field, $operator, $value) = $data;
+				[$field, $operator, $value] = $data;
 				$operators = $this->extractOperators($operator);
 				
 			} else if(count($data) == 2) {
-				list($field, $value) = $data;
+				[$field, $value] = $data;
 				$operators = $this->getOperatorsFromField($field);
 			}
 		
@@ -1396,7 +1396,7 @@ class Selectors extends WireArray {
 		if($op === $operator) {
 			if($is) return true;
 			// Convert types like "SelectorEquals" to "Equals"
-			if(strpos($type, 'Selector') === 0) list(,$type) = explode('Selector', $type, 2);
+			if(strpos($type, 'Selector') === 0) [, $type] = explode('Selector', $type, 2);
 			return $type;
 		}
 		return false;
@@ -1767,7 +1767,7 @@ class Selectors extends WireArray {
 		$parts = explode(',', $s);
 		foreach($parts as $part) {
 			if(!strpos($part, '=')) continue;
-			list($key, $value) = explode('=', $part);
+			[$key, $value] = explode('=', $part);
 			if($hasEscaped) $value = str_replace(['~~COMMA', '~~EQUAL'], [',', '='], $value);
 			$a[trim($key)] = trim($value);
 		}

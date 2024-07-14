@@ -275,7 +275,7 @@ class Pageimage extends Pagefile {
 				$parts = explode(',', str_replace([' ', '%'], '', $top));
 				foreach($parts as $part) {
 					if(!strpos($part, '=')) continue;
-					list($name, $pct) = explode('=', $part);
+					[$name, $pct] = explode('=', $part);
 					$a[$name] = strpos($pct, '.') !== false ? (float) $pct : (int) $pct;
 				}
 				$top = $a; // for later setting by array
@@ -284,10 +284,10 @@ class Pageimage extends Pagefile {
 				// SET string like "25 70 0" (representing "top left zoom")
 				if(strpos($top, ' ') != strrpos($top, ' ')) {
 					// with zoom
-					list($top, $left, $zoom) = explode(' ', $top, 3);
+					[$top, $left, $zoom] = explode(' ', $top, 3);
 				} else {
 					// without zoom
-					list($top, $left) = explode(' ', $top, 2);
+					[$top, $left] = explode(' ', $top, 2);
 					$zoom = 0;
 				}
 			}
@@ -1610,7 +1610,7 @@ class Pageimage extends Pagefile {
 		if(is_string($options)) {
 			if(ctype_digit(str_ireplace('x', '', $options))) {
 				if(stripos($options, 'x') === false) $options .= 'x0';
-				list($w, $h) = explode('x', strtolower($options));
+				[$w, $h] = explode('x', strtolower($options));
 				$options = ['width' => (int) $w, 'height' => (int) $h];
 			} else {
 				$options = [];

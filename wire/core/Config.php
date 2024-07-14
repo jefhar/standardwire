@@ -220,13 +220,13 @@ class Config extends WireData {
 	 * Constant for verbose debug mode (uses more memory)
 	 * 
 	 */
-	const debugVerbose = 2;
+	public const debugVerbose = 2;
 
 	/**
 	 * Constant for core development debug mode (makes it use newer JS libraries in some cases)
 	 * 
 	 */
-	const debugDev = 'dev';
+	public const debugDev = 'dev';
 
 	/**
 	 * Get config property
@@ -838,7 +838,7 @@ class Config extends WireData {
 		$url = $_SERVER['REQUEST_URI'];
 		$query = '';
 		if(strpos($url, '?') !== false) {
-			list($url, $query) = explode('?', $url, 2);
+			[$url, $query] = explode('?', $url, 2);
 		}
 		if($get === 'query') {
 			$url = $query;
@@ -1034,7 +1034,7 @@ class Config extends WireData {
 					continue;
 				}
 				// remove existing core-version query string
-				list($u, $r) = explode($coreVersionStr, $url, 2);
+				[$u, $r] = explode($coreVersionStr, $url, 2);
 				if(!strlen($r)) $url = $u;
 			}
 			if(strpos($url, '?') !== false || strpos($url, '//') !== false) {

@@ -152,7 +152,7 @@ class PagesNames extends Wire {
 	 * 
 	 */
 	public function isUntitledPageName($name) {
-		list($namePrefix,) = $this->nameAndNumber($name);
+		[$namePrefix, ] = $this->nameAndNumber($name);
 		return $namePrefix === $this->untitledPageName;
 	}
 
@@ -192,7 +192,7 @@ class PagesNames extends Wire {
 	 */
 	public function hasNumberSuffix($name, $getNamePrefix = false) {
 		if($name instanceof Page) $name = $name->name;
-		list($namePrefix, $numberSuffix) = $this->nameAndNumber($name);
+		[$namePrefix, $numberSuffix] = $this->nameAndNumber($name);
 		if(!$numberSuffix) return false;
 		return $getNamePrefix ? $namePrefix : $numberSuffix;
 	}
@@ -342,7 +342,7 @@ class PagesNames extends Wire {
 
 		} else if(strpos($format, 'date:') === 0) {
 			// specified date format
-			list(, $format) = explode('date:', $format);
+			[, $format] = explode('date:', $format);
 			if(empty($format)) $format = 'Y-m-d H:i:s';
 			$name = wireDate(trim($format));
 			$formatType = 'date';
@@ -504,7 +504,7 @@ class PagesNames extends Wire {
 		$trims = implode('', $this->delimiters);
 		$pos = 0;
 
-		list($namePrefix, $numberSuffix) = $this->nameAndNumber($name);
+		[$namePrefix, $numberSuffix] = $this->nameAndNumber($name);
 
 		if($namePrefix !== $name) {
 			$numberSuffix = $this->delimiter . $numberSuffix;
@@ -547,7 +547,7 @@ class PagesNames extends Wire {
 	 */
 	public function incrementName($name, $num = null) {
 		
-		list($namePrefix, $n) = $this->nameAndNumber($name); 
+		[$namePrefix, $n] = $this->nameAndNumber($name); 
 		
 		if($namePrefix !== $name) {
 			// name already had an increment

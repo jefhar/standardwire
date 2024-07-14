@@ -30,7 +30,7 @@ class WireCache extends Wire {
 	 * Default cache class
 	 * 
 	 */
-	const defaultCacheClass = 'WireCacheDatabase';
+	public const defaultCacheClass = 'WireCacheDatabase';
 
 	/**
 	 * Expiration constants that may be supplied to WireCache::save $seconds argument.
@@ -41,69 +41,69 @@ class WireCache extends Wire {
 	 * Cache should never expire (unless manually cleared).
 	 *
 	 */
-	const expireNever = '2010-04-08 03:10:10';
+	public const expireNever = '2010-04-08 03:10:10';
 
 	/**
 	 * Cache should never expire and should not be deleted during deleteAll() calls (for PW internal system use)
 	 * Can only be deleted by delete() calls that specify it directly or match it specifically with a wildcard.
 	 *
 	 */
-	const expireReserved = '2010-04-08 03:10:01';
+	public const expireReserved = '2010-04-08 03:10:01';
 
 	/**
 	 * Cache should expire when a given resource (Page or Template) is saved.
 	 *
 	 */
-	const expireSave = '2010-01-01 01:01:01';
+	public const expireSave = '2010-01-01 01:01:01';
 
 	/**
 	 * Used internally when a selector is specified.
 	 * #pw-internal
 	 *
 	 */
-	const expireSelector = '2010-01-02 02:02:02';
+	public const expireSelector = '2010-01-02 02:02:02';
 
 	/**
 	 * Cache should expire now
 	 *
 	 */
-	const expireNow = 0;
+	public const expireNow = 0;
 
 	/**
 	 * Cache should expire once per hour
 	 *
 	 */
-	const expireHourly = 3600;
+	public const expireHourly = 3600;
 
 	/**
 	 * Cache should expire once per day
 	 */
-	const expireDaily = 86400;
+	public const expireDaily = 86400;
 
 	/**
 	 * Cache should expire once per week
 	 *
 	 */
-	const expireWeekly = 604800;
+	public const expireWeekly = 604800;
 
 	/**
 	 * Cache should expire once per month
 	 *
 	 */
-	const expireMonthly = 2419200;
+	public const expireMonthly = 2419200;
 
 	/**
 	 * Ignore expiration (skips expiration check) 3.0.218+
 	 * 
 	 */
-	const expireIgnore = false;
+	public const expireIgnore = false;
 
 	/**
 	 * Date format used by our database queries
 	 * #pw-internal
 	 *
 	 */
-	const dateFormat = 'Y-m-d H:i:s';
+	public const dateFormat = 'Y-m-d H:i:s';
 
 	/**
 	 * String names of expire constants
@@ -1217,7 +1217,7 @@ class WireCache extends Wire {
 		// at this point we have a cache name that is too long
 		if(strpos($name, '__') !== false) {
 			// has namespace
-			list($ns, $name) = explode('__', $name, 2);
+			[$ns, $name] = explode('__', $name, 2);
 			while(strpos($name, '__') !== false) $name = str_replace('__', '_', $name);
 			if(strlen($name) > 32) $name = md5($name);
 			if(strlen($ns . '__' . $name) > $maxLength) $ns = md5($ns); // not likely

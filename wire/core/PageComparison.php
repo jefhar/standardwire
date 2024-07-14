@@ -112,7 +112,7 @@ class PageComparison {
 		$sanitizer = $page->wire()->sanitizer;
 
 		// if only given a key argument, we will be returning a boolean
-		if($yes === '' && $no === '') list($yes, $no) = [true, false];
+		if($yes === '' && $no === '') [$yes, $no] = [true, false];
 		
 		if(is_string($key)) $key = trim($key);
 
@@ -253,7 +253,7 @@ class PageComparison {
 			$subproperty = '';
 			
 			if(is_array($property)) $property = reset($property);
-			if(strpos($property, '.')) list($property, $subproperty) = explode('.', $property, 2);
+			if(strpos($property, '.')) [$property, $subproperty] = explode('.', $property, 2);
 			if(in_array($property, $this->matchesIgnores)) continue;
 			
 			$matches = true; 
@@ -294,7 +294,7 @@ class PageComparison {
 		$value = [];
 		$_property = $property; // original
 		$subproperty = '';
-		if(strpos($property, '.')) list($property, $subproperty) = explode('.', $property, 2);
+		if(strpos($property, '.')) [$property, $subproperty] = explode('.', $property, 2);
 		
 		// if the current page value resolves to an object
 		if($object instanceof Page) {

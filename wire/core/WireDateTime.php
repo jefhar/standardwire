@@ -400,7 +400,7 @@ class WireDateTime extends Wire {
 				continue;
 			}
 
-			list($strftime, $js, $regex) = self::$dateConversion[$c];
+			[$strftime, $js, $regex] = self::$dateConversion[$c];
 			if($type == 'js') {
 				$newFormat .= $js;
 			} else if($type == 'strftime') {
@@ -821,7 +821,7 @@ class WireDateTime extends Wire {
 		if(!ctype_digit("$stop")) $stop = strtotime($stop);
 		
 		if($start > $stop) {
-			list($start, $stop) = [$stop, $start];
+			[$start, $stop] = [$stop, $start];
 			$negative = true;
 		}
 

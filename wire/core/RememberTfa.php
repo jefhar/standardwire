@@ -18,13 +18,13 @@ class RememberTfa extends Wire {
 	 * Shows debug info in warning messages, only for development
 	 * 
 	 */
-	const debug = false;
+	public const debug = false;
 
 	/**
 	 * Max browsers to remember for any user
 	 * 
 	 */
-	const maxItems = 10; 
+	public const maxItems = 10; 
 
 	/**
 	 * @var Tfa
@@ -427,7 +427,7 @@ class RememberTfa extends Wire {
 	 */
 	protected function getFingerprintTypes($fpstr) {
 		if(strpos($fpstr, ':') === false) return false;
-		list($types,) = explode(':', $fpstr, 2);
+		[$types, ] = explode(':', $fpstr, 2);
 		$a = explode(',', $types);
 		$types = [];
 		foreach($a as $type) $types[$type] = $type;

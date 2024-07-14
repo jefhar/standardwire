@@ -999,7 +999,7 @@ abstract class Fieldtype extends WireData implements Module {
 				$append = str_replace([' =', '= '], '=', strtoupper($schema['xtra']['append']));
 				foreach(explode(' ', $append) as $x) {
 					if(strpos($x, '=') === false) continue;
-					list($a, $b) = explode('=', $x);
+					[$a, $b] = explode('=', $x);
 					if($a == 'ENGINE') $info['engine'] = $b;
 					if($a == 'CHARSET') $info['charset'] = $b;
 				}
@@ -1061,7 +1061,7 @@ abstract class Fieldtype extends WireData implements Module {
 		foreach($schema as $colName => $colSchema) {
 			$match = null;
 			$colSchema = strtolower($colSchema) . ' ';
-			list($colType, $colMeta) = explode(' ', $colSchema, 2);
+			[$colType, $colMeta] = explode(' ', $colSchema, 2);
 			
 			if($options['findAutoIncrement'] && $match !== false) {
 				$match = strpos($colMeta, 'auto_increment') !== false;

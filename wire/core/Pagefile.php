@@ -59,7 +59,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * Timestamp 'created' used by pagefiles that are temporary, not yet published
 	 * 
 	 */
-	const createdTemp = 10; 
+	public const createdTemp = 10; 
 
 	/**
 	 * Reference to the owning collection of Pagefiles
@@ -209,7 +209,7 @@ class Pagefile extends WireData implements WireArrayItem {
 		$basename = $filename;
 		
 		if(strpos($basename, '?') !== false) {
-			list($basename, $queryString) = explode('?', $basename); 	
+			[$basename, $queryString] = explode('?', $basename); 	
 			if($queryString) {} // do not use in basename
 		} 
 	

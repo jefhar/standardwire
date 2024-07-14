@@ -32,13 +32,13 @@ abstract class Notice extends WireData {
 	 * @since 3.0.135
 	 *
 	 */
-	const prepend = 1;
+	public const prepend = 1;
 
 	/**
 	 * Flag indicates the notice is for when debug mode is on only
 	 *
 	 */
-	const debug = 2;
+	public const debug = 2;
 
 	/**
 	 * Flag indicates the notice is a warning
@@ -48,19 +48,19 @@ abstract class Notice extends WireData {
 	 * @deprecated use NoticeWarning instead. 
 	 *
 	 */
-	const warning = 4; 
+	public const warning = 4; 
 
 	/**
 	 * Flag indicates the notice will also be sent to the messages or errors log
 	 *
 	 */
-	const log = 8; 
+	public const log = 8; 
 
 	/**
 	 * Flag indicates the notice will be logged, but not shown
 	 *
 	 */
-	const logOnly = 16;
+	public const logOnly = 16;
 
 	/**
 	 * Flag indicates the notice is allowed to contain markup and won’t be automatically entity encoded
@@ -68,7 +68,7 @@ abstract class Notice extends WireData {
 	 * Note: entity encoding is done by the admin theme at output time, which should detect this flag.
 	 * 
 	 */
-	const allowMarkup = 32;
+	public const allowMarkup = 32;
 
 	/**
 	 * Alias of allowMarkup flag
@@ -76,7 +76,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.208
 	 * 
 	 */
-	const markup = 32;
+	public const markup = 32;
 
 	/**
 	 * Make notice anonymous (not tied to a particular class)
@@ -84,7 +84,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.135
 	 * 
 	 */
-	const anonymous = 65536;
+	public const anonymous = 65536;
 
 	/**
 	 * Indicate notice should not group/collapse with others of the same type (when supported by admin theme)
@@ -92,7 +92,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.146
 	 * 
 	 */
-	const noGroup = 131072;
+	public const noGroup = 131072;
 
 	/**
 	 * Alias of noGroup flag
@@ -100,7 +100,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.208
 	 * 
 	 */
-	const separate = 131072;
+	public const separate = 131072;
 
 	/**
 	 * Ignore notice unless it will be seen by a logged-in user
@@ -108,7 +108,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.149
 	 * 
 	 */
-	const login = 262144;
+	public const login = 262144;
 
 	/**
 	 * Ignore notice unless user is somewhere in the admin (login page included)
@@ -116,7 +116,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.149
 	 *
 	 */
-	const admin = 524288;
+	public const admin = 524288;
 
 	/**
 	 * Ignore notice unless current user is a superuser
@@ -124,7 +124,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.149
 	 * 
 	 */
-	const superuser = 1048576;
+	public const superuser = 1048576;
 	
 	/**
 	 * Make notice persist in session until removed with $notices->removeNotice() call
@@ -137,7 +137,7 @@ abstract class Notice extends WireData {
 	 * @todo still needs an interactive way to remove
 	 *
 	 */
-	const persist = 2097152;
+	public const persist = 2097152;
 
 	/**
 	 * Allow parsing of basic/inline markdown and bracket markup per $sanitizer->entitiesMarkdown()
@@ -145,7 +145,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.165
 	 * 
 	 */
-	const allowMarkdown = 4194304;
+	public const allowMarkdown = 4194304;
 
 	/**
 	 * Alias of allowMarkdown flag
@@ -153,7 +153,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.208
 	 * 
 	 */
-	const markdown = 4194304;
+	public const markdown = 4194304;
 
 	/**
 	 * Present duplicate notices separately rather than collapsing them to one
@@ -163,7 +163,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.208
 	 * 
 	 */
-	const allowDuplicate = 8388608;
+	public const allowDuplicate = 8388608;
 
 	/**
 	 * Alias of allowDuplicate flag
@@ -171,7 +171,7 @@ abstract class Notice extends WireData {
 	 * @since 3.0.208
 	 * 
 	 */
-	const duplicate = 8388608; 
+	public const duplicate = 8388608; 
 
 	/**
 	 * Flag integers to flag names
@@ -222,8 +222,8 @@ abstract class Notice extends WireData {
 	 */
 	public function set($key, $value) {
 		if($key === 'text' && is_string($value) && strpos($value, 'icon-') === 0 && strpos($value, ' ')) {
-			list($icon, $value) = explode(' ', $value, 2);
-			list(,$icon) = explode('-', $icon, 2);
+			[$icon, $value] = explode(' ', $value, 2);
+			[, $icon] = explode('-', $icon, 2);
 			$icon = $this->wire()->sanitizer->name($icon);
 			if(strlen($icon)) $this->set('icon', $icon);
 		} else if($key === 'flags') {

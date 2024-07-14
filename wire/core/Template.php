@@ -125,49 +125,49 @@ class Template extends WireData implements Saveable, Exportable {
 	 * Flag used to indicate the field is a system-only field and thus can't be deleted or have it's name changed
 	 *
 	 */
-	const flagSystem = 8; 
+	public const flagSystem = 8; 
 
 	/**
 	 * Flag set if you need to override the system flag - set this first, then remove system flag in 2 operations. 
 	 *
 	 */
-	const flagSystemOverride = 32768; 
+	public const flagSystemOverride = 32768; 
 
 	/**
 	 * Cache expiration options: expire only page cache
 	 *
 	 */
-	const cacheExpirePage = 0;
+	public const cacheExpirePage = 0;
 
 	/**
 	 * Cache expiration options: expire entire site cache
 	 *
 	 */
-	const cacheExpireSite = 1; 
+	public const cacheExpireSite = 1; 
 
 	/**
 	 * Cache expiration options: expire page and parents
 	 *
 	 */
-	const cacheExpireParents = 2; 
+	public const cacheExpireParents = 2; 
 
 	/**
 	 * Cache expiration options: expire page and other specific pages (stored in cacheExpirePages)
 	 *
 	 */
-	const cacheExpireSpecific = 3;
+	public const cacheExpireSpecific = 3;
 
 	/**
 	 * Cache expiration options: expire pages matching a selector
 	 * 
 	 */
-	const cacheExpireSelector = 4; 
+	public const cacheExpireSelector = 4; 
 
 	/**
 	 * Cache expiration options: don't expire anything
 	 *
 	 */
-	const cacheExpireNone = -1; 
+	public const cacheExpireNone = -1; 
 
 	/**
 	 * The PHP output filename used by this Template
@@ -415,7 +415,7 @@ class Template extends WireData implements Saveable, Exportable {
 	public function getRoles($type = 'view') {
 
 		if($type !== 'view') {
-			list($name, $propertyName, /*permissionName*/) = $this->roleTypeNames($type);
+			[$name, $propertyName, ] = $this->roleTypeNames($type);
 			if($name !== 'view') {
 				if(empty($name)) throw new WireException("Unknown roles type: $type");
 				$roleIDs = $this->$propertyName;
@@ -475,7 +475,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 *
 	 */
 	public function hasRole($role, $type = 'view') {
-		list($type, $property, /*permissionName*/) = $this->roleTypeNames($type);
+		[$type, $property, ] = $this->roleTypeNames($type);
 		$has = false;
 		$roles = $this->getRoles();
 		$rolePage = null;
@@ -513,7 +513,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 */
 	public function setRoles($value, $type = 'view') {
 		
-		list($type, $property, /* permissionName */) = $this->roleTypeNames($type);
+		[$type, $property, ] = $this->roleTypeNames($type);
 		
 		if(empty($property)) {
 			// @todo Some other $type, delegate to permissionByRole
@@ -1627,7 +1627,7 @@ class Template extends WireData implements Saveable, Exportable {
 			$prefixes = ['field-', 'field_', 'repeater_'];
 			foreach($prefixes as $prefix) {
 				if(strpos($templateName, $prefix) !== 0) continue;
-				list(,$fieldName) = explode($prefix, $templateName, 2);
+				[, $fieldName] = explode($prefix, $templateName, 2);
 				break;
 			}
 			if($fieldName) {

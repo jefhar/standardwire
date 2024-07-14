@@ -28,7 +28,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * Prefix for namespaced field contexts
 	 * 
 	 */
-	const contextNamespacePrefix = 'NS_';
+	public const contextNamespacePrefix = 'NS_';
 
 	/**
 	 * Permanent/common settings for a Fieldgroup, fields in the database

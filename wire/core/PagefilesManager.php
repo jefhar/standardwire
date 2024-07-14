@@ -48,13 +48,13 @@ class PagefilesManager extends Wire {
 	 * Default prefix for secure paths when not defined by config.php
 	 *
 	 */
-	const defaultSecurePathPrefix = '.';
+	public const defaultSecurePathPrefix = '.';
 
 	/**
 	 * Prefix to all extended path directories
 	 *
 	 */
-	const extendedDirName = '0/';
+	public const extendedDirName = '0/';
 
 	/**
 	 * Name of file that maintains the last modification time independent of directory (LATER/FUTURE)

@@ -54,7 +54,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 				$operator = '=';
 				if(strpos($expires, ' ')) {
 					// string in format: '>= YYYY-MM-DD HH:MM:SS'
-					list($op, $expires) = explode(' ', $expires, 2);
+					[$op, $expires] = explode(' ', $expires, 2);
 					if($database->isOperator($op)) $operator = $op;
 				}
 				$n++;

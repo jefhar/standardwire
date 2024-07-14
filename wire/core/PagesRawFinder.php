@@ -458,10 +458,10 @@ class PagesRawFinder extends Wire {
 			} else if(is_string($fieldName)) {
 				// Field name, subfield/column may optionally be specified as field.subfield
 				if(strpos($fieldName, '.')) {
-					list($fieldName, $colName) = explode('.', $fieldName, 2);
+					[$fieldName, $colName] = explode('.', $fieldName, 2);
 					$dotCol = true;
 				} else if(strpos($fieldName, '[')) {
-					list($fieldName, $colName) = explode('[', $fieldName, 2); 
+					[$fieldName, $colName] = explode('[', $fieldName, 2); 
 					$colName = rtrim($colName, ']');
 				}
 				if($fieldName === 'parent' || $fieldName === 'children' || $fieldName === 'template') {
@@ -560,7 +560,7 @@ class PagesRawFinder extends Wire {
 				$colName = '';
 			} else if(strpos($fieldName, 'pages.') === 0) {
 				// pages table column requested by name
-				list(,$colName) = explode('.', $fieldName, 2);
+				[, $colName] = explode('.', $fieldName, 2);
 			} else {
 				// column requested by name on its own
 				$colName = $fieldName;
@@ -1035,7 +1035,7 @@ class PagesRawFinder extends Wire {
 		
 		foreach($fieldNames as $fieldName) {
 			$colName = '';
-			if(strpos($fieldName, '.')) list($fieldName, $colName) = explode('.', $fieldName, 2);
+			if(strpos($fieldName, '.')) [$fieldName, $colName] = explode('.', $fieldName, 2);
 			if(!isset($runtimeFields[$fieldName])) $runtimeFields[$fieldName] = [];
 			if($colName) $runtimeFields[$fieldName][] = $colName;
 		}
@@ -1420,7 +1420,7 @@ class PagesRawFinder extends Wire {
 			// convert categories.1234.title => categories.title = array(1234 => 'title', ...);
 			foreach($a as $k => $v) {
 				if(strpos($k, "$delimiter$key$delimiter") === false) continue;
-				list($k1, $k2) = explode("$delimiter$key$delimiter", $k); 
+				[$k1, $k2] = explode("$delimiter$key$delimiter", $k); 
 				unset($a[$k]);
 				$kk = "$k1$delimiter$k2";
 				if(!isset($flat[$kk])) $flat[$kk] = [];
@@ -1448,7 +1448,7 @@ class PagesRawFinder extends Wire {
 			// specific fields requested
 			foreach($this->requestFields as $name) {
 				if(isset($this->renameFields[$name])) $name = $this->renameFields[$name];
-				if(!$this->options['flat'] && strpos($name, '.')) list($name,) = explode('.', $name, 2);
+				if(!$this->options['flat'] && strpos($name, '.')) [$name, ] = explode('.', $name, 2);
 				$emptyValue[$name] = null;
 			}
 			foreach($values as $key => $value) {

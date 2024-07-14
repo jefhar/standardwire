@@ -64,43 +64,43 @@ class Modules extends WireArray {
 	 * Flag indicating the module may have only one instance at runtime. 
 	 *
 	 */
-	const flagsSingular = 1; 
+	public const flagsSingular = 1; 
 
 	/**
 	 * Flag indicating that the module should be instantiated at runtime, rather than when called upon.
 	 *
 	 */
-	const flagsAutoload = 2;
+	public const flagsAutoload = 2;
 
 	/**
 	 * Flag indicating the module has more than one copy of it on the file system.
 	 * 
 	 */
-	const flagsDuplicate = 4;
+	public const flagsDuplicate = 4;
 
 	/**
 	 * When combined with flagsAutoload, indicates that the autoload is conditional
 	 * 
 	 */
-	const flagsConditional = 8;
+	public const flagsConditional = 8;
 
 	/**
 	 * When combined with flagsAutoload, indicates that the module's autoload state is temporarily disabled
 	 * 
 	 */
-	const flagsDisabled = 16;
+	public const flagsDisabled = 16;
 
 	/**
 	 * Indicates module that maintains a configurable interface but with no interactive Inputfields
 	 * 
 	 */
-	const flagsNoUserConfig = 32;
+	public const flagsNoUserConfig = 32;
 
 	/**
 	 * Module where no file could be located
 	 * 
 	 */
-	const flagsNoFile = 64;
+	public const flagsNoFile = 64;
 	
 	/**
 	 * Indicates row is for Modules system cache use and not an actual module
@@ -108,7 +108,7 @@ class Modules extends WireArray {
 	 * @since 3.0.218
 	 *
 	 */
-	const flagsSystemCache = 8192;
+	public const flagsSystemCache = 8192;
 
 	/**
 	 * Array of modules that are not currently installed, indexed by className => filename

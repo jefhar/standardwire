@@ -111,7 +111,7 @@ class PagesAccess extends Wire {
 
 		while($row = $query->fetch(\PDO::FETCH_NUM)) {
 
-			list($id, $templates_id, $numChildren) = $row;
+			[$id, $templates_id, $numChildren] = $row;
 
 			if(isset($accessTemplates[$templates_id])) {
 				// this page is defining access with it's template

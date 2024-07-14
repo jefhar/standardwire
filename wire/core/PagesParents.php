@@ -458,7 +458,7 @@ class PagesParents extends Wire {
 			$query->bindValue(':id', $minParentID, \PDO::PARAM_INT); 
 			$query->execute();
 			while($row = $query->fetch(\PDO::FETCH_NUM)) {
-				list($pages_id, $parents_id) = $row;
+				[$pages_id, $parents_id] = $row;
 				$parents[(int) $pages_id] = (int) $parents_id;
 			}
 			$query->closeCursor();
@@ -663,7 +663,7 @@ class PagesParents extends Wire {
 		$query = $database->prepare($sql);
 		
 		foreach($inserts as $insert) {
-			list($id, $parentId) = explode(',', $insert, 2);
+			[$id, $parentId] = explode(',', $insert, 2);
 			$query->bindValue(':pages_id', $id, \PDO::PARAM_INT);
 			$query->bindValue(':parents_id', $parentId, \PDO::PARAM_INT); 
 			try {

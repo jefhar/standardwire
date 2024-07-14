@@ -195,48 +195,48 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * #pw-internal
 	 * 
 	 */
-	const statusOn = 1;
+	public const statusOn = 1;
 	
 	/**
 	 * Reserved status (internal use)
 	 * #pw-internal
 	 * 
 	 */
-	const statusReserved = 2;
+	public const statusReserved = 2;
 
 	/**
 	 * Indicates page is locked for changes (name: "locked")
 	 * 
 	 */
-	const statusLocked = 4;
+	public const statusLocked = 4;
 
 	/**
 	 * Page is for the system and may not be deleted or have its id changed (name: "system-id").
 	 * #pw-internal
 	 * 
 	 */
-	const statusSystemID = 8;
+	public const statusSystemID = 8;
 
 	/**
 	 * Page is for the system and may not be deleted or have its id, name, template or parent changed (name: "system"). 
 	 * #pw-internal
 	 * 
 	 */
-	const statusSystem = 16;
+	public const statusSystem = 16;
 
 	/**
 	 * Page has a globally unique name and no other pages may have the same name
 	 * #pw-internal
 	 * 
 	 */
-	const statusUnique = 32;
+	public const statusUnique = 32;
 
 	/**
 	 * Page has pending draft changes (name: "draft"). 
 	 * #pw-internal
 	 * 
 	 */
-	const statusDraft = 64;
+	public const statusDraft = 64;
 
 	/**
 	 * Page is flagged as incomplete, needing review, or having some issue
@@ -245,8 +245,8 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @since 3.0.127
 	 * 
 	 */
-	const statusFlagged = 128;
-	const statusIncomplete = 128; // alias of statusFlagged
+	public const statusFlagged = 128;
+	public const statusIncomplete = 128; // alias of statusFlagged
 	
 	/**
 	 * Deprecated, was never used, but kept in case any modules referenced it
@@ -254,7 +254,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @deprecated
 	 * 
 	 */
-	const statusVersions = 128; 
+	public const statusVersions = 128; 
 	
 	/**
 	 * Reserved for internal use 
@@ -262,7 +262,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @since 3.0.127
 	 *
 	 */
-	const statusInternal = 256;
+	public const statusInternal = 256;
 
 	/**
 	 * Page is temporary. 1+ day old unpublished pages with this status may be automatically deleted (name: "temp"). 
@@ -270,54 +270,54 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * #pw-internal
 	 * 
 	 */
-	const statusTemp = 512;
+	public const statusTemp = 512;
 
 	/**
 	 * Page is hidden and excluded from page finding methods unless overridden by selector (name: "hidden"). 
 	 * 
 	 */
-	const statusHidden = 1024;
+	public const statusHidden = 1024;
 
 	/**
 	 * Page is unpublished (not publicly visible) and excluded from page finding methods unless overridden (name: "unpublished").
 	 * 
 	 */
-	const statusUnpublished = 2048;
+	public const statusUnpublished = 2048;
 
 	/**
 	 * Page is in the trash.
 	 * #pw-internal
 	 * 
 	 */
-	const statusTrash = 8192; 		// page is in the trash
+	public const statusTrash = 8192; 		// page is in the trash
 
 	/**
 	 * Page is deleted (runtime status only, as deleted pages aren't saved in the database)
 	 * #pw-internal
 	 * 
 	 */
-	const statusDeleted = 16384;
+	public const statusDeleted = 16384;
 
 	/**
 	 * Page is in a state where system flags may be overridden (runtime only)
 	 * #pw-internal
 	 * 
 	 */
-	const statusSystemOverride = 32768;
+	public const statusSystemOverride = 32768;
 
 	/**
 	 * Page was corrupted at runtime and is NOT saveable.
 	 * #pw-internal
 	 * 
 	 */
-	const statusCorrupted = 131072;
+	public const statusCorrupted = 131072;
 
 	/**
 	 * Maximum possible page status, to use only for runtime comparisons - do not assign this to a page.
 	 * #pw-internal
 	 * 
 	 */
-	const statusMax = 9999999;
+	public const statusMax = 9999999;
 	
 	/**
 	 * The Template this page is using (object)
@@ -754,7 +754,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 				break;
 			default:
 				if(isset(PageProperties::$languageProperties[$key])) {
-					list($property, $languageId) = PageProperties::$languageProperties[$key];
+					[$property, $languageId] = PageProperties::$languageProperties[$key];
 					if($property === 'name') {
 						$this->setName($value, $languageId); // i.e. name1234
 					} else if($property === 'status') {
@@ -2043,7 +2043,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	public function siblings($selector = '', $includeCurrent = true) {
 		if(is_bool($selector)) {
 			$includeCurrent = $selector; 
-			$selector = '';
+			$selector = [];
 		}
 		if(!$includeCurrent) {
 			if(is_array($selector)) {

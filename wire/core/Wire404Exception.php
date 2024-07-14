@@ -12,7 +12,7 @@ class Wire404Exception extends WireException {
 	 * #pw-internal
 	 *
 	 */ 
-	const codeNonexist = 404;
+	public const codeNonexist = 404;
 	
 	/**
 	 * 404 is a result of a resource that might exist but there is no access
@@ -22,7 +22,7 @@ class Wire404Exception extends WireException {
 	 * #pw-internal
 	 *
 	 */
-	const codePermission = 4041;
+	public const codePermission = 4041;
 	
 	/**
 	 * 404 is a result of a secondary non-file asset that does not exist, even if page does
@@ -32,7 +32,7 @@ class Wire404Exception extends WireException {
 	 * #pw-internal
 	 *
 	 */
-	const codeSecondary = 4042;
+	public const codeSecondary = 4042;
 
 	/**
 	 * 404 is a result of content not available in requested language
@@ -40,7 +40,7 @@ class Wire404Exception extends WireException {
 	 * #pw-internal
 	 *
 	 */
-	const codeLanguage = 4043;
+	public const codeLanguage = 4043;
 	
 	/**
 	 * 404 is a result of a physical file that does not exist on the file system
@@ -48,7 +48,7 @@ class Wire404Exception extends WireException {
 	 * #pw-internal
 	 *
 	 */
-	const codeFile = 4044;
+	public const codeFile = 4044;
 
 	/**
 	 * 404 is a result of a front-end wire404() function call
@@ -56,7 +56,7 @@ class Wire404Exception extends WireException {
 	 * #pw-internal
 	 * 
 	 */
-	const codeFunction = 4045;
+	public const codeFunction = 4045;
 	
 	/**
 	 * Anonymous 404 with no code provided 
@@ -64,6 +64,6 @@ class Wire404Exception extends WireException {
 	 * #pw-internal
 	 *
 	 */
-	const codeAnonymous = 0;
+	public const codeAnonymous = 0;
 
 }

@@ -508,7 +508,7 @@ abstract class DatabaseQuery extends WireData {
 				do {
 					$name = $this->getUniqueBindKey(['value' => $value]);
 				} while(strpos($sql, $name) !== false); // highly unlikely, but just in case
-				list($a, $b) = explode('?', $sql, 2);
+				[$a, $b] = explode('?', $sql, 2);
 				$sql = $a . $name . $b;
 				
 			} else {
@@ -637,7 +637,7 @@ abstract class DatabaseQuery extends WireData {
 		if(method_exists($this, $methodName)) {
 			$sql = $this->$methodName();
 		} else {
-			list($prepend, $split, $append) = $this->queryMethods[$method];
+			[$prepend, $split, $append] = $this->queryMethods[$method];
 			$values = $this->$method;
 			if(!is_array($values)) return ''; 
 			foreach($values as $key => $value) {

@@ -88,90 +88,90 @@ abstract class Selector extends WireData {
 	 * Comparison type: Exact (value equals this or value does not equal this)
 	 * 
 	 */
-	const compareTypeExact = 1;
+	public const compareTypeExact = 1;
 
 	/**
 	 * Comparison type: Sort (matches based on how it would sort among given value)
 	 * 
 	 */
-	const compareTypeSort = 2;
+	public const compareTypeSort = 2;
 
 	/**
 	 * Comparison type: Find (text value is found within another text value)
 	 * 
 	 */
-	const compareTypeFind = 4;
+	public const compareTypeFind = 4;
 
 	/**
 	 * Comparison type: Like (text value is like another, combined with compareTypeFind)
 	 * 
 	 */
-	const compareTypeLike = 8; 
+	public const compareTypeLike = 8; 
 
 	/**
 	 * Comparison type: Bitwise 
 	 *
 	 */
-	const compareTypeBitwise = 16;
+	public const compareTypeBitwise = 16;
 
 	/**
 	 * Comparison type: Expand (value can be expanded to include other results when supported)
 	 * 
 	 */
-	const compareTypeExpand = 32;
+	public const compareTypeExpand = 32;
 	
 	/**
 	 * Comparison type: Command (value can contain additional commands interpreted by the Selector)
 	 *
 	 */
-	const compareTypeCommand = 64;
+	public const compareTypeCommand = 64;
 	
 	/**
 	 * Comparison type: Database (Selector is only applicable for database-driven comparisons)
 	 *
 	 */
-	const compareTypeDatabase = 128;
+	public const compareTypeDatabase = 128;
 
 	/**
 	 * Comparison type: Fulltext index required when used with database queries
 	 *
 	 */
-	const compareTypeFulltext = 256;
+	public const compareTypeFulltext = 256;
 
 	/**
 	 * Comparison type: Perform phrase match (1+ words in order)
 	 */
-	const compareTypePhrase = 512;
+	public const compareTypePhrase = 512;
 
 	/**
 	 * Comparison type: Match as words independent of order (opposite of phrase)
 	 * 
 	 */
-	const compareTypeWords = 1024;
+	public const compareTypeWords = 1024;
 
 	/**
 	 * Comparison type: Partial matches allowed, such as partial words or phrases
 	 * 
 	 */
-	const compareTypePartial = 2048;
+	public const compareTypePartial = 2048;
 
 	/**
 	 * Comparison type: If multiple items in query, ANY of them may match 
 	 * 
 	 */
-	const compareTypeAny = 4096;
+	public const compareTypeAny = 4096;
 
 	/**
 	 * Comparison type: If multiple items in query, ALL of them may match
 	 *
 	 */
-	const compareTypeAll = 8192;
+	public const compareTypeAll = 8192;
 
 	/**
 	 * Comparison type: Matches at boundary (start or end)
 	 * 
 	 */
-	const compareTypeBoundary = 16384; 
+	public const compareTypeBoundary = 16384; 
 	
 	/**
 	 * Given a field name and value, construct the Selector. 

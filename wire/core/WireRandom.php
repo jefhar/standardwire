@@ -208,7 +208,7 @@ class WireRandom extends Wire {
 				$r = 0; // non-zero if we need to perform replacements at the ed
 				foreach($base64Extras as $name => $c) {
 					while(strpos($baseStr, $c) !== false) {
-						list($a, $b) = explode($c, $baseStr, 2);
+						[$a, $b] = explode($c, $baseStr, 2);
 						$n = $numExtras > 1 ? $this->integer(0, $numExtras-1) : 0;
 						$x = $options['extras'][$n];
 						if(in_array($x, $base64Extras)) {
@@ -836,7 +836,7 @@ class WireRandom extends Wire {
 			$salt = '';
 			foreach($tests as $name => $value) {
 				$note = '';
-				if(strpos($value, "\tNOTE=")) list($value, $note) = explode("\tNOTE=", $value);
+				if(strpos($value, "\tNOTE=")) [$value, $note] = explode("\tNOTE=", $value);
 				$value = empty($value) ? 'N/A' : $this->randomBufferToSalt($value, $requiredLength);
 				$_name = str_pad($name, 28, ' ', STR_PAD_LEFT);
 				$tests[$name] = $value;

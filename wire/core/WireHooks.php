@@ -16,25 +16,25 @@ class WireHooks {
 	 * Debug hooks
 	 *
 	 */
-	const ___debug = false;
+	public const ___debug = false;
 
 	/**
 	 * Refers to ALL hooks
 	 * 
 	 */
-	const getHooksAll = 0;
+	public const getHooksAll = 0;
 	
 	/**
 	 * Refers only to LOCAL hooks
 	 *
 	 */
-	const getHooksLocal = 1;
+	public const getHooksLocal = 1;
 	
 	/**
 	 * Refers only to STATIC hooks
 	 *
 	 */
-	const getHooksStatic = 2;
+	public const getHooksStatic = 2;
 
 	/**
 	 * When a hook is specified, there are a few options which can be overridden: This array outlines those options and the defaults.
@@ -218,7 +218,7 @@ class WireHooks {
 						// object likely extends a class not in PW namespace, so check class parents instead
 						if(empty($objectParentNamespaces)) {
 							foreach(wireClassParents($object) as $nscn => $cn) {
-								list($ns,) = explode("\\", $nscn); 
+								[$ns, ] = explode("\\", $nscn); 
 								$objectParentNamespaces[$ns] = $ns;	
 							}
 						}
@@ -578,10 +578,10 @@ class WireHooks {
 		}
 		
 		if(strpos($method, '::')) {
-			list($fromClass, $method) = explode('::', $method, 2);
+			[$fromClass, $method] = explode('::', $method, 2);
 			if(strpos($fromClass, '(') !== false) {
 				// extract object selector match string
-				list($fromClass, $objMatch) = explode('(', $fromClass, 2);
+				[$fromClass, $objMatch] = explode('(', $fromClass, 2);
 				$objMatch = trim($objMatch, ') ');
 				if(Selectors::stringHasSelector($objMatch)) {
 					/** @var Selectors $selectors */
@@ -604,7 +604,7 @@ class WireHooks {
 			} else if($argClose > $argOpen+1) {
 				// extract argument selector match string(s), arg 0: Something::something(selector_string)
 				// or: Something::something(1:selector_string, 3:selector_string) matches arg 1 and 3. 
-				list($method, $argMatch) = explode('(', $method, 2);
+				[$method, $argMatch] = explode('(', $method, 2);
 				$argMatch = trim($argMatch, ') ');
 				if(strpos($argMatch, ':') !== false) {
 					// zero-based argument indexes specified, i.e. 0:template=product, 1:order_status
@@ -659,7 +659,7 @@ class WireHooks {
 		} else {
 			if(strpos($priority, '.')) {
 				// priority already specifies a sub value: extract it
-				list($priority, $n) = explode('.', $priority);
+				[$priority, $n] = explode('.', $priority);
 				$options['priority'] = $priority; // without $n
 				$priority .= ".$n";
 			} else {
@@ -761,7 +761,7 @@ class WireHooks {
 				
 				foreach($strs as $key => $val) {
 					if(strpos($val, ')') === false) continue;
-					list($a, $b) = explode(')', $val, 2);
+					[$a, $b] = explode(')', $val, 2);
 					if(strpos($a, ',') !== false) $a = str_replace([', ', ','], $argSplit, $a);
 					$strs[$key] = "$a)$b";
 				}
@@ -1244,7 +1244,7 @@ class WireHooks {
 		}
 		if(!empty($hookID) && substr_count($hookID, ':') === 2) {
 			// local hook ID ":100.0:methodName" or static hook ID "ClassName:100.0:methodName"
-			list($hookClass, $priority, $method) = explode(':', $hookID);
+			[$hookClass, $priority, $method] = explode(':', $hookID);
 			if(empty($hookClass)) {
 				// local hook
 				$localHooks = $object->getLocalHooks();

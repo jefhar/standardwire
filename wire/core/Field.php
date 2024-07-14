@@ -64,7 +64,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-group-flags
 	 *
 	 */
-	const flagAutojoin = 1;
+	public const flagAutojoin = 1;
 
 	/**
 	 * Field used by all fieldgroups - all fieldgroups required to contain this field
@@ -72,7 +72,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-group-flags
 	 *
 	 */
-	const flagGlobal = 4;
+	public const flagGlobal = 4;
 
 	/**
 	 * Field is a system field and may not be deleted, have it's name changed, or be converted to non-system
@@ -80,7 +80,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-group-flags
 	 *
 	 */
-	const flagSystem = 8;
+	public const flagSystem = 8;
 
 	/**
 	 * Field is permanent in any fieldgroups/templates where it exists - it may not be removed from them
@@ -88,7 +88,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-group-flags
 	 *
 	 */
-	const flagPermanent = 16;
+	public const flagPermanent = 16;
 
 	/**
 	 * Field is access controlled
@@ -96,7 +96,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-group-flags
 	 *
 	 */
-	const flagAccess = 32;
+	public const flagAccess = 32;
 
 	/**
 	 * If field is access controlled, this flag says that values are still front-end API accessible
@@ -106,7 +106,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-group-flags
 	 * 
 	 */
-	const flagAccessAPI = 64;
+	public const flagAccessAPI = 64;
 
 	/**
 	 * If field is access controlled and user has no edit access, they can still view in the editor (if they have view permission)
@@ -116,7 +116,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-group-flags
 	 * 
 	 */
-	const flagAccessEditor = 128;
+	public const flagAccessEditor = 128;
 
 	/**
 	 * Field requires that the same value is not repeated more than once in its table 'data' column (when supported by Fieldtype)
@@ -129,7 +129,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @since 3.0.150
 	 * 
 	 */
-	const flagUnique = 256;
+	public const flagUnique = 256;
 
 	/**
 	 * Field has been placed in a runtime state where it is contextual to a specific fieldgroup and is no longer saveable
@@ -137,7 +137,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-group-flags
 	 *
 	 */
-	const flagFieldgroupContext = 2048;
+	public const flagFieldgroupContext = 2048;
 
 	/**
 	 * Set this flag to override system/permanent flags if necessary - once set, system/permanent flags can be removed, but not in the same set().
@@ -145,7 +145,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-group-flags
 	 *
 	 */
-	const flagSystemOverride = 32768;
+	public const flagSystemOverride = 32768;
 
 	/**
 	 * Prefix for database tables
@@ -153,7 +153,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-internal
 	 * 
 	 */
-	const tablePrefix = 'field_';
+	public const tablePrefix = 'field_';
 
 	/**
 	 * Permanent/native settings to an individual Field
@@ -691,7 +691,7 @@ class Field extends WireData implements Saveable, Exportable {
 		} else if(is_string($type)) {
 			if(strpos($type, '.')) {
 				// FieldtypeName.setupName
-				list($type, $setupName) = explode('.', $type, 2);
+				[$type, $setupName] = explode('.', $type, 2);
 				$this->setSetupName($setupName);
 			}
 			$typeStr = $type;

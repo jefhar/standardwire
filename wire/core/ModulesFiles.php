@@ -110,7 +110,7 @@ class ModulesFiles extends ModulesClass {
 			// if the filename doesn't end with .module or .module.php, then stop and move onto the next
 			$extension = $file->getExtension();
 			if($extension !== 'module' && $extension !== 'php') continue;
-			list($moduleName, $extension) = explode('.', $filename, 2);
+			[$moduleName, $extension] = explode('.', $filename, 2);
 			if($extension !== 'module'  && $extension !== 'module.php') continue;
 
 			$pathname = str_replace($startPath, '', $pathname);
