@@ -3,7 +3,9 @@
 use Countable;
 use IteratorAggregate;
 use Override;
+use ProcessWire\Interfaces\ConfigurableModule;
 use ReturnTypeWillChange;
+
 /**
  * ProcessWire InputfieldWrapper
  *

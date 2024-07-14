@@ -1,8 +1,10 @@
 <?php namespace ProcessWire;
 
-use Stringable;
-use Override;
 use Exception;
+use Override;
+use ProcessWire\Interfaces\ConfigurableModule;
+use Stringable;
+
 /**
  * ProcessWire Base Class "Wire"
  *
@@ -1905,4 +1907,3 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, St
 
 
 }
-
