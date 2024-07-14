@@ -50,7 +50,7 @@ function _wirePagesAPI($_apiVar, $selector) {
 		// i.e. "contact"
 		return $pages->get("name=$selector");
 
-	} else if(strpos($selector, '/') !== false && wireSanitizer('pagePathName', $selector) === $selector) {
+	} else if(str_contains($selector, '/') && wireSanitizer('pagePathName', $selector) === $selector) {
 		// i.e. "/path/to/page/"
 		return $pages->get($selector);
 
@@ -409,7 +409,7 @@ function wireLanguages($name = '') {
  * @return WireInput|WireInputData|array|string|int|null
  *
  */
-function wireInput($type = '', $key = '', $sanitizer = null, $fallback = null) {
+function wireInput($type = '', $key = '', $sanitizer = null, mixed $fallback = null) {
 	$input = wire()->input;
 	if(!strlen($type)) return $input;
 	$type = strtolower($type);
@@ -429,7 +429,7 @@ function wireInput($type = '', $key = '', $sanitizer = null, $fallback = null) {
  * @return WireInputData|string|int|array|null
  *
  */
-function wireInputGet($key = '', $sanitizer = null, $fallback = null) {
+function wireInputGet($key = '', $sanitizer = null, mixed $fallback = null) {
 	return wireInput('get', $key, $sanitizer, $fallback);
 }
 
@@ -444,7 +444,7 @@ function wireInputGet($key = '', $sanitizer = null, $fallback = null) {
  * @return WireInputData|string|int|array|null
  *
  */
-function wireInputPost($key = '', $sanitizer = null, $fallback = null) {
+function wireInputPost($key = '', $sanitizer = null, mixed $fallback = null) {
 	return wireInput('post', $key, $sanitizer, $fallback);
 }
 
@@ -459,7 +459,7 @@ function wireInputPost($key = '', $sanitizer = null, $fallback = null) {
  * @return WireInputData|string|int|array|null
  *
  */
-function wireInputCookie($key = '', $sanitizer = null, $fallback = null) {
+function wireInputCookie($key = '', $sanitizer = null, mixed $fallback = null) {
 	return wireInput('cookie', $key, $sanitizer, $fallback);
 }
 

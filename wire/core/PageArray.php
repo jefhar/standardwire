@@ -175,7 +175,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 *
 	 */
 	public function makeNew() {
-		$class = get_class($this);
+		$class = static::class;
 		/** @var PageArray $newArray */
 		$newArray = $this->wire(new $class());
 		// $newArray->finderOptions($this->finderOptions());
@@ -582,7 +582,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 
 		if($item instanceof Page) {
 			$value = $item->getUnformatted($property); 
-		} else if(strpos($property, '.') !== false) {
+		} else if(str_contains($property, '.')) {
 			$value = WireData::_getDot($property, $item);
 		} else if($item instanceof WireArray) {
 			/** @var PageArray $item */
@@ -620,7 +620,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * Pipe charactesr are used for compatibility with Selector OR statements
 	 *
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$s = '';
 		foreach($this as $page) $s .= "$page|";
 		$s = rtrim($s, "|"); 
@@ -641,7 +641,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	public function ___getMarkup($key = null) {
 		if($key && !is_string($key)) {
 			$out = $this->each($key);
-		} else if(strpos($key, '{') !== false && strpos($key, '}')) {
+		} else if(str_contains($key, '{') && strpos($key, '}')) {
 			$out = $this->each($key);
 		} else {
 			if(empty($key)) $key = "<li>{title|name}</li>";

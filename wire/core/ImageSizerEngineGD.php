@@ -99,14 +99,9 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 			case 'imageformat':
 				// compare current imagefile infos fetched from ImageInspector
 				$requested = $this->getImageInfo(false);
-				switch($requested) {
-					case 'gif-anim':
-					case 'gif-trans-anim':
-						// Animated GIF images are not supported, but GD renders the first image of the animation
-						#return false;
-					default:
-						return true;
-				}
+				return match ($requested) {
+        default => true,
+    };
 				break;
 			
 			case 'webp':
@@ -756,20 +751,18 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 
 
 	/**
-	 * Calculate USM factor
-	 *
-	 * Return an integer value indicating how much an image should be sharpened
-	 * according to resizing scalevalue and absolute target dimensions
-	 *
-	 * @param mixed $targetWidth width of the targetimage
-	 * @param mixed $targetHeight height of the targetimage
-	 * @param mixed $origWidth
-	 * @param mixed $origHeight
-	 *
-	 * @return int
-	 *
-	 */
-	protected function calculateUSMfactor($targetWidth, $targetHeight, $origWidth = null, $origHeight = null) {
+  * Calculate USM factor
+  *
+  * Return an integer value indicating how much an image should be sharpened
+  * according to resizing scalevalue and absolute target dimensions
+  *
+  * @param mixed $targetWidth width of the targetimage
+  * @param mixed $targetHeight height of the targetimage
+  *
+  * @return int
+  *
+  */
+ protected function calculateUSMfactor(mixed $targetWidth, mixed $targetHeight, mixed $origWidth = null, mixed $origHeight = null) {
 
 		if(null === $origWidth) $origWidth = $this->getWidth();
 		if(null === $origHeight) $origHeight = $this->getHeight();
@@ -877,19 +870,12 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 
 		if(null === $phpMaxMem) {
 			$sMem = trim(strtoupper(ini_get('memory_limit')), ' B'); // trim B just in case it has Mb rather than M
-			switch(substr($sMem, -1)) {
-				case 'M':
-					$phpMaxMem = ((int) $sMem) * 1048576;
-					break;
-				case 'K':
-					$phpMaxMem = ((int) $sMem) * 1024;
-					break;
-				case 'G':
-					$phpMaxMem = ((int) $sMem) * 1073741824;
-					break;
-				default:
-					$phpMaxMem = (int) $sMem;
-			}
+			$phpMaxMem = match (substr($sMem, -1)) {
+       'M' => ((int) $sMem) * 1048576,
+       'K' => ((int) $sMem) * 1024,
+       'G' => ((int) $sMem) * 1073741824,
+       default => (int) $sMem,
+   };
 		}
 
 		if($phpMaxMem <= 0) {

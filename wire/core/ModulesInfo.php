@@ -544,7 +544,7 @@ class ModulesInfo extends ModulesClass {
 			// if $info[requires] isn't already an array, make it one
 			if(!is_array($info['requires'])) {
 				$info['requires'] = str_replace(' ', '', $info['requires']); // remove whitespace
-				if(strpos($info['requires'], ',') !== false) {
+				if(str_contains($info['requires'], ',')) {
 					$info['requires'] = explode(',', $info['requires']);
 				} else {
 					$info['requires'] = [$info['requires']];
@@ -569,7 +569,7 @@ class ModulesInfo extends ModulesClass {
 			// if $info[installs] isn't already an array, make it one
 			if(!is_array($info['installs'])) {
 				$info['installs'] = str_replace(' ', '', $info['installs']); // remove whitespace
-				if(strpos($info['installs'], ',') !== false) {
+				if(str_contains($info['installs'], ',')) {
 					$info['installs'] = explode(',', $info['installs']);
 				} else {
 					$info['installs'] = [$info['installs']];
@@ -614,7 +614,7 @@ class ModulesInfo extends ModulesClass {
 				} else {
 					$dirname = dirname($pathname);
 					$coreModulesPath = $this->modules->coreModulesPath;
-					$dirmtime = substr($dirname, -7) == 'modules' || strpos($dirname, $coreModulesPath) !== false ? 0 : (int) filemtime($dirname);
+					$dirmtime = str_ends_with($dirname, 'modules') || str_contains($dirname, $coreModulesPath) ? 0 : (int) filemtime($dirname);
 					$info['created'] = $dirmtime > $filemtime ? $dirmtime : $filemtime;
 				}
 			}
@@ -644,7 +644,7 @@ class ModulesInfo extends ModulesClass {
 		if($options['verbose']) {
 			// the file property is not stored in the verbose cache, but provided as a verbose key
 			$info['file'] = $this->modules->getModuleFile($moduleName);
-			if($info['file']) $info['core'] = strpos($info['file'], $this->modules->coreModulesDir) !== false; // is it core?
+			if($info['file']) $info['core'] = str_contains($info['file'], $this->modules->coreModulesDir); // is it core?
 		} else {
 			// module info may still contain verbose keys with undefined values	
 		}
@@ -1051,7 +1051,7 @@ class ModulesInfo extends ModulesClass {
 				$versionChanges[$moduleName] = "$fromVersion => $toVersion: $moduleName";
 				$editUrl = $this->modules->configs->getModuleEditUrl($moduleName, false) . '&upgrade=1';
 				$this->modulesLastVersions[$id] = $moduleVersions[$id];
-				if(strpos($moduleName, 'Fieldtype') === 0) {
+				if(str_starts_with($moduleName, 'Fieldtype')) {
 					// apply update now, to Fieldtype modules only (since they are loaded differently)
 					$this->modules->getModule($moduleName);
 				} else {
@@ -1241,10 +1241,10 @@ class ModulesInfo extends ModulesClass {
 
 		$namespace = null;
 
-		if(is_object($moduleName) || strpos($moduleName, "\\") !== false) {
-			$className = is_object($moduleName) ? get_class($moduleName) : $moduleName;
-			if(strpos($className, "ProcessWire\\") === 0) return "ProcessWire\\";
-			if(strpos($className, "\\") === false) return "\\";
+		if(is_object($moduleName) || str_contains($moduleName, "\\")) {
+			$className = is_object($moduleName) ? $moduleName::class : $moduleName;
+			if(str_starts_with($className, "ProcessWire\\")) return "ProcessWire\\";
+			if(!str_contains($className, "\\")) return "\\";
 			$parts = explode("\\", $className);
 			array_pop($parts);
 			$namespace = count($parts) ? implode("\\", $parts) : "";
@@ -1272,7 +1272,7 @@ class ModulesInfo extends ModulesClass {
 			$options['file'] = $this->modules->getModuleFile($moduleName);
 		}
 
-		if(strpos($options['file'], $this->modules->coreModulesDir) !== false) {
+		if(str_contains($options['file'], $this->modules->coreModulesDir)) {
 			// all core modules use \ProcessWire\ namespace
 			$namespace = strlen(__NAMESPACE__) ? __NAMESPACE__ . "\\" : "";
 			return $namespace;
@@ -1305,16 +1305,17 @@ class ModulesInfo extends ModulesClass {
 		return $this->moduleNamespaceCache[$namespace] ?? false;
 	}
 
-	public function __get($name) {
-		switch($name) {
-			case 'moduleInfoCache': return $this->moduleInfoCache;
-			case 'moduleInfoCacheVerbose': return $this->moduleInfoCacheVerbose;
-			case 'moduleInfoCacheUninstalled': return $this->moduleInfoCacheUninstalled;
-			case 'moduleInfoVerboseKeys': return $this->moduleInfoVerboseKeys;
-			case 'modulesLastVersions': return $this->modulesLastVersions;
-		}
-		return parent::__get($name);
-	}
+	public function __get($name)
+ {
+     return match ($name) {
+         'moduleInfoCache' => $this->moduleInfoCache,
+         'moduleInfoCacheVerbose' => $this->moduleInfoCacheVerbose,
+         'moduleInfoCacheUninstalled' => $this->moduleInfoCacheUninstalled,
+         'moduleInfoVerboseKeys' => $this->moduleInfoVerboseKeys,
+         'modulesLastVersions' => $this->modulesLastVersions,
+         default => parent::__get($name),
+     };
+ }
 	
 	public function getDebugData() {
 		return ['moduleInfoCache' => $this->moduleInfoCache, 'moduleInfoCacheVerbose' => $this->moduleInfoCacheVerbose, 'moduleInfoCacheUninstalled' => $this->moduleInfoCacheUninstalled, 'modulesLastVersions' => $this->modulesLastVersions, 'moduleNamespaceCache' => $this->moduleNamespaceCache];

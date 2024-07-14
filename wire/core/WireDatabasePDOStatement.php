@@ -115,18 +115,17 @@ class WireDatabasePDOStatement extends \PDOStatement {
 	}
 
 	/**
-	 * Bind a value for this statement
-	 * 
-	 * @param string|int $parameter
-	 * @param mixed $value
-	 * @param int $data_type
-	 * @return bool
-	 * 
-	 */
-	#[\ReturnTypeWillChange] 
-	public function bindValue($parameter, $value, $data_type = \PDO::PARAM_STR) {
+  * Bind a value for this statement
+  *
+  * @param string|int $parameter
+  * @param int $data_type
+  * @return bool
+  *
+  */
+ #[\ReturnTypeWillChange] 
+	public function bindValue($parameter, mixed $value, $data_type = \PDO::PARAM_STR) {
 		$result = parent::bindValue($parameter, $value, $data_type);
-		if($this->debugMode && strpos($parameter, ':') === 0) {
+		if($this->debugMode && str_starts_with($parameter, ':')) {
 			$this->setDebugParam($parameter, $value, $data_type);
 		} else {
 			// note we do not handle index/question-mark parameters for debugging

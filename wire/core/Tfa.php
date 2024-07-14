@@ -272,7 +272,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		$url = $this->startUrl;
 		if(empty($queryString)) return $url;
 		$queryString = ltrim($queryString, '?&');
-		$url .= (strpos($url, '?') === false ? '?' : '&');
+		$url .= (!str_contains($url, '?') ? '?' : '&');
 		$url .= $queryString;
 		return $url;
 	}
@@ -284,7 +284,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * 
 	 */
 	protected function redirect($url) {
-		if(strpos($url, '/') === false) $url = $this->url($url);
+		if(!str_contains($url, '/')) $url = $this->url($url);
 		$this->session->redirect();
 	}
 
@@ -840,22 +840,21 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @return mixed|null
 	 * 
 	 */
-	protected function sessionGet($key, $blankValue = null) {
+	protected function sessionGet($key, mixed $blankValue = null) {
 		$value = $this->wire()->session->getFor($this->keyName, $key);
 		if($value === null) $value = $blankValue;
 		return $value;
 	}
 
 	/**
-	 * Set a session variable only for this module
-	 * 
-	 * Optionally set several variables at once by specifying just $key as an associative array.
-	 * 
-	 * @param string|array $key
-	 * @param mixed $value
-	 * 
-	 */
-	protected function sessionSet($key, $value = null) {
+  * Set a session variable only for this module
+  *
+  * Optionally set several variables at once by specifying just $key as an associative array.
+  *
+  * @param string|array $key
+  *
+  */
+ protected function sessionSet($key, mixed $value = null) {
 		$session = $this->wire()->session;
 		$values = is_array($key) ? $key : [$key => $value];
 		foreach($values as $k => $v) {
@@ -1250,7 +1249,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		foreach($fieldset->getAll() as $f) {
 			/** @var Inputfield $f */
 			$name = $f->attr('name');
-			if(strpos($name, '_tfa_') === 0) [, $name] = explode('_tfa_', $name);
+			if(str_starts_with($name, '_tfa_')) [, $name] = explode('_tfa_', $name);
 			$f->attr('name', "_tfa_$name");
 		}
 		
@@ -1294,7 +1293,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		foreach($fieldset->getAll() as $f) {
 			/** @var Inputfield $f */
 			$name = $f->attr('name');
-			if(strpos($name, '_tfa_') === 0) [, $name] = explode('_tfa_', $name);
+			if(str_starts_with($name, '_tfa_')) [, $name] = explode('_tfa_', $name);
 			$settings[$name] = $f->val();
 		}
 
@@ -1409,7 +1408,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 			/** @var Inputfield $f */
 			$name = $f->attr('name');
 			if(isset($settings[$name])) $f->val($settings[$name]);
-			if(strpos($name, '_tfa_') !== 0) $f->attr('name', "_tfa_$name");
+			if(!str_starts_with($name, '_tfa_')) $f->attr('name', "_tfa_$name");
 		}
 	}
 

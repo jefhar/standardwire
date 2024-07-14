@@ -119,7 +119,7 @@ class WireClassLoader {
 	 * 
 	 */
 	public function addExtension($ext) {
-		if(strpos($ext, '.') !== 0) $ext = ".$ext";
+		if(!str_starts_with($ext, '.')) $ext = ".$ext";
 		if(!in_array($ext, $this->extensions)) $this->extensions[] = $ext;
 	}
 
@@ -265,7 +265,7 @@ class WireClassLoader {
 			$name = array_pop($parts);
 			$namespace = implode("\\", $parts);
 		} else {
-			if(strpos($className, "\\") !== false) {
+			if(str_contains($className, "\\")) {
 				$parts = explode("\\", $className);
 				$name = array_pop($parts);
 				$namespace = implode("\\", $parts);

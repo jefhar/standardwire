@@ -230,7 +230,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 */
 	public function __get($key) {
 		if($key === 'children') return $this->children();
-		if(strpos($key, 'Inputfield') === 0 && strlen($key) > 10) {
+		if(str_starts_with($key, 'Inputfield') && strlen($key) > 10) {
 			if($key === 'InputfieldWrapper') return $this->wire(new InputfieldWrapper()); 
 			$value = $this->wire()->modules->get($key);
 			if($value instanceof Inputfield) return $value;
@@ -295,7 +295,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 			$label = '';
 		} 
 		
-		if(strpos($typeName, 'Inputfield') !== 0) {
+		if(!str_starts_with($typeName, 'Inputfield')) {
 			$typeName = "Inputfield" . ucfirst($typeName);
 		}
 	
@@ -618,7 +618,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 		if(!isset($p[$c])) {
 			$p[$c] = [];
 			foreach(wireClassParents($inputfield) as $parentClass) {
-				if(strpos($parentClass, 'Inputfield') !== 0 || $parentClass === 'Inputfield') break;
+				if(!str_starts_with($parentClass, 'Inputfield') || $parentClass === 'Inputfield') break;
 				$p[$c][] = $parentClass;
 			}
 		}
@@ -712,7 +712,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 		
 		$lockedStates = [Inputfield::collapsedNoLocked, Inputfield::collapsedYesLocked, Inputfield::collapsedBlankLocked, Inputfield::collapsedTabLocked];
 		
-		if($useColumnWidth === true && isset($_classes['form']) && strpos($_classes['form'], 'InputfieldFormNoWidths') !== false) {
+		if($useColumnWidth === true && isset($_classes['form']) && str_contains($_classes['form'], 'InputfieldFormNoWidths')) {
 			$useColumnWidth = false;
 		}
 	
@@ -777,9 +777,9 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 					$text = '';
 				}
 				$_property = '{' . $property . '}';
-				if(strpos($markup['item_content'], $_property) !== false) {
+				if(str_contains($markup['item_content'], $_property)) {
 					$markup['item_content'] = str_replace($_property, $text, $markup['item_content']);
-				} else if(strpos($markup['item_label'], $_property) !== false) {
+				} else if(str_contains($markup['item_label'], $_property)) {
 					$markup['item_label'] = str_replace($_property, $text, $markup['item_label']);
 				} else if($text && ($property == 'notes' || $property == 'detail')) {
 					$ffOut .= $text;
@@ -862,7 +862,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 				$icon = $inputfield->getSetting('icon');
 				$icon = $icon ? str_replace('{name}', $sanitizer->name(str_replace(['icon-', 'fa-'], '', $icon)), $markup['item_icon']) : ''; 
 				$toggle = $collapsed == Inputfield::collapsedNever ? '' : $markup['item_toggle']; 
-				if($toggle && strpos($toggle, 'title=') === false) {
+				if($toggle && !str_contains($toggle, 'title=')) {
 					$toggle = str_replace("class=", "title='" . $this->_('Toggle open/close') . "' class=", $toggle);
 				}
 				if($skipLabel === Inputfield::skipLabelHeader || $quietMode) {
@@ -874,12 +874,12 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 				}
 				$headerClass = trim($inputfield->getSetting('headerClass') . " $classes[item_label]");
 				if($headerClass) {
-					if(strpos($label, '{class}') !== false) {
+					if(str_contains($label, '{class}')) {
 						$label = str_replace('{class}', ' ' . $headerClass, $label); 
 					} else {
 						$label = preg_replace('/( class=[\'"][^\'"]+)/', '$1 ' . $headerClass, $label, 1);
 					}
-				} else if(strpos($label, '{class}') !== false) {
+				} else if(str_contains($label, '{class}')) {
 					$label = str_replace('{class}', '', $label); 
 				}
 			} else if($skipLabel === Inputfield::skipLabelMarkup) {
@@ -941,12 +941,12 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 			$markupItemContent = $markup['item_content'];
 			$contentClass = trim($inputfield->getSetting('contentClass') . " $classes[item_content]");
 			if($contentClass) {
-				if(strpos($markupItemContent, '{class}') !== false) {
+				if(str_contains($markupItemContent, '{class}')) {
 					$markupItemContent = str_replace('{class}', ' ' . $contentClass, $markupItemContent); 
 				} else {
 					$markupItemContent = preg_replace('/( class=[\'"][^\'"]+)/', '$1 ' . $contentClass, $markupItemContent, 1);
 				}
-			} else if(strpos($markupItemContent, '{class}') !== false) {
+			} else if(str_contains($markupItemContent, '{class}')) {
 				$markupItemContent = str_replace('{class}', '', $markupItemContent); 
 			}
 			if($inputfield->className() != 'InputfieldWrapper') $ffOut = str_replace('{out}', $ffOut, $markupItemContent); 
@@ -963,7 +963,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 			$attrs = "class='$ulClass'"; // . ($this->attr('class') ? ' ' . $this->attr('class') : '') . "'";
 			if(!($this instanceof InputfieldForm)) {
 				foreach($this->getAttributes() as $attr => $value) {
-					if(strpos($attr, 'data-') === 0) $attrs .= " $attr='" . $this->entityEncode($value) . "'";
+					if(str_starts_with($attr, 'data-')) $attrs .= " $attr='" . $this->entityEncode($value) . "'";
 				}
 			}
 			$out = $this->attr('value') . str_replace(['{attrs}', '{out}'], [$attrs, $out], $markup['list']); 
@@ -1103,7 +1103,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 		$url = $input->url();
 		$queryString = $input->queryString();
 		
-		if(strpos($queryString, 'renderInputfieldAjax=') !== false) {
+		if(str_contains($queryString, 'renderInputfieldAjax=')) {
 			// in case nested ajax request 
 			$queryString = preg_replace('/&?renderInputfieldAjax=[^&]+/', '', $queryString);
 		}
@@ -1790,7 +1790,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 
 			$type = $info['type'];
 			unset($info['type']);
-			if(strpos($type, 'Inputfield') !== 0) $type = "Inputfield" . ucfirst($type);
+			if(!str_starts_with($type, 'Inputfield')) $type = "Inputfield" . ucfirst($type);
 			
 			/** @var Inputfield $f */
 			$f = $modules->get($type);

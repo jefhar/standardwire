@@ -314,7 +314,7 @@ class RememberTfa extends Wire {
 	 */
 	protected function cookieName($name) {
 		$prefix = $this->cookiePrefix();
-		if(strpos($name, $prefix) !== 0) $name = $prefix . $name;
+		if(!str_starts_with($name, $prefix)) $name = $prefix . $name;
 		return $name;
 	}
 
@@ -426,7 +426,7 @@ class RememberTfa extends Wire {
 	 * 
 	 */
 	protected function getFingerprintTypes($fpstr) {
-		if(strpos($fpstr, ':') === false) return false;
+		if(!str_contains($fpstr, ':')) return false;
 		[$types, ] = explode(':', $fpstr, 2);
 		$a = explode(',', $types);
 		$types = [];

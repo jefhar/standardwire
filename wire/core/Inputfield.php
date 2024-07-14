@@ -743,9 +743,9 @@ abstract class Inputfield extends WireData implements Module {
 
 		if(is_array($key)) {
 			$keys = $key;
-		} else if(strpos($key, '+') !== false) {
+		} else if(str_contains($key, '+')) {
 			$keys = explode('+', $key);
-		} else if(strpos($key, '|') !== false) {
+		} else if(str_contains($key, '|')) {
 			$keys = explode('|', $key);
 		} else {
 			$keys = [$key];
@@ -1080,7 +1080,7 @@ abstract class Inputfield extends WireData implements Module {
 	 */
 	public function addClass($class, $property = 'class') {
 
-		$force = strpos($property, '=') === 0; // force set, skip processing by addClassString
+		$force = str_starts_with($property, '='); // force set, skip processing by addClassString
 		if($force) $property = ltrim($property, '='); 
 
 		if(is_string($class) && !ctype_alnum($class) && !$force) { 
@@ -1172,7 +1172,7 @@ abstract class Inputfield extends WireData implements Module {
 					// setting new element type i.e. wrap:myclass or +foo:myclass
 					[$typeName, $className] = explode(':', $class, 2);
 					$typeName = trim($typeName);
-					if(in_array($typeName, $typeNames) || strpos($typeName, '+') === 0) {
+					if(in_array($typeName, $typeNames) || str_starts_with($typeName, '+')) {
 						// accepted as element/type for adding classes
 						$type = ltrim($typeName, '+');
 						$class = trim($className);
@@ -1180,7 +1180,7 @@ abstract class Inputfield extends WireData implements Module {
 						// literal class name with a colon in it such as "lg:bg-red-400'
 					}
 				}
-				if(strpos($class, '-') === 0) {
+				if(str_starts_with($class, '-')) {
 					$this->removeClass(ltrim($class, '-'), $type);
 				} else {
 					$this->addClass($class, "=$type"); // "=type" prevents further processing
@@ -1261,7 +1261,7 @@ abstract class Inputfield extends WireData implements Module {
 		$property = $this->getClassProperty($property);
 		$value = ($property === 'class' ? $this->attr('class') : $this->getSetting($property));
 		$value = trim("$value"); 
-		while(strpos($value, '  ') !== false) $value = str_replace('  ', ' ', $value);
+		while(str_contains($value, '  ')) $value = str_replace('  ', ' ', $value);
 		$classes = strlen($value) ? explode(' ', $value) : [];
 		if($assoc) {
 			$a = [];
@@ -1284,7 +1284,7 @@ abstract class Inputfield extends WireData implements Module {
 	protected function getClassProperty($property) {
 		if($property === 'class' || $property === 'input' || empty($property)) {
 			$property = 'class';
-		} else if(strpos($property, 'Class') === false) {
+		} else if(!str_contains($property, 'Class')) {
 			if(in_array($property, ['wrap', 'header', 'content'])) $property .= 'Class';
 		}
 		return $property;
@@ -1372,7 +1372,7 @@ abstract class Inputfield extends WireData implements Module {
 			unset($attributes['value']); 
 
 			// tell PHP to return an array by adding [] to the name attribute, i.e. "myfield[]"
-			if(isset($attributes['name']) && substr($attributes['name'], -1) != ']') $attributes['name'] .= '[]';
+			if(isset($attributes['name']) && !str_ends_with($attributes['name'], ']')) $attributes['name'] .= '[]';
 		}
 
 		foreach($attributes as $attr => $value) {
@@ -1386,7 +1386,7 @@ abstract class Inputfield extends WireData implements Module {
 				if($value === true) $str .= "$attr ";
 				continue;
 
-			} else if(!strlen("$value") && strpos($attr, 'data-') !== 0) {
+			} else if(!strlen("$value") && !str_starts_with($attr, 'data-')) {
 				// skip over empty non-data attributes that are not arrays
 				// if(!$value = $this->attr($attr))) continue; // was in 3.0.132 and earlier
 				continue;
@@ -2023,7 +2023,7 @@ abstract class Inputfield extends WireData implements Module {
 		$str = (string) $str; 
 
 		// if already encoded, then un-encode it
-		if(strpos($str, '&') !== false && preg_match('/&(#\d+|[a-zA-Z]+);/', $str)) {
+		if(str_contains($str, '&') && preg_match('/&(#\d+|[a-zA-Z]+);/', $str)) {
 			$str = $sanitizer->unentities($str);
 		}
 

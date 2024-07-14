@@ -96,7 +96,7 @@
  * 
  */
 
-abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
+abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \Stringable {
 
 	/*******************************************************************************************************
 	 * API VARIABLE/FUEL INJECTION AND ACCESS
@@ -173,19 +173,18 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	}
 
 	/**
-	 * Add fuel to all classes descending from Wire
-	 * 
-	 * #pw-internal
-	 *
-	 * @param string $name 
-	 * @param mixed $value 
-	 * @param bool $lock Whether the API value should be locked (non-overwritable)
-	 * @internal Fuel is an internal-only keyword.
-	 * 	Unless static needed, use $this->wire($name, $value) instead.
-	 * @deprecated Use $this->wire($name, $value, $lock) instead.
-	 *
-	 */
-	public static function setFuel($name, $value, $lock = false) {
+  * Add fuel to all classes descending from Wire
+  *
+  * #pw-internal
+  *
+  * @param string $name
+  * @param bool $lock Whether the API value should be locked (non-overwritable)
+  * @internal Fuel is an internal-only keyword.
+  * 	Unless static needed, use $this->wire($name, $value) instead.
+  * @deprecated Use $this->wire($name, $value, $lock) instead.
+  *
+  */
+ public static function setFuel($name, mixed $value, $lock = false) {
 		$wire = ProcessWire::getCurrentInstance();
 		$log = $wire->wire()->log;
 		if($log) $log->deprecatedCall();
@@ -308,8 +307,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 		}
 
 		if(isset($options['namespace']) && $options['namespace'] === true) {
-			$className = get_class($this);
-			if(strpos($className, '\\') === false) $className = "\\$className";
+			$className = static::class;
+			if(!str_contains($className, '\\')) $className = "\\$className";
 		} else {
 			$className = wireClassName($this, false);
 		}
@@ -340,7 +339,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @return string
 	 *
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->className();
 	}
 
@@ -408,22 +407,13 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 */
 	public function _callMethod($method, $arguments) {
 		$qty = $arguments ? count($arguments) : 0;
-		switch($qty) {
-			case 0:
-				$result = $this->$method();
-				break;
-			case 1:
-				$result = $this->$method($arguments[0]);
-				break;
-			case 2:
-				$result = $this->$method($arguments[0], $arguments[1]);
-				break;
-			case 3:
-				$result = $this->$method($arguments[0], $arguments[1], $arguments[2]);
-				break;
-			default:
-				$result = call_user_func_array([$this, $method], $arguments);
-		}
+		$result = match ($qty) {
+      0 => $this->$method(),
+      1 => $this->$method($arguments[0]),
+      2 => $this->$method($arguments[0], $arguments[1]),
+      3 => $this->$method($arguments[0], $arguments[1], $arguments[2]),
+      default => call_user_func_array([$this, $method], $arguments),
+  };
 		return $result;
 	}
 
@@ -1028,7 +1018,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 	 * @see Wire::trackChange()
 	 *
 	 */
-	public function ___changed($what, $old = null, $new = null) {
+	public function ___changed($what, mixed $old = null, mixed $new = null) {
 		// for hooks to listen to 
 	}
 
@@ -1378,7 +1368,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 		if($text !== null) {
 			if($text === true) $text = $msg;
 			$severe ? $this->error($text) : $this->warning($text);
-			if(strlen($msg) && strpos($text, $msg) === false) $msg = "$text - $msg";
+			if(strlen($msg) && !str_contains($text, $msg)) $msg = "$text - $msg";
 		}
 		if(in_array('exceptions', $config->logs) && $log) {
 			$msg .= " (in " . str_replace($config->paths->root, '/', $e->getFile()) . " line " . $e->getLine() . ")";
@@ -1783,7 +1773,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 				}
 				$value = $name; // return the provided instance
 			} else {
-				throw new WireException('Wire::wire($o) expected WireFuelable for $o and was given ' . get_class($name));
+				throw new WireException('Wire::wire($o) expected WireFuelable for $o and was given ' . $name::class);
 			}
 
 		} else if($value !== null) {

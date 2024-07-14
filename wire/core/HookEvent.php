@@ -81,7 +81,7 @@ class HookEvent extends WireData {
 	 * @return array|null|mixed 
 	 *
 	 */
-	public function arguments($n = null, $value = null) {
+	public function arguments($n = null, mixed $value = null) {
 		if($n === null) return $this->data['arguments'];
 		if($value !== null) {
 			$this->setArgument($n, $value); 
@@ -135,19 +135,18 @@ class HookEvent extends WireData {
 
 
 	/**
-	 * Sets an argument value, handles the implementation of setting for the above arguments() function
-	 *
-	 * Only useful with 'before' hooks, where the argument can be manipulated before being sent to the hooked function.
-	 * 
-	 * #pw-internal 
-	 *
-	 * @param int|string Argument name or key
-	 * @param mixed $value
-	 * @return $this
-	 * @throws WireException
-	 *
-	 */
-	public function setArgument($n, $value) {
+  * Sets an argument value, handles the implementation of setting for the above arguments() function
+  *
+  * Only useful with 'before' hooks, where the argument can be manipulated before being sent to the hooked function.
+  *
+  * #pw-internal
+  *
+  * @param int|string Argument name or key
+  * @return $this
+  * @throws WireException
+  *
+  */
+ public function setArgument($n, mixed $value) {
 
 		if(is_string($n) && !ctype_digit($n)) {
 			// convert argument name to position
@@ -171,7 +170,7 @@ class HookEvent extends WireData {
 
 		$o = $this->get('object'); 
 		$m = $this->get('method');
-		$key = get_class($o) . '.' . $m; 
+		$key = $o::class . '.' . $m; 
 
 		if(isset(self::$argumentNames[$key])) return self::$argumentNames[$key];
 
@@ -234,7 +233,7 @@ class HookEvent extends WireData {
 	 * Return a string representing the HookEvent
 	 *
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$s = $this->object->className() . '::' . $this->method . '(';
 		foreach($this->arguments as $a) $s .= is_string($a) ? '"' . $a . '", ' : "$a, ";
 		$s = rtrim($s, ", ") . ")";

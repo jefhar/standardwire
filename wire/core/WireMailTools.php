@@ -442,20 +442,20 @@ class WireMailTools extends Wire {
 		$tt = $this->wire()->sanitizer->getTextTools();
 		$email = trim($tt->strtolower($email));
 		
-		if(strpos($email, '@') === false) {
+		if(!str_contains($email, '@')) {
 			return $options['why'] ? "Invalid email address" : true;
 		}
 
 		foreach($blacklist as $line) {
 			$line = $tt->strtolower(trim($line));
 			if(!strlen($line)) continue;
-			if(strpos($line, '/') === 0) {
+			if(str_starts_with($line, '/')) {
 				// perform a regex match
 				if(preg_match($line, $email)) $inBlacklist = $line;
 			} else if(strpos($line, '@')) {
 				// full email (@ is present and is not first char)
 				if($email === $line) $inBlacklist = $line;
-			} else if(strpos($line, '.') === 0) {
+			} else if(str_starts_with($line, '.')) {
 				// any hostname at domain (.domain.com)
 				[, $emailDomain] = explode('@', $email);
 				if($emailDomain === ltrim($line, '.')) {

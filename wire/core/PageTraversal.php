@@ -127,7 +127,7 @@ class PageTraversal {
 		} else {
 			// selector is string
 			$selector = trim("parent_id=$page->id, $selector", ", ");
-			if(strpos($selector, 'sort=') === false) $selector .= ", sort=$sortfield";
+			if(!str_contains($selector, 'sort=')) $selector .= ", sort=$sortfield";
 		}
 		return $page->_pages('find', $selector, $options); 
 	}
@@ -152,7 +152,7 @@ class PageTraversal {
 			$selector[] = ["start", "0"];
 		} else {
 			$selector .= ($selector ? ', ' : '') . "limit=1";
-			if(strpos($selector, 'start=') === false) $selector .= ", start=0"; // prevent pagination
+			if(!str_contains($selector, 'start=')) $selector .= ", start=0"; // prevent pagination
 		}
 		$children = $this->children($page, $selector, $options); 
 		return count($children) ? $children->first() : $page->_pages()->newNullPage();
@@ -279,7 +279,7 @@ class PageTraversal {
 			$selector[] = ['sort', $sort];
 		} else {
 			$selector = "parent_id=$page->parent_id, $selector";
-			if(strpos($selector, 'sort=') === false) $selector .= ", sort=$sort";
+			if(!str_contains($selector, 'sort=')) $selector .= ", sort=$sort";
 			$selector = trim($selector, ", ");
 		}
 		$options = ['caller' => 'page.siblings']; 
@@ -294,7 +294,7 @@ class PageTraversal {
 	 * 
 	 */
 	protected function _getIncludeMode($selector) {
-		if(is_string($selector) && strpos($selector, 'include=') === false) return '';
+		if(is_string($selector) && !str_contains($selector, 'include=')) return '';
 		if(is_array($selector)) return $selector['include'] ?? '';
 		$selector = $selector instanceof Selectors ? $selector : new Selectors($selector);
 		$include = $selector->getSelectorByField('include');
@@ -338,7 +338,7 @@ class PageTraversal {
 			$stopPage = new WireData();
 			$stopPage->set('id', (int) $until);
 
-		} else if(strpos($until, '/') === 0) {
+		} else if(str_starts_with($until, '/')) {
 			// page path
 			$stopPage = $page->_pages('get', $until);
 
@@ -642,7 +642,7 @@ class PageTraversal {
 				$options['language'] = null;
 			} else if(!$options['language'] instanceof Page) {
 				$options['language'] = null;
-			} else if(strpos($options['language']->className(), 'Language') === false) {
+			} else if(!str_contains($options['language']->className(), 'Language')) {
 				$options['language'] = null;
 			}
 			if($options['language']) {
@@ -688,18 +688,18 @@ class PageTraversal {
 
 		if($options['scheme']) {
 			$scheme = strtolower($options['scheme']);
-			if(strpos($scheme, '://') === false) $scheme .= '://';
+			if(!str_contains($scheme, '://')) $scheme .= '://';
 			if($scheme === 'https://' && $config->noHTTPS) $scheme = 'http' . '://';
 			$host = $options['host'] ?: $config->httpHost;
 			$url = "$scheme$host$url";
 
 		} else if($options['http'] || $options['host']) {
 			$mode = $config->noHTTPS ? -1 : $template->https; 
-			switch($mode) {
-				case -1: $scheme = 'http'; break;
-				case 1: $scheme = 'https'; break;
-				default: $scheme = $config->https ? 'https' : 'http';
-			}
+			$scheme = match ($mode) {
+       -1 => 'http',
+       1 => 'https',
+       default => $config->https ? 'https' : 'http',
+   };
 			$host = $options['host'] ?: $config->httpHost;
 			$url = "$scheme://$host$url";
 		}
@@ -825,7 +825,7 @@ class PageTraversal {
 		$url .= $config->urls->admin . "page/edit/?id=$page->id";
 
 		if($options === true || (is_array($options) && !empty($options['http']))) {
-			if(strpos($url, '://') === false) {
+			if(!str_contains($url, '://')) {
 				$url = ($https || $config->https ? 'https' : 'http' ) . '://' . $config->httpHost . $url;
 			}
 		}
@@ -853,7 +853,7 @@ class PageTraversal {
 			} else if(is_array($options) && !empty($options['find'])) {
 				$find = $options['find'];
 			} else $find = '';
-			if($find && strpos($url, '#') === false) {
+			if($find && !str_contains($url, '#')) {
 				$url .= '#find-' . $page->wire()->sanitizer->fieldName($find);
 			}
 		}
@@ -899,11 +899,11 @@ class PageTraversal {
 
 		if($mode > 0 && $config->noHTTPS) $mode = 0;
 
-		switch($mode) {
-			case -1: $scheme = 'http'; break;
-			case 1: $scheme = 'https'; break;
-			default: $scheme = $config->https ? 'https' : 'http';
-		}
+		$scheme = match ($mode) {
+      -1 => 'http',
+      1 => 'https',
+      default => $config->https ? 'https' : 'http',
+  };
 
 		$url = "$scheme://$config->httpHost$url";
 

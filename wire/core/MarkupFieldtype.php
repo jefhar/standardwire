@@ -206,7 +206,7 @@ class MarkupFieldtype extends WireData implements Module {
 	 * @return string
 	 * 
 	 */
-	protected function renderValue($value) {
+	protected function renderValue(mixed $value) {
 		return $this->valueToString($value); 
 	}
 	
@@ -222,7 +222,7 @@ class MarkupFieldtype extends WireData implements Module {
 	 * @return string
 	 *
 	 */
-	protected function renderProperty($property, $value) {
+	protected function renderProperty($property, mixed $value) {
 		
 		if(empty($property)) return $this->valueToString($value);
 		
@@ -256,14 +256,13 @@ class MarkupFieldtype extends WireData implements Module {
 	}
 
 	/**
-	 * Convert any value to a string
-	 * 
-	 * @param mixed $value
-	 * @param bool $encode
-	 * @return string
-	 * 
-	 */	
-	protected function valueToString($value, $encode = true) {
+  * Convert any value to a string
+  *
+  * @param bool $encode
+  * @return string
+  *
+  */
+ protected function valueToString(mixed $value, $encode = true) {
 		if($value instanceof Pagefiles || $value instanceof Pagefile) {
 			return $this->objectToString($value);
 		} else if(WireArray::iterable($value)) {
@@ -382,7 +381,7 @@ class MarkupFieldtype extends WireData implements Module {
 	 * @return string
 	 * 
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->render();
 	}
 	

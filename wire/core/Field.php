@@ -312,18 +312,17 @@ class Field extends WireData implements Saveable, Exportable {
 	}
 
 	/**
-	 * Set raw setting or other value with no validation/processing
-	 * 
-	 * This is for use when a field is loading and needs no validation.
-	 * 
-	 * #pw-internal
-	 * 
-	 * @param string $key
-	 * @param mixed $value
-	 * @since 3.0.194
-	 * 
-	 */
-	public function setRawSetting($key, $value) {
+  * Set raw setting or other value with no validation/processing
+  *
+  * This is for use when a field is loading and needs no validation.
+  *
+  * #pw-internal
+  *
+  * @param string $key
+  * @since 3.0.194
+  *
+  */
+ public function setRawSetting($key, mixed $value) {
 		if($key === 'data') {
 			if(!empty($value)) parent::set($key, $value);
 		} else {
@@ -488,7 +487,7 @@ class Field extends WireData implements Saveable, Exportable {
 		$a['data'] = $this->data;
 		foreach($a['data'] as $key => $value) {
 			// remove runtime data (properties beginning with underscore)
-			if(strpos($key, '_') === 0) unset($a['data'][$key]);
+			if(str_starts_with($key, '_')) unset($a['data'][$key]);
 		}
 		if($this->settings['flags'] & self::flagAccess) {
 			$a['data']['editRoles'] = $this->editRoles;
@@ -537,7 +536,7 @@ class Field extends WireData implements Saveable, Exportable {
 
 		foreach($data as $key => $value) {
 			// exclude properties beginning with underscore as they are assumed to be for runtime use only
-			if(strpos($key, '_') === 0) unset($data[$key]);
+			if(str_starts_with($key, '_')) unset($data[$key]);
 		}
 
 		// convert access roles from IDs to names
@@ -652,7 +651,7 @@ class Field extends WireData implements Saveable, Exportable {
 			if(($f = $fields->get($name)) && $f->id != $this->id) {
 				throw new WireException("Field may not be named '$name' because it is already used by another field ($f->id: $f->name)");
 			}
-			if(strpos($name, '__') !== false) {
+			if(str_contains($name, '__')) {
 				throw new WireException("Field name '$name' may not have double underscores because this usage is reserved by the core");
 			}
 		}
@@ -1251,8 +1250,8 @@ class Field extends WireData implements Saveable, Exportable {
 	 * The string value of a Field is always it's name
 	 *
 	 */
-	public function __toString() {
-		return $this->settings['name']; 
+	public function __toString(): string {
+		return (string) $this->settings['name']; 
 	}
 
 	/**
@@ -1366,8 +1365,8 @@ class Field extends WireData implements Saveable, Exportable {
 	public function getIcon($prefix = false) {
 		$icon = parent::get('icon'); 
 		if(empty($icon)) return '';
-		if(strpos($icon, 'fa-') === 0) $icon = str_replace('fa-', '', $icon);
-		if(strpos($icon, 'icon-') === 0) $icon = str_replace('icon-', '', $icon); 
+		if(str_starts_with($icon, 'fa-')) $icon = str_replace('fa-', '', $icon);
+		if(str_starts_with($icon, 'icon-')) $icon = str_replace('icon-', '', $icon); 
 		return $prefix ? "fa-$icon" : $icon;
 	}
 	
@@ -1425,8 +1424,8 @@ class Field extends WireData implements Saveable, Exportable {
 	public function setIcon($icon) {
 		// store the non-prefixed version
 		if(strlen("$icon")) {
-			if(strpos($icon, 'icon-') === 0) $icon = str_replace('icon-', '', $icon);
-			if(strpos($icon, 'fa-') === 0) $icon = str_replace('fa-', '', $icon);
+			if(str_starts_with($icon, 'icon-')) $icon = str_replace('icon-', '', $icon);
+			if(str_starts_with($icon, 'fa-')) $icon = str_replace('fa-', '', $icon);
 			$icon = $this->wire()->sanitizer->pageName($icon);
 		}
 		parent::set('icon', "$icon"); 

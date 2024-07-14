@@ -261,19 +261,18 @@ class TemplateFile extends WireData {
 	}
 
 	/**
-	 * Sets a variable to be globally accessable to all other TemplateFile instances (deprecated)
-	 *
-	 * Note, to set a variable for just this instance, use the set() as inherted from WireData. 
-	 * 
-	 * #pw-internal
-	 *
-	 * @param string $name
-	 * @param mixed $value
-	 * @param bool $overwrite Should the value be overwritten if it already exists? (default true)
-	 * @deprecated
-	 *
-	 */
-	public function setGlobal($name, $value, $overwrite = true) {
+  * Sets a variable to be globally accessable to all other TemplateFile instances (deprecated)
+  *
+  * Note, to set a variable for just this instance, use the set() as inherted from WireData.
+  *
+  * #pw-internal
+  *
+  * @param string $name
+  * @param bool $overwrite Should the value be overwritten if it already exists? (default true)
+  * @deprecated
+  *
+  */
+ public function setGlobal($name, mixed $value, $overwrite = true) {
 		// set template variable that will apply across all instances of Template
 		if(!$overwrite && isset(self::$globals[$name])) return; 
 		self::$globals[$name] = $value; 
@@ -593,7 +592,7 @@ class TemplateFile extends WireData {
 	 * @return string
 	 *	
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		if(!$this->filename) return $this->className();
 		return $this->filename; 
 	}

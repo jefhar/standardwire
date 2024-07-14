@@ -151,7 +151,7 @@ class WireDataDB extends WireData implements \Countable {
 			$query->execute();
 			$result = $query->rowCount();
 			$query->closeCursor();
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			$result = 0;
 		}
 		return $result;
@@ -176,7 +176,7 @@ class WireDataDB extends WireData implements \Countable {
 		if($name !== true) $query->bindValue(':name', $name);
 		try {
 			$query->execute();
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			return $name === true ? [] : null;
 		}
 		if($query->rowCount()) {
@@ -197,16 +197,15 @@ class WireDataDB extends WireData implements \Countable {
 	}
 
 	/**
-	 * Save a value 
-	 * 
-	 * @param string $name
-	 * @param mixed $value
-	 * @param bool $recursive
-	 * @return bool
-	 * @throws WireException
-	 * 
-	 */
-	protected function save($name, $value, $recursive = false) {
+  * Save a value
+  *
+  * @param string $name
+  * @param bool $recursive
+  * @return bool
+  * @throws WireException
+  *
+  */
+ protected function save($name, mixed $value, $recursive = false) {
 		if(is_object($value)) return false; // we do not currently save objects
 		$data = json_encode($value);
 		$table = $this->table();
@@ -262,7 +261,7 @@ class WireDataDB extends WireData implements \Countable {
 		try {
 			$query->execute();
 			$count = (int) $query->fetchColumn();
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			$count = 0;
 		}
 		return $count; 

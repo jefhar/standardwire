@@ -38,7 +38,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 			$n = 0;
 			foreach($options['names'] as $name) {
 				$n++;
-				if(strpos($name, '*') !== false) {
+				if(str_contains($name, '*')) {
 					$name = str_replace('*', '%', $name);
 					$whereNames[] = "name LIKE :name$n";
 				} else {
@@ -220,7 +220,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 				) ENGINE=$dbEngine DEFAULT CHARSET=$dbCharset;
 			");
 			$this->message("Re-created 'caches' table");
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			$this->error("Unable to create 'caches' table");
 		}
 	}

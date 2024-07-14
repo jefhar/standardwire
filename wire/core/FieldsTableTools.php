@@ -124,7 +124,7 @@ class FieldsTableTools extends Wire {
 					try {
 						$result = $database->exec($sql) !== false;
 						if($result) $action = 'remove';
-					} catch(\Exception $e) {
+					} catch(\Exception) {
 						$result = false;
 					}
 				} else {
@@ -295,7 +295,7 @@ class FieldsTableTools extends Wire {
 		if($strict && count($schema) > 1) return false; // if there are other columns too, fail
 
 		$type = strtoupper($schema[$col]);
-		$allowNull = strpos($type, 'NOT NULL') === false;
+		$allowNull = !str_contains($type, 'NOT NULL');
 		
 		if(strpos($type, ' ')) [$type, ] = explode(' ', $type, 2);
 		if(strpos($type, '(')) [$type, ] = explode('(', $type, 2);
@@ -307,7 +307,7 @@ class FieldsTableTools extends Wire {
 			if(empty($col)) return false;
 		}
 
-		if(strpos($type, 'INT') !== false) {
+		if(str_contains($type, 'INT')) {
 			if($fieldtype->isEmptyValue($field, 0)) {
 				$wheres[] = "$col=0";
 			}

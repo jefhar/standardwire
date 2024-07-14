@@ -330,16 +330,16 @@ class WireDateTime extends Wire {
 		if(!strlen("$format") || $format === 'U' || $format === '%s') return (int) $value; // unix timestamp
 		$relativeStr = '';
 
-		if(strpos($format, '!') !== false) {
+		if(str_contains($format, '!')) {
 			if(preg_match('/([!][relativ]+-?)/', $format, $matches)) {
 				$relativeStr = $this->date(ltrim($matches[1], '!'), $value);
 				$format = str_replace($matches[1], '///', $format);
 			}
 		}
 
-		if(strpos($format, '%') !== false) {
+		if(str_contains($format, '%')) {
 			// use strftime() if format string contains a %
-			if(strpos($format, '%-') !== false) {
+			if(str_contains($format, '%-')) {
 				// not all systems support the '%-' option in strftime to trim leading zeros
 				// so we are doing our own implementation here
 				$TRIM0 = true;
@@ -480,7 +480,7 @@ class WireDateTime extends Wire {
 			$value = $this->relativeTimeStr($ts, 1, false);
 		} else if($format == 'ts') {
 			$value = $ts;
-		} else if(strpos($format, '%') !== false && version_compare(PHP_VERSION, '8.1.0', '<')) {
+		} else if(str_contains($format, '%') && version_compare(PHP_VERSION, '8.1.0', '<')) {
 			$value = $this->strftime($format, $ts);
 		} else {
 			$value = date($format, $ts);
@@ -512,7 +512,7 @@ class WireDateTime extends Wire {
 		$options = is_array($options) ? array_merge($defaults, $options) : $defaults;
 		$str = trim($str);
 		if(empty($str)) return $options['emptyReturnValue'];
-		if(strpos($str, '00') === 0) {
+		if(str_starts_with($str, '00')) {
 			$test = trim(preg_replace('/[^\d]/', '', $str), '0');
 			if(!strlen($test)) return $options['emptyReturnValue'];
 		}
@@ -614,7 +614,7 @@ class WireDateTime extends Wire {
 		foreach(self::$dateConversion as $dateFormat => $formats) {
 			$strftimeFormat = $formats[0];
 			if(empty($strftimeFormat)) continue;
-			if(strpos($format, (string) $strftimeFormat) !== false) $replacements[$strftimeFormat] = $dateFormat;
+			if(str_contains($format, (string) $strftimeFormat)) $replacements[$strftimeFormat] = $dateFormat;
 		}
 		
 		return strtr($format, $replacements);
@@ -728,7 +728,7 @@ class WireDateTime extends Wire {
 		
 		if($abbreviate === 1) {
 			$out = str_replace(" ", "", $out); // no space when extra-abbreviate is active
-		} else if(strpos($out, '  ') !== false) {
+		} else if(str_contains($out, '  ')) {
 			$out = preg_replace('/\s\s+/', ' ', $out);
 		}
 		
@@ -990,7 +990,7 @@ class WireDateTime extends Wire {
 		
 		foreach($ltrKeys as $ltr => $key) {
 			$a = self::$dateConversion[$ltr];
-			if(strpos($f, $ltr) !== false || strpos($f, (string) $a[0]) !== false || strpos($f, (string) $a[1]) !== false) {
+			if(str_contains($f, $ltr) || str_contains($f, (string) $a[0]) || str_contains($f, (string) $a[1])) {
 				$keys[] = $key;
 			}
 		}

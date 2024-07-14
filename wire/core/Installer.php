@@ -153,7 +153,7 @@ class Installer {
 			if($dir->isDot() || !$dir->isDir()) continue; 
 			$name = $dir->getBasename();
 			$path = rtrim($dir->getPathname(), '/') . '/';
-			if(strpos($name, 'site-') !== 0) continue;
+			if(!str_starts_with($name, 'site-')) continue;
 			$passed = true;
 			foreach($dirTests as $test) if(!is_dir($path . $test)) $passed = false;
 			foreach($fileTests as $test) if(!file_exists($path . $test)) $passed = false; 
@@ -194,7 +194,7 @@ class Installer {
 				else $out .= "<p class='detail'>No summary.</p>";
 			if(!empty($profile['screenshot'])) {
 				$file = $profile['screenshot'];
-				if(strpos($file, '/') === false) $file = "$name/install/$file";
+				if(!str_contains($file, '/')) $file = "$name/install/$file";
 				$out .= "<p><img src='$file' alt='$name screenshot' style='max-width: 100%;' /></p>";
 			} else {
 				$out .= "<p class='detail'>No screenshot.</p>";
@@ -445,7 +445,7 @@ class Installer {
 		if($values['dbEngine'] != 'InnoDB') $values['dbEngine'] = 'MyISAM';
 
 		foreach($values as $key => $value) {
-			if(strpos($key, 'chmod') === 0) {
+			if(str_starts_with($key, 'chmod')) {
 				$values[$key] = (int) $value;
 			} else if($key != 'httpHosts') {
 				$values[$key] = htmlspecialchars($value, ENT_QUOTES, 'utf-8'); 
@@ -491,7 +491,7 @@ class Installer {
 		$defaults['timezone'] = $timezone; 
 		$defaults['httpHosts'] = strtolower(filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_URL));
 
-		if(strpos($defaults['httpHosts'], 'www.') === 0) {
+		if(str_starts_with($defaults['httpHosts'], 'www.')) {
 			$defaults['httpHosts'] .= "\n" . substr($defaults['httpHosts'], 4); 
 		} else if(substr_count($defaults['httpHosts'], '.') == 1) {
 			$defaults['httpHosts'] .= "\n" . "www.$defaults[httpHosts]";
@@ -633,7 +633,7 @@ class Installer {
 		foreach($fields as $field) {
 			$value = $this->post($field, 'string');
 			$value = substr($value, 0, 255); 
-			if(strpos($value, "'") !== false) $value = str_replace("'", "\\" . "'", $value); // allow for single quotes (i.e. dbPass)
+			if(str_contains($value, "'")) $value = str_replace("'", "\\" . "'", $value); // allow for single quotes (i.e. dbPass)
 			$values[$field] = trim($value); 
 		}
 	
@@ -918,7 +918,7 @@ class Installer {
 		try {
 			$query = $database->prepare("SHOW COLUMNS FROM pages"); 
 			$result = $query->execute();
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			$result = false;
 			$query = null;
 		}
@@ -1433,7 +1433,7 @@ class Installer {
 	 * 
 	 */
 	public function icon($name, $fw = true) {
-		if(strpos($name, 'icon-') === 0 || strpos($name, 'fa-') === 0) {
+		if(str_starts_with($name, 'icon-') || str_starts_with($name, 'fa-')) {
 			[, $name] = explode('-', $name, 2);
 		}
 		$class = 'fa' . ($fw ? ' fa-fw' : '');
@@ -1450,7 +1450,7 @@ class Installer {
 	 */
 	protected function iconize($label, $icon = '') {
 		if(empty($icon)) {
-			if(strpos($label, 'fa-') === 0 || strpos($label, 'icon-') === 0) {
+			if(str_starts_with($label, 'fa-') || str_starts_with($label, 'icon-')) {
 				[$icon, $label] = explode(' ', $label, 2);
 			}
 		}
@@ -1724,7 +1724,7 @@ class Installer {
 				$value = trim((string) $value);
 				if(strlen($value)) {
 					$value = preg_replace('/[^-._a-z0-9]/', '-', $value);
-					while(strpos($value, '--') !== false) $value = str_replace('--', '-', $value);
+					while(str_contains($value, '--')) $value = str_replace('--', '-', $value);
 					$value = trim($value, '-');
 				}
 				break;
@@ -1732,7 +1732,7 @@ class Installer {
 				$value = trim((string) $value);
 				if(strlen($value)) {
 					$value = preg_replace('/[^_a-zA-Z0-9]/', '_', $value);
-					while(strpos($value, '__') !== false) $value = str_replace('__', '_', $value);
+					while(str_contains($value, '__')) $value = str_replace('__', '_', $value);
 					$value = trim($value, '_');
 				}
 				break;
@@ -1829,8 +1829,8 @@ class Installer {
 
 		if(self::TEST_MODE) return true;
 
-		if(substr($src, -1) != '/') $src .= '/';
-		if(substr($dst, -1) != '/') $dst .= '/';
+		if(!str_ends_with($src, '/')) $src .= '/';
+		if(!str_ends_with($dst, '/')) $dst .= '/';
 
 		$dir = opendir($src);
 		$this->mkdir($dst, false);
@@ -1885,7 +1885,7 @@ class Installer {
 		if($unit === $getInUnit) return $value; // already in correct unit
 		if(isset($units[$unit])) $value = $value * $units[$unit]; // convert value to bytes
 		if(isset($units[$getInUnit])) $value = round($value / $units[$getInUnit]);
-		if(strpos("$value", '.') !== false) $value = round($value, 1);
+		if(str_contains("$value", '.')) $value = round($value, 1);
 		return $value;
 	}
 

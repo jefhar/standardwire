@@ -108,7 +108,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return bool True if item is valid and may be added, false if not
 	 *
 	 */
-	public function isValidItem($item) {
+	public function isValidItem(mixed $item) {
 		if($item instanceof Wire) return true;
 		$className = $this->className();
 		if($className === 'WireArray' || $className === 'PaginatedArray') return true;
@@ -208,7 +208,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 *
 	 */
 	public function makeNew() {
-		$class = get_class($this); 
+		$class = static::class; 
 		$newArray = $this->wire(new $class()); 
 		return $newArray; 
 	}
@@ -282,7 +282,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 				foreach($item as $i) $this->prepend($i); 
 				return $this; 
 			} else {
-				throw new WireException("Item added to " . get_class($this) . " is not an allowed type"); 
+				throw new WireException("Item added to " . static::class . " is not an allowed type"); 
 			}
 		}
 
@@ -454,10 +454,10 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	public function set($key, $value) {
 
 		if(!$this->isValidItem($value)) {
-			throw new WireException("Item '$key' set to " . get_class($this) . " is not an allowed type");
+			throw new WireException("Item '$key' set to " . static::class . " is not an allowed type");
 		}
 		if(!$this->isValidKey($key)) {
-			throw new WireException("Key '$key' is not an allowed key for " . get_class($this));
+			throw new WireException("Key '$key' is not an allowed key for " . static::class);
 		}
 
 		$this->trackChange($key, $this->data[$key] ?? null, $value); 
@@ -584,18 +584,18 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 					return $item;
 				}
 
-				if(strpos($key, '{') !== false && strpos($key, '}')) {
+				if(str_contains($key, '{') && strpos($key, '}')) {
 					// populate a formatted string with {tag} vars
 					return wirePopulateStringTags($key, $this);
 				}
 
 				// check if key is requesting a property array: i.e. "name[]"
-				if(strpos($key, '[]') !== false && substr($key, -2) == '[]') {
+				if(str_contains($key, '[]') && str_ends_with($key, '[]')) {
 					return $this->explode(substr($key, 0, -2));
 				}
 
 				// check if key is asking for first match in "a|b|c"
-				if(strpos($key, '|') !== false) {
+				if(str_contains($key, '|')) {
 					$numericKeys = $this->usesNumericKeys();
 					foreach(explode('|', $key) as $k) {
 						if(isset($this->data[$k])) {
@@ -981,7 +981,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 				foreach(array_reverse($item->getArray()) as $i) $this->prepend($i); 
 				return $this; 
 			} else {
-				throw new WireException("Item prepend to " . get_class($this) . " is not an allowed type"); 
+				throw new WireException("Item prepend to " . static::class . " is not an allowed type"); 
 			}
 		}
 
@@ -1394,7 +1394,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 		}
 	
 		$pos = strpos($property, '-');
-		if($pos !== false && ($pos === 0 || substr($property, -1) == '-')) {
+		if($pos !== false && ($pos === 0 || str_ends_with($property, '-'))) {
 			$reverse = true;
 			$property = trim($property, '-');
 		}
@@ -1524,7 +1524,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 *
 	 */
 	protected function getItemPropertyValue(Wire $item, $property) {
-		if(strpos($property, '.') !== false) return WireData::_getDot($property, $item); 
+		if(str_contains($property, '.')) return WireData::_getDot($property, $item); 
 		return $item->$property; 
 	}
 
@@ -1580,11 +1580,11 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 
 			} else if(($field === 'index' || $field == 'eq') && !$fields->get($field)) {
 				// eq or index properties
-				switch($selector->value) {
-					case 'first': $eq = 0; break;
-					case 'last': $eq = -1; break;
-					default: $eq = (int) $selector->value;
-				}
+				$eq = match ($selector->value) {
+        'first' => 0,
+        'last' => -1,
+        default => (int) $selector->value,
+    };
 
 			} else {
 				// everything else is to be saved for filtering
@@ -1797,7 +1797,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return bool True if item is an iterable array or WireArray (or subclass of WireArray).
 	 *
 	 */
-	public static function iterable($item) {
+	public static function iterable(mixed $item) {
 		if(is_array($item)) return true;
 		if($item instanceof WireArray) return true;
 		return false;
@@ -1929,7 +1929,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return string
 	 * 
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$s = '';
 		foreach($this as $value) {
 			if(is_array($value)) $value = "array(" . count($value) . ")";
@@ -2386,7 +2386,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 				// if keys are not numeric, we delegete numbers to eq(n)
 				return $this->eq((int) $key);
 			}
-		} else if(is_callable($key) || (is_string($key) && strpos($key, '{') !== false && strpos($key, '}'))) {
+		} else if(is_callable($key) || (is_string($key) && str_contains($key, '{') && strpos($key, '}'))) {
 			return $this->each($key);
 		}
 		return $this->get($key);
@@ -2521,7 +2521,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 					// function returned a string, so we assume they are wanting us to return the result
 					if(is_null($result)) $result = '';
 					// if returned value resulted in {tags}, go ahead and parse them
-					if(strpos($val, '{') !== false && strpos($val, '}')) {
+					if(str_contains($val, '{') && strpos($val, '}')) {
 						if(is_object($item)) {
 							$val = wirePopulateStringTags($val, $item);
 						} else {
@@ -2531,7 +2531,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 					$result .= $val;
 				}
 			}
-		} else if(is_string($func) && strpos($func, '{') !== false && strpos($func, '}')) {
+		} else if(is_string($func) && str_contains($func, '{') && strpos($func, '}')) {
 			// string with variables
 			$result = '';
 			foreach($this as $key => $item) {
@@ -2629,15 +2629,14 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	}
 
 	/**
-	 * Return debug info for one item from this WireArray
-	 * 
-	 * #pw-internal
-	 * 
-	 * @param mixed $item
-	 * @return mixed|null|string
-	 * 
-	 */
-	public function debugInfoItem($item) {
+  * Return debug info for one item from this WireArray
+  *
+  * #pw-internal
+  *
+  * @return mixed|null|string
+  *
+  */
+ public function debugInfoItem(mixed $item) {
 		if(is_object($item)) {
 			if($item instanceof Page) {
 				$item = $item->debugInfoSmall();

@@ -128,7 +128,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		if(!$options['allowSelf'] && $variationName == $this->pageimage->basename) return false;
 
 		// if file doesn't start with the original name then it's not a variation
-		if(strpos($variationName, $originalName) !== 0) return false;
+		if(!str_starts_with($variationName, $originalName)) return false;
 
 		// get down to the meat and the base
 		// meat is the part of the filename containing variation info like dimensions, crop, suffix, etc.
@@ -254,7 +254,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		if(empty($info['crop'])) {
 			// attempt to extract crop info from suffix
 			foreach($info['suffix'] as /* $key => */ $suffix) {
-				if(strpos($suffix, 'cropx') === 0) {
+				if(str_starts_with($suffix, 'cropx')) {
 					$info['crop'] = ltrim($suffix, 'crop'); // i.e. x123y456
 				}
 			}
@@ -340,7 +340,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		// if suffix or noSuffix option contains space, convert it to suffixes or noSuffixes array option
 		foreach(['suffix', 'noSuffix'] as $key) {
 			if(!isset($options[$key])) continue;
-			if(strpos(trim($options[$key]), ' ') === false) continue;
+			if(!str_contains(trim($options[$key]), ' ')) continue;
 			$keyPlural = $key . 'es';
 			$value = $options[$keyPlural] ?? [];
 			$options[$keyPlural] = array_merge($value, explode(' ', trim($options[$key])));
@@ -487,11 +487,11 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 						$o['hidpi'] = true;
 					} else if($s == 'is') {
 						// this is a known core suffix that we allow
-					} else if(strpos($s, 'cropx') === 0) {
+					} else if(str_starts_with($s, 'cropx')) {
 						// skip cropx suffix (already known from $info[crop])
 						unset($info['suffix'][$k]);
 						// continue;
-					} else if(strpos($s, 'pid') === 0 && preg_match('/^pid\d+$/', $s)) {
+					} else if(str_starts_with($s, 'pid') && preg_match('/^pid\d+$/', $s)) {
 						// allow pid123 to pass through 
 					} else if(in_array($s, $suffix)) {
 						// suffix is one provided in $suffix argument

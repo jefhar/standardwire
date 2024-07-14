@@ -231,7 +231,7 @@ class ModulesConfigs extends ModulesClass {
 				if($info['configurable'] === true) return $info['configurable'];
 				if($info['configurable'] === 1 || $info['configurable'] === "1") return true;
 				if(is_int($info['configurable']) || ctype_digit("$info[configurable]")) return (int) $info['configurable'];
-				if(strpos($info['configurable'], (string) $className) === 0) {
+				if(str_starts_with($info['configurable'], (string) $className)) {
 					if(empty($info['file'])) {
 						$info['file'] = $this->modules->files->getModuleFile($className);
 					}
@@ -342,10 +342,10 @@ class ModulesConfigs extends ModulesClass {
 				$parameters = $ref->getParameters();
 				if(count($parameters)) {
 					$param0 = reset($parameters);
-					if(strpos($param0, 'array') !== false || strpos($param0, '$data') !== false) {
+					if(str_contains($param0, 'array') || str_contains($param0, '$data')) {
 						// method requires a $data array (for compatibility with non-static version)
 						$result = 3;
-					} else if(strpos($param0, 'InputfieldWrapper') !== false || strpos($param0, 'inputfields') !== false) {
+					} else if(str_contains($param0, 'InputfieldWrapper') || str_contains($param0, 'inputfields')) {
 						// method requires an empty InputfieldWrapper (as a convenience)
 						$result = 4;
 					}
@@ -416,7 +416,7 @@ class ModulesConfigs extends ModulesClass {
 		$nsClassName = $module->className(true);
 		$moduleName = $module->className(false);
 
-		if(is_string($configurable) && is_file($configurable) && strpos(basename($configurable), $moduleName) === 0) {
+		if(is_string($configurable) && is_file($configurable) && str_starts_with(basename($configurable), $moduleName)) {
 			// get defaults from ModuleConfig class if available
 			$className = $nsClassName . 'Config';
 			$config = null; // may be overridden by included file

@@ -506,7 +506,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * 	config options before typecasting it to a string. 
 	 *
 	 */
-	public function ___markupValue(Page $page, Field $field, $value = null, $property = '') {
+	public function ___markupValue(Page $page, Field $field, mixed $value = null, $property = '') {
 		/** @var MarkupFieldtype $m */
 		$m = $this->wire(new MarkupFieldtype($page, $field, $value)); 	
 		if(strlen($property)) return $m->render($property); 
@@ -530,50 +530,48 @@ abstract class Fieldtype extends WireData implements Module {
 	}
 
 	/**
-	 * Is given value one that should cause the DB row(s) to be deleted rather than saved?
-	 * 
-	 * Not applicable to Fieldtypes that override the savePageField() method with their own
-	 * implementation, unless they also use this method. 
-	 * 
-	 * @param Page $page
-	 * @param Field $field
-	 * @param mixed $value
-	 * @return bool
-	 * @since 3.0.150
-	 * 
-	 */
-	public function isDeleteValue(Page $page, Field $field, $value) {
+  * Is given value one that should cause the DB row(s) to be deleted rather than saved?
+  *
+  * Not applicable to Fieldtypes that override the savePageField() method with their own
+  * implementation, unless they also use this method.
+  *
+  * @param Page $page
+  * @param Field $field
+  * @return bool
+  * @since 3.0.150
+  *
+  */
+ public function isDeleteValue(Page $page, Field $field, mixed $value) {
 		return $value === $this->getBlankValue($page, $field); 
 	}
 
 	/**
-	 * Return whether the given value is considered empty or not.
-	 * 
-	 * This can be anything that might be present in a selector value and thus is
-	 * typically a string. However, it may be used outside of that purpose so you
-	 * shouldn't count on it being a string. 
-	 * 
-	 * Example: an integer or text Fieldtype might not consider a "0" to be empty,
-	 * whereas a Page reference would. 
-	 * 
-	 * This method is primarily used by the PageFinder::whereEmptyValuePossible()
-	 * method to determine whether to include non-present (null) rows. 
-	 * 
-	 * 3.0.164+: If given a Selector object for $value, PageFinder is proposing 
-	 * handling the empty-value match condition internally rather than calling
-	 * the Fieldtype’s getMatchQuery() method. Return true if this Fieldtype would
-	 * prefer to handle the match, or false if not. Fieldtype modules do not need
-	 * to consider this unless they want to override the default empty value match
-	 * behavior in PageFinder::whereEmptyValuePossible().
-	 * 
-	 * #pw-group-finding
-	 * 
-	 * @param Field $field
-	 * @param mixed $value
-	 * @return bool
-	 * 
-	 */
-	public function isEmptyValue(Field $field, $value) {
+  * Return whether the given value is considered empty or not.
+  *
+  * This can be anything that might be present in a selector value and thus is
+  * typically a string. However, it may be used outside of that purpose so you
+  * shouldn't count on it being a string.
+  *
+  * Example: an integer or text Fieldtype might not consider a "0" to be empty,
+  * whereas a Page reference would.
+  *
+  * This method is primarily used by the PageFinder::whereEmptyValuePossible()
+  * method to determine whether to include non-present (null) rows.
+  *
+  * 3.0.164+: If given a Selector object for $value, PageFinder is proposing
+  * handling the empty-value match condition internally rather than calling
+  * the Fieldtype’s getMatchQuery() method. Return true if this Fieldtype would
+  * prefer to handle the match, or false if not. Fieldtype modules do not need
+  * to consider this unless they want to override the default empty value match
+  * behavior in PageFinder::whereEmptyValuePossible().
+  *
+  * #pw-group-finding
+  *
+  * @param Field $field
+  * @return bool
+  *
+  */
+ public function isEmptyValue(Field $field, mixed $value) {
 		return empty($value); 
 	}
 
@@ -752,7 +750,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * @throws WireException
 	 *
 	 */
-	public function getMatchQuery($query, $table, $subfield, $operator, $value) {
+	public function getMatchQuery($query, $table, $subfield, $operator, mixed $value) {
 
 		$database = $this->wire()->database;
 
@@ -998,7 +996,7 @@ abstract class Fieldtype extends WireData implements Module {
 			if(isset($schema['xtra']['append'])) {
 				$append = str_replace([' =', '= '], '=', strtoupper($schema['xtra']['append']));
 				foreach(explode(' ', $append) as $x) {
-					if(strpos($x, '=') === false) continue;
+					if(!str_contains($x, '=')) continue;
 					[$a, $b] = explode('=', $x);
 					if($a == 'ENGINE') $info['engine'] = $b;
 					if($a == 'CHARSET') $info['charset'] = $b;
@@ -1064,17 +1062,17 @@ abstract class Fieldtype extends WireData implements Module {
 			[$colType, $colMeta] = explode(' ', $colSchema, 2);
 			
 			if($options['findAutoIncrement'] && $match !== false) {
-				$match = strpos($colMeta, 'auto_increment') !== false;
+				$match = str_contains($colMeta, 'auto_increment');
 			}
 			
 			if($options['findDefaultNULL'] && $match !== false) {
-				$match = strpos($colMeta, 'default null') !== false;
+				$match = str_contains($colMeta, 'default null');
 			}
 			
-			if($findType && $match !== false && strpos($colType, $findType) !== false) {
-				if($colType === $findType || strpos($colType, "$findType ") === 0 || strpos($colType, "$findType(") === 0) {
+			if($findType && $match !== false && str_contains($colType, $findType)) {
+				if($colType === $findType || str_starts_with($colType, "$findType ") || str_starts_with($colType, "$findType(")) {
 					$match = true; // exact match
-				} else if($findAllType && strpos($colType, $findType) === 0) {
+				} else if($findAllType && str_starts_with($colType, $findType)) {
 					$match = true; // partial match at front, i.e. "int" matching integer
 				} else if($findAllType && preg_match('/^[a-z]*' . $findType . '\b/i', $colType)) {
 					$match = true; // partial match at rear, i.e. "int" matching "tinyint", "smallint", "mediumint", etc.
@@ -1647,7 +1645,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * The string value of Fieldtype is always the Fieldtype's name. 
 	 *
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->className();
 	}
 

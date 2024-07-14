@@ -226,7 +226,7 @@ class ProcessController extends Wire {
 	protected function hasMethodPermission($method, $throw = true) {
 		// i.e. executeHelloWorld => helloWorld
 		$urlSegment = $method;
-		if(strpos($method, 'execute') === 0) [, $urlSegment] = explode('execute', $method, 2);
+		if(str_starts_with($method, 'execute')) [, $urlSegment] = explode('execute', $method, 2);
 		$urlSegment = $this->wire()->sanitizer->hyphenCase($urlSegment); 
 		if(!$this->hasUrlSegmentPermission($urlSegment, $throw)) return false;
 		return true;
@@ -251,7 +251,7 @@ class ProcessController extends Wire {
 			if(empty($navItem['permission'])) continue;
 			$navSegment = strtolower(trim($navItem['url'], './'));
 			if(empty($navSegment)) continue;
-			if(strpos($navSegment, '/') !== false) [$navSegment, ] = explode($navSegment, '/', 2);
+			if(str_contains($navSegment, '/')) [$navSegment, ] = explode($navSegment, '/', 2);
 			$navSegmentAlt = str_replace('-', '', $navSegment);
 			if($urlSegment === $navSegment || $urlSegment === $navSegmentAlt) {
 				$hasPermission = $this->hasPermission($navItem['permission'], $throw);
@@ -369,7 +369,7 @@ class ProcessController extends Wire {
 				if($headline === $this->wire('processHeadline')) {
 					$process->headline(str_replace('execute', '', $method));
 				}
-				$href = substr($this->wire()->input->url(), -1) == '/' ? '../' : './';
+				$href = str_ends_with($this->wire()->input->url(), '/') ? '../' : './';
 				$process->breadcrumb($href, $this->processInfo['title']); 
 			}
 		}

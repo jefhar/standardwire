@@ -35,8 +35,8 @@ header("X-Frame-Options: SAMEORIGIN");
  */
 function _hookSessionRedirectModal(HookEvent $event) {
 	$url = $event->arguments(0);    
-	if(strpos($url, 'modal=1') === false && strpos($url, '://') === false) {
-		$url .= (strpos($url, '?') === false ? '?' : '&') . 'modal=1';
+	if(!str_contains($url, 'modal=1') && !str_contains($url, '://')) {
+		$url .= (!str_contains($url, '?') ? '?' : '&') . 'modal=1';
 		$event->arguments(0, $url);    
 	}
 }
@@ -77,7 +77,7 @@ function _checkForHttpHostError(Config $config) {
  */
 function _checkForTwoFactorAuth(Session $session) {
 	$tfaUrl = $session->getFor('_user', 'requireTfa'); // contains URL to configure TFA
-	if(!$tfaUrl || strpos($tfaUrl, (string) $session->wire('page')->url()) === 0) return;
+	if(!$tfaUrl || str_starts_with($tfaUrl, (string) $session->wire('page')->url())) return;
 	$sanitizer = $session->wire('sanitizer');
 	$session->wire('user')->warning(
 		'<strong>' . $sanitizer->entities1(__('Action required')) . '</strong> ' .
@@ -149,7 +149,7 @@ if($page->process && $page->process != 'ProcessPageView') {
 		$controller->setProcessName($page->process); 
 		$initFile = $config->paths->adminTemplates . 'init.php'; 
 		if(is_file($initFile)) {
-			if(strpos($initFile, $config->paths->site) === 0) {
+			if(str_starts_with($initFile, $config->paths->site)) {
 				// admin themes in /site/modules/ may be compiled
 				$initFile = $wire->files->compile($initFile);
 			}
@@ -229,7 +229,7 @@ if($controller && $controller->isAjax()) {
 	} else {
 		$adminThemeFile = $config->paths->adminTemplates . 'default.php';
 	}
-	if(strpos($adminThemeFile, $config->paths->site) === 0) {
+	if(str_starts_with($adminThemeFile, $config->paths->site)) {
 		// @todo determine if compilation needed
 		$adminThemeFile = $wire->files->compile($adminThemeFile);
 	}

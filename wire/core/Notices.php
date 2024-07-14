@@ -325,7 +325,7 @@ class Notices extends WireArray {
 	 */
 	protected function addLog(Notice $item) {
 		$text = $item->text;
-		if(strpos($text, '&') !== false) {
+		if(str_contains($text, '&')) {
 			$text = $this->wire()->sanitizer->unentities($text);
 		}
 		if($this->wire()->config->debug && $item->class) $text .= " ($item->class)"; 
@@ -439,7 +439,7 @@ class Notices extends WireArray {
 		$prefix = substr($idStr, 0, 1);
 		foreach($this as $item) {
 			/** @var Notice $item */
-			if(strpos($item->className(), $prefix) !== 0) continue;
+			if(!str_starts_with($item->className(), $prefix)) continue;
 			if($item->getIdStr() !== $idStr) continue;
 			$notice = $item;
 			break;

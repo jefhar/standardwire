@@ -87,7 +87,7 @@ class NullPage extends Page implements WireNull {
 	 * @return string
 	 * 
 	 */
-	public function __toString() { return ""; }
+	public function __toString(): string { return ""; }
 
 	/**
 	 * #pw-internal

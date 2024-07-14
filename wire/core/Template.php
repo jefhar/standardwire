@@ -586,7 +586,7 @@ class Template extends WireData implements Saveable, Exportable {
 				$test = ltrim($permissionID, '-');
 				if(!ctype_digit($test)) {
 					// convert permission name to ID
-					$revoke = strpos($permissionID, '-') === 0;
+					$revoke = str_starts_with($permissionID, '-');
 					$permissionID = $permissions->get("name=$test")->id;
 					if(!$permissionID) continue;
 					if($revoke) $permissionID = "-$permissionID";
@@ -787,17 +787,16 @@ class Template extends WireData implements Saveable, Exportable {
 	}
 
 	/**
-	 * Set a setting
-	 * 
-	 * #pw-internal
-	 * 
-	 * @param string $key
-	 * @param mixed $value
-	 * @since 3.0.153
-	 * @throws WireException
-	 * 
-	 */
-	protected function setSetting($key, $value) {
+  * Set a setting
+  *
+  * #pw-internal
+  *
+  * @param string $key
+  * @since 3.0.153
+  * @throws WireException
+  *
+  */
+ protected function setSetting($key, mixed $value) {
 		
 		if($key === 'id') {
 			$value = (int) $value;
@@ -832,16 +831,15 @@ class Template extends WireData implements Saveable, Exportable {
 	}
 
 	/**
-	 * Set setting value without processing
-	 * 
-	 * #pw-internal
-	 * 
-	 * @param string $key
-	 * @param mixed $value
-	 * @since 3.0.194
-	 * 
-	 */
-	public function setRaw($key, $value) {
+  * Set setting value without processing
+  *
+  * #pw-internal
+  *
+  * @param string $key
+  * @since 3.0.194
+  *
+  */
+ public function setRaw($key, mixed $value) {
 		if($key === 'fieldgroups_id') {
 			$fieldgroup = $this->wire()->fieldgroups->get($value);
 			if($fieldgroup) {
@@ -1085,10 +1083,10 @@ class Template extends WireData implements Saveable, Exportable {
 			if(empty($filename) || !is_string($filename)) {
 				// set to empty
 				$filename = '';
-			} else if(strpos($filename, '/') === false) {
+			} else if(!str_contains($filename, '/')) {
 				// value is basename
 				$filename = $path . $filename;
-			} else if(strpos($filename, (string) $config->paths->root) !== 0) {
+			} else if(!str_starts_with($filename, (string) $config->paths->root)) {
 				// value is path outside of our installation root, which we do not accept
 				$filename = $path . basename($filename);
 			}
@@ -1240,7 +1238,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 * The string value of a Template is always it's name
 	 *
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->name; 
 	}
 
@@ -1447,7 +1445,7 @@ class Template extends WireData implements Saveable, Exportable {
 	public function getIcon($prefix = false) {
 		$label = $this->pageLabelField; 
 		$icon = '';
-		if(strpos($label, 'icon-') !== false || strpos($label, 'fa-') !== false) {
+		if(str_contains($label, 'icon-') || str_contains($label, 'fa-')) {
 			if(preg_match('/\b(icon-|fa-)([^\s,]+)/', $label, $matches)) {
 				if($matches[1] == 'icon-') $matches[1] = 'fa-';
 				$icon = $prefix ? $matches[1] . $matches[2] : $matches[2];
@@ -1591,8 +1589,8 @@ class Template extends WireData implements Saveable, Exportable {
 		$icon = $this->wire()->sanitizer->pageName($icon); 
 		$current = $this->getIcon(false); 	
 		$label = $this->pageLabelField;
-		if(strpos($icon, "icon-") === 0) $icon = str_replace("icon-", "fa-", $icon); // convert icon-str to fa-str
-		if($icon && strpos($icon, "fa-") !== 0) $icon = "fa-$icon"; // convert anon icon to fa-icon
+		if(str_starts_with($icon, "icon-")) $icon = str_replace("icon-", "fa-", $icon); // convert icon-str to fa-str
+		if($icon && !str_starts_with($icon, "fa-")) $icon = "fa-$icon"; // convert anon icon to fa-icon
 		if($current) {
 			// replace icon currently in pageLabelField with new one
 			$label = str_replace(["fa-$current", "icon-$current"], $icon, $label);
@@ -1626,7 +1624,7 @@ class Template extends WireData implements Saveable, Exportable {
 			$templateName = $this->name;
 			$prefixes = ['field-', 'field_', 'repeater_'];
 			foreach($prefixes as $prefix) {
-				if(strpos($templateName, $prefix) !== 0) continue;
+				if(!str_starts_with($templateName, $prefix)) continue;
 				[, $fieldName] = explode($prefix, $templateName, 2);
 				break;
 			}

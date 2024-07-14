@@ -753,7 +753,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 		$logs = $this->wire()->config->logs;
 		$name = $this->className(['lowercase' => true]); 
 		if($logs && in_array($name, $logs)) {
-			if($item && strpos($str, "'$item->name'") === false) $str .= " '$item->name'";
+			if($item && !str_contains($str, "'$item->name'")) $str .= " '$item->name'";
 			return parent::___log($str, ['name' => $name]);
 		}
 		return parent::___log(); 

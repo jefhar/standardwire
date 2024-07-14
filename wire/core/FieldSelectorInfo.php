@@ -192,7 +192,7 @@ class FieldSelectorInfo extends Wire {
 		$this->operatorLabels['!=""'] = $this->_('Is Not Empty');
 		foreach($this->operators as $operator) {
 			if(isset($this->operatorLabels[$operator])) continue; 
-			if(strpos($operator, '!') !== 0) continue;
+			if(!str_starts_with($operator, '!')) continue;
 			$op = ltrim($operator, '!'); 
 			$this->operatorLabels[$operator] = sprintf($this->_('Not: %s'), $this->operatorLabels[$op]); 
 		}

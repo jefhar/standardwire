@@ -13,11 +13,9 @@
 class PWGIFCOLORTABLE {
 	public $m_nColors;
 	public $m_arColors;
-	protected $extended;
-	public function __construct($extended = false) {
+	public function __construct(protected $extended = false) {
 		unSet($this->m_nColors);
 		unSet($this->m_arColors);
-		$this->extended = $extended;
 	}
 	public function load($lpData, $num) {
 		$this->m_nColors  = 0;

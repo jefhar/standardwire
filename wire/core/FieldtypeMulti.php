@@ -488,7 +488,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 				}
 				
 				if($col === 'sort') {
-					$desc = strpos($value, '-') === 0 ? '-' : '';
+					$desc = str_starts_with($value, '-') ? '-' : '';
 					$sort = $sanitizer->fieldName(ltrim($value, '-'));
 					if(isset($schema[$sort])) {
 						$orderByCols[] = $desc . $sort;
@@ -524,7 +524,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 			// one or more orderByCols is defined, enabling sorting and potential pagination
 			$sorts = [];
 			foreach($orderByCols as $key => $col) {
-				$desc = strpos($col, '-') === 0 ? ' DESC' : '';
+				$desc = str_starts_with($col, '-') ? ' DESC' : '';
 				$col = $sanitizer->fieldName(ltrim($col, '-'));
 				if($col === 'random') {
 					$sorts = ['RAND()'];
@@ -573,7 +573,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @throws WireException if given invalid or unrecognized arguments
 	 * 
 	 */
-	protected function getLoadQueryWhere(Field $field, DatabaseQuerySelect $query, $col, $operator, $value) {
+	protected function getLoadQueryWhere(Field $field, DatabaseQuerySelect $query, $col, $operator, mixed $value) {
 		$database = $this->wire()->database;
 		$table = $query->data('_table');
 		if(empty($table)) $table = $field->getTable();
@@ -977,7 +977,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 				$info = $this->getDatabaseSchemaVerbose($field);
 				$primaryKeys = $info['primaryKeys'];
 				$schema = $info['schema'];
-			} catch(\Exception $e) {
+			} catch(\Exception) {
 				$schema = [];
 				$primaryKeys = [];
 			}

@@ -193,7 +193,7 @@ class WireLog extends Wire {
 		$info = "Deprecated call: $a[class].$a[function]() ";
 		if(!empty($b['class'])) {
 			$info .= "from class $b[class].$b[function]() " . (isset($b['line']) ? "line $b[line]" : "");
-		} else if(strpos($b['file'], 'TemplateFile.php') === false) {
+		} else if(!str_contains($b['file'], 'TemplateFile.php')) {
 			$info .= "from file $b[file] line $b[line]";
 		}
 		$this->save('deprecated', $info);
@@ -387,7 +387,7 @@ class WireLog extends Wire {
 		if(count($parts) == 2) {
 			$entry = ['date' => $parts[0], 'user' => '', 'url'  => '', 'text' => $parts[1]];
 		} else if(count($parts) == 3) {
-			$user = strpos($parts[1], '/') === false ? $parts[1] : '';
+			$user = !str_contains($parts[1], '/') ? $parts[1] : '';
 			$url = strpos($parts[2], '://') ? $parts[2] : '';
 			$text = empty($url) ? $parts[2] : '';
 			$entry = ['date' => $parts[0], 'user' => $user, 'url'  => $url, 'text' => $text];

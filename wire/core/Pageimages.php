@@ -90,7 +90,7 @@ class Pageimages extends Pagefiles {
 	
 		foreach($this as $pagefile) {
 			/** @var Pageimage $pagefile */
-			if($base !== null && strpos($pagefile->basename, $base) !== 0) continue;
+			if($base !== null && !str_starts_with($pagefile->basename, $base)) continue;
 			// they start the same, is it a variation?
 			if(!$pagefile->isVariation($name)) continue;
 			// if we are here we found a variation
@@ -159,7 +159,7 @@ class Pageimages extends Pagefiles {
 			
 				// if files don't start the same, it's not a variation
 				$base = $basenames[$name];
-				if(strpos($_base, $base) !== 0) continue;
+				if(!str_starts_with($_base, $base)) continue;
 
 				// if the part up to the first period isn't the same, then it's not a variation
 				$test1 = substr($name, 0, strpos($name, '.'));

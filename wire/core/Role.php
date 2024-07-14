@@ -148,7 +148,7 @@ class Role extends Page {
 	 */
 	protected function hasPermissionContext($has, Permission $permission, Wire $context) {
 		
-		if(strpos($permission->name, 'page-') !== 0) return $has;
+		if(!str_starts_with($permission->name, 'page-')) return $has;
 		
 		$type = str_replace('page-', '', $permission->name);
 		
@@ -181,7 +181,7 @@ class Role extends Page {
 				$rolesPermissions = $accessTemplate->rolesPermissions; 
 				if(!isset($rolesPermissions["$this->id"])) return $has;
 				foreach($rolesPermissions["$this->id"] as $permissionID) {
-					$revoke = strpos($permissionID, '-') === 0;
+					$revoke = str_starts_with($permissionID, '-');
 					if($revoke) $permissionID = ltrim($permissionID, '-');
 					$permissionID = (int) $permissionID;	
 					if($permission->id != $permissionID) continue;

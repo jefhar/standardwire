@@ -184,7 +184,7 @@ class Pagefile extends WireData implements WireArrayItem {
 			$filename = str_replace('\\' . $basename, '/' . $basename, $filename); 
 		}
 	
-		if($basename != $filename && strpos($filename, $this->pagefiles->path()) !== 0) {
+		if($basename != $filename && !str_starts_with($filename, $this->pagefiles->path())) {
 			$this->install($filename); 
 		} else {
 			$this->set('basename', $basename); 
@@ -208,7 +208,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	
 		$basename = $filename;
 		
-		if(strpos($basename, '?') !== false) {
+		if(str_contains($basename, '?')) {
 			[$basename, $queryString] = explode('?', $basename); 	
 			if($queryString) {} // do not use in basename
 		} 
@@ -231,7 +231,7 @@ class Pagefile extends WireData implements WireArrayItem {
 		
 		$destination = $this->pagefiles->path() . $basename; 
 		
-		if(strpos($filename, '://') === false) {
+		if(!str_contains($filename, '://')) {
 			if(!is_readable($filename)) throw new WireException("Unable to read: $filename");
 			if(!copy($filename, $destination)) throw new WireException("Unable to copy: $filename => $destination");
 		} else {
@@ -290,7 +290,7 @@ class Pagefile extends WireData implements WireArrayItem {
 			}
 		}
 		
-		if(strpos($key, 'description') === 0 && preg_match('/^description(\d+)$/', $value, $matches)) {
+		if(str_starts_with($key, 'description') && preg_match('/^description(\d+)$/', $value, $matches)) {
 			// check if a language description is being set manually by description123 where 123 is language ID
 			$languages = $this->wire()->languages; 
 			if($languages) {
@@ -333,10 +333,10 @@ class Pagefile extends WireData implements WireArrayItem {
 			$id = $user && $user->id ? $user->id : 0;
 		}
 		if($id < 0) $id = 0;
-		if(strpos($type, 'created') === 0) {
+		if(str_starts_with($type, 'created')) {
 			$this->_createdUser = ($id && $user instanceof User ? $user : null);
 			parent::set('created_users_id', $id); 
-		} else if(strpos($type, 'modified') === 0) {
+		} else if(str_starts_with($type, 'modified')) {
 			$this->_modifiedUser = ($id && $user instanceof User ? $user : null);
 			parent::set('modified_users_id', $id); 
 		}
@@ -353,7 +353,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * 
 	 */
 	protected function getUser($type) {
-		$type = strpos($type, 'created') === 0 ? 'created' : 'modified';
+		$type = str_starts_with($type, 'created') ? 'created' : 'modified';
 		$key = $type === 'created' ? '_createdUser' : '_modifiedUser';
 		if(!$this->$key) {
 			$id = (int) parent::get($type . '_users_id');
@@ -769,19 +769,17 @@ class Pagefile extends WireData implements WireArrayItem {
 	}
 
 	/**
-	 * Set a custom field value
-	 * 
-	 * #pw-internal Most non-core cases should use set() instead
-	 * 
-	 * @param string $name
-	 * @param mixed $value
-	 * @param bool|null $changed Specify true to force track change, false to force no change, or null to auto-detect (default=null)
-	 * @return bool Returns true if value set, or false if not (like if there’s no template defined for the purpose)
-	 * @since 3.0.142
-	 * 
-	 * 
-	 */
-	public function setFieldValue($name, $value, $changed = null) {
+  * Set a custom field value
+  *
+  * #pw-internal Most non-core cases should use set() instead
+  *
+  * @param string $name
+  * @param bool|null $changed Specify true to force track change, false to force no change, or null to auto-detect (default=null)
+  * @return bool Returns true if value set, or false if not (like if there’s no template defined for the purpose)
+  * @since 3.0.142
+  *
+  */
+ public function setFieldValue($name, mixed $value, $changed = null) {
 		
 		$template = $this->pagefiles->getFieldsTemplate();
 		if(!$template) return false;
@@ -996,9 +994,9 @@ class Pagefile extends WireData implements WireArrayItem {
 			// set tags
 			if(is_array($value)) $value = implode(' ', $value); // convert to string
 			$value = $this->wire()->sanitizer->text($value);
-			if(strpos($value, "\t") !== false) $value = str_replace("\t", " ", $value);
+			if(str_contains($value, "\t")) $value = str_replace("\t", " ", $value);
 			// collapse extra whitespace
-			while(strpos($value, "  ") !== false) $value = str_replace("  ", " ", $value);
+			while(str_contains($value, "  ")) $value = str_replace("  ", " ", $value);
 			parent::set('tags', $value);	
 			$tags = $value; 
 		} else {
@@ -1049,10 +1047,10 @@ class Pagefile extends WireData implements WireArrayItem {
 		$modeAND = null;
 		$tag = trim(strtolower($tag));
 		
-		if(strpos($tag, '|') !== false) {
+		if(str_contains($tag, '|')) {
 			$findTags = explode('|', $tag);
 			$modeAND = false;
-		} else if(strpos($tag, ',') !== false) {
+		} else if(str_contains($tag, ',')) {
 			$findTags = explode(',', $tag);
 			$modeAND = true;
 		} else {
@@ -1113,7 +1111,7 @@ class Pagefile extends WireData implements WireArrayItem {
 		$sanitizer = $this->wire()->sanitizer;
 		if(is_array($tag)) {
 			$addTags = $tag;
-		} else if(strpos($tag, ',') !== false) {
+		} else if(str_contains($tag, ',')) {
 			$addTags = explode(',', $tag);
 		} else {
 			$addTags = [$tag];
@@ -1155,7 +1153,7 @@ class Pagefile extends WireData implements WireArrayItem {
 		if(!count($tags)) return $this; // no tags to remove
 		if(is_array($tag)) {
 			$removeTags = $tag;
-		} else if(strpos($tag, ',') !== false) {
+		} else if(str_contains($tag, ',')) {
 			$removeTags = explode(',', $tag); 
 		} else {
 			$removeTags = [$tag];
@@ -1234,7 +1232,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return string
 	 *
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return (string) $this->basename; 
 	}
 

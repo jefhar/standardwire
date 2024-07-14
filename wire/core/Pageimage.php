@@ -276,7 +276,7 @@ class Pageimage extends Pagefile {
 				foreach($parts as $part) {
 					if(!strpos($part, '=')) continue;
 					[$name, $pct] = explode('=', $part);
-					$a[$name] = strpos($pct, '.') !== false ? (float) $pct : (int) $pct;
+					$a[$name] = str_contains($pct, '.') ? (float) $pct : (int) $pct;
 				}
 				$top = $a; // for later setting by array
 				unset($a);
@@ -549,7 +549,7 @@ class Pageimage extends Pagefile {
 				$imagick->readImage($filename);
 				$width = $imagick->getImageWidth();
 				$height = $imagick->getImageHeight();
-			} catch(\Exception $e) {
+			} catch(\Exception) {
 				// fallback to 100%
 			}
 		}
@@ -787,7 +787,7 @@ class Pageimage extends Pagefile {
 			$crop = ''; // do not add suffix	
 			
 		} else if(is_string($options['cropping'])
-			&& strpos($options['cropping'], 'x') === 0
+			&& str_starts_with($options['cropping'], 'x')
 			&& preg_match('/^x(\d+)[yx](\d+)/', $options['cropping'], $matches)) {
 			$options['cropping'] = true; 
 			$options['cropExtra'] = [(int) $matches[1], (int) $matches[2], $width, $height]; 
@@ -837,7 +837,7 @@ class Pageimage extends Pagefile {
 		$basename = basename($originalName, "." . $this->ext()); 
 		$originalSize = $debug ? @filesize($this->filename) : 0;
 		
-		if($options['cleanFilename'] && strpos($basename, '.') !== false) {
+		if($options['cleanFilename'] && str_contains($basename, '.')) {
 			$basename = substr($basename, 0, strpos($basename, '.')); 
 		}
 		
@@ -986,7 +986,7 @@ class Pageimage extends Pagefile {
 		if(is_array($options)) return $options;
 		if(is_string($options)) {
 			// optionally allow a string to be specified with crop direction, for shorter syntax
-			if(strpos($options, ',') !== false) $options = explode(',', $options); // 30,40
+			if(str_contains($options, ',')) $options = explode(',', $options); // 30,40
 			$options = ['cropping' => $options];
 		} else if(is_int($options)) {
 			// optionally allow an integer to be specified with quality, for shorter syntax
@@ -1593,7 +1593,7 @@ class Pageimage extends Pagefile {
 	 */
 	public function ___render($markup = '', $options = []) {
 		
-		if(is_array($markup) || ($markup && strpos($markup, '}') === false)) {
+		if(is_array($markup) || ($markup && !str_contains($markup, '}'))) {
 			$options = $markup;
 			$markup = $options['markup'] ?? '';
 		} 
@@ -1630,13 +1630,13 @@ class Pageimage extends Pagefile {
 			$image = $this->size($w, $h, $options);
 		}
 		
-		if(!empty($options['link']) && strpos($markup, '<a ') === false) {
+		if(!empty($options['link']) && !str_contains($markup, '<a ')) {
 			$markup = "<a href='{original.url}'>$markup</a>";
 		}
 		
 		foreach($properties as $property) {
 			$tag = '{' . $property . '}';
-			if(strpos($markup, $tag) === false) continue;
+			if(!str_contains($markup, $tag)) continue;
 			if(($property === 'alt' || $property === 'class') && isset($options[$property])) {
 				$value = $sanitizer->entities($options[$property]);
 			} else {
@@ -1650,12 +1650,12 @@ class Pageimage extends Pagefile {
 			$replacements["{class}"] = $class; 
 		}
 		
-		if(strpos($markup, '{original.') !== false) {
+		if(str_contains($markup, '{original.')) {
 			if(!$original) $original = $image->getOriginal();
 			if(!$original) $original = $image;
 			foreach($properties as $property) {
 				$tag = '{original.' . $property . '}';
-				if(strpos($markup, $tag) === false) continue;
+				if(!str_contains($markup, $tag)) continue;
 				$value = $sanitizer->entities1($original->get($property));
 				$replacements[$tag] = $value;
 			}
@@ -1781,7 +1781,7 @@ class Pageimage extends Pagefile {
 		
 		foreach($variations as $pageimage) {
 			/** @var Pageimage $pageimage */
-			if(strpos($pageimage->basename, $oldName) !== 0) continue;
+			if(!str_starts_with($pageimage->basename, $oldName)) continue;
 			$newVariationName = $newName . substr($pageimage->basename, strlen($oldName));
 			$pageimage->rename($newVariationName);
 		}

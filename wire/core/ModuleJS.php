@@ -137,7 +137,7 @@ abstract class ModuleJS extends WireData implements Module {
 		if(count($this->requested)) {
 			foreach($this->requested as $name) {
 				$url = $this->components[$name]; 
-				if(strpos($url, '/') === false) {
+				if(!str_contains($url, '/')) {
 					if($debug) $version = filemtime($config->paths->$class . $url);
 					$url = $config->urls->$class . $url;
 				}
@@ -172,7 +172,7 @@ abstract class ModuleJS extends WireData implements Module {
 		if($this->initialized) {
 			$url = $this->components[$name];
 			$version = $config->version;
-			if(strpos($url, '/') === false) {
+			if(!str_contains($url, '/')) {
 				$file = $config->paths->$class . $url;
 				$url = $config->urls->$class . $url;
 				if($config->debug) $version = filemtime($file);

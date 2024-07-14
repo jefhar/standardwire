@@ -278,7 +278,7 @@ class PagesExportImport extends Wire {
 						if($blankValue instanceof Wire) {
 							$blankValue = "class:" . $blankValue->className();
 						} else {
-							$blankValue = "class:" . get_class($blankValue);
+							$blankValue = "class:" . $blankValue::class;
 						}
 					}
 					$a['fields'][$fieldName]['blankValue'] = $blankValue;
@@ -905,13 +905,13 @@ class PagesExportImport extends Wire {
 				$pageValue = $field->type->importValue($page, $field, $importValue, $o);
 			} catch(\Exception $e) {
 				$warning = $e->getMessage();
-				$page->warning((strpos($warning, "$field:") === 0 ? '' : "$field: ") . $warning);
+				$page->warning((str_starts_with($warning, "$field:") ? '' : "$field: ") . $warning);
 				if($options['commit'] && $fieldtypeImportOptions['restoreOnException'] && $page->id) {
 					$commitException = true;
 					try {
 						$pageValue = $field->type->importValue($page, $field, $exportValue, $o);
 						$page->warning("$field: Attempted to restore previous value");
-					} catch(\Exception $e) {
+					} catch(\Exception) {
 						$commitException = true;
 					}
 				}

@@ -20,8 +20,7 @@ class PWGIFIMAGEHEADER {
 	public $m_bSorted;
 	public $m_nTableSize;
 	public $m_colorTable;
-	protected $extended;
-	public function __construct($extended = false) {
+	public function __construct(protected $extended = false) {
 		unSet($this->m_nLeft);
 		unSet($this->m_nTop);
 		unSet($this->m_nWidth);
@@ -31,7 +30,6 @@ class PWGIFIMAGEHEADER {
 		unSet($this->m_bSorted);
 		unSet($this->m_nTableSize);
 		unSet($this->m_colorTable);
-		$this->extended = $extended;
 	}
 	public function load($lpData, &$hdrLen) {
 		$hdrLen = 0;

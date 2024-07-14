@@ -507,7 +507,7 @@ class WireDatabaseBackup {
 		}
 		
 		$line = fgets($fp);
-		if(strpos($line, self::fileHeader) === 0 || strpos($line, "# " . self::fileHeader) === 0) {
+		if(str_starts_with($line, self::fileHeader) || str_starts_with($line, "# " . self::fileHeader)) {
 			$pos = strpos($line, '{');
 			if($pos !== false) {
 				$json = substr($line, $pos);
@@ -520,7 +520,7 @@ class WireDatabaseBackup {
 		$bytes = strlen(self::fileFooter) + 255; // some extra bytes in case something gets added at the end
 		fseek($fp, $bytes * -1, SEEK_END); 
 		$foot = fread($fp, $bytes); 
-		$info['valid'] = strpos($foot, self::fileFooter) !== false; 
+		$info['valid'] = str_contains($foot, self::fileFooter); 
 		fclose($fp);
 	
 		// footer summary
@@ -1006,7 +1006,7 @@ class WireDatabaseBackup {
 				if(!isset($tables[$table])) continue; // skip tables not selected for import
 			}
 			
-			while(substr($line, -1) != ';' && !feof($fp)) {
+			while(!str_ends_with($line, ';') && !feof($fp)) {
 				// get the rest of the lines in the query (if multi-line)
 				$_line = trim(fgets($fp));
 				if($this->restoreUseLine($_line)) $line .= $_line;
@@ -1014,7 +1014,7 @@ class WireDatabaseBackup {
 		
 			$replacements = $command === 'CREATE' ? $options['findReplaceCreateTable'] : $options['findReplace'];
 			if(count($replacements)) foreach($replacements as $find => $replace) {
-				if(strpos($line, (string) $find) === false) continue;
+				if(!str_contains($line, (string) $find)) continue;
 				$line = str_replace($find, $replace, $line);
 			}
 
@@ -1084,7 +1084,7 @@ class WireDatabaseBackup {
 	 *
 	 */
 	protected function restoreUseLine($line) {
-		if(empty($line) || substr($line, 0, 2) == '--' || substr($line, 0, 1) == '#') return false;
+		if(empty($line) || str_starts_with($line, '--') || str_starts_with($line, '#')) return false;
 		return true;
 	}
 
@@ -1204,7 +1204,7 @@ class WireDatabaseBackup {
 			if(!preg_match($regex, $line, $matches)) continue;
 			if(empty($matches[1])) continue; 
 			$table = $matches[1];
-			while(substr($line, -1) != ';' && !feof($fp)) $line .= " " . rtrim(fgets($fp));
+			while(!str_ends_with($line, ';') && !feof($fp)) $line .= " " . rtrim(fgets($fp));
 			if($multi) {
 				if(!isset($statements[$table])) $statements[$table] = [];
 				$statements[$table][] = $line;
@@ -1233,7 +1233,7 @@ class WireDatabaseBackup {
 		if(!empty($options['findReplaceCreateTable'])) {
 			foreach($options['findReplaceCreateTable'] as $find => $replace) {
 				foreach($statements as $key => $line) {
-					if(strpos($line, (string) $find) === false) continue;
+					if(!str_contains($line, (string) $find)) continue;
 					$line = str_replace($find, $replace, $line);
 					$statements[$key] = $line;
 				}
@@ -1314,10 +1314,10 @@ class WireDatabaseBackup {
 	 */
 	protected function sanitizeFilename($filename) {
 		if(DIRECTORY_SEPARATOR != '/') $filename = str_replace(DIRECTORY_SEPARATOR, '/', $filename);
-		if(strpos($filename, '/') === false) {
+		if(!str_contains($filename, '/')) {
 			$filename = $this->path . $filename;
 		}
-		if(strpos($filename, '/') === false) {
+		if(!str_contains($filename, '/')) {
 			$path = $this->getPath();
 			if(!strlen($path)) throw new \Exception("Please supply full path to file, or call setPath('/backup/files/path/') first");
 			$filename = $path . $filename; 

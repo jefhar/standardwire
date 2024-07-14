@@ -77,7 +77,7 @@ class PageComparison {
 				$is = true;
 			}
 			
-		} else if(is_string($status) && strpos($status, 'Page::status') === 0) {
+		} else if(is_string($status) && str_starts_with($status, 'Page::status')) {
 			// literal constant name in string
 			$status = __NAMESPACE__ . "\\$status";
 			$status = constant($status);
@@ -163,7 +163,7 @@ class PageComparison {
 				// if value placeholders present, replace them with field name placeholders
 				foreach(['{value}', '{val}'] as $tag) {
 					// string with {val} or {value} has that tag replaced with the {field_name}
-					if(strpos($action, $tag) === false) continue;
+					if(!str_contains($action, $tag)) continue;
 					// if val or value is actually the name of a field in the system, then do not override it
 					if($page->hasField(trim($tag, '{}'))) continue;
 					$action = str_replace($tag, ($keyIsFieldName ? '{' . $key . '}' : $val), $action);
@@ -210,7 +210,7 @@ class PageComparison {
 				if(!strlen($s)) {
 					// blank string matches nothing
 					return false;
-				} else if(substr($s, 0, 1) == '/' && $page->path() == (rtrim($s, '/') . '/')) {
+				} else if(str_starts_with($s, '/') && $page->path() == (rtrim($s, '/') . '/')) {
 					// exit early for simple path comparison
 					return true;
 				} else if($page->name === $s) {
@@ -386,15 +386,13 @@ class PageComparison {
 	}
 	
 	/**
-	 * Is $value1 equal to $value2?
-	 *
-	 * @param string $key Name of the key that triggered the check (see WireData::set)
-	 * @param mixed $value1
-	 * @param mixed $value2
-	 * @return bool
-	 *
-	 */
-	public function isEqual(Page $page, $key, $value1, $value2) {
+  * Is $value1 equal to $value2?
+  *
+  * @param string $key Name of the key that triggered the check (see WireData::set)
+  * @return bool
+  *
+  */
+ public function isEqual(Page $page, $key, mixed $value1, mixed $value2) {
 
 		$isEqual = $value1 === $value2;
 

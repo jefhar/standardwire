@@ -100,7 +100,7 @@ class Permissions extends PagesType {
 
 		if($namePrefix !== '') {
 			foreach($names as $name => $id) {
-				if(strpos($name, $namePrefix) !== 0) unset($names[$name]);
+				if(!str_starts_with($name, $namePrefix)) unset($names[$name]);
 			}
 		}
 		

@@ -350,9 +350,9 @@ abstract class Selector extends WireData {
 	public function setField($field) {
 		if(is_array($field)) $field = implode('|', $field);
 		$field = (string) $field;
-		$not = strpos($field, '!') === 0;
+		$not = str_starts_with($field, '!');
 		if($not) $field = ltrim($field, '!');
-		if(strpos($field, '|') !== false) $field = explode('|', $field);
+		if(str_contains($field, '|')) $field = explode('|', $field);
 		parent::set('field', $field);
 		parent::set('not', $not);
 		return $this;
@@ -511,7 +511,7 @@ abstract class Selector extends WireData {
 	 * @return bool
 	 *
 	 */
-	abstract protected function match($value1, $value2);
+	abstract protected function match(mixed $value1, $value2);
 
 	/**
 	 * Does this Selector match the given value?
@@ -546,7 +546,7 @@ abstract class Selector extends WireData {
 			$value = (string) $value; 
 		}
 
-		if(is_string($value) && strpos($value, '|') !== false) $value = explode('|', $value); 
+		if(is_string($value) && str_contains($value, '|')) $value = explode('|', $value); 
 		if(!is_array($value)) $value = [$value];
 		$values2 = $value; 
 		unset($value);
@@ -638,7 +638,7 @@ abstract class Selector extends WireData {
 	 *
 	 */
 	protected function sanitizeFieldName($fieldName) {
-		if(strpos($fieldName, '|') !== false) {
+		if(str_contains($fieldName, '|')) {
 			$fieldName = explode('|', $fieldName);
 		}
 		if(is_array($fieldName)) {
@@ -660,7 +660,7 @@ abstract class Selector extends WireData {
 	 * The string value of Selector is always the selector string that it originated from
 	 *
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		
 		$openingQuote = $this->quote; 
 		$closingQuote = $openingQuote; 

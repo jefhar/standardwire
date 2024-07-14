@@ -10,7 +10,7 @@
  *
  */
 
-class WireHooks {
+class WireHooks implements \Stringable {
 
 	/**
 	 * Debug hooks
@@ -299,7 +299,7 @@ class WireHooks {
 	 */
 	public function isHooked($method, Wire $instance = null) {
 		if($instance) return $this->hasHook($instance, $method);
-		if(strpos($method, ':') !== false) {
+		if(str_contains($method, ':')) {
 			$hooked = isset($this->hookClassMethodCache[$method]); // fromClass::method() or fromClass::property
 		} else {
 			$hooked = isset($this->hookMethodCache[$method]); // method() or property
@@ -338,7 +338,7 @@ class WireHooks {
 		}
 
 		if($type == 'method' || $type == 'either') {
-			if(strpos($method, '(') === false) $method .= '()';
+			if(!str_contains($method, '(')) $method .= '()';
 			if($type == 'either') $property = rtrim($method, '()');
 		} else {
 			$property = rtrim($method, '()');
@@ -438,7 +438,7 @@ class WireHooks {
 	public function hasHook(Wire $object, $method) {
 
 		$hooked = false;
-		if(strpos($method, '::') !== false) {
+		if(str_contains($method, '::')) {
 			throw new WireException("You may only specify a 'method()' or 'property', not 'Class::something'.");
 		}
 
@@ -521,7 +521,7 @@ class WireHooks {
 	 */
 	public function addHook(Wire $object, $method, $toObject, $toMethod = null, $options = []) {
 		
-		if(empty($options['noAddHooks']) && (is_array($method) || strpos($method, ',') !== false)) {
+		if(empty($options['noAddHooks']) && (is_array($method) || str_contains($method, ','))) {
 			// potentially multiple methods to hook in $method argument
 			return $this->addHooks($object, $method, $toObject, $toMethod, $options);
 		}
@@ -548,9 +548,9 @@ class WireHooks {
 			throw new WireException("Method to call is required and was not specified (toMethod)");
 		}
 		
-		if(strpos($method, '___') === 0) {
+		if(str_starts_with($method, '___')) {
 			$method = substr($method, 3);
-		} else if(strpos($this->pathHookStarts, (string) $method[0]) !== false) {
+		} else if(str_contains($this->pathHookStarts, (string) $method[0])) {
 			return $this->addPathHook($object, $method, $toObject, $toMethod, $options);
 		}
 		
@@ -570,7 +570,7 @@ class WireHooks {
 				try {
 					$ref = new \ReflectionMethod($toObject, $_toMethod);
 					$toPublic = $ref->isPublic();
-				} catch(\Exception $e) {
+				} catch(\Exception) {
 					$toPublic = false;
 				}
 			}
@@ -579,7 +579,7 @@ class WireHooks {
 		
 		if(strpos($method, '::')) {
 			[$fromClass, $method] = explode('::', $method, 2);
-			if(strpos($fromClass, '(') !== false) {
+			if(str_contains($fromClass, '(')) {
 				// extract object selector match string
 				[$fromClass, $objMatch] = explode('(', $fromClass, 2);
 				$objMatch = trim($objMatch, ') ');
@@ -606,7 +606,7 @@ class WireHooks {
 				// or: Something::something(1:selector_string, 3:selector_string) matches arg 1 and 3. 
 				[$method, $argMatch] = explode('(', $method, 2);
 				$argMatch = trim($argMatch, ') ');
-				if(strpos($argMatch, ':') !== false) {
+				if(str_contains($argMatch, ':')) {
 					// zero-based argument indexes specified, i.e. 0:template=product, 1:order_status
 					$args = preg_split('/\b([0-9]):/', trim($argMatch), -1, PREG_SPLIT_DELIM_CAPTURE);
 					if(count($args)) {
@@ -743,9 +743,9 @@ class WireHooks {
 			$argSplit = '|';
 
 			// skip optional useless parenthesis in definition to avoid unnecessary iterations
-			if(strpos($str, '()') !== false) $str = str_replace('()', '', $str); 
+			if(str_contains($str, '()')) $str = str_replace('()', '', $str); 
 			
-			if(strpos($str, '(') === false) {
+			if(!str_contains($str, '(')) {
 				// If there is a parenthesis then it is multi-method definition without arguments
 				// Example: "Pages::saveReady, Pages::saved" 
 				$methods = explode(',', $str);
@@ -756,13 +756,13 @@ class WireHooks {
 				// Single method example: "Page(template=order)::changed(0:order_status, 1:name=pending)"
 				// Multi method example: "Page(template=order)::changed(0:order_status, 1:name=pending), Page::saved"
 				
-				while(strpos($str, $argSplit) !== false) $argSplit .= '|';
+				while(str_contains($str, $argSplit)) $argSplit .= '|';
 				$strs = explode('(', $str);
 				
 				foreach($strs as $key => $val) {
-					if(strpos($val, ')') === false) continue;
+					if(!str_contains($val, ')')) continue;
 					[$a, $b] = explode(')', $val, 2);
-					if(strpos($a, ',') !== false) $a = str_replace([', ', ','], $argSplit, $a);
+					if(str_contains($a, ',')) $a = str_replace([', ', ','], $argSplit, $a);
 					$strs[$key] = "$a)$b";
 				}
 				
@@ -770,7 +770,7 @@ class WireHooks {
 				$methods = explode(',', $str);
 				
 				foreach($methods as $key => $method) {
-					if(strpos($method, $argSplit) === false) continue;
+					if(!str_contains($method, $argSplit)) continue;
 					$methods[$key] = str_replace($argSplit, ', ', $method);
 				}
 			}
@@ -956,7 +956,7 @@ class WireHooks {
 								// we don't work with non-object here
 								$matches = false;
 							}
-						} else if(is_string($argMatch) && strpos($argMatch, '<') === 0 && substr($argMatch, -1) === '>') {
+						} else if(is_string($argMatch) && str_starts_with($argMatch, '<') && str_ends_with($argMatch, '>')) {
 							// i.e. <Page>, <User>, <string>, <object>, <bool>, etc.
 							$argMatch = trim($argMatch, '<>'); 
 							if(strpos($argMatch, '|')) {
@@ -1009,7 +1009,7 @@ class WireHooks {
 
 				if(is_null($toObject)) {
 					$toMethodCallable = is_callable($toMethod);
-					if(!$toMethodCallable && strpos($toMethod, "\\") === false && __NAMESPACE__) {
+					if(!$toMethodCallable && !str_contains($toMethod, "\\") && __NAMESPACE__) {
 						$_toMethod = $toMethod;
 						$toMethod = "\\" . __NAMESPACE__ . "\\$toMethod";
 						$toMethodCallable = is_callable($toMethod);
@@ -1102,21 +1102,21 @@ class WireHooks {
 		// at this point the path hook passed pre-filters and might match
 		
 		$pageNum = $this->wire->wire()->input->pageNum();
-		$slashed = substr($requestPath, -1) === '/' && strlen($requestPath) > 1;
+		$slashed = str_ends_with($requestPath, '/') && strlen($requestPath) > 1;
 		$matchPath = $pathHook['match'];
 		$regexDelim = ''; // populated only for user-specified regex
 		$pageNumArgument = 0; // populate in $arguments when {pageNum} present in match pattern
 	
-		if(strpos('!@#%', (string) $matchPath[0]) !== false) {
+		if(str_contains('!@#%', (string) $matchPath[0])) {
 			// already in delimited regex format
 			$regexDelim = $matchPath[0];
 		} else {
 			// needs to be in regex format
-			if(strpos($matchPath, '/') === 0) $matchPath = "^$matchPath";
+			if(str_starts_with($matchPath, '/')) $matchPath = "^$matchPath";
 			$matchPath = "#$matchPath$#";
 		}
 
-		if(strpos($matchPath, '{pageNum}') !== false) {
+		if(str_contains($matchPath, '{pageNum}')) {
 			// the {pageNum} named argument maps to $input->pageNum. remove the {pageNum} argument
 			// from the match path since it is handled differently from other named arguments
 			$find = ['/{pageNum}/', '/{pageNum}', '{pageNum}'];
@@ -1128,12 +1128,12 @@ class WireHooks {
 			return false;
 		}
 
-		if(strpos($matchPath, ':') && strpos($matchPath, '(') !== false) {
+		if(strpos($matchPath, ':') && str_contains($matchPath, '(')) {
 			// named arguments in format “(name: value)” converted to named PCRE capture groups
 			$matchPath = preg_replace('#\(([-_a-z0-9]+):#i', '(?P<$1>', $matchPath);
 		}
 		
-		if(strpos($matchPath, '{') !== false) {
+		if(str_contains($matchPath, '{')) {
 			// named arguments in format “{name}” converted to named PCRE capture groups
 			// note that the match pattern of any URL segment is assumed for this case
 			$matchPath = preg_replace('#\{([_a-z][-_a-z0-9]*)\}#i', '(?P<$1>[^/]+)', $matchPath); 
@@ -1150,9 +1150,9 @@ class WireHooks {
 		}
 		
 		// check on trailing slash
-		if(strpos($matchPath, '/?') === false) {
+		if(!str_contains($matchPath, '/?')) {
 			// either slash or no-slash is required, depending on whether match pattern ends with one
-			$slashRequired = substr(rtrim($pathHook['match'], $regexDelim . '$)+'), -1) === '/';
+			$slashRequired = str_ends_with(rtrim($pathHook['match'], $regexDelim . '$)+'), '/');
 			$this->pathHookRedirect = '';
 			if($slashRequired && !$slashed) {
 				// trailing slash required and not present
@@ -1210,7 +1210,7 @@ class WireHooks {
 		$timerName = $object->className() . "::$method";
 		$notes = [];
 		foreach($arguments as $argument) {
-			if(is_object($argument)) $notes[] = get_class($argument);
+			if(is_object($argument)) $notes[] = $argument::class;
 			else if(is_array($argument)) $notes[] = "array(" . count($argument) . ")";
 			else if(strlen($argument) > 20) $notes[] = substr($argument, 0, 20) . '...';
 		}
@@ -1327,7 +1327,7 @@ class WireHooks {
 		foreach($this->pathHooks as $id => $pathHook) {
 			$fail = false;
 			foreach($pathHook['filters'] as $filter) {
-				$fail = strpos($requestPath, (string) $filter) === false;
+				$fail = !str_contains($requestPath, (string) $filter);
 				if($fail) break;
 			}
 			if(!$fail) {
@@ -1370,7 +1370,7 @@ class WireHooks {
 		return wireClassName($this, false);
 	}
 	
-	public function __toString() {
+	public function __toString(): string {
 		return $this->className();
 	}
 

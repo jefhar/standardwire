@@ -101,21 +101,16 @@
 class Paths extends WireData {
 
 	/**
-	 * Cached root 
-	 * 
-	 * @var string
-	 * 
-	 */
-	protected $_root = '';
-
-	/**
-	 * Construct the Paths
-	 *
-	 * @param string $root Path of the root that will be used as a base for stored paths.
-	 *
-	 */
-	public function __construct($root) {
-		$this->_root = $root;
+  * Construct the Paths
+  *
+  * @param string $_root Path of the root that will be used as a base for stored paths.
+  */
+ public function __construct(/**
+  * Cached root
+  *
+  *
+  */
+ protected $_root) {
 		$this->useFuel(false);
 	}
 
@@ -171,7 +166,7 @@ class Paths extends WireData {
 		$altKey = '';
 		if(is_object($key)) {
 			$key = "$key";
-		} else if(strpos($key, 'http') === 0) {
+		} else if(str_starts_with($key, 'http')) {
 			if(is_null($_http)) {
 				$scheme = $this->wire()->input->scheme;
 				if(!$scheme) $scheme = 'http';

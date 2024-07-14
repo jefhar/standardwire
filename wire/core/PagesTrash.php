@@ -226,7 +226,7 @@ class PagesTrash extends Wire {
 			$langKey = "name$language->id";
 			$langName = (string) $page->get($langKey);
 			if(!strlen($langName)) continue;
-			if(strpos($langName, (string) $trashPrefix) === 0) {
+			if(str_starts_with($langName, (string) $trashPrefix)) {
 				[, $langName] = explode('_', $langName);
 			}
 			$langNamePrevious = $langName;

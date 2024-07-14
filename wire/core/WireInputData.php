@@ -144,13 +144,12 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	}
 
 	/**
-	 * Set an input value
-	 * 
-	 * @param string $key
-	 * @param mixed $value
-	 *
-	 */
-	public function __set($key, $value) {
+  * Set an input value
+  *
+  * @param string $key
+  *
+  */
+ public function __set($key, mixed $value) {
 		if(is_string($value)) {
 			if($this->stripSlashes) $value = stripslashes($value);
 		} else if(is_array($value)) {
@@ -271,7 +270,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 			[$type, $pattern] = explode('=', $pattern, 2);
 		}
 		
-		if(!$isRE && strpos($pattern, '*') !== false) {
+		if(!$isRE && str_contains($pattern, '*')) {
 			// wildcard, convert to regex
 			$a = explode('*', $pattern);
 			foreach($a as $k => $v) {
@@ -307,7 +306,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 				// tests to confirm a preg_match is necessary (wildcard mode only)
 				$passes = true;
 				foreach($tests as $test) {
-					$passes = strpos($match, $test) !== false;
+					$passes = str_contains($match, $test);
 					if(!$passes) break;
 				}
 				if(!$passes) continue;
@@ -316,7 +315,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 			if($isRE) {
 				if(!preg_match($pattern, $match)) continue;
 			} else {
-				if(strpos($match, $pattern) === false) continue;
+				if(!str_contains($match, $pattern)) continue;
 			}
 			
 			if($options['sanitizer']) {
@@ -520,7 +519,7 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 		if(!$sanitizer->methodExists($method)) {
 			try {
 				return parent::___callUnknown($method, $arguments);
-			} catch(\Exception $e) {
+			} catch(\Exception) {
 				throw new WireException("Unknown method '$method' - specify a valid Sanitizer name or WireInputData method"); 
 			}
 		}

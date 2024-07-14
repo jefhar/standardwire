@@ -191,18 +191,18 @@ class PagesRequest extends Wire {
 		if(!isset($_GET['it'])) return;
 	
 		// check if there is an 'it' var present in the request query string, which we don’t want
-		if((strpos($dirtyUrl, '?it=') !== false || strpos($dirtyUrl, '&it='))) {
+		if((str_contains($dirtyUrl, '?it=') || strpos($dirtyUrl, '&it='))) {
 			// the request URL included a user-inserted 'it' variable in query string
 			// force to use path in request url rather than contents of 'it' var
 			[$it, ] = explode('?', $dirtyUrl, 2);
 			$rootUrl = $this->config->urls->root;
 			if(strlen($rootUrl) > 1) {
 				// root url is a subdirectory, like /pwsite/
-				if(strpos($it, $rootUrl) === 0) {
+				if(str_starts_with($it, $rootUrl)) {
 					// url begins with that subdirectory, like /pwsite/
 					// convert '/pwsite/path/to/page/' to just '/path/to/page/'
 					$it = substr($it, strlen($rootUrl) - 1);
-				} else if(strpos(ltrim($it, '/'), ltrim($rootUrl, '/')) === 0) {
+				} else if(str_starts_with(ltrim($it, '/'), ltrim($rootUrl, '/'))) {
 					$it = substr(ltrim($it, '/'), strlen(ltrim($rootUrl, '/')));
 				}
 			}
@@ -294,8 +294,8 @@ class PagesRequest extends Wire {
 		if(stripos($dirtyUrl, 'index.php') !== false && stripos($path, 'index.php') === false) {
 			// force pathFinder to detect a redirect condition without index.php
 			$dirtyUrl = strtolower(rtrim($dirtyUrl, '/'));
-			if(substr("/$dirtyUrl", -10) === '/index.php') $path = rtrim($path, '/') . '/index.php';
-		} else if(strpos($dirtyUrl, '//') !== false) {
+			if(str_ends_with("/$dirtyUrl", '/index.php')) $path = rtrim($path, '/') . '/index.php';
+		} else if(str_contains($dirtyUrl, '//')) {
 			// force pathFinder to detect redirect sans double slashes, /page/path// => /page/path/
 			$path = rtrim($path, '/') . '//';
 		}
@@ -409,7 +409,7 @@ class PagesRequest extends Wire {
 		if(!$page->id && $isGuest) {
 			// this ensures that no admin requests resolve to a 404 and instead show login form
 			$adminPath = substr($config->urls->admin, strlen($config->urls->root) - 1);
-			if(strpos($this->requestPath, $adminPath) === 0) {
+			if(str_starts_with($this->requestPath, $adminPath)) {
 				$page = $this->pages->get($config->adminRootPageID);
 				$this->redirectUrl = '';
 			}
@@ -521,9 +521,9 @@ class PagesRequest extends Wire {
 			// abnormal request, something about request URL made .htaccess skip it, or index.php called directly
 			$rootUrl = $config->urls->root;
 			$shit = trim($_SERVER['REQUEST_URI']);
-			if(strpos($shit, '?') !== false) [$shit, ] = explode('?', $shit, 2);
+			if(str_contains($shit, '?')) [$shit, ] = explode('?', $shit, 2);
 			if($rootUrl != '/') {
-				if(strpos($shit, $rootUrl) === 0) {
+				if(str_starts_with($shit, $rootUrl)) {
 					// remove root URL from request
 					$shit = substr($shit, strlen($rootUrl) - 1);
 				} else {
@@ -565,7 +565,7 @@ class PagesRequest extends Wire {
 
 		if(!isset($it[0]) || $it[0] != '/') $it = "/$it";
 		
-		if(strpos($it, '//') !== false) {
+		if(str_contains($it, '//')) {
 			$this->setResponseCode(400, 'Request URL contains a blank segment “//”');
 			return false;
 		}
@@ -598,7 +598,7 @@ class PagesRequest extends Wire {
 		$url = rtrim($config->urls->root, '/') . $path;
 
 		// check for secured filename, method 1: actual file URL, minus leading "." or "-"
-		if(strpos($url, $config->urls->files) !== 0) {
+		if(!str_starts_with($url, $config->urls->files)) {
 			// if URL is not to files, check if it might be using legacy prefix
 			if($config->pagefileUrlPrefix) return $this->checkRequestFilePrefix($path);
 			// request is not for a file
@@ -634,15 +634,15 @@ class PagesRequest extends Wire {
 			}
 		}
 
-		if(strpos($file, '/') !== false) {
+		if(str_contains($file, '/')) {
 			// file in subdirectory (for instance ProDrafts uses subdirectories for draft files)
 			[$subdir, $file] = explode('/', $file, 2);
 
-			if(strpos($file, '/') !== false) {
+			if(str_contains($file, '/')) {
 				// there is more than one subdirectory, which we do not allow
 				return $pages->newNullPage();
 
-			} else if(strpos($subdir, '.') !== false || strlen($subdir) > 128) {
+			} else if(str_contains($subdir, '.') || strlen($subdir) > 128) {
 				// subdirectory has a "." in it or subdir length is too long
 				return $pages->newNullPage();
 
@@ -730,14 +730,14 @@ class PagesRequest extends Wire {
 			// redirect URL provided in template.redirectLogin
 			$redirectUrl = str_replace('{id}', $page->id, $redirectLogin);
 			[$path, $query] = [$redirectUrl, ''];
-			if(strpos($redirectUrl, '?') !== false) [$path, $query] = explode('?', $redirectUrl, 2);
-			if(strlen($path) && strpos($path, '/') === 0 && strpos($path, '//') === false) {
+			if(str_contains($redirectUrl, '?')) [$path, $query] = explode('?', $redirectUrl, 2);
+			if(strlen($path) && str_starts_with($path, '/') && !str_contains($path, '//')) {
 				// attempt to match to page so we can use URL with scheme and relative to installation url
 				$p = $this->wire()->pages->get($path);
 				if($p->id && $p->viewable()) {
 					$redirectUrl = $p->httpUrl() . ($query ? "?$query" : "");
 				}
-			} else if(strpos($path, '//') === 0 && strpos($path, '://') === false) {
+			} else if(str_starts_with($path, '//') && !str_contains($path, '://')) {
 				// double slash at beginning force path without checking if it maps to page
 				$redirectUrl = '/' . ltrim($redirectUrl, '/');
 			}
@@ -806,7 +806,7 @@ class PagesRequest extends Wire {
 	 *
 	 */
 	protected function checkAccessDelegated(Page $page) {
-		if(strpos($page->template->name, 'repeater_') === 0) {
+		if(str_starts_with($page->template->name, 'repeater_')) {
 			return $this->checkAccessRepeater($page);
 		}
 		return null;
@@ -837,7 +837,7 @@ class PagesRequest extends Wire {
 		// delegate viewable check to the page the repeater lives on
 		if($forPage->viewable($field)) return $page;
 		
-		if(strpos($forPage->template->name, 'repeater_') === 0) {
+		if(str_starts_with($forPage->template->name, 'repeater_')) {
 			// go recursive for nested repeaters
 			$forPage = $this->checkAccessRepeater($forPage);
 			if($forPage && $forPage->id) return $forPage;
@@ -878,7 +878,7 @@ class PagesRequest extends Wire {
 		if(!$scheme) return;
 
 		if($this->redirectUrl) {
-			if(strpos($this->redirectUrl, '://') !== false) {
+			if(str_contains($this->redirectUrl, '://')) {
 				$url = str_replace(['http://', 'https://'], "$scheme://", $this->redirectUrl);
 			} else {
 				$url = "$scheme://$config->httpHost$this->redirectUrl";
@@ -898,7 +898,7 @@ class PagesRequest extends Wire {
 					if($page->template->slashUrlSegments == 1) $url .= '/';
 				} else {
 					// use whatever the request came with	
-					if(substr($this->requestPath, -1) == '/') $url .= '/';
+					if(str_ends_with($this->requestPath, '/')) $url .= '/';
 				}
 			}
 
@@ -913,7 +913,7 @@ class PagesRequest extends Wire {
 					if($page->template->slashPageNum == 1) $url .= '/';
 				} else {
 					// use whatever setting the URL came with
-					if(substr($this->requestPath, -1) == '/') $url .= '/';
+					if(str_ends_with($this->requestPath, '/')) $url .= '/';
 				}
 			}
 		}
@@ -957,10 +957,10 @@ class PagesRequest extends Wire {
 		$config = $this->config;
 
 		// if URL does not start from root, prepend root
-		if(strpos($url, $config->urls->root) !== 0) $url = $config->urls->root . ltrim($url, '/');
+		if(!str_starts_with($url, $config->urls->root)) $url = $config->urls->root . ltrim($url, '/');
 
 		// if URL is not pointing to the files structure, then this is not a files URL
-		if(strpos($url, $config->urls->files) !== 0) return false;
+		if(!str_starts_with($url, $config->urls->files)) return false;
 
 		// pagefileSecure option is enabled and URL pointing to files
 		if($config->pagefileSecure) return true;

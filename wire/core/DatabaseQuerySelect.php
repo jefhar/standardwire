@@ -201,7 +201,7 @@ class DatabaseQuerySelect extends DatabaseQuery {
 		if(!count($this->limit)) return '';
 		$limit = $this->limit; 
 		$limit = reset($limit);
-		if(strpos($limit, ',') !== false) {
+		if(str_contains($limit, ',')) {
 			[$start, $limit] = explode(',', $limit);
 			$start = (int) trim($start);
 			$limit = (int) trim($limit); 

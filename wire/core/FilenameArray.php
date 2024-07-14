@@ -171,7 +171,7 @@ class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
 	 * @return string
 	 * 
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return print_r($this->data, true); 
 	}
 

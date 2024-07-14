@@ -304,7 +304,7 @@ class CacheFile extends Wire {
 	 * CacheFile classes return a string of their cache filename
 	 *
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->buildFilename();
 	}
 }

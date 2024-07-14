@@ -296,7 +296,7 @@ class User extends Page {
 				if(!$page->hasAccessRole($role, $name)) continue; 
 
 				// all page- permissions except page-view and page-add require page-edit access on $page, so check against that
-				if(strpos($name, 'page-') === 0 && $name != 'page-view' && $name != 'page-add') {
+				if(str_starts_with($name, 'page-') && $name != 'page-view' && $name != 'page-add') {
 					if($accessTemplate && !in_array($role->id, $accessTemplate->editRoles)) continue; 
 				}
 
@@ -379,7 +379,7 @@ class User extends Page {
 
 			$context = null;
 			if($name != 'page-edit' && $name != 'page-add' && $name != 'page-create' && $name != 'page-view') {
-				if(strpos($name, "page-") === 0) $context = $template;
+				if(str_starts_with($name, "page-")) $context = $template;
 			}
 
 			if($role->hasPermission($name, $context)) {

@@ -82,15 +82,14 @@ class Password extends Wire {
 	}
 
 	/**
-	 * Set a property 
-	 * 
-	 * #pw-group-internal
-	 * 
-	 * @param string $key
-	 * @param mixed $value
-	 *
-	 */
-	public function __set($key, $value) {
+  * Set a property
+  *
+  * #pw-group-internal
+  *
+  * @param string $key
+  *
+  */
+ public function __set($key, mixed $value) {
 
 		if($key === 'pass') {
 			// setting the password
@@ -354,7 +353,7 @@ class Password extends Wire {
 		return $this->random;
 	}
 	
-	public function __toString() {
+	public function __toString(): string {
 		return (string) $this->data['hash'];
 	}
 

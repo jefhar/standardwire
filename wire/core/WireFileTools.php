@@ -125,7 +125,7 @@ class WireFileTools extends Wire {
 		if($recursive === true) {
 			$files = @scandir($path);
 			if(is_array($files)) foreach($files as $file) {
-				if($file == '.' || $file == '..' || strpos($file, '..') !== false) continue;
+				if($file == '.' || $file == '..' || str_contains($file, '..')) continue;
 				$pathname = rtrim($path, '/') . '/' . $file;
 				if(is_dir($pathname)) {
 					$this->rmdir($pathname, true, $options);
@@ -276,8 +276,8 @@ class WireFileTools extends Wire {
 			return true;
 		}
 
-		if(substr($src, -1) != '/') $src .= '/';
-		if(substr($dst, -1) != '/') $dst .= '/';
+		if(!str_ends_with($src, '/')) $src .= '/';
+		if(!str_ends_with($dst, '/')) $dst .= '/';
 
 		$dir = opendir($src);
 		if(!$dir) return false;
@@ -286,7 +286,7 @@ class WireFileTools extends Wire {
 			$isEmpty = true;
 			while(false !== ($file = readdir($dir))) {
 				if($file == '.' || $file == '..') continue;
-				if(!$options['hidden'] && strpos(basename($file), '.') === 0) continue;
+				if(!$options['hidden'] && str_starts_with(basename($file), '.')) continue;
 				$isEmpty = false;
 				break;
 			}
@@ -297,7 +297,7 @@ class WireFileTools extends Wire {
 
 		while(false !== ($file = readdir($dir))) {
 			if($file == '.' || $file == '..') continue;
-			if(!$options['hidden'] && strpos(basename($file), '.') === 0) continue;
+			if(!$options['hidden'] && str_starts_with(basename($file), '.')) continue;
 			$isDir = is_dir($src . $file);
 			if($options['recursive'] && $isDir) {
 				$this->copy($src . $file, $dst . $file, $options);
@@ -529,7 +529,7 @@ class WireFileTools extends Wire {
 			
 		} else if(is_string($options)) {
 			$types = ['file', 'link', 'dir'];
-			if(strpos($options, ',') !== false) $options = str_replace(',', ' ', $options);
+			if(str_contains($options, ',')) $options = str_replace(',', ' ', $options);
 			foreach(explode(' ', $options) as $option) {
 				$option = strtolower(trim($option));
 				if(empty($option)) continue;
@@ -588,7 +588,7 @@ class WireFileTools extends Wire {
 			foreach(new \RecursiveIteratorIterator($dir) as $file) {
 				try {
 					$size += $file->getSize();
-				} catch(\Exception $e) {
+				} catch(\Exception) {
 					// ok
 				}
 			}
@@ -673,12 +673,12 @@ class WireFileTools extends Wire {
 			return $this->filesError(__FUNCTION__, "pathname not allowed: $pathname", $throw);
 		}
 		
-		if(strpos($pathname, '..') !== false) {
+		if(str_contains($pathname, '..')) {
 			// not allowed to traverse anywhere
 			return $this->filesError(__FUNCTION__, 'pathname may not traverse “../”', $throw);
 		}
 		
-		if(strpos($pathname, '.') === 0 || empty($pathname)) {
+		if(str_starts_with($pathname, '.') || empty($pathname)) {
 			return $this->filesError(__FUNCTION__, 'pathname may not begin with “.”', $throw);
 		}
 
@@ -688,7 +688,7 @@ class WireFileTools extends Wire {
 			return $this->filesError(__FUNCTION__, 'pathname may not contain double slash “//”', $throw);
 		}
 
-		if($limitPath !== false && strpos($pathname, (string) $limitPath) !== 0) {
+		if($limitPath !== false && !str_starts_with($pathname, (string) $limitPath)) {
 			// disallow paths that do not begin with limitPath (i.e. /path/to/public_html/site/assets/)
 			return $this->filesError(__FUNCTION__, "Given pathname is not within $limitPath (limitPath)", $throw);
 		}
@@ -801,7 +801,7 @@ class WireFileTools extends Wire {
 			if($file->isDir()) {
 				$dir = $this->unixDirName($file->getPathname());
 				if($options['allowDirs']) {
-					if($options['returnRelative'] && strpos($dir, (string) $options['_startPath']) === 0) {
+					if($options['returnRelative'] && str_starts_with($dir, (string) $options['_startPath'])) {
 						$dir = substr($dir, strlen($options['_startPath']));
 					}
 					$files[$dir] = $dir;
@@ -811,12 +811,12 @@ class WireFileTools extends Wire {
 				continue;
 			}
 			
-			if($options['excludeHidden'] && strpos($basename, '.') === 0) continue;
+			if($options['excludeHidden'] && str_starts_with($basename, '.')) continue;
 			if(!empty($options['extensions']) && !in_array($ext, $options['extensions'])) continue;
 			if(!empty($options['excludeExtensions']) && in_array($ext, $options['excludeExtensions'])) continue;
 
 			$filename = $this->unixFileName($file->getPathname());
-			if($options['returnRelative'] && strpos($filename, (string) $options['_startPath']) === 0) {
+			if($options['returnRelative'] && str_starts_with($filename, (string) $options['_startPath'])) {
 				$filename = substr($filename, strlen($options['_startPath']));
 			}
 				
@@ -885,7 +885,7 @@ class WireFileTools extends Wire {
 
 		for($i = 0; $i < $zip->numFiles; $i++) {
 			$name = $zip->getNameIndex($i);
-			if(strpos($name, '..') !== false) continue;
+			if(str_contains($name, '..')) continue;
 			if($zip->extractTo($dst, $name)) {
 				$names[$i] = $name;
 				$filename = $dst . ltrim($name, '/');
@@ -1414,18 +1414,18 @@ class WireFileTools extends Wire {
 			return false;
 		}
 
-		if($options['defaultPath'] && strpos($filename, './') === 0) {
+		if($options['defaultPath'] && str_starts_with($filename, './')) {
 			$filename = rtrim($options['defaultPath'], '/') . '/' . substr($filename, 2);
 
-		} else if($options['defaultPath'] && strpos($filename, '/') !== 0 && strpos($filename, ':') !== 1) {
+		} else if($options['defaultPath'] && !str_starts_with($filename, '/') && strpos($filename, ':') !== 1) {
 			// filename is relative to defaultPath (typically /site/templates/)
 			$filename = rtrim($options['defaultPath'], '/') . '/' . $filename;
 
-		} else if(strpos($filename, '/') !== false) {
+		} else if(str_contains($filename, '/')) {
 			// filename is absolute, make sure it's in a location we consider safe
 			$allowed = false;
 			foreach($options['allowedPaths'] as $path) {
-				if(strpos($filename, (string) $path) === 0) {
+				if(str_starts_with($filename, (string) $path)) {
 					$allowed = true;
 					break;
 				}
@@ -1498,7 +1498,7 @@ class WireFileTools extends Wire {
 			$filename .= '.' . $options['autoExtension'];
 		}
 
-		if(strpos($filename, '..') !== false) {
+		if(str_contains($filename, '..')) {
 			// if backtrack/relative components, convert to real path
 			$_filename = $filename;
 			$filename = realpath($filename);
@@ -1507,18 +1507,18 @@ class WireFileTools extends Wire {
 		
 		$filename = $this->unixFileName($filename);
 
-		if(strpos($filename, '//') !== false) {
+		if(str_contains($filename, '//')) {
 			$this->filesException(__FUNCTION__, "File is not allowed (double-slash): $filename");
 		}
 
-		if(strpos($filename, './') !== 0) {
+		if(!str_starts_with($filename, './')) {
 			// file does not specify "current directory"
 			$slashPos = strpos($filename, '/');
 			// If no absolute path specified, ensure it only looks in current directory
-			if($slashPos !== 0 && strpos($filename, ':/') === false) $filename = "./$filename";
+			if($slashPos !== 0 && !str_contains($filename, ':/')) $filename = "./$filename";
 		}
 
-		if(strpos($filename, '/') === 0 || strpos($filename, ':/') !== false) {
+		if(str_starts_with($filename, '/') || str_contains($filename, ':/')) {
 			// absolute path, make sure it's part of PW's installation
 			$allowed = false;
 			foreach($options['allowedPaths'] as $path) {
@@ -1604,7 +1604,7 @@ class WireFileTools extends Wire {
 		if($namespacePos === false) return $namespace;
 
 		// quick optimization for common ProcessWire namespace usage
-		if(strpos($data, '<' . '?php namespace ProcessWire;') === 0) return 'ProcessWire';
+		if(str_starts_with($data, '<' . '?php namespace ProcessWire;')) return 'ProcessWire';
 
 		// if file doesn't start with an opening PHP tag, then it's not going to have a namespace declaration
 		$phpOpen = strpos($data, '<' . '?');
@@ -1624,12 +1624,12 @@ class WireFileTools extends Wire {
 		}
 
 		// single line comment(s) appear before namespace
-		if(strpos($head, '//') !== false) { 
+		if(str_contains($head, '//')) { 
 			$head = preg_replace('!//.*!', '', $head);
 		}
 		
 		// single or multi-line comments before namespace
-		if(strpos($head, '/' . '*') !== false) {
+		if(str_contains($head, '/' . '*')) {
 			$head = preg_replace('!/\*.*\*/!s', '', $head);
 		}
 		
@@ -1663,10 +1663,10 @@ class WireFileTools extends Wire {
 		if($phpEnd !== false) $data = substr($data, 0, $phpEnd);
 
 		// if there's no 'namespace' word present in the data, nothing is declared
-		if(strpos($data, 'namespace') === false) return $namespace;
+		if(!str_contains($data, 'namespace')) return $namespace;
 
 		// normalize line endings
-		if(strpos($data, "\r") !== false) $data = str_replace("\r", "\n", $data);
+		if(str_contains($data, "\r")) $data = str_replace("\r", "\n", $data);
 
 		while(preg_match('/(^.*[\s\r\n]+)namespace\s+([_a-zA-Z0-9\\\\]+);\s*$/m', $data, $matches)) {
 
@@ -1685,7 +1685,7 @@ class WireFileTools extends Wire {
 			}
 
 			// determine if line is commented
-			$hasComment = strpos($line, '//') !== false;
+			$hasComment = str_contains($line, '//');
 
 			if(!$hasComment) {
 				// determine if namespace declaration is in a comment block
@@ -1835,7 +1835,7 @@ class WireFileTools extends Wire {
 	 * 
 	 */
 	public function unixDirName($dir, $trailingSlash = true) {
-		if(DIRECTORY_SEPARATOR != '/' && strpos($dir, DIRECTORY_SEPARATOR) !== false) {
+		if(DIRECTORY_SEPARATOR != '/' && str_contains($dir, DIRECTORY_SEPARATOR)) {
 			$dir = str_replace(DIRECTORY_SEPARATOR, '/', $dir);
 		}
 		$dir = rtrim($dir, '/');
@@ -1873,7 +1873,7 @@ class WireFileTools extends Wire {
 		$file = $this->unixDirName($file); // use of unixDirName rather than unixFileName intentional
 		$path = $this->unixDirName($path);
 		if($file === $path || strlen($file) <= strlen($path)) return false;
-		return strpos($file, $path) === 0;
+		return str_starts_with($file, $path);
 	}
 
 	/**

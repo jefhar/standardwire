@@ -248,15 +248,16 @@ abstract class AdminTheme extends WireData implements Module {
 	 * @since 3.0.162
 	 * 
 	 */
-	public function getLabel($key, $val = '') {
-		switch($key) {
-			case 'search-help': return $this->_('help'); // Localized term to type for search-engine help (3+ chars) 
-			case 'search-tip': return $this->_('Try “help”'); // // Search tip (indicating your translated “help” term)
-			case 'advanced-mode': return $this->_('Advanced Mode');
-			case 'debug': return $this->_('Debug'); 
-		}
-		return $val;
-	}
+	public function getLabel($key, $val = '')
+ {
+     return match ($key) {
+         'search-help' => $this->_('help'),
+         'search-tip' => $this->_('Try “help”'),
+         'advanced-mode' => $this->_('Advanced Mode'),
+         'debug' => $this->_('Debug'),
+         default => $val,
+     };
+ }
 
 	/**
 	 * Returns true if this admin theme is the one that will be used for this request
@@ -389,7 +390,7 @@ abstract class AdminTheme extends WireData implements Module {
 			}
 		} else if(!$replace && isset($this->classes[$name])) {
 			$classes = $this->classes[$name];
-			if(strpos($classes, $class) !== false) {
+			if(str_contains($classes, $class)) {
 				// avoid re-adding class if it is already present
 				if(array_search($class, explode(' ', $classes)) !== false) return; 
 			}
@@ -453,7 +454,7 @@ abstract class AdminTheme extends WireData implements Module {
 			$field->flags = Field::flagSystem;
 			try {
 				$field->save();
-			} catch(\Exception $e) {
+			} catch(\Exception) {
 				// $this->error("Error creating 'admin_theme' field: " . $e->getMessage());
 			}
 		}

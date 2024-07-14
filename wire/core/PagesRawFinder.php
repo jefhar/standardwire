@@ -222,7 +222,7 @@ class PagesRawFinder extends Wire {
 		if(empty($field)) {
 			$this->getAll = true;
 			
-		} else if(is_string($field) && strpos($field, ',') !== false) {
+		} else if(is_string($field) && str_contains($field, ',')) {
 			// multiple fields requested in CSV string, we will return an array for each page
 			$this->requestFields = explode(',', $field);
 			foreach($this->requestFields as $k => $v) {
@@ -256,7 +256,7 @@ class PagesRawFinder extends Wire {
 		$optionsValues = [];
 		foreach(['objects', 'entities', 'flat', 'nulls', 'options'] as $name) {
 			if($this->selectorIsPageIDs) continue;
-			if($selectorString && strpos($selectorString, "$name=") === false) continue;
+			if($selectorString && !str_contains($selectorString, "$name=")) continue;
 			if($fields->get($name)) continue; // if maps to a real field then ignore
 			$result = Selectors::selectorHasField($this->selector, $name, ['operator' => '=', 'verbose' => true, 'remove' => true]);
 			$value = $result['value'];
@@ -558,7 +558,7 @@ class PagesRawFinder extends Wire {
 			if($fieldName === '*' || $fieldName === 'pages' || $fieldName === 'pages.*') {
 				// get all columns
 				$colName = '';
-			} else if(strpos($fieldName, 'pages.') === 0) {
+			} else if(str_starts_with($fieldName, 'pages.')) {
 				// pages table column requested by name
 				[, $colName] = explode('.', $fieldName, 2);
 			} else {
@@ -669,7 +669,7 @@ class PagesRawFinder extends Wire {
 			unset($trimSchema['data']); 
 			foreach($trimSchema as $key => $value) {
 				// multi-language columns do not count as custom schema
-				if(strpos($key, 'data') === 0 && ctype_digit(substr($key, 4))) unset($trimSchema[$key]); 
+				if(str_starts_with($key, 'data') && ctype_digit(substr($key, 4))) unset($trimSchema[$key]); 
 			}	
 			if(empty($trimSchema)) {
 				// if table doesn’t maintain a custom schema, just get data column
@@ -715,7 +715,7 @@ class PagesRawFinder extends Wire {
 			$orderByCols = $fieldtypeMulti->get('orderByCols');
 			if($fieldtypeMulti->useOrderByCols && !empty($orderByCols)) {
 				foreach($orderByCols as $key => $col) {
-					$desc = strpos($col, '-') === 0 ? ' DESC' : '';
+					$desc = str_starts_with($col, '-') ? ' DESC' : '';
 					$col = $sanitizer->fieldName(ltrim($col, '-'));
 					if(!array_key_exists($col, $schema)) continue;
 					$sorts[$key] = '`' . $database->escapeCol($col) . '`' . $desc;
@@ -1294,12 +1294,11 @@ class PagesRawFinder extends Wire {
 	}
 
 	/**
-	 * Apply entity encoding to all strings in given value, recursively
-	 * 
-	 * @param mixed $value
-	 * 
-	 */
-	protected function entities(&$value) {
+  * Apply entity encoding to all strings in given value, recursively
+  *
+  *
+  */
+ protected function entities(mixed &$value) {
 		$prefix = ''; // populate for testing only
 		if(is_string($value)) {
 			// entity-encode
@@ -1418,7 +1417,7 @@ class PagesRawFinder extends Wire {
 
 			// convert categories.1234.title => categories.title = array(1234 => 'title', ...);
 			foreach($a as $k => $v) {
-				if(strpos($k, "$delimiter$key$delimiter") === false) continue;
+				if(!str_contains($k, "$delimiter$key$delimiter")) continue;
 				[$k1, $k2] = explode("$delimiter$key$delimiter", $k); 
 				unset($a[$k]);
 				$kk = "$k1$delimiter$k2";

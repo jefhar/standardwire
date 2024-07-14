@@ -50,14 +50,14 @@ class SelectorContainsAdvanced extends SelectorContains {
 			// find all quoted phrases
 			foreach($matches[0] as $key => $fullMatch) {
 				$type = substr($fullMatch, 0, 1);
-				$partial = substr($fullMatch, -1) === '*';
+				$partial = str_ends_with($fullMatch, '*');
 				if($type !== '+' && $type !== '-') $type = '';
 				$phrase = $matches[1][$key];
 				$phrase = trim($phrase, $substr($phrase, 0, 1) . $substr($phrase, -1)); // remove quotes
 				$phrase = str_replace('+', '', trim($phrase, '-')); 
-				if(strpos($phrase, '-') !== false) $phrase = preg_replace('/([^\w\d])-(.)/', '$1 $2', $phrase); 
+				if(str_contains($phrase, '-')) $phrase = preg_replace('/([^\w\d])-(.)/', '$1 $2', $phrase); 
 				$value = str_replace($fullMatch, ' ', $value);
-				while(strpos($phrase, '  ') !== false) $phrase = str_replace('  ', ' ', $phrase);
+				while(str_contains($phrase, '  ')) $phrase = str_replace('  ', ' ', $phrase);
 				if(!strlen($phrase)) continue;
 				$phrase = str_replace('"', '', $phrase);
 				$query = $type . '"' . $phrase . '"' . ($partial ? '*' : ''); 
@@ -68,7 +68,7 @@ class SelectorContainsAdvanced extends SelectorContains {
 		$words = $this->wire()->sanitizer->wordsArray($value, ['keepChars' => ['+', '-', '*']]);
 		foreach($words as $word) {
 			$type = substr($word, 0, 1);
-			$partial = substr($word, -1) === '*';
+			$partial = str_ends_with($word, '*');
 			if($type !== '+' && $type !== '-') $type = '';
 			$word = trim($word, '+-*');
 			$query = $type . $word . ($partial ? '*' : ''); 

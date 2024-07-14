@@ -441,7 +441,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * Fieldgroups always return their name when dereferenced as a string
 	 *	
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->name; 
 	}
 

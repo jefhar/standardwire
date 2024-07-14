@@ -221,7 +221,7 @@ abstract class Notice extends WireData {
 	 * 
 	 */
 	public function set($key, $value) {
-		if($key === 'text' && is_string($value) && strpos($value, 'icon-') === 0 && strpos($value, ' ')) {
+		if($key === 'text' && is_string($value) && str_starts_with($value, 'icon-') && strpos($value, ' ')) {
 			[$icon, $value] = explode(' ', $value, 2);
 			[, $icon] = explode('-', $icon, 2);
 			$icon = $this->wire()->sanitizer->name($icon);
@@ -267,7 +267,7 @@ abstract class Notice extends WireData {
 			if(ctype_digit($value)) {
 				$flags = (int) $value;
 			} else {
-				if(strpos($value, ',') !== false) $value = str_replace([', ', ','], ' ', $value);
+				if(str_contains($value, ',')) $value = str_replace([', ', ','], ' ', $value);
 				$value = explode(' ', $value);
 			}
 		}
@@ -299,7 +299,7 @@ abstract class Notice extends WireData {
 		$name = strtolower($name);
 		if(isset(self::$flagNamesAlt[$name])) {
 			return self::$flagNamesAlt[$name];
-		} else if(strpos($name, 'icon-') === 0) {
+		} else if(str_starts_with($name, 'icon-')) {
 			$this->icon = substr($name, 5); 
 			$flag = 0;
 		} else {
@@ -393,7 +393,7 @@ abstract class Notice extends WireData {
 		return $idStr;
 	}
 	
-	public function __toString() {
+	public function __toString(): string {
 		$text = $this->text;
 		if(is_object($text)) {
 			$value = method_exists($text, '__toString') ? (string) $text : '';

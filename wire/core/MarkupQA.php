@@ -243,7 +243,7 @@ class MarkupQA extends Wire {
 				$this->page->setQuietly('_markupQA', $info);
 			}
 
-		} else if(strpos($value, "\t") === false) {
+		} else if(!str_contains($value, "\t")) {
 			// wakeup, but nothing necessary (quick exit)
 			return;
 
@@ -267,12 +267,12 @@ class MarkupQA extends Wire {
 		$page = $this->page;
 		$slashUrls = $page->template->slashUrls;
 
-		if(strpos($path, './') === 0) {
+		if(str_starts_with($path, './')) {
 			// remove leading "./" reference, making "./something/" => "something/"
 			$path = substr($path, 2);
 		}
 
-		if(strpos($path, '.') !== 0 && !$slashUrls) {
+		if(!str_starts_with($path, '.') && !$slashUrls) {
 			// path like "something/"
 			// if slashUrls are not in use, then the meaning of "./" is parent rather than page
 			$page = $page->parent();
@@ -280,7 +280,7 @@ class MarkupQA extends Wire {
 		}
 
 		// resolve leading "../" to a $page
-		while(strpos($path, '../') === 0) {
+		while(str_starts_with($path, '../')) {
 			$page = $slashUrls ? $page->parent() : $page->parent()->parent();
 			$path = substr($path, 3);
 			$slashUrls = $page->template->slashUrls;
@@ -318,7 +318,7 @@ class MarkupQA extends Wire {
 	
 		// if there are no href attributes, there's nothing to sleep 
 		// if there is already a data-pwid attribute present, then links are already asleep
-		if(strpos($value, 'href=') === false || strpos($value, 'data-pwid=')) return;
+		if(!str_contains($value, 'href=') || strpos($value, 'data-pwid=')) return;
 	
 		$info = $this->verbose() ? $this->page->get('_markupQA') : [];
 		if(!is_array($info)) $info = [];
@@ -366,13 +366,13 @@ class MarkupQA extends Wire {
 					// external hostname, which we will skip over
 					continue;
 				}
-			} else if(strpos($href, ':') !== false || strpos($end, ':') === 0) {
+			} else if(str_contains($href, ':') || str_starts_with($end, ':')) {
 				// non http link like mailto: or tel: 
 				$counts['nohttp']++;	
 				continue;
 			}
 		
-			if(strpos($path, '/') !== 0) {
+			if(!str_starts_with($path, '/')) {
 				// convert relative path to absolute
 				$path = $this->relativeToAbsolutePath($path);
 				if(!strlen($path)) continue;
@@ -391,7 +391,7 @@ class MarkupQA extends Wire {
 			// check if this path is in the ignored paths list
 			$ignored = false;
 			foreach($this->ignorePaths() as $ignorePath) {
-				if(strpos($path, (string) $ignorePath) !== 0) continue;
+				if(!str_starts_with($path, (string) $ignorePath)) continue;
 				if($debug) $this->message("MarkupQA sleepLinks skipped $path because it matches ignored path $ignorePath"); 
 				$counts['ignored']++;
 				$ignored = true;
@@ -477,7 +477,7 @@ class MarkupQA extends Wire {
 	public function wakeupLinks(&$value) {
 
 		// if there's no data-pwid attribute present, then there's nothing to do here
-		if(strpos($value, 'data-pwid=') === false) return [];
+		if(!str_contains($value, 'data-pwid=')) return [];
 		
 		$re = '!' . 
 			'(<a[^\t<>]*?)' . // 1:"start" which includes "<a" and everything up until data-pwid attribute
@@ -543,22 +543,22 @@ class MarkupQA extends Wire {
 			if($livePath) {
 				$ignore = false;
 				foreach($this->ignorePaths() as $ignorePath) {
-					if(strpos($livePath, (string) $ignorePath) !== 0) continue;
+					if(!str_starts_with($livePath, (string) $ignorePath)) continue;
 					if($debug) $this->message("MarkupQA wakeupLinks path $livePath matches ignored path $ignorePath");
 					$ignore = true;
 					break;
 				}
-				if($path && substr($path, -1) != '/') {
+				if($path && !str_ends_with($path, '/')) {
 					// no trailing slash, retain the editors wishes here
 					$livePath = rtrim($livePath, '/');
 				}
 				if($ignore) {
 					// path should be ignored and left as-is
-				} else if(strpos($livePath, '/trash/') !== false) {
+				} else if(str_contains($livePath, '/trash/')) {
 					// linked page is in trash, we won't update it but we'll produce a warning
 					$this->linkWarning("$path => $livePath (" . $this->_('it is in the trash') . ')');
 					continue;
-				} else if(strpos($livePath, (string) $adminPath) === 0) {
+				} else if(str_starts_with($livePath, (string) $adminPath)) {
 					// do not update paths that point in admin
 					$this->linkWarning("$path => $livePath (" . $this->_('points to the admin') . ')');
 					continue;
@@ -721,7 +721,7 @@ class MarkupQA extends Wire {
 	 *
 	 */
 	public function checkImgTags(&$value, array $options = []) {
-		if(strpos($value, '<img ') !== false && preg_match_all('{(<' . 'img [^>]+>)}', $value, $matches)) {
+		if(str_contains($value, '<img ') && preg_match_all('{(<' . 'img [^>]+>)}', $value, $matches)) {
 			foreach($matches[0] as $img) {
 				$this->checkImgTag($value, $img, $options);
 			}
@@ -781,7 +781,7 @@ class MarkupQA extends Wire {
 		}
 
 		// if <img> had no src attr, or if it was pointing to something outside of PW assets, skip it
-		if(!$src || strpos($src, $this->assetsURL) === false) return;
+		if(!$src || !str_contains($src, $this->assetsURL)) return;
 
 		// recognized site image, make sure the file exists
 		/** @var Pageimage $pagefile */

@@ -112,7 +112,7 @@ class WireRandom extends Wire {
 		}
 
 		foreach($options['require'] as $c) {
-			if(strpos($allowed, (string) $c) === false) $allowed = '';
+			if(!str_contains($allowed, (string) $c)) $allowed = '';
 		}
 
 		if(!strlen($allowed)) {
@@ -130,7 +130,7 @@ class WireRandom extends Wire {
 			if(count($options['require'])) {
 				$n = 0;
 				foreach($options['require'] as $c) {
-					if(strpos($value, (string) $c) === false) $n++;
+					if(!str_contains($value, (string) $c)) $n++;
 				}
 				if($n) continue;
 			}
@@ -207,7 +207,7 @@ class WireRandom extends Wire {
 				// base64 string includes "/" or "." characters and we have substitutions (extras)
 				$r = 0; // non-zero if we need to perform replacements at the ed
 				foreach($base64Extras as $name => $c) {
-					while(strpos($baseStr, $c) !== false) {
+					while(str_contains($baseStr, $c)) {
 						[$a, $b] = explode($c, $baseStr, 2);
 						$n = $numExtras > 1 ? $this->integer(0, $numExtras-1) : 0;
 						$x = $options['extras'][$n];
@@ -238,7 +238,7 @@ class WireRandom extends Wire {
 			$lastChar = '';
 			for($n = 0; $n < strlen($baseStr); $n++) {
 				$c = $baseStr[$n];
-				if(strpos($allowed, (string) $c) === false) continue;
+				if(!str_contains($allowed, (string) $c)) continue;
 				if($options['noRepeat'] && $c === $lastChar) continue;
 				$value .= $c;
 				$lastChar = $c;
@@ -771,7 +771,7 @@ class WireRandom extends Wire {
 				try {
 					$buffer = random_bytes($rawLength);
 					if($buffer) $valid = true;
-				} catch(\Exception $e) {
+				} catch(\Exception) {
 					$valid = false;
 				}
 				if($test) $tests['random_bytes'] = $buffer;

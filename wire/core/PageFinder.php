@@ -544,7 +544,7 @@ class PageFinder extends Wire {
 				$values = is_array($value) ? $value : [$value];
 				foreach($values as $k => $v) {
 					if(ctype_digit("$v")) continue;
-					if(strpos($v, '/') !== 0) continue;
+					if(!str_starts_with($v, '/')) continue;
 					$child = $this->pages->get($v);
 					$values[$k] = $child->id;
 				}
@@ -583,7 +583,7 @@ class PageFinder extends Wire {
 			// if single parent specified and no sort requested, default to the sort specified with the requested parent
 			try {
 				$parent = $this->pages->get(reset($hasParents));
-			} catch(\Exception $e) {
+			} catch(\Exception) {
 				// don't try to add sort
 				$parent = null;
 			}
@@ -810,7 +810,7 @@ class PageFinder extends Wire {
 					if($options['returnVerbose']) {
 						// determine score for this row
 						$score = 0.0;
-						foreach($row as $k => $v) if(strpos($k, '_score_') === 0) {
+						foreach($row as $k => $v) if(str_starts_with($k, '_score_')) {
 							$v = (float) $v; 
 							if($v === 111.1 || $v === 222.2 || $v === 333.3) continue; // signal scores of non-match
 							$score += $v;
@@ -1031,7 +1031,7 @@ class PageFinder extends Wire {
 				
 			} else if($field === 'sort') {
 				$sortSelectors[] = $selector;
-				if(!empty($options['useSortsAfter']) && $selector->operator == '=' && strpos($selector->value, '.') === false) {
+				if(!empty($options['useSortsAfter']) && $selector->operator == '=' && !str_contains($selector->value, '.')) {
 					$sortAfterSelectors[] = $selector;
 				}
 				
@@ -1084,7 +1084,7 @@ class PageFinder extends Wire {
 					// first iteration only, see if it's a native column and prevent sortsAfter if so
 					break;
 				}
-				if(strpos($selector->value(), '.') !== false) {
+				if(str_contains($selector->value(), '.')) {
 					// we don't supports sortsAfter for subfields, so abandon entirely
 					$sortsAfter = [];
 					break;
@@ -1146,7 +1146,7 @@ class PageFinder extends Wire {
 			// reverse the sorts
 			foreach($sortSelectors as $s) {
 				if($s->operator != '=' || ctype_digit($s->value)) continue;
-				if(strpos($s->value, '-') === 0) {
+				if(str_starts_with($s->value, '-')) {
 					$s->value = ltrim($s->value, '-');
 				} else {
 					$s->value = '-' . $s->value;
@@ -1311,7 +1311,7 @@ class PageFinder extends Wire {
 			
 			// determine if it is a double-dot field (a.b.c)
 			if($dot && strrpos($fn, '.') !== $dot) {
-				if(strpos($fn, '__owner.') !== false) continue;
+				if(str_contains($fn, '__owner.')) continue;
 				$hasDoubleDot = true;
 			} 
 	
@@ -1488,7 +1488,7 @@ class PageFinder extends Wire {
 			$findSelector = '';
 			
 			foreach($fields as $fieldName) {
-				if(strpos($fieldName, '.') !== false) {
+				if(str_contains($fieldName, '.')) {
 					/** @noinspection PhpUnusedLocalVariableInspection */
 					[$unused, $fieldName] = explode('.', $fieldName);
 				}
@@ -1525,7 +1525,7 @@ class PageFinder extends Wire {
 			if($findSelector) {
 				foreach(new Selectors($findSelector) as $s) {
 					// add everything from findSelector, except for dynamic/runtime 'page.[something]' vars
-					if(strpos($s->getField('string'), 'page.') === 0 || strpos($s->getValue('string'), 'page.') === 0) continue;
+					if(str_starts_with($s->getField('string'), 'page.') || str_starts_with($s->getValue('string'), 'page.')) continue;
 					$selectors->append($s);
 				}
 			}
@@ -1544,7 +1544,7 @@ class PageFinder extends Wire {
 			// force non-match for this subselector by populating 'id' subfield to field name(s)
 			$fieldNames = [];
 			foreach($selector->fields as $key => $fieldName) {
-				if(strpos($fieldName, '.') !== false) {
+				if(str_contains($fieldName, '.')) {
 					// reduce fieldName to just field name without subfield name
 					/** @noinspection PhpUnusedLocalVariableInspection */
 					[$fieldName, $subname] = explode('.', $fieldName); // subname intentionally unused
@@ -1783,7 +1783,7 @@ class PageFinder extends Wire {
 					$isEmptyValue = $fieldtype->isEmptyValue($field, $value);
 					$useEmpty = $isEmptyValue || $operator[0] === '<' || ((int) $value < 0 && $operator[0] === '>') 
 						|| ($operator === '!=' && $isEmptyValue === false);	
-					if($useEmpty && strpos($subfield, 'data') === 0) { // && !$fieldtype instanceof FieldtypeMulti) {
+					if($useEmpty && str_starts_with($subfield, 'data')) { // && !$fieldtype instanceof FieldtypeMulti) {
 						if($isEmptyValue) $numEmptyValues++;
 						if(in_array($operator, ['=', '!=', '<', '<=', '>', '>='])) {
 							// we only accommodate this optimization for single-value selectors...
@@ -2684,7 +2684,7 @@ class PageFinder extends Wire {
 					foreach($values as $k => $v) {
 						if(ctype_digit("$v")) continue; 
 						$v = $sanitizer->pagePathName($v, Sanitizer::toAscii); 
-						if(strpos($v, '/') === false) $v = "/$v"; // prevent a plain string with no slashes
+						if(!str_contains($v, '/')) $v = "/$v"; // prevent a plain string with no slashes
 						// convert path to id
 						$parent = $this->pages->get($v);
 						$values[$k] = $parent instanceof NullPage ? null : $parent->id;
@@ -2796,7 +2796,7 @@ class PageFinder extends Wire {
 					$value = (int) $value; 
 				}
 
-				$isName = $field === 'name' || strpos($field, 'name') === 0; 
+				$isName = $field === 'name' || str_starts_with($field, 'name'); 
 				$isPath = $field === 'path' || $field === 'url';
 				$isNumChildren = $field === 'num_children' || $field === 'numChildren';
 
@@ -2871,7 +2871,7 @@ class PageFinder extends Wire {
 						if($not) $s = "NOT ($s)";
 					}
 
-					if($field === 'status' && strpos($operator, '<') === 0 && $value >= Page::statusHidden && count($options['alwaysAllowIDs'])) {
+					if($field === 'status' && str_starts_with($operator, '<') && $value >= Page::statusHidden && count($options['alwaysAllowIDs'])) {
 						// support the 'alwaysAllowIDs' option for specific page IDs when requested but would
 						// not otherwise appear in the results due to hidden or unpublished status
 						$allowIDs = [];
@@ -3246,7 +3246,7 @@ class PageFinder extends Wire {
 		if($field) {
 			if($field->type instanceof FieldtypePage) {
 				$is = true;
-			} else if(strpos($field->type->className(), 'FieldtypePageTable') !== false) {
+			} else if(str_contains($field->type->className(), 'FieldtypePageTable')) {
 				$is = true;
 			} else if($this->isRepeaterFieldtype($field->type)) {
 				$is = $literal ? false : true;
@@ -3435,7 +3435,7 @@ class PageFinder extends Wire {
 	 */
 	protected function getQueryOwnerField($fieldName, array $data) {
 		
-		if(substr($fieldName, -7) !== '__owner') return false;
+		if(!str_ends_with($fieldName, '__owner')) return false;
 		
 		$fields = $data['fields']; /** @var array $fields */
 		$subfields = $data['subfields']; /** @var string $subfields */
@@ -3493,7 +3493,7 @@ class PageFinder extends Wire {
 			array_shift($fields);
 			$subfields = [$subfields];
 			foreach($fields as $name) {
-				if(strpos($name, "$fieldName.") === 0) {
+				if(str_starts_with($name, "$fieldName.")) {
 					[, $name] = explode('__owner.', $name); 	
 					$subfields[] = $name;
 				} else {
@@ -3512,10 +3512,10 @@ class PageFinder extends Wire {
 		
 		// find any other selectors referring to this same owner, bundle them in, and remove from source
 		foreach($selectors as $sel) {
-			if(strpos($sel->field(), "$fieldName.") !== 0) continue;
+			if(!str_starts_with($sel->field(), "$fieldName.")) continue;
 			$sel->set('owner_processed', true);
 			$op = $sel->operator();
-			if($useCount && ($sel->not || strpos($op, '!') !== false || strpos($op, '<') !== false)) {
+			if($useCount && ($sel->not || str_contains($op, '!') || str_contains($op, '<'))) {
 				$useCount = false;
 			}
 			if($sel === $selector) {
@@ -3613,9 +3613,9 @@ class PageFinder extends Wire {
 
 		if(count($fieldNames)) {
 			$fieldsStr = ':' . implode(':', $fieldNames) . ':';
-			if(strpos($fieldsStr, ':parent.') !== false) return true;
-			if(strpos($fieldsStr, ':children.') !== false) return true;
-			if(strpos($fieldsStr, ':child.') !== false) return true;
+			if(str_contains($fieldsStr, ':parent.')) return true;
+			if(str_contains($fieldsStr, ':children.')) return true;
+			if(str_contains($fieldsStr, ':child.')) return true;
 		}
 
 		return false;

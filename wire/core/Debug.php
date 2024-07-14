@@ -410,7 +410,7 @@ class Debug {
 				if($class === 'WireHooks' || $basename === 'WireHooks.php') continue;
 			}
 			
-			if(strpos($function, '___') === 0) {
+			if(str_starts_with($function, '___')) {
 				$isHookableCall = '___';
 			} else if($obj && !method_exists($obj, $function) && method_exists($obj, "___$function")) {
 				$isHookableCall = true;
@@ -558,8 +558,8 @@ class Debug {
 			if(strlen($value) > $options['maxStrlen']) {
 				$value = substr($value, 0, $options['maxStrlen']) . $options['ellipsis'];
 			}
-			$hasDQ = strpos($value, '"') !== false;
-			$hasSQ = strpos($value, "'") !== false;
+			$hasDQ = str_contains($value, '"');
+			$hasSQ = str_contains($value, "'");
 			if(($hasDQ && $hasSQ) || $hasSQ) {
 				$value = str_replace('"', '\\"', $value);
 				$str = '"' . $value . '"';
@@ -645,7 +645,7 @@ class Debug {
 			case 'json_encode':
 				$value = json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 				$value = str_replace('    ', '  ', $value);
-				if(strpos($value, '\\"') !== false) $value = str_replace('\\"', "'", $value);
+				if(str_contains($value, '\\"')) $value = str_replace('\\"', "'", $value);
 				break;
 			case 'var_export':
 				$value = var_export($value, true);

@@ -237,7 +237,7 @@ class Selectors extends WireArray {
 
 			$not = false;
 			$quote = '';	
-			if(strpos($str, '!') === 0) {
+			if(str_starts_with($str, '!')) {
 				$str = ltrim($str, '!');
 				$not = true; 
 			}
@@ -301,7 +301,7 @@ class Selectors extends WireArray {
 	protected function extractField(&$str) {
 		$field = '';
 		
-		if(strpos($str, '(') === 0) {
+		if(str_starts_with($str, '(')) {
 			// OR selector where specification of field name is optional and = operator is assumed
 			$str = '=(' . substr($str, 1); 
 			return $field; 
@@ -478,10 +478,10 @@ class Selectors extends WireArray {
 		if($hasEmbeddedQuotes) return false;
 	
 		// does the value contain possible OR conditions?
-		if(strpos($value, '|') !== false) {
+		if(str_contains($value, '|')) {
 			
 			// if there is an escaped pipe, abort optimization attempt
-			if(strpos($value, '\\' . '|') !== false) return false; 
+			if(str_contains($value, '\\' . '|')) return false; 
 		
 			// if value was surrounded in "quotes" or 'quotes' abort optimization attempt
 			// as the pipe is a literal value rather than an OR
@@ -627,7 +627,7 @@ class Selectors extends WireArray {
 		$str = ltrim($str, ' ,"\']})'); // should be executed even if blank value
 
 		// check if a pipe character is present next, indicating an OR value may be provided
-		if(strlen($str) > 1 && substr($str, 0, 1) == '|') {
+		if(strlen($str) > 1 && str_starts_with($str, '|')) {
 			$str = substr($str, 1); 
 			// perform a recursive extract to account for all OR values
 			$v = $this->extractValue($str, $quote); 
@@ -709,7 +709,7 @@ class Selectors extends WireArray {
 	 */
 	public function valueHasVar($value) {
 		if(self::stringHasOperator($value)) return false;
-		if(strpos($value, '.') !== false) {
+		if(str_contains($value, '.')) {
 			[$name, $subname] = explode('.', $value);
 		} else {
 			$name = $value;
@@ -837,7 +837,7 @@ class Selectors extends WireArray {
 		if(ctype_alnum($c)) return ['='];
 
 		$op = '';
-		while(strpos($operatorsStr, $c) !== false && strlen($field)) {
+		while(str_contains($operatorsStr, $c) && strlen($field)) {
 			$op = $c . $op;
 			$field = substr($field, 0, -1);
 			$c = substr($field, -1); 
@@ -1051,7 +1051,7 @@ class Selectors extends WireArray {
 	
 		// determine field(s)
 		foreach($_fields as $name) {
-			if(strpos($name, '.') !== false) {
+			if(str_contains($name, '.')) {
 				// field name with multiple.named.parts, sanitize them separately
 				$parts = explode('.', $name);
 				foreach($parts as $n => $part) {
@@ -1080,7 +1080,7 @@ class Selectors extends WireArray {
 			$_sanitize = $sanitize;
 			if(is_array($value)) $value = 'array'; // we don't allow arrays here
 			if(is_object($value)) $value = (string) $value;
-			if(is_int($value) || (ctype_digit("$value") && strpos($value, '0') !== 0)) {
+			if(is_int($value) || (ctype_digit("$value") && !str_starts_with($value, '0'))) {
 				$value = (int) $value;
 				if($_sanitize == 'selectorValue') $_sanitize = ''; // no need to sanitize integer to string
 			}
@@ -1195,7 +1195,7 @@ class Selectors extends WireArray {
 	 * @return string
 	 * 
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$str = '';
 		foreach($this as $selector) {
 			$str .= $selector->str . ", ";
@@ -1396,7 +1396,7 @@ class Selectors extends WireArray {
 		if($op === $operator) {
 			if($is) return true;
 			// Convert types like "SelectorEquals" to "Equals"
-			if(strpos($type, 'Selector') === 0) [, $type] = explode('Selector', $type, 2);
+			if(str_starts_with($type, 'Selector')) [, $type] = explode('Selector', $type, 2);
 			return $type;
 		}
 		return false;
@@ -1482,7 +1482,7 @@ class Selectors extends WireArray {
 				// if a letter appears as the character before operator, then we're good
 				$has = true;
 
-			} else if(strpos($digits, $c) !== false) {
+			} else if(str_contains($digits, $c)) {
 				// if a digit appears as the character before operator, we need to confirm there is at least one letter
 				// as there can't be a field named 123, for example, which would mean the operator is likely something 
 				// to do with math equations, which we would refuse as a valid selector operator
@@ -1494,7 +1494,7 @@ class Selectors extends WireArray {
 						$has = true;
 						break;
 
-					} else if(strpos($digits, $c) === false) {
+					} else if(!str_contains($digits, $c)) {
 						// if we've got a non-digit (and non-letter) then definitely not valid
 						break;
 					}
@@ -1529,7 +1529,7 @@ class Selectors extends WireArray {
 		$alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
 		// replace characters that are allowed but aren't useful here
-		if(strpos($str, '=(') !== false) $str = str_replace('=(', '=1,', $str);
+		if(str_contains($str, '=(')) $str = str_replace('=(', '=1,', $str);
 		$str = str_replace(['!', '(', ')', '@', '.', '|', '_'], '', trim(strtolower($str)));
 
 		// flatten sub-selectors
@@ -1540,7 +1540,7 @@ class Selectors extends WireArray {
 		$str = rtrim($str, ", ");
 
 		// first character must match alphabet
-		if(strpos($alphabet, substr($str, 0, 1)) === false) return false;
+		if(!str_contains($alphabet, substr($str, 0, 1))) return false;
 
 		$operatorChars = implode('', self::getOperatorChars());
 
@@ -1645,12 +1645,12 @@ class Selectors extends WireArray {
 		} else if(is_string($selectors)) {
 			if(is_array($fieldName)) {
 				foreach($fieldName as $key => $name) {
-					if(strpos($selectors, (string) $name) === false) unset($fieldName[$key]);
+					if(!str_contains($selectors, (string) $name)) unset($fieldName[$key]);
 				}
 				$count = count($fieldName);
 				$fail = $count === 0;
 				if($count === 1) $fieldName = reset($fieldName); // simplify 1-item array to string
-			} else if(strpos($selectors, $fieldName) === false) {
+			} else if(!str_contains($selectors, $fieldName)) {
 				$fail = true;
 			}
 			
@@ -1749,16 +1749,16 @@ class Selectors extends WireArray {
 	 */
 	static public function keyValueStringToArray($s) {
 
-		if(strpos($s, '~~COMMA') !== false) $s = str_replace('~~COMMA', '', $s);
-		if(strpos($s, '~~EQUAL') !== false) $s = str_replace('~~EQUAL', '', $s);
+		if(str_contains($s, '~~COMMA')) $s = str_replace('~~COMMA', '', $s);
+		if(str_contains($s, '~~EQUAL')) $s = str_replace('~~EQUAL', '', $s);
 
 		$hasEscaped = false;
 
-		if(strpos($s, ',,') !== false) {
+		if(str_contains($s, ',,')) {
 			$s = str_replace(',,', '~~COMMA', $s);
 			$hasEscaped = true;
 		}
-		if(strpos($s, '==') !== false) {
+		if(str_contains($s, '==')) {
 			$s = str_replace('==', '~~EQUAL', $s);
 			$hasEscaped = true;
 		}
@@ -1787,8 +1787,8 @@ class Selectors extends WireArray {
 	static public function arrayToKeyValueString($a) {
 		$s = '';
 		foreach($a as $key => $value) {
-			if(strpos($value, ',') !== false) $value = str_replace([',,', ','], ',,', $value);
-			if(strpos($value, '=') !== false) $value = str_replace('=', '==', $value);
+			if(str_contains($value, ',')) $value = str_replace([',,', ','], ',,', $value);
+			if(str_contains($value, '=')) $value = str_replace('=', '==', $value);
 			$s .= "$key=$value, ";
 		}
 		return rtrim($s, ", ");

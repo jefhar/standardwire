@@ -715,7 +715,7 @@ class PagesEditor extends Wire {
 				} catch(\Exception $e) {
 					$label = $field->getLabel();
 					$message = $e->getMessage();
-					if(strpos($message, $label) !== false) $label = $name;
+					if(str_contains($message, $label)) $label = $name;
 					$error = sprintf($this->_('Error saving field "%s"'), $label) . ' — ' . $message;
 					$this->trackException($e, true, $error);
 					if($this->wire()->database->inTransaction()) throw $e;
@@ -1601,7 +1601,7 @@ class PagesEditor extends Wire {
 		foreach($sqls as $sql) {
 			$query = $database->prepare($sql);
 			foreach($binds as $bindKey => $bindValue) {
-				if(strpos($sql, $bindKey) === false) continue;
+				if(!str_contains($sql, $bindKey)) continue;
 				$query->bindValue($bindKey, $bindValue);
 				$query->execute();
 			}
@@ -1686,7 +1686,7 @@ class PagesEditor extends Wire {
 		if($options['clearMeta'] && !$halt) {
 			try {
 				$page->meta()->removeAll();
-			} catch(\Exception $e) {
+			} catch(\Exception) {
 				$errors[] = "Error clearing meta for page $page";
 				$halt = $options['haltOnError'];
 			}
@@ -1740,14 +1740,14 @@ class PagesEditor extends Wire {
 		if(is_array($options)) {
 			// ok
 		} else if(is_string($options)) {
-			if(strpos($options, '=') !== false) {
+			if(str_contains($options, '=')) {
 				$selectors = new Selectors($options);
 				$this->wire($selectors);
 				$options = [];
 				foreach($selectors as $selector) {
 					$options[$selector->field()] = $selector->value;
 				}
-			} else if(strpos($options, '/') === 0) {
+			} else if(str_starts_with($options, '/')) {
 				$options = ['path' => $options];
 			} else {
 				$options = ['template' => $options];
@@ -1809,7 +1809,7 @@ class PagesEditor extends Wire {
 		// name and parent can be detected from path, when specified
 		if(!empty($options['path'])) {
 			$path = trim($options['path'], '/');
-			if(strpos($path, '/') === false) $path = "/$path";
+			if(!str_contains($path, '/')) $path = "/$path";
 			$parts = explode('/', $path); // note index[0] is blank
 			$name = array_pop($parts);
 			if(empty($options['name']) && !empty($name)) {

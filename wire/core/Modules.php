@@ -1237,7 +1237,7 @@ class Modules extends WireArray {
 	 */
 	public function moduleID($name, $setID = null) {
 		if($name instanceof Module) $name = $name->className();
-		if(strpos("$name", '\\') !== false) $name = wireClassName($name, false);
+		if(str_contains("$name", '\\')) $name = wireClassName($name, false);
 		if($setID !== null) {
 			if($setID === false) {
 				unset($this->moduleIDs[$name]);
@@ -1268,7 +1268,7 @@ class Modules extends WireArray {
 			if($setName === null) return $name;
 			$id = $this->getModuleID($name);
 		} else if(!ctype_digit("$id")) {
-			if(strpos("$id", '\\') !== false) $id = wireClassName($id, false);
+			if(str_contains("$id", '\\')) $id = wireClassName($id, false);
 			if($setName === null && is_string($id)) return $id;
 			$id = $this->getModuleID($id);
 		}
@@ -1297,7 +1297,7 @@ class Modules extends WireArray {
 		if(is_object($class)) {
 			if(!$class instanceof Module) return 0; // class is not a  module
 			$class = $this->getModuleClass($class);
-		} else if(strpos("$class", '\\') !== false) {
+		} else if(str_contains("$class", '\\')) {
 			$class = wireClassName($class, false);
 		}
 		
@@ -1354,13 +1354,13 @@ class Modules extends WireArray {
 
 		} else if(is_string($module)) {
 			
-			if(strpos($module, "\\") !== false) {
+			if(str_contains($module, "\\")) {
 				$namespace = wireClassName($module, 1);
 				$className = wireClassName($module, false);
 			}
 
 			// remove extensions if they were included in the module name
-			if(strpos($module, '.') !== false) {
+			if(str_contains($module, '.')) {
 				$module = basename(basename($module, '.php'), '.module');
 			}
 			
@@ -1906,7 +1906,7 @@ class Modules extends WireArray {
 		}
 		/** @var string $moduleName */
 		
-		if(strpos($moduleName, "\\") !== false) {
+		if(str_contains($moduleName, "\\")) {
 			$namespace = wireClassName($moduleName, 1);
 			$moduleName = wireClassName($moduleName, false);
 		} else {
@@ -2156,7 +2156,7 @@ class Modules extends WireArray {
 				substr($version, 1, 1) . '.' . 
 				substr($version, 2); 
 			
-		} else if(strpos($version, '.') !== false) {
+		} else if(str_contains($version, '.')) {
 			// version is a formatted string
 			if(strpos($version, '.') == strrpos($version, '.')) {
 				// only 1 period, like: 2.0, convert that to 2.0.0
@@ -2343,7 +2343,7 @@ class Modules extends WireArray {
 		if(!is_array($options)) $options = [];
 		if(!in_array('modules', $this->wire()->config->logs)) return $this->___log();
 		if(!is_string($moduleName)) $moduleName = (string) $moduleName; 
-		if($moduleName && strpos($str, $moduleName) === false) $str .= " (Module: $moduleName)";
+		if($moduleName && !str_contains($str, $moduleName)) $str .= " (Module: $moduleName)";
 		$options['name'] = 'modules';
 		return $this->___log($str, $options); 
 	}
@@ -2415,19 +2415,17 @@ class Modules extends WireArray {
 
 
 	/*************************************************************************************
-	 * CACHES
-	 * 
-	 */
-
-	/**
-	 * Set a runtime memory cache
-	 * 
-	 * @param string $name
-	 * @param mixed $setValue
-	 * @return bool|array|mixed|null
-	 * 
-	 */
-	public function memcache($name, $setValue = null) {
+  * CACHES
+  * 
+  */
+ /**
+  * Set a runtime memory cache
+  *
+  * @param string $name
+  * @return bool|array|mixed|null
+  *
+  */
+ public function memcache($name, mixed $setValue = null) {
 		if($setValue) {
 			$this->caches[$name] = $setValue;
 			return true;
@@ -2503,7 +2501,7 @@ class Modules extends WireArray {
 			$data = $this->wire()->cache->get($cacheName);
 			if($data) return $data;
 		}
-		if(is_string($data) && (strpos($data, '{') === 0 || strpos($data, '[') === 0)) {
+		if(is_string($data) && (str_starts_with($data, '{') || str_starts_with($data, '['))) {
 			$data = json_decode($data, true);
 		}
 		return $data;
@@ -2530,21 +2528,22 @@ class Modules extends WireArray {
 	 * @return mixed
 	 * 
 	 */
-	public function __get($name) {
-		switch($name) {
-			case 'loader': return $this->loader;
-			case 'info': return $this->info;
-			case 'configs': return $this->configs;
-			case 'flags': return $this->flags;
-			case 'files': return $this->files;
-			case 'installableFiles': return $this->installableFiles;
-			case 'coreModulesDir': return $this->coreModulesDir;
-			case 'coreModulesPath': return $this->paths[0];
-			case 'siteModulesPath': return $this->paths[1] ?? '';
-			case 'moduleIDs': return $this->moduleIDs;
-			case 'moduleNames': return $this->moduleNames;
-			case 'refreshing': return $this->refreshing;
-		}
-		return parent::__get($name);
-	}
+	public function __get($name)
+ {
+     return match ($name) {
+         'loader' => $this->loader,
+         'info' => $this->info,
+         'configs' => $this->configs,
+         'flags' => $this->flags,
+         'files' => $this->files,
+         'installableFiles' => $this->installableFiles,
+         'coreModulesDir' => $this->coreModulesDir,
+         'coreModulesPath' => $this->paths[0],
+         'siteModulesPath' => $this->paths[1] ?? '',
+         'moduleIDs' => $this->moduleIDs,
+         'moduleNames' => $this->moduleNames,
+         'refreshing' => $this->refreshing,
+         default => parent::__get($name),
+     };
+ }
 }

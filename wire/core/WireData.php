@@ -58,7 +58,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @see WireData::setQuietly(), WireData::get()
 	 *
 	 */
-	public function set($key, $value) {
+	public function set($key, mixed $value) {
 		if($key === 'data') {
 			if(!is_array($value)) $value = (array) $value;
 			return $this->setArray($value); 
@@ -85,7 +85,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @see Wire::trackChanges(), WireData::set()
 	 *
 	 */
-	public function setQuietly($key, $value) {
+	public function setQuietly($key, mixed $value) {
 		$track = $this->trackChanges(); 
 		if($track) $this->setTrackChanges(false);
 		$this->set($key, $value);
@@ -107,7 +107,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return bool True if values are equal, false if not
 	 *
 	 */
-	protected function isEqual($key, $value1, $value2) {
+	protected function isEqual($key, mixed $value1, mixed $value2) {
 		if($key) {} // intentional to avoid unused argument notice
 		// $key intentionally not used here, but may be used by descending classes
 		return $value1 === $value2; 	
@@ -132,13 +132,12 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	}
 
 	/**
-	 * Provides direct reference access to set values in the $data array
-	 * 
-	 * @param string $key
-	 * @param mixed $value
-	 *
-	 */
-	public function __set($key, $value) {
+  * Provides direct reference access to set values in the $data array
+  *
+  * @param string $key
+  *
+  */
+ public function __set($key, mixed $value) {
 		$this->set($key, $value); 
 	}
 
@@ -211,7 +210,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 *   - `null` - If you are attempting to get a value that has not been set. 
 	 *   - `$this` - If you are setting a value.
 	 */
-	public function data($key = null, $value = null) {
+	public function data($key = null, mixed $value = null) {
 		if($key === null) return $this->data;
 		if(is_array($key)) {
 			if($value === true) {

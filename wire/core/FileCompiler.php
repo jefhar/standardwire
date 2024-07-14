@@ -133,7 +133,7 @@ class FileCompiler extends Wire {
 	 */
 	public function __construct($sourcePath, array $options = []) {
 		$this->options = array_merge($this->options, $options);
-		if(strpos($sourcePath, '..') !== false) $sourcePath = realpath($sourcePath);
+		if(str_contains($sourcePath, '..')) $sourcePath = realpath($sourcePath);
 		if(DIRECTORY_SEPARATOR != '/') $sourcePath = str_replace(DIRECTORY_SEPARATOR, '/', $sourcePath);
 		$this->sourcePath = rtrim($sourcePath, '/') . '/';
 		parent::__construct();
@@ -197,7 +197,7 @@ class FileCompiler extends Wire {
 		$rootPath = $config->paths->root;
 		$targetPath = $this->cachePath; 
 		
-		if(strpos($this->sourcePath, $targetPath) === 0) {
+		if(str_starts_with($this->sourcePath, $targetPath)) {
 			// sourcePath is inside the targetPath, correct this 
 			$this->sourcePath = str_replace($targetPath, '', $this->sourcePath);
 			$this->sourcePath = $rootPath . $this->sourcePath;
@@ -307,7 +307,7 @@ class FileCompiler extends Wire {
 		
 		if($this->globalOptions['siteOnly']) {
 			// only files in /site/ are allowed for compilation
-			if(strpos($filename, (string) $this->wire()->config->paths->site) !== 0) {
+			if(!str_starts_with($filename, (string) $this->wire()->config->paths->site)) {
 				// sourcePath is somewhere outside of the PW /site/, and not allowed
 				return false;
 			}
@@ -334,7 +334,7 @@ class FileCompiler extends Wire {
 		
 		$allow = true;
 		foreach($this->exclusions as $pathname) {
-			if(strpos($filename, (string) $pathname) === 0) {
+			if(str_starts_with($filename, (string) $pathname)) {
 				$allow = false;
 				break;
 			}
@@ -355,7 +355,7 @@ class FileCompiler extends Wire {
 		
 		$this->init();
 		
-		if(strpos($sourceFile, $this->sourcePath) === 0) {
+		if(str_starts_with($sourceFile, $this->sourcePath)) {
 			$sourcePathname = $sourceFile;
 			$sourceFile = str_replace($this->sourcePath, '/', $sourceFile);
 		} else {
@@ -397,7 +397,7 @@ class FileCompiler extends Wire {
 			$targetPath = dirname($targetPathname);
 			$targetData = file_get_contents($sourcePathname);
 			if(stripos($targetData, 'FileCompiler=0')) return $sourcePathname; // bypass if it contains this string
-			if(strpos($targetData, 'namespace') !== false) $this->ns = $this->wire()->files->getNamespace($targetData, true);
+			if(str_contains($targetData, 'namespace')) $this->ns = $this->wire()->files->getNamespace($targetData, true);
 			if(!$this->ns) $this->ns = "\\";
 			if(!__NAMESPACE__ && !$this->options['modules'] && $this->ns === "\\") return $sourcePathname;
 			set_time_limit(120);
@@ -584,11 +584,11 @@ class FileCompiler extends Wire {
 		
 		// other related to includes
 		$rawPHP = $this->rawPHP;
-		if(strpos($rawPHP, '__DIR__') !== false) {
+		if(str_contains($rawPHP, '__DIR__')) {
 			$data = str_replace('__DIR__', "'" . dirname($sourceFile) . "'", $data);
 			$rawPHP = str_replace('__DIR__', "'" . dirname($sourceFile) . "'", $rawPHP);
 		}
-		if(strpos($rawPHP, '__FILE__') !== false) {
+		if(str_contains($rawPHP, '__FILE__')) {
 			$data = str_replace('__FILE__', "'" . $sourceFile . "'", $data);
 			$rawPHP = str_replace('__FILE__', "'" . $sourceFile . "'", $rawPHP);
 		}
@@ -613,7 +613,7 @@ class FileCompiler extends Wire {
 			// if the include statement looks like one of these below then skip compilation for included file
 			// include(/*NoCompile*/__DIR__ . '/file.php');
 			// include(__DIR__ . '/file.php'/*NoCompile*/); 
-			if(strpos($fullMatch, 'NoCompile') !== false) continue;
+			if(str_contains($fullMatch, 'NoCompile')) continue;
 			
 			$open = $matches[1][$key];
 			$funcMatch = $matches[2][$key];
@@ -622,7 +622,7 @@ class FileCompiler extends Wire {
 			$close = $matches[5][$key];
 			$argsMatch = '';
 			
-			if(!$argOpen && strpos($funcMatch, 'include') !== 0 && strpos($funcMatch, 'require') !== 0) {
+			if(!$argOpen && !str_starts_with($funcMatch, 'include') && !str_starts_with($funcMatch, 'require')) {
 				// only include, include_once, require, require_once can be used without opening parenthesis
 				continue; 
 			}
@@ -637,7 +637,7 @@ class FileCompiler extends Wire {
 				$close = '?' . '>' . $fileMatchExtra . $close;
 				$fileMatch = trim($fileMatch);
 			}
-			if(substr($fileMatch, -1) == ')') {
+			if(str_ends_with($fileMatch, ')')) {
 				// move the closing parenthesis out of fileMatch and into close
 				$fileMatch = substr($fileMatch, 0, -1);
 				$close = ")$close";
@@ -657,15 +657,15 @@ class FileCompiler extends Wire {
 				$fileMatch = substr($fileMatch, 0, $commaPos);
 			}
 		
-			if(strpos($fileMatch, '"') === 0 || strpos($fileMatch, "'") === 0) {
+			if(str_starts_with($fileMatch, '"') || str_starts_with($fileMatch, "'")) {
 				// fileMatch is quoted string
 				if(strpos($fileMatch, './') === 1) {
 					// relative to current dir, convert to absolute
 					$fileMatch = $fileMatch[0] . dirname($sourceFile) . substr($fileMatch, 2);
-				} else if(strpos($fileMatch, '/') === false
-					&& strpos($fileMatch, '$') === false
-					&& strpos($fileMatch, '(') === false
-					&& strpos($fileMatch, '\\') === false) {
+				} else if(!str_contains($fileMatch, '/')
+					&& !str_contains($fileMatch, '$')
+					&& !str_contains($fileMatch, '(')
+					&& !str_contains($fileMatch, '\\')) {
 					// i.e. include("file.php")
 					$fileMatch = $fileMatch[0] . dirname($sourceFile) . '/' . substr($fileMatch, 1);
 				}
@@ -703,16 +703,16 @@ class FileCompiler extends Wire {
 		$test = $open;
 		foreach(['"', "'"] as $quote) {
 			// skip when words like "require" are in a string
-			if(strpos($test, $quote) === false) continue;
+			if(!str_contains($test, $quote)) continue;
 			$test = str_replace('\\' . $quote, '', $test); // ignore quotes that are escaped
-			if(strpos($test, $quote) === false) continue;
+			if(!str_contains($test, $quote)) continue;
 			if(substr_count($test, $quote) % 2 > 0) {
 				// there are an uneven number of quotes, indicating that
 				// our $funcMatch is likely part of a quoted string
 				$skipMatch = true;
 				break;
 			}
-			if($quote == '"' && strpos($test, "'") !== false) {
+			if($quote == '"' && str_contains($test, "'")) {
 				// remove quoted apostrophes so they don't confuse the next iteration
 				$test = preg_replace('/"[^"\']*\'[^"]*"/', '', $test);
 			}
@@ -833,8 +833,8 @@ class FileCompiler extends Wire {
 		// update classes and interfaces
 		foreach($classes as $class) {
 			
-			if(__NAMESPACE__ && strpos($class, __NAMESPACE__ . '\\') !== 0) continue; // limit only to ProcessWire classes/interfaces
-			if(strpos($class, '\\') !== false) {
+			if(__NAMESPACE__ && !str_starts_with($class, __NAMESPACE__ . '\\')) continue; // limit only to ProcessWire classes/interfaces
+			if(str_contains($class, '\\')) {
 				[$ns, $class] = explode('\\', $class, 2); // reduce to just class without namespace
 			} else {
 				$ns = '';
@@ -868,7 +868,7 @@ class FileCompiler extends Wire {
 				foreach($matches[0] as $key => $fullMatch) {
 					$open = $matches[1][$key];
 					$close = $matches[2][$key];
-					if(substr($open, -1) == '\\') continue; // if last character in open is '\' then skip the replacement
+					if(str_ends_with($open, '\\')) continue; // if last character in open is '\' then skip the replacement
 					$className = __NAMESPACE__ ? '\\' . __NAMESPACE__ . '\\' . $class : '\\' . $class;
 					$repl = $open . $className . $close;
 					$data = str_replace($fullMatch, $repl, $data);
@@ -880,7 +880,7 @@ class FileCompiler extends Wire {
 	
 		// update PW procedural function calls
 		$functions = get_defined_functions();
-		$hasFunctionExists = strpos($rawDequotedPHP, 'function_exists') !== false; 
+		$hasFunctionExists = str_contains($rawDequotedPHP, 'function_exists'); 
 		
 		foreach($functions['user'] as $function) {
 			
@@ -900,7 +900,7 @@ class FileCompiler extends Wire {
 			while(preg_match_all('/^(.*?[()!;,@\[=\s.])' . $function . '\s*\(/im', $rawPHP, $matches)) {
 				foreach($matches[0] as $key => $fullMatch) {
 					$open = $matches[1][$key];
-					if(strpos($open, 'function') !== false) continue; // skip function defined with same name
+					if(str_contains($open, 'function')) continue; // skip function defined with same name
 					$repl = $open . $functionName . '(';
 					$data = str_replace($fullMatch, $repl, $data);
 					$rawPHP = str_replace($fullMatch, $repl, $rawPHP);
@@ -917,10 +917,10 @@ class FileCompiler extends Wire {
 		
 		// update other function calls
 		$ns = __NAMESPACE__ ? "\\ProcessWire" : "";
-		if(strpos($rawDequotedPHP, 'class_parents(') !== false) {
+		if(str_contains($rawDequotedPHP, 'class_parents(')) {
 			$data = preg_replace('/\bclass_parents\(/', $ns . '\\wireClassParents(', $data);
 		}
-		if(strpos($rawDequotedPHP, 'class_implements(') !== false) {
+		if(str_contains($rawDequotedPHP, 'class_implements(')) {
 			$data = preg_replace('/\bclass_implements\(/', $ns . '\\wireClassImplements(', $data);
 		}
 		

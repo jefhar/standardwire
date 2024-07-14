@@ -97,7 +97,7 @@ class ModulesFiles extends ModulesClass {
 				$pathname = str_replace(DIRECTORY_SEPARATOR, '/', $pathname);
 			}
 
-			if(strpos($pathname, '/.') !== false) {
+			if(str_contains($pathname, '/.')) {
 				$pos = strrpos(rtrim($pathname, '/'), '/');
 				if($pathname[$pos+1] == '.') continue; // skip hidden files and dirs
 			}
@@ -212,7 +212,7 @@ class ModulesFiles extends ModulesClass {
 			// see if it's a predefined core type that can be determined from the type
 			// this should only come into play if module has moved or had a load error
 			foreach($this->coreTypes as $typeName) {
-				if(strpos($moduleName, (string) $typeName) !== 0) continue;
+				if(!str_starts_with($moduleName, (string) $typeName)) continue;
 				$checkFiles = ["$typeName/$moduleName/$moduleName.module", "$typeName/$moduleName/$moduleName.module.php", "$typeName/$moduleName.module", "$typeName/$moduleName.module.php"];
 				$path1 = $config->paths->modules;
 				foreach($checkFiles as $checkFile) {
@@ -238,7 +238,7 @@ class ModulesFiles extends ModulesClass {
 			// if all the above failed, try to get it from Reflection
 			try {
 				// note we don't call getModuleClass() here because it may result in a circular reference
-				if(strpos($className, "\\") === false) {
+				if(!str_contains($className, "\\")) {
 					$moduleID = $this->moduleID($moduleName);
 					$namespace = $this->modules->info->moduleInfoCache($moduleID, 'namespace');
 					if(!empty($namespace)) {
@@ -250,7 +250,7 @@ class ModulesFiles extends ModulesClass {
 				$reflector = new \ReflectionClass($className);
 				$file = $reflector->getFileName();
 
-			} catch(\Exception $e) {
+			} catch(\Exception) {
 				$file = false;
 			}
 		}
@@ -341,14 +341,14 @@ class ModulesFiles extends ModulesClass {
 		if(!$allowCompile) return $file;
 
 		// don't compile core modules
-		if(strpos($file, $this->modules->coreModulesDir) !== false) return $file;
+		if(str_contains($file, $this->modules->coreModulesDir)) return $file;
 
 		// if namespace not provided, get it
 		if(is_null($namespace)) {
 			if(is_object($moduleName)) {
 				$className = $moduleName->className(true);
 				$namespace = wireClassName($className, 1);
-			} else if(is_string($moduleName) && strpos($moduleName, "\\") !== false) {
+			} else if(is_string($moduleName) && str_contains($moduleName, "\\")) {
 				$namespace = wireClassName($moduleName, 1);
 			} else {
 				$namespace = $this->modules->info->getModuleNamespace($moduleName, ['file' => $file]);
@@ -537,7 +537,7 @@ class ModulesFiles extends ModulesClass {
 	public function setConfigPaths($moduleName, $path) {
 		$config = $this->wire()->config;
 		$rootPath = $config->paths->root;
-		if(strpos($path, (string) $rootPath) === 0) {
+		if(str_starts_with($path, (string) $rootPath)) {
 			// if root path included, strip it out
 			$path = substr($path, strlen($config->paths->root));
 		}
@@ -584,7 +584,7 @@ class ModulesFiles extends ModulesClass {
 		if(!strpos($data, 'class')) return $value;
 		if(!preg_match('/^\s*class\s+(.+)$/m', $data, $matches)) return $value;
 
-		if(strpos($matches[1], "\t") !== false) $matches[1] = str_replace("\t", " ", $matches[1]);
+		if(str_contains($matches[1], "\t")) $matches[1] = str_replace("\t", " ", $matches[1]);
 		$parts = explode(' ', trim($matches[1]));
 
 		foreach($parts as $key => $part) {
@@ -592,7 +592,7 @@ class ModulesFiles extends ModulesClass {
 		}
 
 		$className = array_shift($parts);
-		if(strpos($className, '\\') !== false) {
+		if(str_contains($className, '\\')) {
 			$className = trim($className, '\\');
 			$a = explode('\\', $className);
 			$value['className'] = "\\$className\\";

@@ -807,7 +807,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @return Page|WireData Returns reference to this page
 	 * 
 	 */
-	public function setForced($key, $value) {
+	public function setForced($key, mixed $value) {
 		if(isset($this->settings[$key])) {
 			$this->settings[$key] = $value;
 		} else {
@@ -817,22 +817,21 @@ class Page extends WireData implements \Countable, WireMatchable {
 	}
 
 	/**
-	 * Set the value of a field that is defined in the page's Fieldgroup
-	 *
-	 * This may not be called when outputFormatting is on. 
-	 *
-	 * This is for internal use. API should generally use the set() method, but this is kept public for the minority of instances where it's useful.
-	 * 
-	 * #pw-internal
-	 *
-	 * @param string $key
-	 * @param mixed $value
-	 * @param bool $load Should the existing value be loaded for change comparisons? (applicable only to non-autoload fields)
-	 * @return Page|WireData Returns reference to this Page
-	 * @throws WireException
-	 *
-	 */
-	public function setFieldValue($key, $value, $load = true) {
+  * Set the value of a field that is defined in the page's Fieldgroup
+  *
+  * This may not be called when outputFormatting is on.
+  *
+  * This is for internal use. API should generally use the set() method, but this is kept public for the minority of instances where it's useful.
+  *
+  * #pw-internal
+  *
+  * @param string $key
+  * @param bool $load Should the existing value be loaded for change comparisons? (applicable only to non-autoload fields)
+  * @return Page|WireData Returns reference to this Page
+  * @throws WireException
+  *
+  */
+ public function setFieldValue($key, mixed $value, $load = true) {
 		return $this->values()->setFieldValue($this, $key, $value, $load);
 	}
 
@@ -983,7 +982,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 			
 				$ulpos = strpos($key, '_');
 				
-				if($ulpos === 0 && substr($key, -1) === '_' && !$this->wire()->fields->get($key)) {
+				if($ulpos === 0 && str_ends_with($key, '_') && !$this->wire()->fields->get($key)) {
 					if($this->wire()->sanitizer->fieldName($key) === $key) {
 						return $this->renderField(substr($key, 1, -1));
 					}
@@ -994,12 +993,12 @@ class Page extends WireData implements \Countable, WireMatchable {
 				if(!ctype_alnum("$k")) {
 					// key has formatting beyond just a field/property name
 					
-					if(strpos($key, '{') !== false && strpos($key, '}')) {
+					if(str_contains($key, '{') && strpos($key, '}')) {
 						// populate a formatted string with {tag} vars
 						return $this->getMarkup($key);
 					}
 
-					if(strpos($key, '|') !== false) {
+					if(str_contains($key, '|')) {
 						$value = $this->values()->getFieldFirstValue($this, $key);
 						if($value !== null) return $value; 
 					}
@@ -1166,7 +1165,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 *
 	 */
 	public function getDot($key) {
-		if(strpos($key, '.') === false) return $this->get($key);
+		if(!str_contains($key, '.')) return $this->get($key);
 		$of = $this->outputFormatting();
 		if($of) $this->setOutputFormatting(false);
 		$value = self::_getDot($key, $this);
@@ -1205,16 +1204,15 @@ class Page extends WireData implements \Countable, WireMatchable {
 	}
 
 	/**
-	 * Return a value consistent with the page’s output formatting state
-	 * 
-	 * This is primarily for use as a helper to the getFieldValue() method. 
-	 * 
-	 * @param Field $field
-	 * @param mixed $value
-	 * @return mixed
-	 * 
-	 */
-	protected function formatFieldValue(Field $field, $value) {
+  * Return a value consistent with the page’s output formatting state
+  *
+  * This is primarily for use as a helper to the getFieldValue() method.
+  *
+  * @param Field $field
+  * @return mixed
+  *
+  */
+ protected function formatFieldValue(Field $field, mixed $value) {
 		return $this->values()->formatFieldValue($this, $field, $value);
 	}
 
@@ -1345,35 +1343,34 @@ class Page extends WireData implements \Countable, WireMatchable {
 	}
 
 	/**
-	 * Set the unformatted value of a field, regardless of current output formatting state
-	 * 
-	 * Use this when setting an unformatted value to a page that has (or might have) output formatting enabled. 
-	 * This will save you the steps of checking the output formatting state, turning it off, setting the value,
-	 * and turning it back on again (if it was on). Note that the output formatting distinction matters for some
-	 * field types and not others, just depending on the case—this method is safe to use either way.
-	 * 
-	 * Make sure you do not use this to set an already formatted value to a Page (like some text that has been 
-	 * entity encoded). This method skips over some of the checks that might otherwise flag the page as corrupted. 
-	 * 
-	 * ~~~~~
-	 * // good usage
-	 * $page->setUnformatted('title', 'This & That'); 
-	 * 
-	 * // bad usage
-	 * $page->setUnformatted('title', 'This &amp; That'); 
-	 * ~~~~~
-	 * 
-	 * #pw-advanced
-	 * 
-	 * @param string $key
-	 * @param mixed $value
-	 * @return self
-	 * @since 3.0.169
-	 * @throws WireException if given an object value that indicates it is already formatted. 
-	 * @see Page::getUnformatted(), Page::of(), Page::setOutputFormatting(), Page::outputFormatting()
-	 * 
-	 */
-	public function setUnformatted($key, $value) {
+  * Set the unformatted value of a field, regardless of current output formatting state
+  *
+  * Use this when setting an unformatted value to a page that has (or might have) output formatting enabled.
+  * This will save you the steps of checking the output formatting state, turning it off, setting the value,
+  * and turning it back on again (if it was on). Note that the output formatting distinction matters for some
+  * field types and not others, just depending on the case—this method is safe to use either way.
+  *
+  * Make sure you do not use this to set an already formatted value to a Page (like some text that has been
+  * entity encoded). This method skips over some of the checks that might otherwise flag the page as corrupted.
+  *
+  * ~~~~~
+  * // good usage
+  * $page->setUnformatted('title', 'This & That');
+  *
+  * // bad usage
+  * $page->setUnformatted('title', 'This &amp; That');
+  * ~~~~~
+  *
+  * #pw-advanced
+  *
+  * @param string $key
+  * @return self
+  * @since 3.0.169
+  * @throws WireException if given an object value that indicates it is already formatted.
+  * @see Page::getUnformatted(), Page::of(), Page::setOutputFormatting(), Page::outputFormatting()
+  *
+  */
+ public function setUnformatted($key, mixed $value) {
 		if($value instanceof PageFieldValueInterface && $value->formatted()) {
 			throw new WireException("Cannot use formatted-value with Page::setUnformatted($key, formatted-value);");
 		}
@@ -1524,7 +1521,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 */
 	public function setName($value, $language = null) {
 		
-		if(!$this->isLoaded && empty($language) && is_string($value) && strpos($value, 'xn-') !== 0) {
+		if(!$this->isLoaded && empty($language) && is_string($value) && !str_starts_with($value, 'xn-')) {
 			$this->settings['name'] = $value;
 		} else {
 			$this->values()->setName($this, $value, $language);
@@ -1632,10 +1629,10 @@ class Page extends WireData implements \Countable, WireMatchable {
 			$user = $this->wire()->users->get($this->wire()->config->superUserPageID);
 		}
 
-		if(strpos($userType, 'created') === 0) {
+		if(str_starts_with($userType, 'created')) {
 			$key = 'created_users_id';
 			$this->_createdUser = $user; 
-		} else if(strpos($userType, 'modified') === 0) {
+		} else if(str_starts_with($userType, 'modified')) {
 			$key = 'modified_users_id';
 			$this->_modifiedUser = $user;
 		} else {
@@ -1658,9 +1655,9 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 */
 	protected function getUser($userType) {
 		
-		if(strpos($userType, 'created') === 0) {
+		if(str_starts_with($userType, 'created')) {
 			$userType = 'created';
-		} else if(strpos($userType, 'modified') === 0) {
+		} else if(str_starts_with($userType, 'modified')) {
 			$userType = 'modified';
 		} else {
 			return $this->wire(new NullPage());
@@ -2966,7 +2963,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @return mixed|string Returns rendered value
 	 *
 	 */
-	public function ___renderValue($value, $file = '') {
+	public function ___renderValue(mixed $value, $file = '') {
 		return $this->___renderField('', $file, $value);
 	}
 
@@ -4095,7 +4092,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @since 3.0.205
 	 *
 	 */
-	public function fieldDataQueue($key = null, $value = null, $unset = false) {
+	public function fieldDataQueue($key = null, mixed $value = null, $unset = false) {
 		if($key === null) return $this->fieldDataQueue;
 		if($unset) {
 			unset($this->fieldDataQueue[$key]);
@@ -4176,7 +4173,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @return string
 	 *
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return "$this->id";
 	}
 

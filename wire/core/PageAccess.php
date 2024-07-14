@@ -47,7 +47,7 @@ class PageAccess {
 			$name = $name->name;
 		}
 		
-		if(strpos($name, 'page-') === 0) $name = str_replace('page-', '', $name);
+		if(str_starts_with($name, 'page-')) $name = str_replace('page-', '', $name);
 		
 		// all non-recognized names inherit the 'edit' type
 		return in_array($name, $this->types) ? $name : 'edit';

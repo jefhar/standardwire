@@ -302,8 +302,8 @@ class WireCache extends Wire {
 		$wildcards = [];
 
 		foreach($names as $s) {
-			if(strpos($s, '%') !== false) $s = str_replace('%', '*', $s);
-			if(strpos($s, '*') === false) continue;
+			if(str_contains($s, '%')) $s = str_replace('%', '*', $s);
+			if(!str_contains($s, '*')) continue;
 			// retrieve all caches matching wildcard
 			$getMultiple = true;
 			$wildcards[$s] = $s;
@@ -488,7 +488,7 @@ class WireCache extends Wire {
 			} else if(method_exists($data, '__toString')) {
 				$data = (string) $data;
 			} else {
-				throw new WireException("WireCache::save does not know how to cache values of type " . get_class($data));
+				throw new WireException("WireCache::save does not know how to cache values of type " . $data::class);
 			}
 		}
 
@@ -665,7 +665,7 @@ class WireCache extends Wire {
 	 *
 	 */
 	public function delete($name) {
-		if(strpos($name, '*') !== false) {
+		if(str_contains($name, '*')) {
 			$rows = $this->cacher()->find(['names' => [$name], 'get' => ['name']]);
 		} else {
 			$rows = [['name' => $name]];
@@ -1134,7 +1134,7 @@ class WireCache extends Wire {
 		$files = $this->wire()->files;
 		$filename = $files->unixFileName($filename);
 
-		if(strpos($filename, '/') !== 0 && strpos($filename, ':') === false && strpos($filename, '//') === false) {
+		if(!str_starts_with($filename, '/') && !str_contains($filename, ':') && !str_contains($filename, '//')) {
 			// make relative to current path
 			$currentPath = $files->currentPath();
 			if($files->fileInPath($filename, $currentPath)) {
@@ -1191,17 +1191,17 @@ class WireCache extends Wire {
 
 		if($ns === false) {
 			// namespace not allowed (cache name is NAME only)
-			while(strpos($name, '__') !== false) $name = str_replace('__', '_', $name);
+			while(str_contains($name, '__')) $name = str_replace('__', '_', $name);
 			if(strlen($name) > $maxLength) $name = md5($name);
 			return $name;
 		}
 
 		if(is_string($ns) && strlen($ns)) {
 			// a namespace has been supplied
-			while(strpos($name, '__') !== false) $name = str_replace('__', '_', $name);
-			while(strpos($ns, '__') !== false) $ns = str_replace('__', '_', $ns);
+			while(str_contains($name, '__')) $name = str_replace('__', '_', $name);
+			while(str_contains($ns, '__')) $ns = str_replace('__', '_', $ns);
 			$ns = rtrim($ns, '_') . '__';
-			if(strpos($name, $ns) === 0) {
+			if(str_starts_with($name, $ns)) {
 				// name already has this namespace
 			} else {
 				// prepend namespace to name
@@ -1215,10 +1215,10 @@ class WireCache extends Wire {
 		}
 
 		// at this point we have a cache name that is too long
-		if(strpos($name, '__') !== false) {
+		if(str_contains($name, '__')) {
 			// has namespace
 			[$ns, $name] = explode('__', $name, 2);
-			while(strpos($name, '__') !== false) $name = str_replace('__', '_', $name);
+			while(str_contains($name, '__')) $name = str_replace('__', '_', $name);
 			if(strlen($name) > 32) $name = md5($name);
 			if(strlen($ns . '__' . $name) > $maxLength) $ns = md5($ns); // not likely
 			$name = $ns . '__' . $name;
@@ -1242,8 +1242,8 @@ class WireCache extends Wire {
 	public function looksLikeJSON(&$str) {
 		if(empty($str) || !is_string($str)) return false;
 		$c = substr($str, 0, 1);
-		if($c === '{' && substr(trim($str), -1) === '}') return true;
-		if($c === '[' && substr(trim($str), -1) === ']') return true;
+		if($c === '{' && str_ends_with(trim($str), '}')) return true;
+		if($c === '[' && str_ends_with(trim($str), ']')) return true;
 		return false;
 	}
 

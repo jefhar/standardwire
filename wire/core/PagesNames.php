@@ -172,7 +172,7 @@ class PagesNames extends Wire {
 	public function nameAndNumber($name, $delimiter = '') {
 		if(empty($delimiter)) $delimiter = $this->delimiter;
 		$fail = [$name, 0];
-		if(strpos($name, $delimiter) === false) return $fail;
+		if(!str_contains($name, $delimiter)) return $fail;
 		$parts = explode($delimiter, $name);
 		$suffix = array_pop($parts);
 		if(!ctype_digit($suffix)) return $fail;
@@ -340,14 +340,14 @@ class PagesNames extends Wire {
 			$name = $page->getUnformatted($format);
 			$formatType = 'field'; // Page::hasField() accepts pipes
 
-		} else if(strpos($format, 'date:') === 0) {
+		} else if(str_starts_with($format, 'date:')) {
 			// specified date format
 			[, $format] = explode('date:', $format);
 			if(empty($format)) $format = 'Y-m-d H:i:s';
 			$name = wireDate(trim($format));
 			$formatType = 'date';
 
-		} else if(strpos($format, ' ') !== false || strpos($format, '/') !== false || strpos($format, ':') !== false) {
+		} else if(str_contains($format, ' ') || str_contains($format, '/') || str_contains($format, ':')) {
 			// date assumed when spaces, slashes or colon present in format
 			$name = wireDate($format);
 			$formatType = 'date';
@@ -559,7 +559,7 @@ class PagesNames extends Wire {
 				// no number supplied 
 				// make sure that any leading zeros are retained before we increment number
 				$zeros = '';
-				while(strpos($name, $namePrefix . $this->delimiter . "0$zeros") === 0) $zeros .= '0';
+				while(str_starts_with($name, $namePrefix . $this->delimiter . "0$zeros")) $zeros .= '0';
 				// increment the number
 				$name = $namePrefix . $this->delimiter . $zeros . (++$n);
 			}

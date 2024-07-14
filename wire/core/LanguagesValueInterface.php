@@ -9,13 +9,12 @@
 interface LanguagesValueInterface {
 
 	/**
-	 * Sets the value for a given language
-	 *
-	 * @param int|Language $languageID
-	 * @param mixed $value
-	 *
-	 */
-	public function setLanguageValue($languageID, $value);
+  * Sets the value for a given language
+  *
+  * @param int|Language $languageID
+  *
+  */
+ public function setLanguageValue($languageID, mixed $value);
 
 	/**
 	 * Given a language, returns the value in that language

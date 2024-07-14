@@ -342,10 +342,10 @@ class Config extends WireData {
 			$dir = Paths::normalizeSeparators($dir);
 
 			// if given path is inclusive of root path, make path relative to site root
-			if(strpos($dir, (string) $rootPath) === 0) $dir = substr($dir, strlen($rootPath));
+			if(str_starts_with($dir, (string) $rootPath)) $dir = substr($dir, strlen($rootPath));
 
 			// ensure trailing slash
-			if(substr($dir, -1) !== '/') $dir .= '/';
+			if(!str_ends_with($dir, '/')) $dir .= '/';
 		}
 		
 		// now determine the URL to set
@@ -358,9 +358,9 @@ class Config extends WireData {
 			// given a custom URL
 			$rootUrl = $this->urls->get('root');
 			// if URL begins at PW installation root, remove the root part of the URL
-			if(strpos($url, (string) $rootUrl) === 0) $url = substr($url, strlen($rootUrl)); 
+			if(str_starts_with($url, (string) $rootUrl)) $url = substr($url, strlen($rootUrl)); 
 			// ensure trailing slash
-			if(substr($url, -1) !== '/' && strpos($url, '?') === false && strpos($url, '#') === false) $url .= '/';
+			if(!str_ends_with($url, '/') && !str_contains($url, '?') && !str_contains($url, '#')) $url .= '/';
 		}
 		
 		if(!empty($dir)) $this->paths->set($for, $dir);
@@ -491,51 +491,50 @@ class Config extends WireData {
 	protected $jsData = [];
 
 	/**
-	 * Set or retrieve a config value to be shared with javascript
-	 * 
-	 * Values are set to the Javascript variable `ProcessWire.config[key]`.
-	 * 
-	 * Note: In ProcessWire 3.0.173+ when setting new values, it is preferable to use 
-	 * $config->jsConfig() instead, unless your intended use is to share an 
-	 * existing $config property with JS. 
-	 * 
-	 * 1. Specify a $key and $value to set a JS config value. 
-	 *
-	 * 2. Specify only a $key and omit the $value in order to retrieve an existing set value.
-	 *    The $key may also be an array of properties, which will return an array of values. 
-	 * 
-	 * 3. Specify boolean true for $value to share the $key with the JS side. If the $key 
-	 *    specified does not exist then $key=true will be added to the JS config (which can later 
-	 *    be overwritten with another value, which will still be shared with the JS config). 
-	 *    The $key property may also be an array of properties to specify multiple. 
-	 * 
-	 * 4. Specify no params to retrieve in array of all existing set values.
-	 * 
-	 * ~~~~~
-	 * // Set a property from PHP
-	 * $config->js('mySettings', [
-	 *   'foo' => 'bar', 
-	 *   'bar' => 123,
-	 * ]);
-	 * 
-	 * // Get a property (from PHP)
-	 * $mySettings = $config->js('mySettings'); 
-	 * ~~~~~
-	 * ~~~~~
-	 * // Get a property (from Javascript):
-	 * var mySettings = ProcessWire.config.mySettings;
-	 * console.log(mySettings.foo);
-	 * console.log(mySettings.bar); 
-	 * ~~~~~
-	 * 
-	 * #pw-group-js
-	 *
-	 * @param string|array $key Property or array of properties
-	 * @param mixed $value
-	 * @return array|mixed|null|$this
- 	 *
-	 */
-	public function js($key = null, $value = null) {
+  * Set or retrieve a config value to be shared with javascript
+  *
+  * Values are set to the Javascript variable `ProcessWire.config[key]`.
+  *
+  * Note: In ProcessWire 3.0.173+ when setting new values, it is preferable to use
+  * $config->jsConfig() instead, unless your intended use is to share an
+  * existing $config property with JS.
+  *
+  * 1. Specify a $key and $value to set a JS config value.
+  *
+  * 2. Specify only a $key and omit the $value in order to retrieve an existing set value.
+  *    The $key may also be an array of properties, which will return an array of values.
+  *
+  * 3. Specify boolean true for $value to share the $key with the JS side. If the $key
+  *    specified does not exist then $key=true will be added to the JS config (which can later
+  *    be overwritten with another value, which will still be shared with the JS config).
+  *    The $key property may also be an array of properties to specify multiple.
+  *
+  * 4. Specify no params to retrieve in array of all existing set values.
+  *
+  * ~~~~~
+  * // Set a property from PHP
+  * $config->js('mySettings', [
+  *   'foo' => 'bar',
+  *   'bar' => 123,
+  * ]);
+  *
+  * // Get a property (from PHP)
+  * $mySettings = $config->js('mySettings');
+  * ~~~~~
+  * ~~~~~
+  * // Get a property (from Javascript):
+  * var mySettings = ProcessWire.config.mySettings;
+  * console.log(mySettings.foo);
+  * console.log(mySettings.bar);
+  * ~~~~~
+  *
+  * #pw-group-js
+  *
+  * @param string|array $key Property or array of properties
+  * @return array|mixed|null|$this
+  *
+  */
+ public function js($key = null, mixed $value = null) {
 
 		if(is_null($key)) {
 			// return array of all keys and values
@@ -837,14 +836,14 @@ class Config extends WireData {
 		if(empty($_SERVER['REQUEST_URI'])) return '';
 		$url = $_SERVER['REQUEST_URI'];
 		$query = '';
-		if(strpos($url, '?') !== false) {
+		if(str_contains($url, '?')) {
 			[$url, $query] = explode('?', $url, 2);
 		}
 		if($get === 'query') {
 			$url = $query;
 		} else if($get === 'path') {
 			$rootUrl = $this->urls->root;
-			if($rootUrl !== '/' && strpos($url, $rootUrl) === 0) {
+			if($rootUrl !== '/' && str_starts_with($url, $rootUrl)) {
 				$url = substr($url, strlen($rootUrl) - 1);
 			}
 		}
@@ -852,12 +851,12 @@ class Config extends WireData {
 		if(is_array($match)) {
 			$found = false;
 			foreach($match as $m) {
-				if(strpos($url, (string) $m) !== false) $found = true;
+				if(str_contains($url, (string) $m)) $found = true;
 				if($found) break;
 			}
 			if(count($match) && !$found) $url = '';
 		} else if(strlen($match)) {
-			if(strpos($url, $match) === false) $url = '';
+			if(!str_contains($url, $match)) $url = '';
 		}
 		return $url;
 	}
@@ -1018,7 +1017,7 @@ class Config extends WireData {
 			} else {
 				// use custom version str
 				$versionStr = $useVersion;
-				if(strpos($versionStr, '?') === false) $versionStr = "?v=$versionStr";
+				if(!str_contains($versionStr, '?')) $versionStr = "?v=$versionStr";
 			}
 		} else {
 			// use core version when appropriate
@@ -1037,10 +1036,10 @@ class Config extends WireData {
 				[$u, $r] = explode($coreVersionStr, $url, 2);
 				if(!strlen($r)) $url = $u;
 			}
-			if(strpos($url, '?') !== false || strpos($url, '//') !== false) {
+			if(str_contains($url, '?') || str_contains($url, '//')) {
 				// leave URL with query string or scheme:// alone
 				$a[] = $url;
-			} else if($useVersion === true && strpos($url, $rootUrl) === 0) {
+			} else if($useVersion === true && str_starts_with($url, $rootUrl)) {
 				// use filemtime based version
 				$f = $rootPath . substr($url, strlen($rootUrl));
 				if(is_readable($f)) {

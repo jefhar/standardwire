@@ -113,7 +113,7 @@ class ModulesInstaller extends ModulesClass {
 
 		$pathname = $this->modules->installableFile($class);
 		
-		if(strpos($class, "\\") === false) {
+		if(!str_contains($class, "\\")) {
 			$ns = $this->modules->info->getModuleNamespace($class, ['file' => $pathname]);
 			$nsClass = $ns . $class;
 		} else {
@@ -305,7 +305,7 @@ class ModulesInstaller extends ModulesClass {
 		} else if(!is_file($filename)) {
 			$reason = "Module file does not exist";
 
-		} else if(strpos($filename, $this->modules->coreModulesPath) === 0) {
+		} else if(str_starts_with($filename, $this->modules->coreModulesPath)) {
 			$reason = "Core modules may not be deleted.";
 
 		} else if(!is_writable($filename)) {
@@ -362,7 +362,7 @@ class ModulesInstaller extends ModulesClass {
 
 		foreach($this->modules->getPaths() as $key => $modulesPath) {
 			if($key === 0) continue; // skip core modules path
-			if(strpos("$parentPath/", (string) $modulesPath) === 0) $inPath = true;
+			if(str_starts_with("$parentPath/", (string) $modulesPath)) $inPath = true;
 			if($modulesPath === $path) $inRoot = true;
 		}
 
@@ -717,14 +717,15 @@ class ModulesInstaller extends ModulesClass {
 			$requiredVersion = (int) $requiredVersion;
 			$result = false;
 
-			switch($operator) {
-				case '=': $result = ($currentVersion == $requiredVersion); break;
-				case '>': $result = ($currentVersion > $requiredVersion); break;
-				case '<': $result = ($currentVersion < $requiredVersion); break;
-				case '>=': $result = ($currentVersion >= $requiredVersion); break;
-				case '<=': $result = ($currentVersion <= $requiredVersion); break;
-				case '!=': $result = ($currentVersion != $requiredVersion); break;
-			}
+			$result = match ($operator) {
+       '=' => $currentVersion == $requiredVersion,
+       '>' => $currentVersion > $requiredVersion,
+       '<' => $currentVersion < $requiredVersion,
+       '>=' => $currentVersion >= $requiredVersion,
+       '<=' => $currentVersion <= $requiredVersion,
+       '!=' => $currentVersion != $requiredVersion,
+       default => $result,
+   };
 			return $result;
 		}
 

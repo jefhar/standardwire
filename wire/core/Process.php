@@ -252,9 +252,9 @@ abstract class Process extends WireData implements Module {
 	 */
 	public function ___breadcrumb($href, $label) {
 		$pos = strpos($label, '/'); 
-		if($pos !== false && strpos($href, '/') === false) {
+		if($pos !== false && !str_contains($href, '/')) {
 			// arguments got reversed, we'll work with it anyway...
-			if($pos === 0 || $label[0] == '.' || substr($label, -1) == '/') {
+			if($pos === 0 || $label[0] == '.' || str_ends_with($label, '/')) {
 				$_href = $href; 
 				$href = $label;
 				$label = $_href;
@@ -371,7 +371,7 @@ abstract class Process extends WireData implements Module {
 			// already have what we  need
 		} else if(ctype_digit("$parent")) {
 			$parent = $pages->get((int) $parent);
-		} else if(strpos("$parent", '/') !== false) {
+		} else if(str_contains("$parent", '/')) {
 			$parent = $pages->get($parent);
 		} else if($parent) {
 			$parent = $sanitizer->pageName($parent);
@@ -554,13 +554,13 @@ abstract class Process extends WireData implements Module {
 	 * 
 	 */
 	public function setViewFile($file) {
-		if(strpos($file, '..') !== false) throw new WireException("Invalid view file (relative paths not allowed)"); 
+		if(str_contains($file, '..')) throw new WireException("Invalid view file (relative paths not allowed)"); 
 		$config = $this->wire()->config;
-		if(strpos($file, (string) $config->paths->root) === 0 && is_file($file)) {
+		if(str_starts_with($file, (string) $config->paths->root) && is_file($file)) {
 			// full path filename already specified, nothing to auto-determine
 		} else {
 			$path = $config->paths($this->className());
-			if($path && strpos($file, (string) $path) !== 0) $file = $path . ltrim($file, '/\\');
+			if($path && !str_starts_with($file, (string) $path)) $file = $path . ltrim($file, '/\\');
 			if(!is_file($file)) throw new WireException("View file '$file' does not exist");
 		}
 		$this->_viewFile = $file;

@@ -197,7 +197,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * 
 	 */
 	public function makeNew() {
-		$class = get_class($this); 
+		$class = static::class; 
 		/** @var Pagefiles|Pageimages $newArray */
 		$newArray = $this->wire(new $class($this->page)); 
 		$newArray->setField($this->field); 
@@ -582,7 +582,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 		$dot = strrpos($basename, '.'); 
 		$ext = $dot ? substr($basename, $dot) : '';
 		$basename = basename($basename, $ext);
-		while(strpos($basename, '..') !== false) $basename = str_replace('..', '', $basename);
+		while(str_contains($basename, '..')) $basename = str_replace('..', '', $basename);
 		$test = str_replace(['-', '_', '.'], '', $basename);
 		
 		if(!ctype_alnum($test)) {
@@ -595,7 +595,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 		}
 		
 		if(!ctype_alnum(ltrim($ext, '.'))) $ext = preg_replace('/[^a-z0-9.]/', '_', $ext); 
-		if(!$allowDots && strpos($basename, '.') !== false) $basename = str_replace('.', '_', $basename); 
+		if(!$allowDots && str_contains($basename, '.')) $basename = str_replace('.', '_', $basename); 
 		$basename .= $ext;
 
 		if($originalize) { 

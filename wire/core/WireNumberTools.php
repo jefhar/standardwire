@@ -65,14 +65,14 @@ class WireNumberTools extends Wire {
 			$uniqueNum = (int) $query->fetchColumn();
 			$query->closeCursor();
 			return $uniqueNum;
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			return 0;
 		}
 
 		try {
 			$database->query("INSERT INTO $table SET id=null");
 			$uniqueNum = (int) $database->lastInsertId();
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			$uniqueNum = 0;
 		}
 
@@ -132,10 +132,10 @@ class WireNumberTools extends Wire {
 			$value = (int) $value;
 		} else {
 			$value = trim("$value");
-			$negative = strpos($value, '-') === 0; 
+			$negative = str_starts_with($value, '-'); 
 			if($negative) $value = ltrim($value, '-');
 			if(preg_match('/^([\d.]+)([bkmgt])/i', $value, $matches)) {
-				$value = strpos($matches[1], '.') !== false ? (float) $matches[1] : (int) $matches[1];
+				$value = str_contains($matches[1], '.') ? (float) $matches[1] : (int) $matches[1];
 				if($unit === null) $unit = $matches[2];
 			}
 			if($negative) $value *= -1;

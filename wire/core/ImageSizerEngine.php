@@ -804,14 +804,14 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			}
 		}
 		if(is_array($cropping)) {
-			if(strpos($cropping[0], '%') !== false) {
+			if(str_contains($cropping[0], '%')) {
 				$v = trim($cropping[0], '%');
 				if(ctype_digit(trim($v, '-'))) $v = (int) $v;
 				$cropping[0] = round(min(100, max(0, $v))) . '%';
 			} else {
 				$cropping[0] = (int) $cropping[0];
 			}
-			if(strpos($cropping[1], '%') !== false) {
+			if(str_contains($cropping[1], '%')) {
 				$v = trim($cropping[1], '%');
 				if(ctype_digit(trim($v, '-'))) $v = (int) $v;
 				$cropping[1] = round(min(100, max(0, $v))) . '%';
@@ -860,7 +860,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			// p = percent, d = pixel dimension, z = zoom
 			$zoom = isset($cropping[2]) ? (int) $cropping[2] : 0;
 			$cropping = 
-				(strpos($cropping[0], '%') !== false ? 'p' : 'd') . 
+				(str_contains($cropping[0], '%') ? 'p' : 'd') . 
 				((int) rtrim($cropping[0], '%')) . 'x' . ((int) rtrim($cropping[1], '%'));
 			if($zoom > 1 && $zoom < 100) $cropping .= "z$zoom";
 		}
@@ -1021,15 +1021,14 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	}
 
 	/**
-	 * Set sharpening value: blank (for none), soft, medium, or strong
-	 *
-	 * @param mixed $value
-	 *
-	 * @return self
-	 * @throws WireException
-	 *
-	 */
-	public function setSharpening($value) {
+  * Set sharpening value: blank (for none), soft, medium, or strong
+  *
+  *
+  * @return self
+  * @throws WireException
+  *
+  */
+ public function setSharpening(mixed $value) {
 
 		if(is_string($value) && in_array(strtolower($value), self::$sharpeningValues)) {
 			$ret = strtolower($value);
@@ -1402,7 +1401,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 		foreach(array_keys($this->iptcRaw) as $s) {
 			$tag = substr($s, 2);
 			if(!$includeCustomTags && in_array($tag, $customTags)) continue;
-			if(substr($s, 0, 1) == '2' && in_array($tag, $this->validIptcTags) && is_array($this->iptcRaw[$s])) {
+			if(str_starts_with($s, '2') && in_array($tag, $this->validIptcTags) && is_array($this->iptcRaw[$s])) {
 				foreach($this->iptcRaw[$s] as $row) {
 					$iptcNew .= $this->iptcMakeTag(2, $tag, $row);
 				}
@@ -1567,13 +1566,13 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			// index 0 represents % or pixels from left
 			// index 1 represents % or pixels from top
 			// @interrobang + @u-nikos
-			if(strpos($this->cropping[0], '%') === false) {
+			if(!str_contains($this->cropping[0], '%')) {
 				$pointX = (int) $this->cropping[0];
 			} else {
 				$pointX = $gdWidth * ((int) $this->cropping[0] / 100);
 			}
 
-			if(strpos($this->cropping[1], '%') === false) {
+			if(!str_contains($this->cropping[1], '%')) {
 				$pointY = (int) $this->cropping[1];
 			} else {
 				$pointY = $gdHeight * ((int) $this->cropping[1] / 100);
@@ -1788,27 +1787,21 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	}
 
 	/**
-	 * Get an integer representing the resize method to use
-	 *
-	 * This method calculates all dimensions at first. It is called before any of the main image operations,
-	 * but after rotation and crop_before_resize. As result it returns an integer [0|2|4] that indicates which
-	 * steps should be processed:
-	 *
-	 * 0 = this is the case if the original size is requested or a greater size but upscaling is set to false
-	 * 2 = only resize with aspect ratio
-	 * 4 = resize and crop with aspect ratio
-	 *
-	 * @param mixed $gdWidth
-	 * @param mixed $gdHeight
-	 * @param mixed $targetWidth
-	 * @param mixed $targetHeight
-	 * @param mixed $x1
-	 * @param mixed $y1
-	 *
-	 * @return int 0|2|4
-	 *
-	 */
-	protected function getResizeMethod(&$gdWidth, &$gdHeight, &$targetWidth, &$targetHeight, &$x1, &$y1) {
+  * Get an integer representing the resize method to use
+  *
+  * This method calculates all dimensions at first. It is called before any of the main image operations,
+  * but after rotation and crop_before_resize. As result it returns an integer [0|2|4] that indicates which
+  * steps should be processed:
+  *
+  * 0 = this is the case if the original size is requested or a greater size but upscaling is set to false
+  * 2 = only resize with aspect ratio
+  * 4 = resize and crop with aspect ratio
+  *
+  *
+  * @return int 0|2|4
+  *
+  */
+ protected function getResizeMethod(mixed &$gdWidth, mixed &$gdHeight, mixed &$targetWidth, mixed &$targetHeight, mixed &$x1, mixed &$y1) {
 		[$gdWidth, $gdHeight, $targetWidth, $targetHeight] = $this->getResizeDimensions($targetWidth, $targetHeight);
 		$x1 = ($gdWidth / 2) - ($targetWidth / 2);
 		$y1 = ($gdHeight / 2) - ($targetHeight / 2);
@@ -1920,7 +1913,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 		// therefore we need index 0 and 1 to be strings with '%' sign included
 		// and index 2 to be an integer between 2 and 70
 		$a = $this->cropping;
-		if(is_array($a) && isset($a[2]) && strpos($a[0], '%') !== false && strpos($a[1], '%') !== false) {
+		if(is_array($a) && isset($a[2]) && str_contains($a[0], '%') && str_contains($a[1], '%')) {
 			$zoom = (int) $a[2];
 			if($zoom < 2) $zoom = 0;
 			if($zoom > 70) $zoom = 70;

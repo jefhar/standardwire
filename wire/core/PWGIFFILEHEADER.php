@@ -21,9 +21,8 @@ class PWGIFFILEHEADER {
 	public $m_nBgColor;
 	public $m_nPixelRatio;
 	public $m_colorTable;
-	public $m_bAnimated;   // @Horst: added property
-	protected $extended;
-	public function __construct($extended = false) {
+	public $m_bAnimated;
+	public function __construct(protected $extended = false) {
 		unSet($this->m_lpVer);
 		unSet($this->m_nWidth);
 		unSet($this->m_nHeight);
@@ -35,7 +34,6 @@ class PWGIFFILEHEADER {
 		unSet($this->m_nPixelRatio);
 		unSet($this->m_colorTable);
 		unSet($this->m_bAnimated);
-		$this->extended = $extended;
 	}
 	public function load($lpData, &$hdrLen) {
 		$hdrLen = 0;

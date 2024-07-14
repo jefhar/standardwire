@@ -557,7 +557,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @since 3.0.133
 	 * 
 	 */
-	public function getVal($key, $val = null) {
+	public function getVal($key, mixed $val = null) {
 		$value = $this->get($key);
 		if($value === null) $value = $val;
 		return $value;
@@ -626,7 +626,7 @@ class Session extends Wire implements \IteratorAggregate {
  	 * @return $this
 	 *
 	 */
-	public function set($key, $value, $_value = null) {
+	public function set($key, $value, mixed $_value = null) {
 		if(!is_null($_value)) return $this->setFor($key, $value, $_value);
 		$oldValue = $this->get($key); 
 		if($value !== $oldValue) $this->trackChange($key, $oldValue, $value);
@@ -676,7 +676,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @since 3.0.133
 	 *
 	 */
-	public function getValFor($ns, $key, $val = null) {
+	public function getValFor($ns, $key, mixed $val = null) {
 		$value = $this->getFor($ns, $key);
 		if($value === null) $value = $val;
 		return $value;
@@ -700,7 +700,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @return $this
 	 *
 	 */
-	public function setFor($ns, $key, $value) {
+	public function setFor($ns, $key, mixed $value) {
 		$ns = $this->getNamespace($ns); 
 		$data = $this->get($ns); 
 		if(!is_array($data)) $data = [];
@@ -818,14 +818,13 @@ class Session extends Wire implements \IteratorAggregate {
 	}
 
 	/**
-	 * Provide non-namespaced $session->variable = variable set access
-	 * 
-	 * @param string $key
-	 * @param mixed $value
-	 * @return $this
-	 *
-	 */
-	public function __set($key, $value) {
+  * Provide non-namespaced $session->variable = variable set access
+  *
+  * @param string $key
+  * @return $this
+  *
+  */
+ public function __set($key, mixed $value) {
 		return $this->set($key, $value); 
 	}
 
@@ -889,14 +888,14 @@ class Session extends Wire implements \IteratorAggregate {
 				$ip = $_SERVER['REMOTE_ADDR'];
 			}
 			// It's possible for X_FORWARDED_FOR to have more than one CSV separated IP address, per @tuomassalo
-			if(strpos($ip, ',') !== false && $useClient !== 2) {
+			if(str_contains($ip, ',') && $useClient !== 2) {
 				[$ip] = explode(',', $ip);
 			}
 			// sanitize: if IP contains something other than digits, periods, commas, spaces, 
 			// then don't use it and instead fallback to the REMOTE_ADDR. 
 			$test = str_replace(['.', ',', ' '], '', $ip);
 			if(!ctype_digit("$test")) {
-				if(strpos($test, ':') !== false) {
+				if(str_contains($test, ':')) {
 					// ipv6 allowed
 					$test = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
 					$ip = $test === false ? $_SERVER['REMOTE_ADDR'] : $test;
@@ -909,7 +908,7 @@ class Session extends Wire implements \IteratorAggregate {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 
-		if(strpos($ip, ':') !== false) {
+		if(str_contains($ip, ':')) {
 			// attempt to identify an IPv4 version when an integer required for return value
 			if($int && $ip === '::1') {
 				$ip = '127.0.0.1';
@@ -920,7 +919,7 @@ class Session extends Wire implements \IteratorAggregate {
 			}
 		}
 
-		if($useClient === 2 && strpos($ip, ',') !== false) {
+		if($useClient === 2 && str_contains($ip, ',')) {
 			// return multiple IPs
 			$ips = [];
 			foreach(explode(',', $ip) as $ip) {
@@ -1380,8 +1379,8 @@ class Session extends Wire implements \IteratorAggregate {
 				$process->finished();
 				// retain modal=1 get variables through redirects (this can be moved to a hook later)
 				$input = $this->wire()->input;
-				if($page->template == 'admin' && $input && $input->get('modal') && strpos($url, '//') === false) {
-					if(!strpos($url, 'modal=')) $url .= (strpos($url, '?') !== false ? '&' : '?') . 'modal=1';
+				if($page->template == 'admin' && $input && $input->get('modal') && !str_contains($url, '//')) {
+					if(!strpos($url, 'modal=')) $url .= (str_contains($url, '?') ? '&' : '?') . 'modal=1';
 				}
 			}
 		}

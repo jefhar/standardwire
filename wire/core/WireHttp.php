@@ -282,7 +282,7 @@ class WireHttp extends Wire {
 	 * @see WireHttp::send(), WireHttp::get()
 	 *
 	 */
-	public function getJSON($url, $assoc = true, $data = [], array $options = []) {
+	public function getJSON($url, $assoc = true, mixed $data = [], array $options = []) {
 		return json_decode($this->get($url, $data, $options), $assoc); 
 	}
 
@@ -318,7 +318,7 @@ class WireHttp extends Wire {
 	 * @see WireHttp::send(), WireHttp::statusText()
 	 *
 	 */
-	 public function status($url, $data = [], $textMode = false, array $options = []) {
+	 public function status($url, mixed $data = [], $textMode = false, array $options = []) {
 		$this->send($url, $data, 'HEAD', $options);
 		return $this->getHttpCode($textMode); 
 	}
@@ -336,7 +336,7 @@ class WireHttp extends Wire {
 	 * @see WireHttp::send(), WireHttp::status()
 	 *
 	 */
-	public function statusText($url, $data = [], array $options = []) {
+	public function statusText($url, mixed $data = [], array $options = []) {
 		return $this->status($url, $data, true, $options); 
 	}
 
@@ -522,7 +522,7 @@ class WireHttp extends Wire {
 		if(!empty($this->data)) {
 			$content = http_build_query($this->data);
 			if(($method === 'GET' || $method === 'HEAD') && strlen($content)) {
-				$url .= (strpos($url, '?') === false ? '?' : '&') . $content;
+				$url .= (!str_contains($url, '?') ? '?' : '&') . $content;
 				$content = '';
 			}
 		} else if(!empty($this->rawData)) {
@@ -667,7 +667,7 @@ class WireHttp extends Wire {
 				curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($this->data));
 			} else {
 				$content = http_build_query($this->data);
-				if(strlen($content)) $url .= (strpos($url, '?') === false ? '?' : '&') . $content;
+				if(strlen($content)) $url .= (!str_contains($url, '?') ? '?' : '&') . $content;
 			}
 		} else if(!empty($this->rawData)) {
 			if($isPost) {
@@ -772,7 +772,7 @@ class WireHttp extends Wire {
 		if(!empty($this->data)) {
 			$content = http_build_query($this->data); 
 			if($method === 'GET' && strlen($content)) { 
-				$query .= (strpos($query, '?') === false ? '?' : '&') . $content; 
+				$query .= (!str_contains($query, '?') ? '?' : '&') . $content; 
 				$content = '';
 			}
 		} else if(!empty($this->rawData)) {
@@ -819,7 +819,7 @@ class WireHttp extends Wire {
 			// follow redirects
 			$location = $this->getResponseHeader('location'); 
 			if(!empty($location) && ++$level <= 5) {
-				if(strpos($location, '://') === false && preg_match('{(https?://[^/]+)}i', $url, $matches)) {
+				if(!str_contains($location, '://') && preg_match('{(https?://[^/]+)}i', $url, $matches)) {
 					// if location is relative, convert to absolute
 					$location = $matches[1] . '/' . ltrim($location, '/'); 
 				}
@@ -1213,15 +1213,14 @@ class WireHttp extends Wire {
 	}
 
 	/**
-	 * Directly set a variable to be included in the next GET/POST/etc. request
-	 * 
-	 * #pw-internal
-	 * 
-	 * @param string $key
-	 * @param mixed $value
-	 *
-	 */
-	public function __set($key, $value) {
+  * Directly set a variable to be included in the next GET/POST/etc. request
+  *
+  * #pw-internal
+  *
+  * @param string $key
+  *
+  */
+ public function __set($key, mixed $value) {
 		$this->set($key, $value);
 	}
 
@@ -1478,7 +1477,7 @@ class WireHttp extends Wire {
 		$bytesSent = 0;
 		
 		if($options['exit']) $this->wire()->session->close();
-		if(is_null($forceDownload)) $forceDownload = substr($contentType, 0, 1) === '+';
+		if(is_null($forceDownload)) $forceDownload = str_starts_with($contentType, '+');
 		if(ini_get('zlib.output_compression')) ini_set('zlib.output_compression', 'Off');
 		$contentType = ltrim($contentType, '+');
 		
@@ -1544,10 +1543,10 @@ class WireHttp extends Wire {
 		[$rangeType, $rangeBytes] = explode('=', $rangeStr, 2);
 		
 		if(strtolower($rangeType) !== 'bytes') return null; // unrecognized range type prefix
-		if(strpos($rangeBytes, ',') !== false) return null; // unsupported multibyte range
-		if(strpos($rangeBytes, '-') === false) return null; // unrecognized range bytes string
+		if(str_contains($rangeBytes, ',')) return null; // unsupported multibyte range
+		if(!str_contains($rangeBytes, '-')) return null; // unrecognized range bytes string
 
-		if(strpos($rangeBytes, '-') === 0) {
+		if(str_starts_with($rangeBytes, '-')) {
 			// no rangeStart: rangeBytes was "-123" or just "-"
 			$rangeStart = $filesize - ((int) ltrim($rangeBytes, '-'));
 		} else {

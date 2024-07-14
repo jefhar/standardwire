@@ -158,7 +158,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 */
 	protected function selectorString($selectorString) {
 		if(ctype_digit("$selectorString")) $selectorString = "id=$selectorString"; 
-		if(strpos($selectorString, 'sort=') === false && !preg_match('/\bsort=/', $selectorString)) {
+		if(!str_contains($selectorString, 'sort=') && !preg_match('/\bsort=/', $selectorString)) {
 			$template = reset($this->templates);
 			if($template->sortfield) {
 				$sortfield = $template->sortfield;
@@ -395,9 +395,9 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 			}
 			$page = $pages->getById([(int) $selectorString], $options);
 			
-		} else if(strpos($selectorString, '=') === false) { 
+		} else if(!str_contains($selectorString, '=')) { 
 			// selector string contains no operators, so it is a page name or path
-			if(strpos($selectorString, '/') === false) {
+			if(!str_contains($selectorString, '/')) {
 				// selector string contains no operators or slashes, so we assume it to be a page ame
 				$s = $this->wire()->sanitizer->name($selectorString);
 				if($s === $selectorString) $selectorString = "name=$s";

@@ -121,10 +121,10 @@ class PageValues extends Wire {
 	 * @return array|mixed|Page|PageArray|Wire|WireArray|WireData|string|\Traversable
 	 *
 	 */
-	public function getBracketValue(Page $page, $key, $value = null) {
+	public function getBracketValue(Page $page, $key, mixed $value = null) {
 
 		if(strpos($key, '.')) return $this->getDotValue($page, $key);
-		if(substr($key, -1) !== ']') return null;
+		if(!str_ends_with($key, ']')) return null;
 
 		$property = '';
 		$selector = '';
@@ -248,7 +248,7 @@ class PageValues extends Wire {
 	public function getMultiple(Page $page, $keys, $assoc = false) {
 		if(!is_array($keys)) {
 			$keys = (string) $keys;
-			if(strpos($keys, ',') !== false) {
+			if(str_contains($keys, ',')) {
 				$keys = explode(',', $keys);
 			} else {
 				$keys = [$keys];
@@ -283,7 +283,7 @@ class PageValues extends Wire {
 	public function getFieldFirstValue(Page $page, $multiKey, $getKey = false) {
 
 		// looking multiple keys split by "|" chars, and not an '=' selector
-		if(strpos($multiKey, '|') === false || strpos($multiKey, '=') !== false) return null;
+		if(!str_contains($multiKey, '|') || str_contains($multiKey, '=')) return null;
 
 		$value = null;
 		$keys = explode('|', $multiKey);
@@ -334,14 +334,14 @@ class PageValues extends Wire {
 	 */
 	public function getMarkup(Page $page, $key) {
 
-		if(strpos($key, '{') !== false && strpos($key, '}')) {
+		if(str_contains($key, '{') && strpos($key, '}')) {
 			// populate a string with {tags}
 			// note that the wirePopulateStringTags() function calls back on this method
 			// to retrieve the markup values for each of the found field names
 			return wirePopulateStringTags($key, $page);
 		}
 
-		if(strpos($key, '|') !== false) {
+		if(str_contains($key, '|')) {
 			$key = $this->getFieldFirstValue($page, $key, true);
 			if(!$key) return '';
 		}
@@ -451,7 +451,7 @@ class PageValues extends Wire {
 			// status provided as something other than integer
 			if(is_string($value) && !ctype_digit($value)) {
 				// string of one or more status names
-				if(strpos($value, ',') !== false) $value = str_replace([', ', ','], ' ', $value);
+				if(str_contains($value, ',')) $value = str_replace([', ', ','], ' ', $value);
 				$value = explode(' ', strtolower($value));
 			}
 			if(is_array($value)) {
@@ -554,7 +554,7 @@ class PageValues extends Wire {
 				$languages = $this->wire()->languages;
 				if($languages) {
 					if(!is_object($language)) {
-						if(strpos($language, 'name') === 0) $language = (int) substr($language, 4);
+						if(str_starts_with($language, 'name')) $language = (int) substr($language, 4);
 						$language = $languages->getLanguage($language);
 						if(!$language || !$language->id || $language->isDefault()) $language = '';
 					}
@@ -583,7 +583,7 @@ class PageValues extends Wire {
 			
 		} else {
 			// name being set while page is loading
-			if($charset === 'UTF8' && strpos("$value", 'xn-') === 0) {
+			if($charset === 'UTF8' && str_starts_with("$value", 'xn-')) {
 				// allow decode of UTF8 name while page is loading
 				$value = $sanitizer->pageName($value, Sanitizer::toUTF8);
 			} else {
@@ -733,7 +733,7 @@ class PageValues extends Wire {
 			// as a result of an sql group_concat() function
 			if($field->type instanceof FieldtypeMulti && ($field->flags & Field::flagAutojoin)) {
 				foreach($value as $k => $v) {
-					if(is_string($v) && strpos($v, FieldtypeMulti::multiValueSeparator) !== false) {
+					if(is_string($v) && str_contains($v, FieldtypeMulti::multiValueSeparator)) {
 						$value[$k] = explode(FieldtypeMulti::multiValueSeparator, $v);
 					}
 				}
@@ -822,7 +822,7 @@ class PageValues extends Wire {
 	public function hasField(Page $page, $field) {
 		$template = $page->template();
 		if(!$template) return false;
-		if(is_string($field) && strpos($field, '|') !== false) {
+		if(is_string($field) && str_contains($field, '|')) {
 			$field = explode('|', $field);
 		}
 		if(is_array($field)) {
@@ -964,17 +964,16 @@ class PageValues extends Wire {
 	}
 
 	/**
-	 * Return a value consistent with the page’s output formatting state
-	 *
-	 * This is primarily for use as a helper to the getFieldValue() method.
-	 *
-	 * @param Page $page
-	 * @param Field $field
-	 * @param mixed $value
-	 * @return mixed
-	 *
-	 */
-	public function formatFieldValue(Page $page, Field $field, $value) {
+  * Return a value consistent with the page’s output formatting state
+  *
+  * This is primarily for use as a helper to the getFieldValue() method.
+  *
+  * @param Page $page
+  * @param Field $field
+  * @return mixed
+  *
+  */
+ public function formatFieldValue(Page $page, Field $field, mixed $value) {
 
 		$hasInterface = $value instanceof PageFieldValueInterface;
 
@@ -1000,23 +999,22 @@ class PageValues extends Wire {
 	}
 
 	/**
-	 * Set the value of a field that is defined in the page's Fieldgroup
-	 *
-	 * This may not be called when outputFormatting is on.
-	 *
-	 * This is for internal use. API should generally use the set() method, but this is kept public for the minority of instances where it's useful.
-	 *
-	 * #pw-internal
-	 *
-	 * @param Page $page
-	 * @param string $key
-	 * @param mixed $value
-	 * @param bool $load Should the existing value be loaded for change comparisons? (applicable only to non-autoload fields)
-	 * @return Page Returns reference to this Page
-	 * @throws WireException
-	 *
-	 */
-	public function setFieldValue(Page $page, $key, $value, $load = true) {
+  * Set the value of a field that is defined in the page's Fieldgroup
+  *
+  * This may not be called when outputFormatting is on.
+  *
+  * This is for internal use. API should generally use the set() method, but this is kept public for the minority of instances where it's useful.
+  *
+  * #pw-internal
+  *
+  * @param Page $page
+  * @param string $key
+  * @param bool $load Should the existing value be loaded for change comparisons? (applicable only to non-autoload fields)
+  * @return Page Returns reference to this Page
+  * @throws WireException
+  *
+  */
+ public function setFieldValue(Page $page, $key, mixed $value, $load = true) {
 
 		if(!$page->template()) {
 			throw new WireException("You must assign a template to the page before setting field values ($key)");

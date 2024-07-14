@@ -223,7 +223,7 @@ class WireMail extends WireData implements WireMailInterface {
 	protected function extractEmailAndName($email) {
 		$name = '';
 		$email = (string) $email;
-		if(strpos($email, '<') !== false && strpos($email, '>') !== false) {
+		if(str_contains($email, '<') && str_contains($email, '>')) {
 			// email has separate from name and email
 			if(preg_match('/^(.*?)<([^>]+)>.*$/', $email, $matches)) {
 				$name = $this->sanitizeHeaderValue($matches[1]);
@@ -249,7 +249,7 @@ class WireMail extends WireData implements WireMailInterface {
 		if(!strlen($name)) return $email;
 		$name = $this->sanitizeHeaderValue($name); 
 		$delim = '';
-		if(strpos($name, ',') !== false) {
+		if(str_contains($name, ',')) {
 			// name contains a comma, so quote the value
 			$name = str_replace('"', '', $name); // remove existing quotes
 			$delim = '"';  // add quotes
@@ -296,7 +296,7 @@ class WireMail extends WireData implements WireMailInterface {
 				$toEmail = $key; 
 				$toName = $value; 
 
-			} else if(strpos($value, '<') !== false && strpos($value, '>') !== false) {
+			} else if(str_contains($value, '<') && str_contains($value, '>')) {
 				// toName supplied as: "User Name <user@example.com"
 				[$toEmail, $toName] = $this->extractEmailAndName($value); 
 
@@ -865,7 +865,7 @@ class WireMail extends WireData implements WireMailInterface {
 
 		if(strlen($input) <= $maxEffLen) {
 			$part = $input;
-		} else if(strpos($input, " ") === FALSE || strrpos($input, " ") === FALSE || strpos($input, " ") > $maxEffLen) {
+		} else if(!str_contains($input, " ") || strrpos($input, " ") === FALSE || strpos($input, " ") > $maxEffLen) {
 			// Force cutting of subject since there is no whitespace to break on
 			$part = substr($input, $maxlen - $maxEffLen);
 		} else {

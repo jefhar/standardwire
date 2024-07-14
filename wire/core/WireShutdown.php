@@ -427,9 +427,9 @@ class WireShutdown extends Wire {
 		// encode message the same way that PHP does by default
 		$message = htmlspecialchars($this->error['message'], ENT_COMPAT | ENT_HTML401, ini_get('default_charset'), false);
 		
-		if(strpos($out, $message) !== false) {
+		if(str_contains($out, $message)) {
 			// encoded message present in output
-		} else if(strpos($out, (string) $this->error['message']) !== false) {
+		} else if(str_contains($out, (string) $this->error['message'])) {
 			// non-encoded message present in output
 			$message = $this->error['message']; 
 		} else {
@@ -442,7 +442,7 @@ class WireShutdown extends Wire {
 		$token = '';
 		do {
 			$token .= 'xPW' . mt_rand() . 'SD';
-		} while(strpos($out, $token) !== false);
+		} while(str_contains($out, $token));
 		
 		// replace error message with token
 		$out = str_replace($message, $token, $out);
@@ -609,7 +609,7 @@ class WireShutdown extends Wire {
 			$log = $this->wire(new FileLog($config->paths->logs . 'errors.txt'));
 			$log->setDelimeter("\t");
 			$saved = $log->save("$userName\t$url\t$message"); 
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			$saved = false;
 		}
 		return $saved;
@@ -647,7 +647,7 @@ class WireShutdown extends Wire {
 		
 		$emailSubject = $this->fatalErrorResponse['emailSubject'];
 		if(empty($emailSubject)) $emailSubject = $this->labels['email-subject'];
-		if(strpos($emailSubject, '{host}') === false && $this->config) $emailSubject .= " - {host}";
+		if(!str_contains($emailSubject, '{host}') && $this->config) $emailSubject .= " - {host}";
 		if($this->config) $emailSubject = str_replace('{host}', $this->config->httpHost, $emailSubject);
 		
 		$emailModule = $this->fatalErrorResponse['emailModule'];
@@ -688,7 +688,7 @@ class WireShutdown extends Wire {
 		}
 
 		$messageHTML = $message;
-		if(strpos($message, '&') !== false) {
+		if(str_contains($message, '&')) {
 			$messageHTML = html_entity_decode($message, ENT_QUOTES, "UTF-8");
 		}
 		$emailBodyHTML = str_replace(
@@ -700,7 +700,7 @@ class WireShutdown extends Wire {
 		$emailBody = $this->simplifyErrorMessageText($emailBody);
 		$emailBodyHTML = $this->simplifyErrorMessageHTML($emailBodyHTML);
 		$emailBodyHTML = str_replace("\t", " ", $emailBodyHTML);
-		while(strpos($emailBodyHTML, '  ') !== false) $emailBodyHTML = str_replace('  ', ' ', $emailBodyHTML);
+		while(str_contains($emailBodyHTML, '  ')) $emailBodyHTML = str_replace('  ', ' ', $emailBodyHTML);
 		
 		if($emailBodyHTML && stripos($emailBodyHTML, "</html>") === false) {
 			$emailBodyHTML = 
@@ -716,7 +716,7 @@ class WireShutdown extends Wire {
 			if($emailFrom) $mail->from($emailFrom);
 			if($emailFromName) $mail->fromName($emailFromName);
 			$sent = $mail->send();
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			$sent = false;
 		}
 		

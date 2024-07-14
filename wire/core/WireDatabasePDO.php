@@ -424,7 +424,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		if(is_array($sqlModes)) {
 			// ["5.7.0" => "remove:mode1,mode2/add:mode3"]
 			foreach($sqlModes as $minVersion => $commands) {
-				if(strpos($commands, '/') !== false) {
+				if(str_contains($commands, '/')) {
 					$commands = explode('/', $commands);
 				} else {
 					$commands = [$commands];
@@ -650,17 +650,16 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 	/**
-	 * Sets an attribute on the database handle
-	 * 
-	 * #pw-group-connection
-	 * 
-	 * @param int $attribute
-	 * @param mixed $value
-	 * @return bool
-	 * @link http://php.net/manual/en/pdo.setattribute.php
-	 * 
-	 */
-	public function setAttribute($attribute, $value) {
+  * Sets an attribute on the database handle
+  *
+  * #pw-group-connection
+  *
+  * @param int $attribute
+  * @return bool
+  * @link http://php.net/manual/en/pdo.setattribute.php
+  *
+  */
+ public function setAttribute($attribute, mixed $value) {
 		return $this->pdoLast()->setAttribute($attribute, $value); 
 	}
 
@@ -1191,7 +1190,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			$numRows = (int) $query->rowCount();
 			if($numRows) $exists = $getInfo ? $query->fetch(\PDO::FETCH_ASSOC) : true;
 			$query->closeCursor();
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			// most likely given table does not exist
 			$exists = false;
 		}
@@ -1245,7 +1244,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 				$exists = $numRows > 0;
 			}
 			$query->closeCursor();
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			// most likely given table does not exist
 			$exists = false;
 		}
@@ -1452,7 +1451,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 *
 	 */
 	public function escapeTableCol($str) {
-		if(strpos($str, '.') === false) return $this->escapeTable($str); 
+		if(!str_contains($str, '.')) return $this->escapeTable($str); 
 		[$table, $col] = explode('.', $str, 2);
 		$col = $this->escapeCol($col);
 		$table = $this->escapeTable($table);
@@ -1668,7 +1667,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		$version = $this->getVersion();
 		$name = 'MySQL';
 		if(strpos($version, '-')) [$version, $name] = explode('-', $version, 2);
-		if(strpos($name, 'mariadb') === false) {
+		if(!str_contains($name, 'mariadb')) {
 			if(version_compare($version, '8.0.4', '>=')) return 'ICU';
 		}
 		return 'HenrySpencer';

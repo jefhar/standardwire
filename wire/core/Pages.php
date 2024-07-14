@@ -415,9 +415,9 @@ class Pages extends Wire {
 			$joinFields = [];
 		} else if(!is_array($joinFields)) {
 			$joinFields = (string) $joinFields;
-			if(strpos($joinFields, ',') !== false) {
+			if(str_contains($joinFields, ',')) {
 				$joinFields = explode(',', $joinFields);
-			} else if(strpos($joinFields, '|') !== false) {
+			} else if(str_contains($joinFields, '|')) {
 				$joinFields = explode('|', $joinFields);
 			} else {
 				$joinFields = [$joinFields];
@@ -429,7 +429,7 @@ class Pages extends Wire {
 				$field = $fields->get($name);
 				if(!$field) continue;
 				$name = $field->name;
-			} else if(strpos($name, '.') !== false) {
+			} else if(str_contains($name, '.')) {
 				[$name, ] = explode('.', $name, 2); // subfields not allowed
 			}
 			$joinFields[$key] = trim($name);
@@ -1689,29 +1689,29 @@ class Pages extends Wire {
 	 * @return mixed
 	 *
 	 */
-	public function __get($name) {
-		switch($name) {
-			// A-Z
-			case 'autojoin': return $this->loader->getAutojoin();
-			case 'cacher': return $this->cacher();
-			case 'cloning': return $this->editor()->isCloning();
-			case 'editor': return $this->editor();
-			case 'loader': return $this->loader();
-			case 'names': return $this->names();
-			case 'newNullPage': return $this->newNullPage();
-			case 'newPage': return $this->newPage();
-			case 'newPageArray': return $this->newPageArray();
-			case 'of': return $this->of();
-			case 'outputFormatting': return $this->loader->getOutputFormatting();
-			case 'parents': return $this->parents();
-			case 'pathFinder': return $this->pathFinder();
-			case 'raw': return $this->raw();
-			case 'request': return $this->request();
-			case 'trasher': return $this->trasher();
-			case 'types': return $this->types();
-		}
-		return parent::__get($name); 
-	}
+	public function __get($name)
+ {
+     return match ($name) {
+         'autojoin' => $this->loader->getAutojoin(),
+         'cacher' => $this->cacher(),
+         'cloning' => $this->editor()->isCloning(),
+         'editor' => $this->editor(),
+         'loader' => $this->loader(),
+         'names' => $this->names(),
+         'newNullPage' => $this->newNullPage(),
+         'newPage' => $this->newPage(),
+         'newPageArray' => $this->newPageArray(),
+         'of' => $this->of(),
+         'outputFormatting' => $this->loader->getOutputFormatting(),
+         'parents' => $this->parents(),
+         'pathFinder' => $this->pathFinder(),
+         'raw' => $this->raw(),
+         'request' => $this->request(),
+         'trasher' => $this->trasher(),
+         'types' => $this->types(),
+         default => parent::__get($name),
+     };
+ }
 
 	/**
 	 * Set whether loaded pages have their outputFormatting turn on or off
@@ -1911,7 +1911,7 @@ class Pages extends Wire {
 
 		unset($options['template'], $options['parent'], $options['pageClass']); 
 	
-		if(strpos($class, "\\") === false) $class = wireClassName($class, true);
+		if(!str_contains($class, "\\")) $class = wireClassName($class, true);
 		
 		$page = $this->wire(new $class($template));
 		
@@ -1977,7 +1977,7 @@ class Pages extends Wire {
 		}
 		
 		// page path
-		if(is_string($key) && strpos($key, '/') !== false) { 
+		if(is_string($key) && str_contains($key, '/')) { 
 			if($this->wire()->sanitizer->pagePathName($key) === $key) {
 				return $this->get($key);
 			}

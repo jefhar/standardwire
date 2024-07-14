@@ -158,7 +158,7 @@ class Fields extends WireSaveableItems {
 		
 		if(empty($class) || $class === 'Field') {
 			$class = '';
-		} else if(strpos($class, "\\") === false) {
+		} else if(!str_contains($class, "\\")) {
 			$class = wireClassName($class, true);
 			if(!class_exists($class)) $class = '';
 		}
@@ -517,7 +517,7 @@ class Fields extends WireSaveableItems {
 
 		// remove runtime properties (those that start with underscore)
 		foreach($data as $key => $value) {
-			if(strpos($key, '_') === 0) unset($data[$key]);
+			if(str_starts_with($key, '_')) unset($data[$key]);
 		}
 
 		// keep all in the same order so that it's easier to compare (by eye) in the DB
@@ -534,7 +534,7 @@ class Fields extends WireSaveableItems {
 			if(!is_array($existingData)) $existingData = [];
 			foreach($data as $k => $v) {
 				// disallow namespace within namespace
-				if(strpos($k, Fieldgroup::contextNamespacePrefix) === 0) unset($data[$k]);
+				if(str_starts_with($k, Fieldgroup::contextNamespacePrefix)) unset($data[$k]);
 			}
 			$existingData[Fieldgroup::contextNamespacePrefix . $namespace] = $data;
 			$data = $existingData;
@@ -696,14 +696,14 @@ class Fields extends WireSaveableItems {
 
 		foreach($reflector->getMethods() as $method) {
 			$methodName = $method->getName();
-			if(strpos($methodName, '___deletePageField') === false) continue;
+			if(!str_contains($methodName, '___deletePageField')) continue;
 			try {
 				new \ReflectionMethod($reflector->getParentClass()->getName(), $methodName);
 				if(!in_array($method->getDeclaringClass()->getName(), ['Fieldtype', 'FieldtypeMulti', __NAMESPACE__ . "\\Fieldtype", __NAMESPACE__ . "\\FieldtypeMulti"])) {
 					$hasDeletePageField = true;
 				}
 
-			} catch(\Exception $e) {
+			} catch(\Exception) {
 				// not there
 			}
 			break;

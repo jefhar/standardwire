@@ -719,7 +719,7 @@ class PagesParents extends Wire {
 			$query->bindValue(':parents_id', $insert['parents_id'], \PDO::PARAM_INT);
 			try {
 				if($query->execute()) $numRows++;
-			} catch(\Exception $e) {
+			} catch(\Exception) {
 				// ok
 			}
 		}

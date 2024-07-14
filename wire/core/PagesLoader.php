@@ -161,7 +161,7 @@ class PagesLoader extends Wire {
 			// if selector begins with a slash, it is referring to a path
 			$selector = "path=$selector";
 			
-		} else if(strpos($selector, ',') === false) {
+		} else if(!str_contains($selector, ',')) {
 			// there is just one “key=value” or “value” selector that needs further processing
 			if(strpos($selector, 'id=')) {
 				if($convertIDs) {
@@ -367,7 +367,7 @@ class PagesLoader extends Wire {
 			$fields = $this->wire()->fields;
 			// support the joinFields option when selector contains 'field=a|b|c' or 'join=a|b|c'
 			foreach(['field', 'join'] as $name) {
-				if(strpos($selectorString, "$name=") === false || $fields->get($name)) continue; 
+				if(!str_contains($selectorString, "$name=") || $fields->get($name)) continue; 
 				foreach($selectors as $selector) {
 					if($selector->field() !== $name) continue;
 					$joinFields = array_merge($joinFields, $selector->values());
@@ -397,7 +397,7 @@ class PagesLoader extends Wire {
 		$profiler = $this->wire()->profiler;
 		$profilerEvent = $profiler ? $profiler->start("$caller($selectorString)", "Pages") : null;
 		
-		if(($lazy || $findIDs) && strpos($selectorString, 'limit=') === false) $options['getTotal'] = false;
+		if(($lazy || $findIDs) && !str_contains($selectorString, 'limit=')) $options['getTotal'] = false;
 	
 		if($lazy) {
 			// [ pageID => templateID ]
@@ -544,7 +544,7 @@ class PagesLoader extends Wire {
 		$this->lastPageFinder = $pageFinder; 
 
 		if($loadPages && $cachePages) {
-			if(strpos($selectorString, 'sort=random') !== false) {
+			if(str_contains($selectorString, 'sort=random')) {
 				if($selectors->getSelectorByFieldValue('sort', 'random')) $cachePages = false;
 			}
 			if($cachePages) {
@@ -560,7 +560,7 @@ class PagesLoader extends Wire {
 				$note .= ": " . $pages->first()->path;
 				if($count > 1) $note .= " ... " . $pages->last()->path;
 			}
-			if(substr($caller, -1) !== ')') $caller .= "($selectorString)";
+			if(!str_ends_with($caller, ')')) $caller .= "($selectorString)";
 			Debug::saveTimer($caller, $note);
 			foreach($pages as $item) {
 				if($item->_debug_loader) continue;
@@ -677,7 +677,7 @@ class PagesLoader extends Wire {
 			if($languages) {
 				foreach($languageIds as $id) {
 					$key = "name$id";
-					if(isset($row[$key]) && strpos($row[$key], 'xn-') === 0) {
+					if(isset($row[$key]) && str_starts_with($row[$key], 'xn-')) {
 						$page->setName($row[$key], $key);
 						unset($row[$key]);
 					}
@@ -876,7 +876,7 @@ class PagesLoader extends Wire {
 			$ids = $data['pages'];
 		} else {
 			$ids = null;
-			if(strpos($selectorStr, 'template') !== false && empty($options['template'])) {
+			if(str_contains($selectorStr, 'template') && empty($options['template'])) {
 				$info = Selectors::selectorHasField($selectors, ['template', 'templates_id'], ['verbose' => true]);
 				if($info['result']) $options['template'] = $this->wire()->templates->get($info['value']);
 				echo "template=$options[template]\n";
@@ -922,7 +922,7 @@ class PagesLoader extends Wire {
 		
 		if(is_int($selector)) {
 			$getCache = true;
-		} else if(is_string($selector) && (ctype_digit($selector) || strpos($selector, 'id=') === 0)) {
+		} else if(is_string($selector) && (ctype_digit($selector) || str_starts_with($selector, 'id='))) {
 			$getCache = true;
 		} else {
 			$getCache = false;
@@ -1661,7 +1661,7 @@ class PagesLoader extends Wire {
 		$homepageID = (int) $config->rootPageID;
 		$rootUrl = $this->wire()->config->urls->root;
 
-		if($options['allowUrl'] && $rootUrl !== '/' && strpos($path, (string) $rootUrl) === 0) {
+		if($options['allowUrl'] && $rootUrl !== '/' && str_starts_with($path, (string) $rootUrl)) {
 			// root URL is subdirectory and path has that subdirectory
 			$rootName = trim($rootUrl, '/');
 			if(strpos($rootName, '/')) {
@@ -2043,7 +2043,7 @@ class PagesLoader extends Wire {
 		$query->execute();
 		$value = $query->fetchColumn();
 		$query->closeCursor();
-		if(ctype_digit("$value") && strpos($column, 'name') !== 0) $value = (int) $value;
+		if(ctype_digit("$value") && !str_starts_with($column, 'name')) $value = (int) $value;
 		return $value;
 	}
 

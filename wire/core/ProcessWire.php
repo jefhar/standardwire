@@ -324,7 +324,7 @@ class ProcessWire extends Wire {
 		}
 	}
 
-	public function __toString() {
+	public function __toString(): string {
 		$str = $this->className() . " ";
 		$str .= self::versionMajor . "." . self::versionMinor . "." . self::versionRevision; 
 		if(self::versionSuffix) $str .= " " . self::versionSuffix;
@@ -420,7 +420,7 @@ class ProcessWire extends Wire {
 				if(is_string($debugIf) && strlen($debugIf) && !empty($ip)) {
 					// match exact IP address or regex matching IP address(es)
 					$debugIf = trim($debugIf);
-					if(strpos($debugIf, '/') === 0) {
+					if(str_starts_with($debugIf, '/')) {
 						$debug = (bool) @preg_match($debugIf, $ip); // regex IPs
 					} else {
 						$debug = $debugIf === $ip; // exact IP match
@@ -920,7 +920,7 @@ class ProcessWire extends Wire {
 	 * @since 3.0.158
 	 * 
 	 */
-	public function _objectNotWired(Wire $obj, $name, $value) { 
+	public function _objectNotWired(Wire $obj, $name, mixed $value) { 
 		// Uncomment code below to enable (use in admin)
 		/*
 		if(is_string($name) && $this->wire($name)) {
@@ -1075,7 +1075,7 @@ class ProcessWire extends Wire {
 	 */
 	public static function getRootPath($rootPath = '') {
 		
-		if($rootPath !== true && strpos($rootPath, '..') !== false) {
+		if($rootPath !== true && str_contains($rootPath, '..')) {
 			$rootPath = realpath($rootPath);
 		}
 
@@ -1141,7 +1141,7 @@ class ProcessWire extends Wire {
 		if(strpos($rootPath, "/$siteDir")) {
 			$parts = explode('/', $rootPath);
 			$testDir = array_pop($parts);
-			if(($testDir === $siteDir || strpos($testDir, 'site-') === 0) && is_file("$rootPath/config.php")) {
+			if(($testDir === $siteDir || str_starts_with($testDir, 'site-')) && is_file("$rootPath/config.php")) {
 				// rootPath was given as a /site/ directory rather than root directory
 				$rootPath = implode('/', $parts); // remove siteDir from rootPath
 				$siteDir = $testDir; // set proper siteDir
@@ -1159,7 +1159,7 @@ class ProcessWire extends Wire {
 			// check if we're being included from another script and adjust the rootPath accordingly
 			$sf = empty($realScriptFile) ? '' : dirname($realScriptFile);
 			$f = dirname($realIndexFile);
-			if($sf && $sf != $f && strpos($sf, $f) === 0) {
+			if($sf && $sf != $f && str_starts_with($sf, $f)) {
 				$x = rtrim(substr($sf, strlen($f)), '/');
 				if(is_null($_rootURL)) $rootURL = substr($rootURL, 0, strlen($rootURL) - strlen($x));
 			}

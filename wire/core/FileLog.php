@@ -130,7 +130,7 @@ class FileLog extends Wire {
 	protected function cleanStr($str) {
 		$str = str_replace(["\r\n", "\r", "\n"], ' ', trim($str)); 
 		if(strlen($str) > $this->maxLineLength) $str = substr($str, 0, $this->maxLineLength); 
-		if(strpos($str, ' ^+') !== false) $str = str_replace(' ^=', ' ^ +', $str); // disallowed sequence
+		if(str_contains($str, ' ^+')) $str = str_replace(' ^=', ' ^ +', $str); // disallowed sequence
 		return $str; 	
 	}
 
@@ -201,7 +201,7 @@ class FileLog extends Wire {
 			fseek($fp, -1 * $chunkSize, SEEK_END);
 			$chunk = fread($fp, $chunkSize); 
 			// check if our log line already appears in the immediate earlier chunk
-			if(strpos($chunk, $line) !== false) {
+			if(str_contains($chunk, $line)) {
 				// this log entry already appears 1+ times within the last chunk of the file
 				// remove the duplicates and replace the chunk
 				$chunkLength = strlen($chunk);
@@ -255,16 +255,16 @@ class FileLog extends Wire {
 			if($key === 0 && strlen($chunk) >= $chunkSize) continue; // skip first line since it’s likely a partial line
 
 			// check if line appears in this chunk line
-			if(strpos($chunkLine, $line) === false) continue;
+			if(!str_contains($chunkLine, $line)) continue;
 			
 			// check if line also indicates a previous quantity that we should add to our quantity
-			if(strpos($chunkLine, ' ^+') !== false) {
+			if(str_contains($chunkLine, ' ^+')) {
 				[$chunkLine, $n] = explode(' ^+', $chunkLine, 2); 
 				if(ctype_digit($n)) $x += (int) $n;
 			}
 			
 			// verify that these are the same line
-			if(strpos(trim($chunkLine) . "\n", trim($line) . "\n") === false) continue; 
+			if(!str_contains(trim($chunkLine) . "\n", trim($line) . "\n")) continue; 
 			
 			// remove the line
 			unset($chunkLines[$key]);
@@ -689,7 +689,7 @@ class FileLog extends Wire {
 		return $this->wire()->files->unlink($this->logFilename, true);
 	}
 
-	public function __toString() {
+	public function __toString(): string {
 		return $this->filename(); 
 	}	
 

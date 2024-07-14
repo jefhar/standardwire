@@ -26,7 +26,7 @@ interface WireTrackable {
 	 * @return $this
 	 *
 	 */
-	public function trackChange($what, $old = null, $new = null);
+	public function trackChange($what, mixed $old = null, mixed $new = null);
 
 	/**
 	 * Has the given property changed?

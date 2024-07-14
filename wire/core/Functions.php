@@ -609,8 +609,8 @@ function wireDate($format = '', $ts = null) {
  */
 function wireIconMarkup($icon, $class = '') {
 	if(empty($icon)) return '';
-	if(strpos($icon, 'icon-') === 0) $icon = str_replace('icon-', 'fa-', $icon); 
-	if(strpos($icon, 'fa-') !== 0) $icon = "fa-$icon";
+	if(str_starts_with($icon, 'icon-')) $icon = str_replace('icon-', 'fa-', $icon); 
+	if(!str_starts_with($icon, 'fa-')) $icon = "fa-$icon";
 	if($class) {
 		$modifiers = ['lg', 'fw', '2x', '3x', '4x', '5x', 'spin', 'spinner', 'li', 'border', 'rotate-90', 'rotate-180', 'rotate-270', 'flip-horizontal', 'flip-vertical', 'stack', 'stack-1x', 'stack-2x', 'inverse'];
 		$classes = explode(' ', $class); 
@@ -711,7 +711,7 @@ function wireClassName($className, $withNamespace = false, $verbose = false) {
 
 	if(is_object($className)) {
 		$object = $className;
-		$className = get_class($className);
+		$className = $className::class;
 	} else {
 		$object = null;
 	}
@@ -808,10 +808,10 @@ function wireClassNamespace($className, $withClass = false, $strict = false) {
 	$ns = "";
 	
 	if(is_object($className)) {
-		$className = get_class($className);
+		$className = $className::class;
 	}
 	
-	if(strpos($className, $bs) !== false) {
+	if(str_contains($className, $bs)) {
 		// namespace is already included in class name
 		$a = explode($bs, $className);
 		array_pop($a); // class
@@ -833,7 +833,7 @@ function wireClassNamespace($className, $withClass = false, $strict = false) {
 		$nsa = [];
 		$name = strtolower($className); 
 		foreach(get_declared_classes() as $class) {
-			if(strpos($class, $bs) === false) {
+			if(!str_contains($class, $bs)) {
 				// root namespace
 				if(!$strict) continue;
 				$class = "$bs$class";
@@ -1073,20 +1073,19 @@ function wireIsCallable($var, $syntaxOnly = false, &$callableName = '') {
 
 /**
  * Return the count of item(s) present in the given value
- * 
+ *
  * Duplicates behavior of PHP count() function prior to PHP 7.2, which states:
- * 
+ *
  * > Returns the number of elements in $value. When the parameter is neither an array nor an
  * object with implemented Countable interface, 1 will be returned. There is one exception,
  * if $value is NULL, 0 will be returned.
- * 
+ *
  * #pw-group-common
- * 
- * @param mixed $value
+ *
  * @return int
- * 
+ *
  */
-function wireCount($value) {
+function wireCount(mixed $value) {
 	if($value === null) return 0; 
 	if(is_array($value)) return count($value); 
 	if($value instanceof \Countable) return count($value);
@@ -1168,7 +1167,7 @@ function wireLen($value) {
  * @since 3.0.143
  * 
  */
-function wireEmpty($value) {
+function wireEmpty(mixed $value) {
 	if(empty($value)) return true;
 	if(is_object($value)) {
 		if($value instanceof \Countable && !count($value)) return true;
@@ -1245,7 +1244,7 @@ function wireRegion($key, $value = null) {
 		// set region
 		$pos = strpos($key, '+');
 		if($pos !== false) {
-			$lock = strpos($key, '++') !== false;
+			$lock = str_contains($key, '++');
 			$key = trim($key, '+');
 			if($lock !== false && !isset($locked[$key])) {
 				$locked[$key] = $lock === 0 ? '^' : '$'; // prepend : append

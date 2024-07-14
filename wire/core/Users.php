@@ -193,7 +193,7 @@ class Users extends PagesType {
 	 * 
 	 */
 	public function setAdminThemeByRole($adminTheme, Role $role) {
-		if(strpos("$adminTheme", 'AdminTheme') !== 0) throw new WireException('Invalid admin theme');
+		if(!str_starts_with("$adminTheme", 'AdminTheme')) throw new WireException('Invalid admin theme');
 		$moduleId = $this->wire()->modules->getModuleID($adminTheme); 
 		if(!$moduleId) throw new WireException('Unknown admin theme');
 		$userTemplateIds = implode('|', $this->wire()->config->userTemplateIDs);

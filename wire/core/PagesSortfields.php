@@ -96,7 +96,7 @@ class PagesSortfields extends Wire {
 		$reverse = false;
 		$sortfield = (string) $sortfield;
 
-		if(substr($sortfield, 0, 1) == '-') {
+		if(str_starts_with($sortfield, '-')) {
 			$sortfield = substr($sortfield, 1); 
 			$reverse = true; 	
 		}
@@ -129,7 +129,7 @@ class PagesSortfields extends Wire {
 
 		$reverse = false; 
 	
-		if(substr($sortfield, 0, 1) == '-') {	
+		if(str_starts_with($sortfield, '-')) {	
 			$reverse = true; 
 			$sortfield = substr($sortfield, 1); 
 		}

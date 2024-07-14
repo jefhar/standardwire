@@ -111,7 +111,7 @@ class WireMarkupRegions extends Wire {
 					$testAction = '';
 					$testPW = substr($markup, $pos, 20);
 					foreach($this->actions as $testAction) {
-						if(strpos($testPW, (string) $testAction) !== false) {
+						if(str_contains($testPW, (string) $testAction)) {
 							$testAction = true;
 							break;
 						}
@@ -246,7 +246,7 @@ class WireMarkupRegions extends Wire {
 		if(!empty($options['leftover'])) {
 			if(!empty($leftover)) {
 				foreach($regions as $region) {
-					if(strpos($leftover, (string) $region['html']) !== false) {
+					if(str_contains($leftover, (string) $region['html'])) {
 						$leftover = str_replace($region['html'], '', $leftover);	
 					}
 				}
@@ -274,7 +274,7 @@ class WireMarkupRegions extends Wire {
 			// partial class match
 			$class = rtrim($class, '*');
 			foreach($classes as $c) {
-				if(strpos($c, $class) === 0) {
+				if(str_starts_with($c, $class)) {
 					$has = $c;
 					break;
 				}
@@ -367,23 +367,23 @@ class WireMarkupRegions extends Wire {
 			// match a class name prefix or action prefix
 			$find = trim($find, '.*');
 			$finds = [' class="' . $find, " class='$find", " class=$find", " $find", "'$find", "\"$find"];
-			if(strpos($find, 'pw-') !== false) $finds[] = " data-$find";
+			if(str_contains($find, 'pw-')) $finds[] = " data-$find";
 			$hasClass = "$find*";
 
 		} else if($c === '.') {
 			// match a class name or action
 			$find = trim($find, '.');
 			$finds = [' class="' . $find . '"', " class='$find'", " class=$find ", " class=$find>", " $find'", "'$find ", " $find\"", "\"$find ", " $find "];
-			if(strpos($find, 'pw-') !== false) $finds[] = " data-$find";
+			if(str_contains($find, 'pw-')) $finds[] = " data-$find";
 			$hasClass = $find;
 			
 		} else if($c === '<') {
 			// matching a single-use HTML tag
 			$finds = [$find, rtrim($find, '>') . ' '];
 			
-		} else if(strpos($find, '=') !== false) {
+		} else if(str_contains($find, '=')) {
 			// some other specified attribute in attr=value format
-			if(strpos($find, '[') !== false && $z === ']') {
+			if(str_contains($find, '[') && $z === ']') {
 				// i.e. div[attr=value]
 				[$findTag, $find] = explode('[', $find, 2);
 				$find = rtrim($find, ']');
@@ -395,7 +395,7 @@ class WireMarkupRegions extends Wire {
 				$finds = [" $attr="];
 			}
 			
-			if(strpos($find, 'id=') === 0) {
+			if(str_starts_with($find, 'id=')) {
 				// when finding an id attribute, also allow for "pw-id=" and "data-pw-id="
 				foreach($finds as $find) {
 					$find = ltrim($find);
@@ -498,7 +498,7 @@ class WireMarkupRegions extends Wire {
 				$test = substr($region, 0, $testPos);
 				$openCnt = 0;
 				foreach($openTags as $openTag) {
-					if(strpos($test, $openTag) !== false) $openCnt += substr_count($test, $openTag);
+					if(str_contains($test, $openTag)) $openCnt += substr_count($test, $openTag);
 				}
 				$closeCnt = substr_count($test, $tagInfo['close']);
 				if($openCnt == $closeCnt) {
@@ -590,7 +590,7 @@ class WireMarkupRegions extends Wire {
 		$tag = trim($tag, '</> ');
 		$pos = strpos($tag, '>'); 
 		if($pos) $tag = substr($tag, 0, $pos);
-		while(strpos($tag, '  ') !== false) $tag = str_replace('  ', ' ', $tag); 
+		while(str_contains($tag, '  ')) $tag = str_replace('  ', ' ', $tag); 
 		$tag = str_replace([' =', '= '], '=', $tag); 
 		$tag .= ' '; // extra space for loop below
 
@@ -690,7 +690,7 @@ class WireMarkupRegions extends Wire {
 				// action attribute
 				[$prefix, $action] = explode('-', $name, 2); 
 				if($prefix) {} // ignore
-			} else if(strpos($name, 'data-pw-') === 0) {
+			} else if(str_starts_with($name, 'data-pw-')) {
 				// action data attribute
 				[$ignore, $prefix, $action] = explode('-', $name, 3); 
 				if($ignore && $prefix) {} // ignore
@@ -715,7 +715,7 @@ class WireMarkupRegions extends Wire {
 		
 		// if action was not specified as an attribute, see if action is specified as a class name
 		if(!$action) foreach($classes as $key => $class) {
-			if(strpos($class, 'pw-') !== 0) continue;
+			if(!str_starts_with($class, 'pw-')) continue;
 			[$prefix, $action] = explode('-', $class, 2);
 			if(strpos($action, '-')) [$action, $actionTarget] = explode('-', $action, 2);
 			if($prefix && $actionTarget) {} // ignore
@@ -758,11 +758,11 @@ class WireMarkupRegions extends Wire {
 		$startPos = 0;
 		$regions = [];
 		
-		$open = strpos($tag, '<') === 0 ? $tag : "<$tag";
+		$open = str_starts_with($tag, '<') ? $tag : "<$tag";
 		$close = $tag == '<!--' ? '-->' : '</' . trim($tag, '<>') . '>';
 	
 		// keep comments that start with <!--#
-		if($tag == "<!--" && strpos($markup, "<!--#") !== false) {
+		if($tag == "<!--" && str_contains($markup, "<!--#")) {
 			$hasHints = true;
 			$markup = str_replace("<!--#", "<!~~#", $markup);
 			$markup = preg_replace('/<!--#([-_.a-zA-Z0-9]+)-->/', '<!~~$1~~>', $markup);
@@ -806,7 +806,7 @@ class WireMarkupRegions extends Wire {
 		static $level = 0;
 		$attrs = ['data-pw-optional', 'pw-optional']; 
 		foreach($attrs as $attrName) {
-			if(strpos($markup, " $attrName") === false) continue;
+			if(!str_contains($markup, " $attrName")) continue;
 			$regions = $this->find($attrName, $markup, ['verbose' => true]);
 			foreach($regions as $region) {
 				$pos = strpos($markup, (string) $region['html']);
@@ -878,7 +878,7 @@ class WireMarkupRegions extends Wire {
 					$classes = array_unique($classes);
 					// identify remove classes
 					foreach($classes as $key => $class) {
-						if(strpos($class, '-') !== 0) continue;
+						if(!str_starts_with($class, '-')) continue;
 						$removeClass = ltrim($class, '-');
 						unset($classes[$key]);
 						while(false !== ($k = array_search($removeClass, $classes))) unset($classes[$k]);
@@ -946,7 +946,7 @@ class WireMarkupRegions extends Wire {
 				// entity encode value
 				$value = $sanitizer->entities($value);
 				
-			} else if(strpos($value, '"') !== false && strpos($value, "'") === false) {
+			} else if(str_contains($value, '"') && !str_contains($value, "'")) {
 				// if value has a quote in it, use single quotes rather than double quotes
 				$q = "'";
 			}
@@ -977,7 +977,7 @@ class WireMarkupRegions extends Wire {
 			$tests = [" $name=\"$value\"", " $name='$value'"];
 			
 			// if there's no space in value, we also check non-quoted values
-			if(strpos($value, ' ') === false) {
+			if(!str_contains($value, ' ')) {
 				$tests[] = " $name=$value ";
 				$tests[] = " $name=$value>";
 			}
@@ -1064,26 +1064,14 @@ class WireMarkupRegions extends Wire {
 				if(in_array($region['action'], $this->actions)) $action = $region['action'];
 			}
 			
-			switch($action) {
-				case 'append':
-					$replacement = $region['open'] . $region['region'] . $content . $region['close'];
-					break;
-				case 'prepend':
-					$replacement = $region['open'] . $content . $region['region'] . $region['close'];
-					break;
-				case 'before':
-					$replacement = $content . $region['html'];
-					break;
-				case 'after':
-					$replacement = $region['html'] . $content;
-					break;
-				case 'remove': 
-					$replacement = '';
-					break;
-				default:
-					// replace
-					$replacement = $region['open'] . $content . $region['close']; 
-			}
+			$replacement = match ($action) {
+       'append' => $region['open'] . $region['region'] . $content . $region['close'],
+       'prepend' => $region['open'] . $content . $region['region'] . $region['close'],
+       'before' => $content . $region['html'],
+       'after' => $region['html'] . $content,
+       'remove' => '',
+       default => $region['open'] . $content . $region['close'],
+   };
 	
 			$markup = str_replace($region['html'], $replacement, $markup); 
 		}
@@ -1262,7 +1250,7 @@ class WireMarkupRegions extends Wire {
 		
 		$options = array_merge($defaults, $options);
 		$leftoverMarkup = '';
-		$hasDebugLandmark = strpos($htmlDocument, self::debugLandmark) !== false;
+		$hasDebugLandmark = str_contains($htmlDocument, self::debugLandmark);
 		$debug = $hasDebugLandmark && $this->wire()->config->debug;
 		$debugTimer = $debug ? Debug::timer() : 0;
 		
@@ -1464,7 +1452,7 @@ class WireMarkupRegions extends Wire {
 		
 		$updated = false;
 		
-		if(stripos($html, '</region>') !== false || strpos($html, '</pw-region>') !== false) {
+		if(stripos($html, '</region>') !== false || str_contains($html, '</pw-region>')) {
 			$html = preg_replace('!</?(?:region|pw-region)(?:\s[^>]*>|>)!i', '', $html);
 			$updated = true;
 		}
@@ -1485,7 +1473,7 @@ class WireMarkupRegions extends Wire {
 	 * 
 	 */
 	public function hasRegions(&$html) {
-		if(strpos($html, ' id=') === false && strpos($html, 'pw-') === false) return false;
+		if(!str_contains($html, ' id=') && !str_contains($html, 'pw-')) return false;
 		return true;
 	}
 
@@ -1501,7 +1489,7 @@ class WireMarkupRegions extends Wire {
 	public function hasRegionActions(&$html) {
 		$has = false;
 		foreach($this->actions as $action) {
-			if(strpos($html, "pw-$action") !== false) {
+			if(str_contains($html, "pw-$action")) {
 				// found pw-action, now perform a more thorough check
 				if(preg_match('![="\'\s]pw-' . $action . '(?:["\'\s=][^<>]*>|>)!', $html)) {
 					$has = true;
@@ -1514,7 +1502,7 @@ class WireMarkupRegions extends Wire {
 	
 	protected function debugNoteStr($str, $maxLength = 0) {
 		$str = str_replace(["\r", "\n", "\t"], ' ', $str);
-		while(strpos($str, '  ') !== false) $str= str_replace('  ', ' ', $str);
+		while(str_contains($str, '  ')) $str= str_replace('  ', ' ', $str);
 		if($maxLength) $str  = substr($str, 0, $maxLength);
 		return trim($str);
 	}

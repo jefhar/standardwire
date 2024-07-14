@@ -512,12 +512,12 @@ class ModulesLoader extends ModulesClass {
 		}
 
 		// if the filename doesn't end with .module or .module.php, then stop and move onto the next
-		if(strpos($filename, '.module') === false) return false;
+		if(!str_contains($filename, '.module')) return false;
 		[, $ext] = explode('.module', $filename, 2);
 		if(!empty($ext) && $ext !== '.php') return false;
 
 		//  if the filename doesn't start with the requested path, then skip
-		if(strpos($pathname, $basepath) !== 0) return '';
+		if(!str_starts_with($pathname, $basepath)) return '';
 
 		// if the file isn't there, it was probably uninstalled, so ignore it
 		// if(!file_exists($pathname)) return ''; 

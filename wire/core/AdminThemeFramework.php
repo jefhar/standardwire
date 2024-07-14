@@ -112,13 +112,13 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 *
 	 */
 	public function get($key) {
-		switch($key) {
-			case 'isSuperuser': $value = $this->isSuperuser; break;
-			case 'isEditor': $value = $this->isEditor; break;
-			case 'isLoggedIn': $value = $this->isLoggedIn; break;
-			case 'isModal': $value = $this->isModal; break;
-			default: $value = parent::get($key);
-		}
+		$value = match ($key) {
+      'isSuperuser' => $this->isSuperuser,
+      'isEditor' => $this->isEditor,
+      'isLoggedIn' => $this->isLoggedIn,
+      'isModal' => $this->isModal,
+      default => parent::get($key),
+  };
 		return $value;
 	}
 
@@ -158,7 +158,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 		$config = $this->wire()->config;
 		$initFile = $this->path() . 'init.php';
 		if(file_exists($initFile)) {
-			if(strpos($initFile, (string) $config->paths->site) === 0) {
+			if(str_starts_with($initFile, (string) $config->paths->site)) {
 				// admin themes in /site/modules/ may be compiled
 				$initFile = $this->wire()->files->compile($initFile);
 			}
@@ -266,7 +266,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 		if(!$this->isEditor) return [];
 		if($page->name != 'page' && $page->name != 'list') return [];
 		if($input->urlSegment1 || $input->get('modal')) return [];
-		if(strpos($process, 'ProcessPageList') !== 0) return [];
+		if(!str_starts_with($process, 'ProcessPageList')) return [];
 
 		/** @var ProcessPageAdd $module */
 		$module = $this->wire()->modules->getModule('ProcessPageAdd', ['noInit' => true]);
@@ -485,7 +485,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 				}
 			} else {
 				// The /page/ and /page/list/ are the same process, so just keep them on /page/ instead. 
-				if(strpos($navArray['url'], '/page/list/') !== false) {
+				if(str_contains($navArray['url'], '/page/list/')) {
 					$navArray['url'] = str_replace('/page/list/', '/page/', $navArray['url']);
 				}
 			}
@@ -559,7 +559,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 
 		if(!$modal) {
 			$httpHost = $this->wire()->config->httpHost;
-			if(strpos($httpHost, 'www.') === 0) $httpHost = substr($httpHost, 4); // remove www
+			if(str_starts_with($httpHost, 'www.')) $httpHost = substr($httpHost, 4); // remove www
 			if(strpos($httpHost, ':')) $httpHost = preg_replace('/:\d+/', '', $httpHost); // remove port
 			$browserTitle .= " • $httpHost";
 		}
@@ -660,7 +660,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 				// leave $text alone
 			} else {
 				// unencode + re-encode entities, just in case module already entity some or all of output
-				if(strpos($text, '&') !== false) $text = $this->sanitizer->unentities($text);
+				if(str_contains($text, '&')) $text = $this->sanitizer->unentities($text);
 				$text = $this->sanitizer->entities($text);
 				$text = nl2br($text);
 			}

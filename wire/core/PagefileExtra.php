@@ -202,7 +202,7 @@ class PagefileExtra extends WireData {
 		$thisUrl = $this->url();
 		$bustUrl = $this->pagefile->get($http ? 'HTTPURL' : 'URL');
 		
-		if(strpos($bustUrl, $fileUrl) !== false) {
+		if(str_contains($bustUrl, $fileUrl)) {
 			// i.e. /site/assets/files/321/file.webp?nc=1234 or file.webp?1r17j
 			$value = str_replace($fileUrl, $thisUrl, $bustUrl);
 		} else {
@@ -319,7 +319,7 @@ class PagefileExtra extends WireData {
 	 * 
 	 */
 	
-	public function __toString() {
+	public function __toString(): string {
 		return $this->basename();
 	}
 }

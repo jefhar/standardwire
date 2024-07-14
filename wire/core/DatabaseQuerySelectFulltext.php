@@ -254,7 +254,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	protected function value($value) {
 		$maxLength = self::maxQueryValueLength;
 		$value = trim($value);
-		if(strlen($value) < $maxLength && strpos($value, "\n") === false && strpos($value, "\r") === false) return $value;
+		if(strlen($value) < $maxLength && !str_contains($value, "\n") && !str_contains($value, "\r")) return $value;
 		$value = $this->sanitizer->trunc($value, $maxLength); 
 		return $value;
 	}
@@ -275,7 +275,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 		$this->tableName = $this->database->escapeTable($tableName); 
 		$allowOrder = true;
 		
-		if(strpos($operator, '!') === 0 && $operator !== '!=') {
+		if(str_starts_with($operator, '!') && $operator !== '!=') {
 			$this->not = true;
 			$operator = ltrim($operator, '!');
 		} else {
@@ -336,14 +336,13 @@ class DatabaseQuerySelectFulltext extends Wire {
 	}
 
 	/**
-	 * Match when given $fieldName is an array
-	 *
-	 * @param array $fieldNames
-	 * @param mixed $value
-	 * @since 3.0.169
-	 *
-	 */
-	protected function matchArrayFieldName(array $fieldNames, $value) {
+  * Match when given $fieldName is an array
+  *
+  * @param array $fieldNames
+  * @since 3.0.169
+  *
+  */
+ protected function matchArrayFieldName(array $fieldNames, mixed $value) {
 		$query = $this->query;
 		$query->bindOption('global', true);
 		
@@ -449,7 +448,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 */
 	protected function matchLikeStartEnd($value) {
 		$likeType = $this->not ? 'NOT LIKE' : 'LIKE';
-		if(strpos($this->operator, '^') !== false) {
+		if(str_contains($this->operator, '^')) {
 			$this->query->where("$this->tableField $likeType ?", $this->escapeLike($value) . '%');
 		} else {
 			$this->query->where("$this->tableField $likeType ?", '%' . $this->escapeLike($value));
@@ -469,7 +468,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 		// ~|%= Match any words LIKE
 		
 		$likeType = $this->not ? 'NOT LIKE' : 'LIKE';
-		$any = strpos($this->operator, '|') !== false;
+		$any = str_contains($this->operator, '|');
 		$words = $this->words($value); 
 		$binds = []; // used only in $any mode
 		$wheres = []; // used only in $any mode
@@ -512,10 +511,10 @@ class DatabaseQuerySelectFulltext extends Wire {
 
 		$tableField = $this->tableField();
 		$operator = $this->operator;
-		$required = strpos($operator, '|') === false;
-		$partial = strpos($operator, '*') !== false;
+		$required = !str_contains($operator, '|');
+		$partial = str_contains($operator, '*');
 		$partialLast = $operator === '~~=';
-		$expand = strpos($operator, '+') !== false;
+		$expand = str_contains($operator, '+');
 		$matchType = $this->matchType();
 		$scoreField = $this->getScoreFieldName();
 		$matchAgainst = '';
@@ -799,7 +798,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 		// **+= Contains match + expand
 		
 		$tableField = $this->tableField();
-		$expand = strpos($this->operator, '+') !== false;
+		$expand = str_contains($this->operator, '+');
 		$matchType = $this->matchType();
 
 		if($expand && $this->allowOrder) {
@@ -851,7 +850,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 		// $=   Ends with
 	
 		$tableField = $this->tableField();
-		$matchStart = strpos($this->operator, '^') !== false;
+		$matchStart = str_contains($this->operator, '^');
 		$againstValue = '';
 		
 		
@@ -932,7 +931,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 */
 	protected function getBooleanModeWords($value, array $options = []) {
 		
-		$expand = strpos($this->operator, '+') !== false;
+		$expand = str_contains($this->operator, '+');
 		
 		$defaults = ['required' => true, 'partial' => false, 'partialLast' => ($this->operator === '~~=' || $this->operator === '^='), 'partialLess' => false, 'useStopwords' => null, 'useShortwords' => null, 'alternates' => $expand];
 
@@ -1082,7 +1081,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 */
 	protected function getBooleanModeAlternateWords($word, &$booleanValue, $minWordLength, array $options) {
 
-		$required = strpos($booleanValue, '+') === 0 ? '+' : '';
+		$required = str_starts_with($booleanValue, '+') ? '+' : '';
 		$alternateWords = $this->getWordAlternates($word);
 		$rootWord = $this->getWordRoot($word);
 		
@@ -1130,7 +1129,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 		$booleanValue = trim($booleanValue, '()');
 		
 		// assign higher weight to existing first word, if not already
-		if($booleanValue && strpos($booleanValue, '>') !== 0) $booleanValue = ">$booleanValue";
+		if($booleanValue && !str_starts_with($booleanValue, '>')) $booleanValue = ">$booleanValue";
 		
 		// append alternate words
 		$booleanValue = trim($booleanValue . ' ' . implode(' ', $booleanWords));
@@ -1232,16 +1231,16 @@ class DatabaseQuerySelectFulltext extends Wire {
 		// escape characters used in regular expressions
 		$likeValue = preg_quote($value);
 		
-		if(strpos($likeValue, "'") !== false || strpos($likeValue, "’") !== false) {
+		if(str_contains($likeValue, "'") || str_contains($likeValue, "’")) {
 			// match either straight or curly apostrophe
 			$likeValue = preg_replace('/[\'’]+/', '(\'|’)', $likeValue);
 			// if word ends with apostrophe then apostrophe is optional
 			$likeValue = rtrim(str_replace("('|’) ", "('|’)? ", "$likeValue "));
 		}
 
-		if(strpos($likeValue, ' ') !== false) {
+		if(str_contains($likeValue, ' ')) {
 			// collapse multiple spaces to just one
-			while(strpos($likeValue, '  ') !== false) $likeValue = str_replace('  ', ' ', $likeValue);
+			while(str_contains($likeValue, '  ')) $likeValue = str_replace('  ', ' ', $likeValue);
 			// hyphen/space can match space or hyphen in any quantity
 			$likeValue = str_replace(' ', '[- ]+', $likeValue);
 		}

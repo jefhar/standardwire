@@ -395,7 +395,7 @@ class WireInput extends Wire {
 	 * @return null|mixed|WireInputData Returns whitelist variable value if getting a value (null if it doesn't exist).
 	 *
 	 */
-	public function whitelist($key = '', $value = null) {
+	public function whitelist($key = '', mixed $value = null) {
 		if(is_null($this->whitelist)) $this->whitelist = $this->wire(new WireInputData()); 
 		if(!$key) return $this->whitelist; 
 		if(is_array($key)) return $this->whitelist->setArray($key); 
@@ -888,7 +888,7 @@ class WireInput extends Wire {
 		if($key == 'queryString') return $this->queryString();
 		if($key == 'scheme') return $this->scheme();
 
-		if(strpos($key, 'urlSegment') === 0) {
+		if(str_starts_with($key, 'urlSegment')) {
 			if($key === 'urlSegmentFirst') {
 				$num = 1;
 			} else if($key === 'urlSegmentLast') {
@@ -974,19 +974,19 @@ class WireInput extends Wire {
 				if($pageNum > 1) $url = rtrim($url, '/') . '/' . $this->pageNumStr($pageNum); 
 				if(isset($_SERVER['REQUEST_URI'])) {
 					$info = parse_url($_SERVER['REQUEST_URI']);
-					if(!empty($info['path']) && substr($info['path'], -1) == '/') $url .= '/'; // trailing slash
+					if(!empty($info['path']) && str_ends_with($info['path'], '/')) $url .= '/'; // trailing slash
 				}
 				if($pageNum > 1) {
 					if($page->template->slashPageNum == 1) {
-						if(substr($url, -1) != '/') $url .= '/';
+						if(!str_ends_with($url, '/')) $url .= '/';
 					} else if($page->template->slashPageNum == -1) {
-						if(substr($url, -1) == '/') $url = rtrim($url, '/');
+						if(str_ends_with($url, '/')) $url = rtrim($url, '/');
 					}
 				} else if(strlen($segmentStr)) {
 					if($page->template->slashUrlSegments == 1) {
-						if(substr($url, -1) != '/') $url .= '/';
+						if(!str_ends_with($url, '/')) $url .= '/';
 					} else if($page->template->slashUrlSegments == -1) {
-						if(substr($url, -1) == '/') $url = rtrim($url, '/');
+						if(str_ends_with($url, '/')) $url = rtrim($url, '/');
 					}
 				}
 			}
@@ -1000,7 +1000,7 @@ class WireInput extends Wire {
 				if($i > 0) $url .= "/";
 				$url .= ($charset === 'UTF8' ? $sanitizer->pageNameUTF8($part) : $sanitizer->pageName($part, false));
 			}
-			if(!empty($info['path']) && substr($info['path'], -1) == '/') {
+			if(!empty($info['path']) && str_ends_with($info['path'], '/')) {
 				$url = rtrim($url, '/') . '/'; // trailing slash
 			}
 		}
@@ -1089,7 +1089,7 @@ class WireInput extends Wire {
 			$scheme = 'http' . '://';
 		} else if(is_string($scheme)) {
 			if(strlen($scheme)) {
-				if(strpos($scheme, '//') === false) $scheme = "$scheme://";
+				if(!str_contains($scheme, '//')) $scheme = "$scheme://";
 			} else {
 				$scheme = '//';
 			}
@@ -1233,7 +1233,7 @@ class WireInput extends Wire {
 			} else if($slashUrlSegments === 0) {
 				// use current request as model for whether slash should be used
 				$testUrl = rtrim($pageUrl, '/') . "/$urlSegmentStr/";
-				if(strpos($requestUrl, $testUrl) !== false) $url .= '/';	
+				if(str_contains($requestUrl, $testUrl)) $url .= '/';	
 			} else if($slashUrlSegments < 0) {
 				// no trailing slash
 			}
@@ -1249,7 +1249,7 @@ class WireInput extends Wire {
 			} else if($slashPageNum === 0) {
 				// use current request as model for whether slash should be used
 				$testUrl = rtrim($url, '/') . "/$pageNumStr/";
-				if(strpos($requestUrl, $testUrl) !== false) $url .= '/';	
+				if(str_contains($requestUrl, $testUrl)) $url .= '/';	
 			} else if($slashPageNum < 0) {
 				// no trailing slash
 			}
@@ -1287,7 +1287,7 @@ class WireInput extends Wire {
 	 *
 	 */
 	public function fragment() {
-		if(strpos($_SERVER['REQUEST_URI'], '#') === false) return '';
+		if(!str_contains($_SERVER['REQUEST_URI'], '#')) return '';
 		$info = parse_url($_SERVER['REQUEST_URI']);
 		return empty($info['fragment']) ? '' : $info['fragment']; 
 	}
@@ -1678,7 +1678,7 @@ class WireInput extends Wire {
 		if(!$getArray) {
 			if($lastReturnType === 'a') {
 				$getArray = true; // array return value implied
-			} else if(strpos($lastReturnType, 'a') !== false) {
+			} else if(str_contains($lastReturnType, 'a')) {
 				$getArray = 1; // array return value possible
 			}
 		}
@@ -1693,7 +1693,7 @@ class WireInput extends Wire {
 				if(!count($value)) {
 					// nothing to do with value
 					$value = [];
-				} else if($getArray && strpos($returnType, 'a') === false) {
+				} else if($getArray && !str_contains($returnType, 'a')) {
 					// sanitize array with sanitizer that does not do arrays, 1 item at a time
 					$a = [];
 					foreach($value as $v) {
@@ -1788,7 +1788,7 @@ class WireInput extends Wire {
 	 * 
 	 */
 	public function ___callUnknown($method, $arguments) {
-		if(strpos($method, 'urlSegment') === 0) {
+		if(str_starts_with($method, 'urlSegment')) {
 			// Allow for method calls: urlSegment1(), urlSegment2('sort-*'), urlSegmentLast(), etc. 
 			[, $num] = explode('urlSegment', $method, 2);
 			if(ctype_digit($num)) $num = (int) $num;
@@ -1834,7 +1834,7 @@ class WireInput extends Wire {
 				$result = '';
 			}
 		} else if($partial) {
-			$result = strpos($value, $pattern) !== false ? $value : '';
+			$result = str_contains($value, $pattern) ? $value : '';
 		} else {
 			$result = $pattern === $value ? $value : '';
 		}
@@ -1858,7 +1858,7 @@ class WireInput extends Wire {
 		} else if(in_array($pattern[0], $this->regexDelims) && strrpos($pattern, $pattern[0])) {
 			// already a regular expression
 			$regex = $pattern;
-		} else if(strpos($pattern, '*') !== false) {
+		} else if(str_contains($pattern, '*')) {
 			// wildcard, convert to regex
 			$a = explode('*', $pattern);
 			foreach($a as $k => $v) {

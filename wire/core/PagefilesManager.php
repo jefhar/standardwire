@@ -161,7 +161,7 @@ class PagefilesManager extends Wire {
 	 */
 	public function getFile($name) {
 		$pagefile = null;
-		if(strpos($name, '/') !== false) {
+		if(str_contains($name, '/')) {
 			$pageID = self::dirToPageID($name);
 			if(!$pageID) return null;
 			if($pageID == $this->page->id) {
@@ -425,7 +425,7 @@ class PagefilesManager extends Wire {
 	public function ___url() {
 		if(!is_null($this->url)) return $this->url;
 		$config = $this->wire()->config;
-		if(strpos($this->path(), $config->paths->files . self::extendedDirName) !== false) {
+		if(str_contains($this->path(), $config->paths->files . self::extendedDirName)) {
 			$this->url = $config->urls->files . self::_dirExtended($this->page->id); 
 		} else {
 			$this->url = $config->urls->files . $this->page->id . '/';

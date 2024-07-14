@@ -314,18 +314,16 @@ class ImageSizer extends Wire {
 	}
 
 	/**
-	 * GD is the fallback ImageEngine, it gets invoked if there is no other Engine defined,
-	 *
-	 * or if a defined Engine is not available,
-	 * or if an invoked Engine failes with the image manipulation.
-	 *
-	 * @param mixed $targetWidth
-	 * @param mixed $targetHeight
-	 *
-	 * @return bool
-	 *
-	 */
-	protected function resizeFallback($targetWidth, $targetHeight = 0) {
+  * GD is the fallback ImageEngine, it gets invoked if there is no other Engine defined,
+  *
+  * or if a defined Engine is not available,
+  * or if an invoked Engine failes with the image manipulation.
+  *
+  *
+  * @return bool
+  *
+  */
+ protected function resizeFallback(mixed $targetWidth, mixed $targetHeight = 0) {
 		$engine = $this->newDefaultImageSizerEngine();
 		$success = false;
 		if($engine->supported()) $success = $engine->resize($targetWidth, $targetHeight);
@@ -549,7 +547,7 @@ class ImageSizer extends Wire {
 	 * @return bool|null
 	 *
 	 */
-	static public function imageIsRotated($image, &$correctionArray = null) {
+	static public function imageIsRotated(mixed $image, mixed &$correctionArray = null) {
 		if($image instanceof Pageimage) {
 			$filename = $image->filename;
 		} else if(is_readable($image)) {
@@ -590,7 +588,7 @@ class ImageSizer extends Wire {
 	 * @return bool|null
 	 *
 	 */
-	static public function imageIsAnimatedGif($image) {
+	static public function imageIsAnimatedGif(mixed $image) {
 		if($image instanceof Pageimage) {
 			$filename = $image->filename;
 		} elseif(is_readable($image)) {
@@ -624,7 +622,7 @@ class ImageSizer extends Wire {
 	 * @return null|bool
 	 *
 	 */
-	static public function imageResetIPTC($image) {
+	static public function imageResetIPTC(mixed $image) {
 		$wire = null;
 		if($image instanceof Pageimage) {
 			$wire = $image;

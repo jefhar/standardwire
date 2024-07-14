@@ -146,8 +146,8 @@ abstract class DatabaseQuery extends WireData {
 	 * @return $this
 	 * 
 	 */
-	public function bindValue($key, $value, $type = null) {
-		if(strpos($key, ':') !== 0) $key = ":$key";
+	public function bindValue($key, mixed $value, $type = null) {
+		if(!str_starts_with($key, ':')) $key = ":$key";
 		$this->bindValues[$key] = $value; 
 		$this->bindKeys[$key] = $key;
 		if($type !== null) $this->setBindType($key, $type);
@@ -205,13 +205,13 @@ abstract class DatabaseQuery extends WireData {
 			$this->bindTypes[$key] = (int) $type;
 		}
 		
-		switch(strtolower(substr($type, 0, 3))) {
-			case 'str': $type = \PDO::PARAM_STR; break;
-			case 'int': $type = \PDO::PARAM_INT; break;
-			case 'boo': $type = \PDO::PARAM_BOOL; break;
-			case 'nul': $type = \PDO::PARAM_NULL; break;
-			default: $type = null;
-		}
+		$type = match (strtolower(substr($type, 0, 3))) {
+      'str' => \PDO::PARAM_STR,
+      'int' => \PDO::PARAM_INT,
+      'boo' => \PDO::PARAM_BOOL,
+      'nul' => \PDO::PARAM_NULL,
+      default => null,
+  };
 		
 		if($type !== null) $this->bindTypes[$key] = $type;
 	}
@@ -332,7 +332,7 @@ abstract class DatabaseQuery extends WireData {
 		
 		if(!empty($options['inSQL'])) {
 			foreach(array_keys($bindValues) as $bindKey) {
-				if(strpos($options['inSQL'], (string) $bindKey) === false) {
+				if(!str_contains($options['inSQL'], (string) $bindKey)) {
 					unset($bindValues[$bindKey]);
 				} else if(!preg_match('/' . $bindKey . '\b/', $options['inSQL'])) {
 					unset($bindValues[$bindKey]);
@@ -502,27 +502,27 @@ abstract class DatabaseQuery extends WireData {
 			if(is_int($name)) {
 				// implied parameter 
 				$numImplied++;
-				if(strpos($sql, '?') === false) {
+				if(!str_contains($sql, '?')) {
 					throw new WireException("No place for given param $name in: $_sql"); 
 				}
 				do {
 					$name = $this->getUniqueBindKey(['value' => $value]);
-				} while(strpos($sql, $name) !== false); // highly unlikely, but just in case
+				} while(str_contains($sql, $name)); // highly unlikely, but just in case
 				[$a, $b] = explode('?', $sql, 2);
 				$sql = $a . $name . $b;
 				
 			} else {
 				// named parameter
 				$numNamed++;
-				if(strpos($name, ':') !== 0) $name = ":$name";
-				if(strpos($sql, $name) === false) {
+				if(!str_starts_with($name, ':')) $name = ":$name";
+				if(!str_contains($sql, $name)) {
 					throw new WireException("Param $name not found in: $_sql"); 
 				}
 			}
 			$this->bindValue($name, $value);
 		}
 		
-		if($numImplied && strpos($sql, '?') !== false) {
+		if($numImplied && str_contains($sql, '?')) {
 			throw new WireException("Missing implied “?” param in: $_sql"); 
 		} else if($numImplied && $numNamed) {
 			throw new WireException("You may not mix named and implied params in: $_sql"); 

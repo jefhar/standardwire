@@ -18,10 +18,9 @@
 class PWPNG {
 	public $info = [];
 	public $errors = [];
-	protected $extended;
-	public function __construct($extended = false) {
-		$this->extended = $extended;
-	}
+	public function __construct(protected $extended = false)
+ {
+ }
 	public function loadFile($lpszFileName) {
 		// READ FILE
 		if(!($fh = @fopen($lpszFileName, 'rb'))) {

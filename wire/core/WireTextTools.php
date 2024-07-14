@@ -98,21 +98,21 @@ class WireTextTools extends Wire {
 		
 		$options = array_merge($defaults, $options);
 
-		if(strpos($str, '>') !== false) {
+		if(str_contains($str, '>')) {
 
 			// strip out everything up to and including </head>, if present
-			if(strpos($str, '</head>') !== false) [, $str] = explode('</head>', $str);
+			if(str_contains($str, '</head>')) [, $str] = explode('</head>', $str);
 
 			// ensure tags are separated by whitespace
 			$str = str_replace('><', '> <', $str);
 
 			// normalize newlines
-			if(strpos($str, "\r") !== false) {
+			if(str_contains($str, "\r")) {
 				$str = str_replace(["\r\n", "\r"], "\n", $str);
 			}
 
 			// normalize tabs to spaces
-			if(strpos($str, "\t") !== false) {
+			if(str_contains($str, "\t")) {
 				$str = str_replace("\t", " ", $str);
 			}
 
@@ -174,7 +174,7 @@ class WireTextTools extends Wire {
 					$links = [];
 					foreach($matches[0] as $key => $fullMatch) {
 						$href = trim($matches[1][$key], '"\'');
-						if(strpos($href, '#') === 0) continue; // do not convert jumplinks
+						if(str_starts_with($href, '#')) continue; // do not convert jumplinks
 						$anchorText = trim($matches[2][$key]);
 						$links[$fullMatch] = "[$anchorText]($href)";
 					}
@@ -186,7 +186,7 @@ class WireTextTools extends Wire {
 			}
 		
 			// indent within <pre>...</pre> sections
-			if(strlen($options['preIndent']) && strpos($str, '<pre') !== false) {
+			if(strlen($options['preIndent']) && str_contains($str, '<pre')) {
 				if(preg_match_all('!<pre(?:>|\s[^>]*>)(.+?)</pre>!is', $str, $matches)) {
 					foreach($matches[0] as $key => $fullMatch) {
 						$lines = explode("\n", $matches[1][$key]);
@@ -207,7 +207,7 @@ class WireTextTools extends Wire {
 				$str = str_ireplace(["<$s", "</$s"], ["<$s", "</$s"], $str); // adjust case
 				$parts = explode("<$s", $str); 
 				foreach($parts as $key => $part) {
-					if(strpos($part, "</$s>") === false) {
+					if(!str_contains($part, "</$s>")) {
 						if($key > 0) unset($parts[$key]); // remove nested inner content
 					} else {
 						$endparts = explode("</$s>", $part);
@@ -241,23 +241,23 @@ class WireTextTools extends Wire {
 		}
 
 		// convert entities to plain text equivalents
-		if($options['convertEntities'] && strpos($str, '&') !== false) {
+		if($options['convertEntities'] && str_contains($str, '&')) {
 			$str = $sanitizer->unentities($str);
 		}
 	
 		// collapse any redundant/extra whitespace
 		if($options['collapseSpaces']) {
-			while(strpos($str, '  ') !== false) $str = str_replace('  ', ' ', $str);
+			while(str_contains($str, '  ')) $str = str_replace('  ', ' ', $str);
 		}
 		
 		// normalize newlines and whitespace around newlines
-		while(strpos($str, " \n") !== false) $str = str_replace(" \n", "\n", $str);
-		while(strpos($str, "\n ") !== false) $str = str_replace("\n ", "\n", $str);
-		while(strpos($str, "\n\n\n") !== false) $str = str_replace("\n\n\n", "\n\n", $str);
+		while(str_contains($str, " \n")) $str = str_replace(" \n", "\n", $str);
+		while(str_contains($str, "\n ")) $str = str_replace("\n ", "\n", $str);
+		while(str_contains($str, "\n\n\n")) $str = str_replace("\n\n\n", "\n\n", $str);
 
 		if(strpos($str, '](')) {
 			// contains links
-			if(strpos($str, '[](') !== false || strpos($str, '[ ](') !== false) {
+			if(str_contains($str, '[](') || str_contains($str, '[ ](')) {
 				// remove links that lack anchor text
 				$str = preg_replace('!\[\s*\]\([^)]*\)!', '', $str);
 			}
@@ -333,7 +333,7 @@ class WireTextTools extends Wire {
 		if(!preg_match_all('!<([a-z]+[a-z0-9]*)(>|\s*/>|\s[^>]+>)!i', $str, $matches)) return $str;
 
 		foreach($matches[1] as $key => $tag) {
-			if(strpos($matches[2][$key], '/>') !== false) continue; // ignore self closing tags
+			if(str_contains($matches[2][$key], '/>')) continue; // ignore self closing tags
 			if(in_array(strtolower($tag), $options['ignoreTags'])) continue; 
 			$tags[$tag] = $tag;
 		}
@@ -396,21 +396,21 @@ class WireTextTools extends Wire {
 		$r = $options['collapseLinesWith'];
 
 		// convert any tabs to space
-		if(strpos($str, "\t") !== false) {
+		if(str_contains($str, "\t")) {
 			$str = str_replace("\t", " ", $str);
 		}
 
 		// convert CRs to LFs
-		if(strpos($str, "\r") !== false) {
+		if(str_contains($str, "\r")) {
 			$str = str_replace(["\r\n", "\r"], "\n", $str);
 		}
 
 		// collapse whitespace that appears before or after newlines
-		while(strpos($str, " \n") !== false) $str = str_replace(" \n", "\n", $str);
-		while(strpos($str, "\n ") !== false) $str = str_replace("\n ", "\n", $str);
+		while(str_contains($str, " \n")) $str = str_replace(" \n", "\n", $str);
+		while(str_contains($str, "\n ")) $str = str_replace("\n ", "\n", $str);
 
 		// convert redundant LFs to no more than double LFs
-		while(strpos($str, "\n\n\n") !== false) {
+		while(str_contains($str, "\n\n\n")) {
 			$str = str_replace("\n\n\n", "\n\n", $str);
 		}
 
@@ -423,14 +423,14 @@ class WireTextTools extends Wire {
 		$str = str_replace(["\r\n", "\r", "\n\n", "\n"], $r, $str);
 
 		// while there are consecutives of our collapse string, reduce them to one
-		while(strpos($str, "$r$r") !== false) {
+		while(str_contains($str, "$r$r")) {
 			$str = str_replace("$r$r", $r, $str);
 		}
 
 		if($r !== $defaults['collapseLinesWith']) {
 			// replacement of whitespace with something other than another single whitespace
 			// so collapse consecutive spaces to one space, since this would not be already done
-			while(strpos($str, "  ") !== false) {
+			while(str_contains($str, "  ")) {
 				$str = str_replace("  ", " ", $str);
 			}
 			// use space rather than replacement char when left side already ends with punctuation
@@ -663,7 +663,7 @@ class WireTextTools extends Wire {
 			} while(!strlen($result) && count($tests));
 
 			// make sure we didn't break any HTML tags as a result of truncation
-			if(strlen($result) && count($options['keepTags']) && strpos($result, '<') !== false) {
+			if(strlen($result) && count($options['keepTags']) && str_contains($result, '<')) {
 				$result = $this->fixUnclosedTags($result);
 			}
 		} else {
@@ -674,7 +674,7 @@ class WireTextTools extends Wire {
 		if(strlen($options['more'])) {
 			// remove any duplicated more strings
 			$more = $options['more'];
-			while(strpos($result, "$more$more") !== false) {
+			while(str_contains($result, "$more$more")) {
 				$result = str_replace("$more$more", "$more", $result); 
 			}
 		}
@@ -748,7 +748,7 @@ class WireTextTools extends Wire {
 		if(strpos($str, '>')) {
 			$str = strip_tags($str);
 		}
-		if(strpos($str, '&') !== false && strpos($str, ';')) {
+		if(str_contains($str, '&') && strpos($str, ';')) {
 			$str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
 		}
 		return $this->strlen($str);
@@ -1020,11 +1020,11 @@ class WireTextTools extends Wire {
 			
 			$fieldValue = (string) $fieldValue;
 
-			if(!$options['allowMarkup'] && strpos($fieldValue, '<') !== false) $fieldValue = strip_tags($fieldValue);
+			if(!$options['allowMarkup'] && str_contains($fieldValue, '<')) $fieldValue = strip_tags($fieldValue);
 			if($options['entityEncode']) $fieldValue = htmlentities($fieldValue, ENT_QUOTES, 'UTF-8', false);
 			if($options['entityDecode']) $fieldValue = html_entity_decode($fieldValue, ENT_QUOTES, 'UTF-8');
 			
-			if($options['recursive'] && strpos($fieldValue, (string) $options['tagOpen']) !== false) {
+			if($options['recursive'] && str_contains($fieldValue, (string) $options['tagOpen'])) {
 				$fieldValue = $this->populatePlaceholders($fieldValue, $vars, $optionsNoRecursive);
 			}
 		
@@ -1091,7 +1091,7 @@ class WireTextTools extends Wire {
 		$replacements = [];
 		$parts = [];
 		
-		if(strpos($str, (string) $options['tagOpen']) === false || !strpos($str, (string) $options['tagClose'])) return $str;
+		if(!str_contains($str, (string) $options['tagOpen']) || !strpos($str, (string) $options['tagClose'])) return $str;
 		
 		if(!is_array($data) && !$data instanceof WireData && !$data instanceof WireInputData) {
 			throw new WireException('$data argument must be associative array, WireData or WireInputData');
@@ -1312,7 +1312,7 @@ class WireTextTools extends Wire {
 
 		$options = array_merge($defaults, $options);
 		$escapePrefix = $options['escapePrefix'];
-		if(strpos($str, (string) $escapePrefix) === false) return [];
+		if(!str_contains($str, (string) $escapePrefix)) return [];
 		$escapes = [];
 		$glueSuffix = $options['glueSuffix'];
 		$parts = explode($escapePrefix, $str);

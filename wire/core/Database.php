@@ -238,7 +238,7 @@ class Database extends \mysqli implements WireDatabase {
 	 *
 	 */
 	public function escapeTableCol($str) {
-		if(strpos($str, '.') === false) return $this->escapeTable($str); 
+		if(!str_contains($str, '.')) return $this->escapeTable($str); 
 		[$table, $col] = explode('.', $str); 
 		return $this->escapeTable($table) . '.' . $this->escapeCol($col);
 	}

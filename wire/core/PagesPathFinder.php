@@ -621,7 +621,7 @@ class PagesPathFinder extends Wire {
 		$template = $this->getResultTemplate();
 		$slashUrls = $template ? (int) $template->slashUrls : 0;
 		$useTrailingSlash = $slashUrls ? 1 : -1; // 1=yes, 0=either, -1=no
-		$hadTrailingSlash = substr($result['request'], -1) === '/';
+		$hadTrailingSlash = str_ends_with($result['request'], '/');
 		$https = $template ? (int) $template->https : 0;
 		$appendPath = '';
 
@@ -804,7 +804,7 @@ class PagesPathFinder extends Wire {
 		if(!ctype_digit(substr($lastSegment, -1))) return;
 
 		foreach($this->pageNumUrlPrefixes() as $languageName => $pageNumUrlPrefix) {
-			if(strpos($lastSegment, (string) $pageNumUrlPrefix) !== 0) continue;
+			if(!str_starts_with($lastSegment, (string) $pageNumUrlPrefix)) continue;
 			if(!preg_match('!^' . $pageNumUrlPrefix . '(\d+)$!i', $lastSegment, $matches)) continue;
 			$segment = $matches[0];
 			$pageNum = (int) $matches[1];
@@ -928,7 +928,7 @@ class PagesPathFinder extends Wire {
 		// check for pagination segment, which we don’t want in our path here
 		[$pageNum, $pageNumPrefix] = $this->getShortcutPageNum($path);
 		
-		if(strpos($path, '/') === false) {
+		if(!str_contains($path, '/')) {
 			// single directory off root
 			$found = $this->getShortcutRoot($path);
 		}
@@ -1113,7 +1113,7 @@ class PagesPathFinder extends Wire {
 		$database = $this->wire()->database;
 		$unique = Page::statusUnique;
 
-		if(strpos($path, '/') !== false) return false;
+		if(str_contains($path, '/')) return false;
 
 		$name = $this->pageNameToAscii($path);
 		$columns = ['id', 'parent_id', 'templates_id', 'status'];
@@ -1142,7 +1142,7 @@ class PagesPathFinder extends Wire {
 		if($row['parent_id'] === 1) {
 			$template = $this->wire()->templates->get($row['templates_id']); 
 			$slashUrls = $template ? (int) $template->slashUrls : 0;
-			$slash = ($slashUrls ? $slashUrls > 0 : substr($path, -1) === '/');
+			$slash = ($slashUrls ? $slashUrls > 0 : str_ends_with($path, '/'));
 			$path = "/$path" . ($slash ? '/' : '');
 		} else {
 			// global unique, must redirect to its actual path
@@ -1177,7 +1177,7 @@ class PagesPathFinder extends Wire {
 		$pageNum = 1;
 
 		foreach($this->pageNumUrlPrefixes() as $prefix) {
-			if(strpos($lastPart, (string) $prefix) !== 0) continue;
+			if(!str_starts_with($lastPart, (string) $prefix)) continue;
 			if(!preg_match('/^' . $prefix . '(\d+)$/', $lastPart, $matches)) continue;
 			$pageNumPrefix = $prefix;
 			$pageNum = (int) $matches[1];
@@ -1318,7 +1318,7 @@ class PagesPathFinder extends Wire {
 	protected function pageNameToUTF8($name) {
 		$name = (string) $name;
 		if($this->pageNameCharset !== 'UTF8') return $name;
-		if(strpos($name, 'xn-') !== 0) return $name;
+		if(!str_starts_with($name, 'xn-')) return $name;
 		return $this->wire()->sanitizer->pageName($name, Sanitizer::toUTF8);
 	}
 
@@ -1599,7 +1599,7 @@ class PagesPathFinder extends Wire {
 			$query->execute();
 			$status = (int) $query->fetchColumn();
 			$query->closeCursor();
-		} catch(\Exception $e) {
+		} catch(\Exception) {
 			$status = -1;
 		}
 		return $status;
@@ -1809,7 +1809,7 @@ class PagesPathFinder extends Wire {
 			// name property translates to default language
 			$languages = $this->languages();
 			return count($languages) ? $languages->getDefault()->id : 0;
-		} else if(strpos($language, 'name') === 0 && ctype_digit(substr($language, 5))) {
+		} else if(str_starts_with($language, 'name') && ctype_digit(substr($language, 5))) {
 			// i.e. name1234 where 1234 is language id
 			$language = str_replace('name', '', $language);
 		} else if(!ctype_digit($language)) {
@@ -1881,11 +1881,11 @@ class PagesPathFinder extends Wire {
 	 * 
 	 */
 	protected function addLanguageSegment($path, $language) {
-		if(strpos($path, '/') !== 0) $path = "/$path";
+		if(!str_starts_with($path, '/')) $path = "/$path";
 		$segment = $this->languageSegment($language);
 		if(!strlen($segment)) return $path;
 		if($path === "/$segment" && $this->result['page']['id'] < 2) return $path;
-		if(strpos($path, "/$segment/") === 0) return $path;
+		if(str_starts_with($path, "/$segment/")) return $path;
 		return "/$segment$path";
 	}
 
@@ -1897,13 +1897,13 @@ class PagesPathFinder extends Wire {
 	 * 
 	 */
 	protected function removeLanguageSegment($path) {
-		if(strpos($path, '/') !== 0) $path = "/$path";
+		if(!str_starts_with($path, '/')) $path = "/$path";
 		if($path === '/') return $path;
 		$segments = $this->languageSegments();
 		$segments[] = Pages::defaultRootName;
 		foreach($segments as $segment) {
 			if($segment === null || !strlen($segment)) continue;
-			if($path !== "/$segment" && strpos($path, "/$segment/") !== 0) continue;
+			if($path !== "/$segment" && !str_starts_with($path, "/$segment/")) continue;
 			[, $path] = explode("/$segment", $path, 2); 
 			if($path === '') $path = '/';
 			break;
