@@ -295,7 +295,7 @@ class PageTraversal {
 	 */
 	protected function _getIncludeMode($selector) {
 		if(is_string($selector) && strpos($selector, 'include=') === false) return '';
-		if(is_array($selector)) return isset($selector['include']) ? $selector['include'] : '';
+		if(is_array($selector)) return $selector['include'] ?? '';
 		$selector = $selector instanceof Selectors ? $selector : new Selectors($selector);
 		$include = $selector->getSelectorByField('include');
 		return $include ? $include->value() : '';

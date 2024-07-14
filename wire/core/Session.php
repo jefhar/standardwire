@@ -446,7 +446,7 @@ class Session extends Wire implements \IteratorAggregate {
 	public function getFingerprint($mode = null, $debug = false) {
 	
 		$debugInfo = [];
-		$useFingerprint = $mode === null ? $this->config->sessionFingerprint : $mode;
+		$useFingerprint = $mode ?? $this->config->sessionFingerprint;
 		
 		if(!$useFingerprint) return false;
 		
@@ -469,12 +469,12 @@ class Session extends Wire implements \IteratorAggregate {
 		}
 		
 		if($useFingerprint & self::fingerprintUseragent) {
-			$fingerprint .= isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+			$fingerprint .= $_SERVER['HTTP_USER_AGENT'] ?? '';
 			if($debug) $debugInfo[] = 'useragent';
 		}
 		
 		if($useFingerprint & self::fingerprintAccept) {
-			$fingerprint .= isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : '';
+			$fingerprint .= $_SERVER['HTTP_ACCEPT'] ?? '';
 			if($debug) $debugInfo[] = 'accept';
 		}
 		
@@ -526,10 +526,10 @@ class Session extends Wire implements \IteratorAggregate {
 			return $this->getFor($key, $_key);
 		}
 		if($this->sessionInit) {
-			$value = isset($_SESSION[$this->sessionKey][$key]) ? $_SESSION[$this->sessionKey][$key] : null;
+			$value = $_SESSION[$this->sessionKey][$key] ?? null;
 		} else {
 			if($key === 'config') return $this->config;
-			$value = isset($this->data[$key]) ? $this->data[$key] : null;
+			$value = $this->data[$key] ?? null;
 		}
 	
 		/*
@@ -658,7 +658,7 @@ class Session extends Wire implements \IteratorAggregate {
 		$data = $this->get($ns); 
 		if(!is_array($data)) $data = [];
 		if($key === '') return $data;
-		return isset($data[$key]) ? $data[$key] : null;
+		return $data[$key] ?? null;
 	}
 	
 	/**
@@ -1281,7 +1281,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * 
 	 */
 	protected function sessionCookieSameSite($value = null) {
-		$samesite = $value === null ? $this->config->sessionCookieSameSite : $value;
+		$samesite = $value ?? $this->config->sessionCookieSameSite;
 		$samesite = empty($samesite) ? 'Lax' : ucfirst(strtolower($samesite));
 		if(!in_array($samesite, ['Strict', 'Lax', 'None'], true)) $samesite = 'Lax';
 		return $samesite;

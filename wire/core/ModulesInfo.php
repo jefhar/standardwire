@@ -238,7 +238,7 @@ class ModulesInfo extends ModulesClass {
 			if(!is_array($info)) $info = [];
 			$infos[$moduleID] = $info;
 		}
-		if($property) return isset($info[$property]) ? $info[$property] : null;
+		if($property) return $info[$property] ?? null;
 		return $info;
 	}
 
@@ -760,7 +760,7 @@ class ModulesInfo extends ModulesClass {
 			$info = $this->getModuleInfoVerbose($class, $options);
 		}
 
-		return isset($info[$property]) ? $info[$property] : null;
+		return $info[$property] ?? null;
 	}
 
 	/**
@@ -1172,7 +1172,7 @@ class ModulesInfo extends ModulesClass {
 	 */
 	public function modulesLastVersions($id = null) {
 		if($id === null) return $this->modulesLastVersions;
-		return isset($this->modulesLastVersions[$id]) ? $this->modulesLastVersions[$id] : null;
+		return $this->modulesLastVersions[$id] ?? null;
 	}
 	
 	/**
@@ -1302,7 +1302,7 @@ class ModulesInfo extends ModulesClass {
 		if($namespace === 'ProcessWire') return "ProcessWire\\";
 		if(is_null($this->moduleNamespaceCache)) $this->getNamespaces();
 		$namespace = "\\" . trim($namespace, "\\") . "\\";
-		return isset($this->moduleNamespaceCache[$namespace]) ? $this->moduleNamespaceCache[$namespace] : false;
+		return $this->moduleNamespaceCache[$namespace] ?? false;
 	}
 
 	public function __get($name) {

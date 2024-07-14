@@ -74,7 +74,7 @@ class PagesEditor extends Wire {
 		// the $values may optionally be the 3rd argument
 		if(is_array($name)) {
 			$values = $name;
-			$name = isset($values['name']) ? $values['name'] : '';
+			$name = $values['name'] ?? '';
 		}
 
 		if(!is_object($template)) {
@@ -402,7 +402,7 @@ class PagesEditor extends Wire {
 	 *
 	 */
 	public function setupPageName(Page $page, array $options = []) {
-		return $this->pages->names()->setupNewPageName($page, isset($options['format']) ? $options['format'] : '');
+		return $this->pages->names()->setupNewPageName($page, $options['format'] ?? '');
 	}
 	
 	/**

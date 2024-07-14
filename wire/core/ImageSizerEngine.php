@@ -490,7 +490,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 
 		if(!is_array($moduleInfo)) $moduleInfo = [];
 
-		$info = ['name' => str_replace('ImageSizerEngine', '', $moduleName), 'title' => isset($moduleInfo['title']) ? $moduleInfo['title'] : '', 'class' => $moduleName, 'summary' => isset($moduleInfo['summary']) ? $moduleInfo['summary'] : '', 'author' => isset($moduleInfo['author']) ? $moduleInfo['author'] : '', 'moduleVersion' => isset($moduleInfo['version']) ? $moduleInfo['version'] : '', 'libraryVersion' => $this->getLibraryVersion(), 'priority' => $this->enginePriority, 'sources' => $formats['source'], 'targets' => $formats['target'], 'quality' => $this->quality, 'sharpening' => $this->sharpening];
+		$info = ['name' => str_replace('ImageSizerEngine', '', $moduleName), 'title' => $moduleInfo['title'] ?? '', 'class' => $moduleName, 'summary' => $moduleInfo['summary'] ?? '', 'author' => $moduleInfo['author'] ?? '', 'moduleVersion' => $moduleInfo['version'] ?? '', 'libraryVersion' => $this->getLibraryVersion(), 'priority' => $this->enginePriority, 'sources' => $formats['source'], 'targets' => $formats['target'], 'quality' => $this->quality, 'sharpening' => $this->sharpening];
 
 		return $info;
 	}
@@ -916,12 +916,12 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 		} else {
 			// check for associative array
 			foreach(['x', 'y', 'w', 'h'] as $v) {
-				if(isset($value[$v])) $$v = $value[$v];
+				if(isset($value[$v])) ${$v} = $value[$v];
 			}
 		}
 		
 		foreach(['x', 'y', 'w', 'h'] as $k) {
-			$v = (int) (isset($$k) ? $$k : -1);
+			$v = (int) (${$k} ?? -1);
 			if(!$v && $k == 'w' && $h > 0) $v = $this->getProportionalWidth((int) $h); 
 			if(!$v && $k == 'h' && $w > 0) $v = $this->getProportionalHeight((int) $w); 
 			if($v < 0) throw new WireException("Missing or wrong param $k=$v for ImageSizer-cropExtra! " . print_r($value, true));
@@ -1354,9 +1354,8 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 		if($key === 'webpOnly') return $this->webpOnly;
 		if(in_array($key, $keys)) return $this->$key;
 		if(in_array($key, $this->optionNames)) return $this->$key;
-		if(isset($this->options[$key])) return $this->options[$key];
 		
-		return parent::get($key);
+		return $this->options[$key] ?? parent::get($key);
 	}
 
 	/**

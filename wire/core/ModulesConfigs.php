@@ -102,7 +102,7 @@ class ModulesConfigs extends ModulesClass {
 		$id = $this->moduleID($className);
 		if(!$id) return $emptyReturn;
 	
-		$data = isset($this->configData[$id]) ? $this->configData[$id] : null;
+		$data = $this->configData[$id] ?? null;
 		if($data === null) return $emptyReturn; // module has no config data
 
 		if(is_array($data)) {
@@ -122,7 +122,7 @@ class ModulesConfigs extends ModulesClass {
 			$this->configData[(int) $id] = $data;
 		}
 
-		if($property) return isset($data[$property]) ? $data[$property] : null;
+		if($property) return $data[$property] ?? null;
 
 		return $data;
 	}

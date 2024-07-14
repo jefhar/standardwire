@@ -461,7 +461,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 			throw new WireException("Key '$key' is not an allowed key for " . get_class($this));
 		}
 
-		$this->trackChange($key, isset($this->data[$key]) ? $this->data[$key] : null, $value); 
+		$this->trackChange($key, $this->data[$key] ?? null, $value); 
 		$this->data[$key] = $value; 
 		$this->trackAdd($value, $key); 
 		return $this; 
@@ -1419,7 +1419,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 					$key = $item->$property;
 				}
 			} else if(is_array($item)) {
-				$key = isset($item[$property]) ? $item[$property] : null;
+				$key = $item[$property] ?? null;
 			} else {
 				// $property does not apply to non-object/non-array items
 				$key = $item; 
@@ -1432,7 +1432,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 				} else if(is_object($key)) {
 					$key = $key->$subProperty;
 				} else if(is_array($key)) {
-					$key = isset($key[$subProperty]) ? $key[$subProperty] : null;
+					$key = $key[$subProperty] ?? null;
 				} else {
 					// no containing type, $subProperty ignored
 				}
@@ -2337,7 +2337,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 					// regular, non-associative array, GET only requested properties
 					$a = [];
 					foreach($key as $k) {
-						$a[$k] = isset($this->extraData[$k]) ? $this->extraData[$k] : null;
+						$a[$k] = $this->extraData[$k] ?? null;
 					}
 					return $a;
 				} else if(count($key)) {
@@ -2351,7 +2351,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 			
 		} else if($value === null) {
 			// get a property
-			return isset($this->extraData[$key]) ? $this->extraData[$key] : null;
+			return $this->extraData[$key] ?? null;
 		} else {
 			// set a property
 			$this->extraData[$key] = $value;
@@ -2551,7 +2551,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 			$result = $this->explode($func);
 		}
 	
-		return $result === null ? $this : $result;
+		return $result ?? $this;
 	}
 
 	/**

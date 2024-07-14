@@ -180,7 +180,7 @@ class WireInputDataCookie extends WireInputData {
 			$this->options = array_merge($this->options, $key);
 		} else if($value === null) {
 			// get one
-			return isset($this->options[$key]) ? $this->options[$key] : null;
+			return $this->options[$key] ?? null;
 		} else {
 			// set one
 			$this->options[$key] = $value;

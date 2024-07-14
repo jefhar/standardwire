@@ -125,7 +125,7 @@ class ModuleConfig extends WireData {
 		$defaults = [];
 		foreach($a as $name => $info) {
 			if(isset($info['name'])) $name = $info['name'];
-			$value = isset($info['value']) ? $info['value'] : '';
+			$value = $info['value'] ?? '';
 			if(is_string($name)) $defaults[$name] = $value;
 			if(!empty($info['children'])) {
 				$defaults2 = $this->identifyDefaults($info['children']);

@@ -522,23 +522,23 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 				$index = null;
 				if($matchValue !== null) {
 					if($matchArray) {
-						$v = isset($row[$matchType]) ? $row[$matchType] : null;
+						$v = $row[$matchType] ?? null;
 						if(!$v === null || !isset($matchArray[$v])) continue;
 					} else {
 						if($row[$matchType] != $matchValue) continue;
 					}
 				}
 				if($indexType) {
-					$index = isset($row[$indexType]) ? $row[$indexType] : $row['id'];
+					$index = $row[$indexType] ?? $row['id'];
 				}
 				if($useValueArray) {
 					/** @var array $valueType */
 					$value = [];
 					foreach($valueType as $key) {
-						$value[$key] = isset($row[$key]) ? $row[$key] : null;
+						$value[$key] = $row[$key] ?? null;
 					}
 				} else {
-					$value = isset($row[$valueType]) ? $row[$valueType] : null;
+					$value = $row[$valueType] ?? null;
 				}
 				if($index !== null) {
 					$values[$index] = $value;

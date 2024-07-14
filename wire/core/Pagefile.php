@@ -402,7 +402,7 @@ class Pagefile extends WireData implements WireArrayItem {
 			}
 		} else if($value === null) {
 			// return value for key
-			return isset($this->filedata[$key]) ? $this->filedata[$key] : null;
+			return $this->filedata[$key] ?? null;
 		} else {
 			// set value for key
 			if(!isset($filedata[$key]) || $filedata[$key] != $value) {
@@ -1396,7 +1396,7 @@ class Pagefile extends WireData implements WireArrayItem {
 		if($value instanceof PagefileExtra) {
 			$this->extras[$name] = $value;
 		}
-		return isset($this->extras[$name]) ? $this->extras[$name] : null;
+		return $this->extras[$name] ?? null;
 	}
 
 	/**

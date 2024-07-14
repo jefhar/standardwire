@@ -745,11 +745,11 @@ class Sanitizer extends Wire {
 		
 		if(is_array($beautify)) {
 			$options = array_merge($beautify, $options);
-			$beautify = isset($options['beautify']) ? $options['beautify'] : false;
-			$maxLength = isset($options['maxLength']) ? $options['maxLength'] : 128;
+			$beautify = $options['beautify'] ?? false;
+			$maxLength = $options['maxLength'] ?? 128;
 		} else if(is_array($maxLength)) {
 			$options = array_merge($maxLength, $options);
-			$maxLength = isset($options['maxLength']) ? $options['maxLength'] : 128;
+			$maxLength = $options['maxLength'] ?? 128;
 		} else {
 			$options = array_merge($defaults, $options);
 		}
@@ -1470,10 +1470,10 @@ class Sanitizer extends Wire {
 		
 		if(!is_string($value)) $value = $this->string($value);
 		
-		$separator = isset($options['separator']) ? $options['separator'] : null;
-		$keepChars = isset($options['keepChars']) ? $options['keepChars'] : [];
+		$separator = $options['separator'] ?? null;
+		$keepChars = $options['keepChars'] ?? [];
 		$maxLength = isset($options['maxLength']) ? (int) $options['maxLength'] : 1024;
-		$minWordLength = isset($options['minWordLength']) ? $options['minWordLength'] : 1;
+		$minWordLength = $options['minWordLength'] ?? 1;
 	
 		if(empty($options['maxWords'])) $options['maxWords'] = $separator !== null ? 99 : 1;
 		if(!empty($options['keepHyphen']) && !in_array('-', $keepChars)) $keepChars[] = '-';
@@ -1492,7 +1492,7 @@ class Sanitizer extends Wire {
 		}
 		
 		if(!empty($options['ascii'])) {
-			$sep = $separator === null ? '' : $separator;
+			$sep = $separator ?? '';
 			$value = $this->nameFilter($value, $keepChars, $sep, Sanitizer::translate, $maxLength); 
 		} else if($maxLength) {
 			$length = $this->multibyteSupport ? mb_strlen($value) : strlen($value);
@@ -2437,7 +2437,7 @@ class Sanitizer extends Wire {
 	 */
 	protected function selectorValueArray(array $value, $options = []) {
 		$a = [];
-		$allowArray = isset($options['allowArray']) ? $options['allowArray'] : true;
+		$allowArray = $options['allowArray'] ?? true;
 		if(count($value) < 2 || !$allowArray) {
 			// if array has 1 or 0 items, or arrays not allowed, return only first item in array
 			$value = reset($value);
@@ -4492,7 +4492,7 @@ class Sanitizer extends Wire {
 			$value = $this->___array($value, null, $options);
 		}
 		$clean = [];
-		$strict = isset($options['strict']) ? $options['strict'] : false;
+		$strict = $options['strict'] ?? false;
 		foreach($value as $v) {
 			if($strict) {
 				$isInt = is_int($v);
@@ -5550,7 +5550,7 @@ class Sanitizer extends Wire {
 			
 			if(!empty($method['maxLength'])) {
 				$maxLength = $method['maxLength'];
-				$n = isset($maxLengthMethods[$methodName]) ? $maxLengthMethods[$methodName] : 0;
+				$n = $maxLengthMethods[$methodName] ?? 0;
 				switch($n) {
 					case 4: $value = $this->maxLength($value, $maxLength); break;
 					case 3: $value = $this->$methodName($value, false, $maxLength); break;

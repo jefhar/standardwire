@@ -60,7 +60,7 @@ class ModulesDuplicates extends Wire {
 	 * 
 	 */
 	public function getCurrent($className) {
-		return isset($this->duplicatesUse[$className]) ? $this->duplicatesUse[$className] : null;
+		return $this->duplicatesUse[$className] ?? null;
 	}
 	
 	/**
@@ -122,8 +122,8 @@ class ModulesDuplicates extends Wire {
 	 * 
 	 */
 	public function addFromConfigData($className, array $data) {
-		$files = isset($data['-dups']) ? $data['-dups'] : [];
-		$using = isset($data['-dups-use']) ? $data['-dups-use'] : '';
+		$files = $data['-dups'] ?? [];
+		$using = $data['-dups-use'] ?? '';
 		if(count($files)) $this->addDuplicates($className, $files);
 		if($using) $this->addDuplicate($className, $using, true); // set current, in-use
 	}
@@ -157,8 +157,8 @@ class ModulesDuplicates extends Wire {
 		
 		$modules = $this->wire()->modules;
 		$className = $modules->getModuleClass($className);
-		$files = isset($this->duplicates[$className]) ? $this->duplicates[$className] : [];
-		$using = isset($this->duplicatesUse[$className]) ? $this->duplicatesUse[$className] : '';
+		$files = $this->duplicates[$className] ?? [];
+		$using = $this->duplicatesUse[$className] ?? '';
 		$rootPath = $this->wire()->config->paths->root;
 
 		foreach($files as $key => $file) {

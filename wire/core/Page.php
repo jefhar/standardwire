@@ -4038,7 +4038,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 */
 	public function _setSetting($key, $value) {
 		if($this->isLoaded && $this->trackChanges && !$this->quietMode) {
-			$valuePrevious = isset($this->settings[$key]) ? $this->settings[$key] : null;
+			$valuePrevious = $this->settings[$key] ?? null;
 			if($valuePrevious != $value) $this->trackChange($key, $valuePrevious, $value);
 		}
 		$this->settings[$key] = $value;
@@ -4056,7 +4056,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 */
 	public function _getSetting($key) {
 		if($key === 'quietMode') return $this->quietMode;
-		return isset($this->settings[$key]) ? $this->settings[$key] : null;
+		return $this->settings[$key] ?? null;
 	}
 
 	/**

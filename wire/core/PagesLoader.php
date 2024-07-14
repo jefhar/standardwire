@@ -277,7 +277,7 @@ class PagesLoader extends Wire {
 	
 		if($value) {
 			if($filter) {
-				$includeMode = isset($options['include']) ? $options['include'] : '';
+				$includeMode = $options['include'] ?? '';
 				$value = $this->filterListable($value, $includeMode, $loadOptions);
 			}
 			if($this->debug) {
@@ -328,13 +328,13 @@ class PagesLoader extends Wire {
 
 		$loadOptions = isset($options['loadOptions']) && is_array($options['loadOptions']) ? $options['loadOptions'] : [];
 		$loadPages = array_key_exists('loadPages', $options) ? (bool) $options['loadPages'] : true; 
-		$caller = isset($options['caller']) ? $options['caller'] : 'pages.find';
+		$caller = $options['caller'] ?? 'pages.find';
 		$lazy = empty($options['lazy']) ? false : true;
-		$findIDs = isset($options['findIDs']) ? $options['findIDs'] : false;
+		$findIDs = $options['findIDs'] ?? false;
 		$debug = $this->debug && !$lazy;
 		$allowShortcuts = $loadPages && !$lazy && (!$findIDs || $findIDs === 4); 
-		$joinFields = isset($options['joinFields']) ? $options['joinFields'] : [];
-		$cachePages = isset($options['cache']) ? $options['cache'] : true;
+		$joinFields = $options['joinFields'] ?? [];
+		$cachePages = $options['cache'] ?? true;
 		
 		if($cachePages) {
 			$options['cache'] = $cachePages;
@@ -526,7 +526,7 @@ class PagesLoader extends Wire {
 			
 			if(count($scores)) {
 				foreach($pages as $page) {
-					$score = isset($scores[$page->id]) ? $scores[$page->id] : 0; 
+					$score = $scores[$page->id] ?? 0; 
 					$page->setQuietly('_pfscore', $score); 
 				}
 			}
@@ -620,7 +620,7 @@ class PagesLoader extends Wire {
 	 */
 	public function findMin($selector, array $options = []) {
 
-		$useCache = isset($options['cache']) ? $options['cache'] : true;
+		$useCache = $options['cache'] ?? true;
 		$templates = $this->wire()->templates;
 		$languages = $this->wire()->languages;
 		$languageIds = [];
@@ -630,7 +630,7 @@ class PagesLoader extends Wire {
 		if($languages) foreach($languages as $language) $languageIds[$language->id] = $language->id;
 		
 		$options['findIDs'] = $useCache ? 4 : 3;
-		$joinFields = isset($options['joinFields']) ? $options['joinFields'] : [];
+		$joinFields = $options['joinFields'] ?? [];
 		$rows = $this->find($selector, $options);
 		
 		// if PageArray was already available in cache, return it now

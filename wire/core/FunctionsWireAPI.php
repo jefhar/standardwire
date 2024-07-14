@@ -569,7 +569,7 @@ function wireSetting($name = '', $value = null) {
 	if(is_array($name)) return $settings = array_merge($settings, $name);
 	if($name === false) { unset($settings[(string) $value]); return null; }
 	if($value !== null) $settings[$name] = $value;
-	return isset($settings[$name]) ? $settings[$name] : null;
+	return $settings[$name] ?? null;
 }
 
 /**

@@ -938,7 +938,7 @@ class WireCache extends Wire {
 	 */
 	protected function arrayToPageArray(array $data) {
 
-		$pageArrayClass = isset($data['pageArrayClass']) ? $data['pageArrayClass'] : 'PageArray';
+		$pageArrayClass = $data['pageArrayClass'] ?? 'PageArray';
 
 		if(!isset($data['PageArray']) || !is_array($data['PageArray'])) {
 			$class = wireClassName($pageArrayClass, true);

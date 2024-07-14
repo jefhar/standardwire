@@ -1862,7 +1862,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 			$value = null;
 			if(is_array($data)) {
 				// array
-				$value = isset($data[$name]) ? $data[$name] : null;
+				$value = $data[$name] ?? null;
 			} else if($data instanceof WireData) {
 				// WireData object
 				$value = $data->data($name);

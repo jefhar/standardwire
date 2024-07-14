@@ -512,9 +512,8 @@ class TemplateFile extends WireData {
 		if($key === 'currentFilename') return $this->currentFilename; 
 		if($key === 'halt') return $this->halt;
 		if($key === 'trim') return $this->trim;
-		if($value = parent::get($key)) return $value; 
-		if(isset(self::$globals[$key])) return self::$globals[$key];
-		return null;
+		if($value = parent::get($key)) return $value;
+		return self::$globals[$key] ?? null;
 	}
 
 	/**

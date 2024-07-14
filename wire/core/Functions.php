@@ -1239,7 +1239,7 @@ function wireRegion($key, $value = null) {
 
 	if(is_null($value)) {
 		// get region
-		$result = isset($regions[$key]) ? $regions[$key] : null;
+		$result = $regions[$key] ?? null;
 
 	} else {
 		// set region
@@ -1251,7 +1251,7 @@ function wireRegion($key, $value = null) {
 				$locked[$key] = $lock === 0 ? '^' : '$'; // prepend : append
 			}
 		}
-		$lock = isset($locked[$key]) ? $locked[$key] : '';
+		$lock = $locked[$key] ?? '';
 		if(!isset($regions[$key])) $regions[$key] = '';
 		if($pos === 0 || ($pos === false && $lock == '^')) {
 			// prepend

@@ -116,7 +116,7 @@ class PageArrayIterator extends Wire implements \Iterator {
 		} else {
 			
 			// Check if the user gave options for the loading
-			$options = isset($this->options['loadOptions']) ? $this->options['loadOptions'] : [];
+			$options = $this->options['loadOptions'] ?? [];
 
 			// Here we retrieve a chunk of Page objects and loop over them to retrieve the IDs of the Pages.
 			$lazypages = array_slice($this->lazypages, $start, $this->chunkSize);

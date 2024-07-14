@@ -1269,7 +1269,7 @@ class PagesPathFinder extends Wire {
 		$pageNum = (int) $pageNum;
 		if($pageNum < 2) return '';
 		$a = $this->pageNumUrlPrefixes();
-		$prefix = isset($a[$langName]) ? $a[$langName] : $a['default'];
+		$prefix = $a[$langName] ?? $a['default'];
 		return $prefix . $pageNum;
 	}
 
@@ -1749,7 +1749,7 @@ class PagesPathFinder extends Wire {
 	protected function languageSegment($language) {
 		$id = $this->languageId($language);
 		$segments = $this->languageSegments();
-		return isset($segments[$id]) ? $segments[$id] : '';
+		return $segments[$id] ?? '';
 	}
 	
 	/**
@@ -1777,8 +1777,7 @@ class PagesPathFinder extends Wire {
 	protected function languageName($language) {
 		$names = $this->languageNames();
 		$languageId = $this->languageId($language);
-		if(isset($names[$languageId])) return $names[$languageId];
-		return 'default';
+		return $names[$languageId] ?? 'default';
 	}
 	
 	/**

@@ -69,7 +69,7 @@ class PageValues extends Wire {
 				if(is_int($index)) {
 					// index is integer
 					if(WireArray::iterable($value)) {
-						$value = isset($value[$index]) ? $value[$index] : null;
+						$value = $value[$index] ?? null;
 					}
 				} else if($index) {
 					// index is selector
@@ -196,7 +196,7 @@ class PageValues extends Wire {
 			if($value instanceof WireArray){
 				$value = $value->eq($index);
 			} else if(is_array($value) || $value instanceof \ArrayAccess) {
-				$value = isset($value[$index]) ? $value[$index] : null;
+				$value = $value[$index] ?? null;
 			} else if(WireArray::iterable($value)) {
 				$n = 0;
 				$found = false;

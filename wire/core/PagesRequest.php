@@ -178,7 +178,7 @@ class PagesRequest extends Wire {
 	 */
 	protected function init() {
 		
-		$dirtyUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+		$dirtyUrl = $_SERVER['REQUEST_URI'] ?? '';
 
 		if(!strlen($dirtyUrl) && !empty($_SERVER['QUERY_STRING'])) {
 			if(strlen($_SERVER['QUERY_STRING']) < 4096) {

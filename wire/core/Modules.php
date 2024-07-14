@@ -1024,7 +1024,7 @@ class Modules extends WireArray {
 			}
 			return $setPath;
 		}
-		return isset($this->installableFiles[$class]) ? $this->installableFiles[$class] : null;
+		return $this->installableFiles[$class] ?? null;
 	}
 	
 	/**
@@ -1249,7 +1249,7 @@ class Modules extends WireArray {
 		}
 		if(ctype_digit("$name")) return (int) $name; 
 		if(!is_string($name)) return $this->getModuleID($name);
-		return isset($this->moduleIDs[$name]) ? $this->moduleIDs[$name] : 0;
+		return $this->moduleIDs[$name] ?? 0;
 	}
 
 	/**
@@ -1277,7 +1277,7 @@ class Modules extends WireArray {
 			$this->moduleNames[$id] = (string) $setName;
 			return $setName;
 		}
-		return isset($this->moduleNames[$id]) ? $this->moduleNames[$id] : '';
+		return $this->moduleNames[$id] ?? '';
 	}
 
 	/**
@@ -2432,7 +2432,7 @@ class Modules extends WireArray {
 			$this->caches[$name] = $setValue;
 			return true;
 		}
-		return isset($this->caches[$name]) ? $this->caches[$name] : null;
+		return $this->caches[$name] ?? null;
 	}
 
 	/**
@@ -2540,7 +2540,7 @@ class Modules extends WireArray {
 			case 'installableFiles': return $this->installableFiles;
 			case 'coreModulesDir': return $this->coreModulesDir;
 			case 'coreModulesPath': return $this->paths[0];
-			case 'siteModulesPath': return isset($this->paths[1]) ? $this->paths[1] : '';
+			case 'siteModulesPath': return $this->paths[1] ?? '';
 			case 'moduleIDs': return $this->moduleIDs;
 			case 'moduleNames': return $this->moduleNames;
 			case 'refreshing': return $this->refreshing;

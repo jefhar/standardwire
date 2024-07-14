@@ -672,7 +672,7 @@ class WireMarkupRegions extends Wire {
 		$tagName = strtolower($tagName);
 		$selfClosing = in_array($tagName, $this->selfClosingTags);
 		$classes = isset($attrs['class']) ? explode(' ', $attrs['class']) : [];
-		$id = isset($attrs['id']) ? $attrs['id'] : '';
+		$id = $attrs['id'] ?? '';
 		$pwid = '';
 		$action = '';
 		$actionTarget = '';

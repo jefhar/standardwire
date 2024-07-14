@@ -338,7 +338,7 @@ class PagesParents extends Wire {
 			$id = (int) $row['id'];
 			if($column) {
 				// single column
-				$value = isset($row[$column]) ? $row[$column] : null;
+				$value = $row[$column] ?? null;
 			} else if(!empty($columns)) {
 				// multiple columns
 				$value = [];

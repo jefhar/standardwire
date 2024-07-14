@@ -135,7 +135,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 			foreach($this->data as $key => $page) {
 				$this->keyIndex[$page->id] = $key;
 			}
-			return isset($this->keyIndex[$id]) ? $this->keyIndex[$id] : null;
+			return $this->keyIndex[$id] ?? null;
 		} else {
 			// page is not present here
 			return null;

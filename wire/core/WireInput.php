@@ -570,14 +570,14 @@ class WireInput extends Wire {
 			// retrieve from end
 			$get = abs($get)-1;
 			$urlSegments = array_reverse($this->urlSegments);
-			return isset($urlSegments[$get]) ? $urlSegments[$get] : '';
+			return $urlSegments[$get] ?? '';
 		}
 
 		if(is_int($get) || ctype_digit($get) || empty($get)) {
 			// return URL segment at numbered index $get
 			$get = (int) $get;
 			if($get < 1) $get = 1;
-			return isset($this->urlSegments[$get]) ? $this->urlSegments[$get] : '';
+			return $this->urlSegments[$get] ?? '';
 		}
 	
 		return $this->urlSegmentMatch($get); 
@@ -595,7 +595,7 @@ class WireInput extends Wire {
 	protected function urlSegmentMatch($get, $num = 0) {
 		
 		if(empty($get) && $num > 0) {
-			return isset($this->urlSegments[$num]) ? $this->urlSegments[$num] : '';
+			return $this->urlSegments[$num] ?? '';
 		}
 		
 		$eqPos = strpos($get, '=');
@@ -633,7 +633,7 @@ class WireInput extends Wire {
 		if($matchBefore) {
 			$match = $index > 1 ? $this->urlSegments[$index-1] : '';
 		} else if($matchAfter) {
-			$match = isset($this->urlSegments[$index+1]) ? $this->urlSegments[$index+1] : '';
+			$match = $this->urlSegments[$index+1] ?? '';
 		}
 
 		return $match;
@@ -762,7 +762,7 @@ class WireInput extends Wire {
 		
 		if(is_array($verbose)) {
 			$options = $verbose;
-			$verbose = isset($options['verbose']) ? $options['verbose'] : false;
+			$verbose = $options['verbose'] ?? false;
 		}
 		
 		if(!empty($options['values']) && is_array($options['values'])) {
@@ -1133,7 +1133,7 @@ class WireInput extends Wire {
 		$page = $options['page']; /** @var Page $page */
 		$pageUrl = $page->url();
 		$template = $page->template;
-		$requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+		$requestUrl = $_SERVER['REQUEST_URI'] ?? '';
 		$languages = $this->wire()->languages;
 		$language = $options['language']; /** @var Language|int|string|bool */
 		
@@ -1512,7 +1512,7 @@ class WireInput extends Wire {
 	public function requestMethod($method = '') {
 		if(isset($_SERVER['REQUEST_METHOD'])) {
 			$m = strtoupper($_SERVER['REQUEST_METHOD']);
-			$requestMethod = isset($this->requestMethods[$m]) ? $this->requestMethods[$m] : '';
+			$requestMethod = $this->requestMethods[$m] ?? '';
 		} else {
 			$requestMethod = '';
 		}
@@ -1576,7 +1576,7 @@ class WireInput extends Wire {
 			
 		} else if($valid === null) {
 			// no sanitization/validation requested
-			$cleanValue = $value === null ? $fallback : $value;
+			$cleanValue = $value ?? $fallback;
 
 		} else if(is_string($valid)) {
 			// sanitizer "name" or multiple "name1,name2,name3" specified for $valid argument
@@ -1829,7 +1829,7 @@ class WireInput extends Wire {
 		$regex = in_array($pattern[0], $this->regexDelims) ? $pattern : $this->patternToRegex($pattern);
 		if($regex) {
 			if(preg_match($regex, $value, $matches)) {
-				$result = isset($matches[1]) ? $matches[1] : $value;
+				$result = $matches[1] ?? $value;
 			} else {
 				$result = '';
 			}

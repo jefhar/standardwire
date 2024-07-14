@@ -116,7 +116,7 @@ class PageimageDebugInfo extends WireData {
 		$parent = ['files' => array_merge(
 				$original,
 				$this->pageimage->_parentDebugInfo(),
-				['suffix'    => isset($finalOptions['suffix']) ? $finalOptions['suffix'] : '', 'extension' => $osInfo['extension']]
+				['suffix'    => $finalOptions['suffix'] ?? '', 'extension' => $osInfo['extension']]
 			)];
 		
 		// rearange parts

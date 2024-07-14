@@ -556,9 +556,7 @@ class Config extends WireData {
 				}
 				return $a;
 			} else {
-				// return value for just one key
-				if(isset($this->jsData[$key])) return $this->jsData[$key];
-				return in_array($key, $this->jsFields) ? $this->get($key) : null;
+				return $this->jsData[$key] ?? (in_array($key, $this->jsFields) ? $this->get($key) : null);
 			}
 			
 		} else if($value === true) {
@@ -629,7 +627,7 @@ class Config extends WireData {
 	 */
 	public function jsConfig($key = null, $value = null) {
 		if($key === null) return $this->jsData; // get all
-		if($value === null) return isset($this->jsData[$key]) ? $this->jsData[$key] : null; // get property
+		if($value === null) return $this->jsData[$key] ?? null; // get property
 		$this->jsData[$key] = $value; // set property
 		return $this;
 	}
@@ -682,7 +680,7 @@ class Config extends WireData {
 				// just a property name (get) or array (set) provided
 				if(is_string($property)) {
 					// just return property value from array
-					return isset($value[$property]) ? $value[$property] : null;
+					return $value[$property] ?? null;
 				} else if(is_array($property)) {
 					// set multiple named properties
 					$value = array_merge($value, $property);
@@ -801,7 +799,7 @@ class Config extends WireData {
 	 */
 	protected function serverProtocol() {
 		$protos = ['HTTP/1.1', 'HTTP/1.0', 'HTTP/2', 'HTTP/2.0'];
-		$proto = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
+		$proto = $_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
 		return $protos[(int) array_search($proto, $protos, true)];
 	}
 
@@ -1076,7 +1074,7 @@ class Config extends WireData {
 	 */
 	public function versionUrl($url, $useVersion = null) {
 		$a = $this->versionUrls([$url], $useVersion);
-		return isset($a[0]) ? $a[0] : $url;
+		return $a[0] ?? $url;
 	}
 
 }

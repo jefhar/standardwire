@@ -1047,7 +1047,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			}
 		}
 		$query->closeCursor();
-		if($getColumn) return isset($columns[$getColumn]) ? $columns[$getColumn] : [];
+		if($getColumn) return $columns[$getColumn] ?? [];
 		return $columns;	
 	}
 
@@ -1092,7 +1092,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			}
 		}
 		$query->closeCursor();
-		if($getIndex) return isset($indexes[$getIndex]) ? $indexes[$getIndex] : [];
+		if($getIndex) return $indexes[$getIndex] ?? [];
 		return $indexes;	
 	}
 

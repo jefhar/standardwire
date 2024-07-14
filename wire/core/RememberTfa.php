@@ -364,7 +364,7 @@ class RememberTfa extends Wire {
 	public function ___getFingerprintArray() {
 		
 		$config = $this->wire()->config;
-		$agent = isset($_SERVER['HTTP_USER_AGENT']) ?  $_SERVER['HTTP_USER_AGENT'] : 'noagent';
+		$agent = $_SERVER['HTTP_USER_AGENT'] ?? 'noagent';
 		$fwip = '';
 		
 		if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) $fwip .= $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -375,10 +375,10 @@ class RememberTfa extends Wire {
       'agent' => $agent,
       'agentVL' => preg_replace('![^a-zA-Z]!', '', $agent),
       // versionless agent
-      'accept' => (isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : 'noaccept'),
+      'accept' => ($_SERVER['HTTP_ACCEPT'] ?? 'noaccept'),
       'scheme' => ($config->https ? 'HTTPS' : 'http'),
       'host' => $config->httpHost,
-      'ip' => (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'noip'),
+      'ip' => ($_SERVER['REMOTE_ADDR'] ?? 'noip'),
       'fwip' => $fwip,
   ];
 		

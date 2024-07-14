@@ -182,7 +182,7 @@ class WireNumberTools extends Wire {
 		$bytes = (int) $bytes;
 		$options = array_merge($defaults, $options);
 		$type = empty($options['type']) ? '' : strtolower(substr($options['type'], 0, 1));
-		$small = isset($options['small']) ? $options['small'] : false;
+		$small = $options['small'] ?? false;
 		$labels = $options['labels'];
 
 		if($options['decimals'] === null) {
@@ -199,28 +199,28 @@ class WireNumberTools extends Wire {
 			// bytes
 			$val = $bytes;
 			if($small) {
-				$label = $val > 0 ? (isset($labels['b']) ? $labels['b'] : $this->_('B')) : ''; // bytes
+				$label = $val > 0 ? ($labels['b'] ?? $this->_('B')) : ''; // bytes
 			} else if($val == 1) {
-				$label = isset($labels['byte']) ? $labels['byte'] : $this->_('byte'); // singular 1-byte
+				$label = $labels['byte'] ?? $this->_('byte'); // singular 1-byte
 			} else {
-				$label = isset($labels['bytes']) ? $labels['bytes'] : $this->_('bytes'); // plural 2+ bytes (or 0 bytes)
+				$label = $labels['bytes'] ?? $this->_('bytes'); // plural 2+ bytes (or 0 bytes)
 			}
 		} else if($bytes < 1000000 || $type === 'k') {
 			// kilobytes
 			$val = $bytes / 1024;
-			$label = isset($labels['k']) ? $labels['k'] : $this->_('kB');
+			$label = $labels['k'] ?? $this->_('kB');
 		} else if($bytes < 1073741824 || $type === 'm') {
 			// megabytes
 			$val = $bytes / 1024 / 1024;
-			$label = isset($labels['m']) ? $labels['m'] : $this->_('MB');
+			$label = $labels['m'] ?? $this->_('MB');
 		} else if($bytes < 1099511627776 || $type === 'g') {
 			// gigabytes
 			$val = $bytes / 1024 / 1024 / 1024;
-			$label = isset($labels['g']) ? $labels['g'] : $this->_('GB');
+			$label = $labels['g'] ?? $this->_('GB');
 		} else {
 			// terabytes
 			$val = $bytes / 1024 / 1024 / 1024 / 1024;
-			$label = isset($labels['t']) ? $labels['t'] : $this->_('TB');
+			$label = $labels['t'] ?? $this->_('TB');
 		}
 
 		// determine decimal point if not specified in $options
@@ -288,7 +288,7 @@ class WireNumberTools extends Wire {
 		if($key === 'clear') unset($this->caches[$locale]);
 		if(empty($this->caches[$locale])) $this->caches[$locale] = localeconv();
 		if($key === '') return $this->caches[$locale]; 
-		return isset($this->caches[$locale][$key]) ? $this->caches[$locale][$key] : null;
+		return $this->caches[$locale][$key] ?? null;
 	}
 
 }

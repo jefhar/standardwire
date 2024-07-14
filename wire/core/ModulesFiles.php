@@ -39,7 +39,7 @@ class ModulesFiles extends ModulesClass {
 			$this->moduleFileExts[$class] = (int) $setValue;
 			return $setValue;
 		}
-		return isset($this->moduleFileExts[$class]) ? $this->moduleFileExts[$class] : 0;
+		return $this->moduleFileExts[$class] ?? 0;
 	}
 
 	/**

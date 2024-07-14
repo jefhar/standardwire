@@ -139,7 +139,7 @@ function __($text, $textdomain = null, $context = '') {
 			} else {
 				// set and get other options
 				if($option === 'encode') $option = 'entityEncode'; // supported alias
-				$currentValue = isset($options[$option]) ? $options[$option] : null; // existing value is returned even when setting
+				$currentValue = $options[$option] ?? null; // existing value is returned even when setting
 				if($values !== '' && $values !== $currentValue) $options[$option] = $values;
 				return $currentValue;
 			}

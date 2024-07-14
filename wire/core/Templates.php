@@ -640,7 +640,7 @@ class Templates extends WireSaveableItems {
 			}
 
 			$template->errors("clear");
-			$oldValue = isset($_data[$key]) ? $_data[$key] : '';
+			$oldValue = $_data[$key] ?? '';
 			$newValue = $value;
 			if(is_array($oldValue)) $oldValue = wireEncodeJSON($oldValue, true, false);
 			else if(is_object($oldValue)) $oldValue = (string) $oldValue;
@@ -965,7 +965,7 @@ class Templates extends WireSaveableItems {
 		} else if($permission instanceof Permission) {
 			$rolesPermissions = $template->get('rolesPermissions');
 			if(!is_array($rolesPermissions)) $rolesPermissions = [];
-			$rolePermissions = isset($rolesPermissions["$role->id"]) ? $rolesPermissions["$role->id"] : [];
+			$rolePermissions = $rolesPermissions["$role->id"] ?? [];
 			$_rolePermissions = $rolePermissions;
 			if($revoke) {
 				$key = array_search("$permission->id", $rolePermissions);

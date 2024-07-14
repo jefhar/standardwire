@@ -481,7 +481,7 @@ class Installer {
 			$defaults['chmodFile'] = "666";
 		}
 
-		$timezone = isset($values['timezone']) ? $values['timezone'] : date_default_timezone_get(); 
+		$timezone = $values['timezone'] ?? date_default_timezone_get(); 
 		$timezones = $this->timezones();
 		if(!$timezone || !in_array($timezone, $timezones)) {
 			$timezone = ini_get('date.timezone'); 
@@ -1681,7 +1681,7 @@ class Installer {
 	 */
 	public function post($key, $sanitizer = '') {
 		
-		$value = isset($_POST[$key]) ? $_POST[$key] : null;
+		$value = $_POST[$key] ?? null;
 		
 		if($value === null && empty($sanitizer)) return null;
 		

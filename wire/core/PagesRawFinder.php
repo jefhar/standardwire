@@ -446,7 +446,7 @@ class PagesRawFinder extends Wire {
 					$this->runtimeFields[$fullName] = $fullName;
 					continue;
 				} else {
-					$fieldObject = isset($this->customFields[$fieldName]) ? $this->customFields[$fieldName] : null;
+					$fieldObject = $this->customFields[$fieldName] ?? null;
 					if(!$fieldObject) $fieldObject = $fields->get($fieldName);
 					if(!$fieldObject) continue;
 				}
@@ -471,7 +471,7 @@ class PagesRawFinder extends Wire {
 					$this->runtimeFields[$fullName] = $fullName;
 					continue;
 				} else {
-					$fieldObject = isset($this->customFields[$fieldName]) ? $this->customFields[$fieldName] : null;
+					$fieldObject = $this->customFields[$fieldName] ?? null;
 					if(!$fieldObject) $fieldObject = $fields->get($fieldName);
 				}
 				
@@ -621,7 +621,7 @@ class PagesRawFinder extends Wire {
 			if(!count($this->ids)) return;
 			foreach($this->customFields as $fieldName => $field) {
 				/** @var Field $field */
-				$cols = isset($this->customCols[$fieldName]) ? $this->customCols[$fieldName] : [];
+				$cols = $this->customCols[$fieldName] ?? [];
 				$this->findCustomField($field, $cols);
 			}
 		} else if($this->getAll && !empty($this->ids)) {
@@ -757,7 +757,7 @@ class PagesRawFinder extends Wire {
 			} else if($getArray) {
 				$value = [];
 				foreach($getCols as $col) {
-					$value[$col] = isset($row[$col]) ? $row[$col] : null;
+					$value[$col] = $row[$col] ?? null;
 				}
 			} else {
 				$col = reset($getCols);

@@ -258,7 +258,7 @@ class Permissions extends PagesType {
 	 */
 	public function getDelegatedPermission($name) {
 		if($this->has($name)) return '';
-		return isset($this->delegatedPermissions[$name]) ? $this->delegatedPermissions[$name] : ''; 
+		return $this->delegatedPermissions[$name] ?? ''; 
 	}
 
 	/**

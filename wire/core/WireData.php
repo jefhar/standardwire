@@ -64,7 +64,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 			return $this->setArray($value); 
 		}
 		if($this->trackChanges) {
-			$v = isset($this->data[$key]) ? $this->data[$key] : null;
+			$v = $this->data[$key] ?? null;
 			if(!$this->isEqual($key, $v, $value)) $this->trackChange($key, $v, $value);
 		}
 		$this->data[$key] = $value; 
@@ -221,7 +221,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 			}
 			return $this;
 		} else if($value === null) {
-			return isset($this->data[$key]) ? $this->data[$key] : null;
+			return $this->data[$key] ?? null;
 		} else {
 			$this->data[$key] = $value; 
 			return $this;
@@ -359,7 +359,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 *
 	 */
 	public function remove($key) {
-		$value = isset($this->data[$key]) ? $this->data[$key] : null;
+		$value = $this->data[$key] ?? null;
 		$this->trackChange("unset:$key", $value, null); 
 		unset($this->data[$key]); 
 		return $this;

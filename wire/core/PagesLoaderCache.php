@@ -129,7 +129,7 @@ class PagesLoaderCache extends Wire {
 			$pageId = $page->id; 
 		} else {
 			$pageId = is_int($page) ? $page : (int) "$page"; 
-			$page = isset($this->pageIdCache[$pageId]) ? $this->pageIdCache[$pageId] : null;
+			$page = $this->pageIdCache[$pageId] ?? null;
 		}
 		if(empty($options['shallow']) && $page) {
 			$page->uncache();
@@ -299,8 +299,7 @@ class PagesLoaderCache extends Wire {
 		}
 
 		if($returnSelector) return $selector;
-		if(isset($this->pageSelectorCache[$selector])) return $this->pageSelectorCache[$selector];
 
-		return null;
+		return $this->pageSelectorCache[$selector] ?? null;
 	}
 }

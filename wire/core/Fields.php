@@ -1378,12 +1378,12 @@ class Fields extends WireSaveableItems {
 	protected function ___applySetupName(Field $field, $setupName = '') {
 		
 		$setups = $field->type->getFieldSetups();
-		$setup = isset($setups[$setupName]) ? $setups[$setupName] : null;
+		$setup = $setups[$setupName] ?? null;
 		
 		if(!$setup) return false;
 		
-		$title = isset($setup['title']) ? $setup['title'] : $setupName;
-		$func = isset($setup['setup']) ? $setup['setup'] : null;
+		$title = $setup['title'] ?? $setupName;
+		$func = $setup['setup'] ?? null;
 		
 		foreach($setup as $property => $value) {
 			if($property === 'title' || $property === 'setup') continue;

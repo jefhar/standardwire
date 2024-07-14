@@ -772,7 +772,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 	public function renderExtraMarkup($for) {
 		static $extras = [];
 		if(empty($extras)) $extras = $this->getExtraMarkup();
-		return isset($extras[$for]) ? $extras[$for] : '';
+		return $extras[$for] ?? '';
 	}
 	
 	/**

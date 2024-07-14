@@ -313,7 +313,7 @@ abstract class Selector extends WireData {
 		if($key === 'str') return $this->__toString();
 		if($key === 'values') return $this->values();
 		if($key === 'fields') return $this->fields();
-		if($key === 'label') return $this->getLabel();
+		if($key === 'label') return static::getLabel();
 		return parent::get($key); 
 	}
 

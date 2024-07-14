@@ -613,7 +613,7 @@ class WireMail extends WireData implements WireMailInterface {
 		$subject = $this->encodeSubject($this->subject);
 		
 		foreach($this->to as $to) {
-			$toName = isset($this->mail['toName'][$to]) ? $this->mail['toName'][$to] : '';
+			$toName = $this->mail['toName'][$to] ?? '';
 			if($toName) $to = $this->bundleEmailAndName($to, $toName); // bundle to "User Name <user@example.com>"
 			if($param) {
 				if(@mail($to, $subject, $body, $header, $param)) $numSent++;

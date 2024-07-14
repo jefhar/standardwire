@@ -180,7 +180,7 @@ class WireClassLoader {
 	 * 
 	 */
 	public function getNamespace($namespace) {
-		return isset(self::$namespaces[$namespace]) ? self::$namespaces[$namespace] : [];
+		return self::$namespaces[$namespace] ?? [];
 	}
 
 	/**

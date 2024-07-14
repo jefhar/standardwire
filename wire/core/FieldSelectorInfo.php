@@ -176,8 +176,7 @@ class FieldSelectorInfo extends Wire {
 			foreach($this->operators as $o) $operators = array_merge($operators, $o); 
 			return $operators; 
 		}
-		if(isset($this->operators[$inputType])) return $this->operators[$inputType];
-		return [];
+		return $this->operators[$inputType] ?? [];
 	}
 
 	/**

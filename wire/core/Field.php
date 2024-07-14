@@ -588,7 +588,7 @@ class Field extends WireData implements Saveable, Exportable {
 		foreach($data as $key => $value) {
 			if($key == 'errors') continue;
 			$data['errors'][$key] = '';
-			$old = isset($_data[$key]) ? $_data[$key] : '';
+			$old = $_data[$key] ?? '';
 			if(is_array($old)) $old = wireEncodeJSON($old, true);
 			$new = is_array($value) ? wireEncodeJSON($value, true) : $value;
 			if($old === $new || (empty($old) && empty($new)) || (((string) $old) === ((string) $new))) continue;
@@ -1078,7 +1078,7 @@ class Field extends WireData implements Saveable, Exportable {
 			}
 		} else if(is_null($value)) {
 			// get a setting, or return null if not found
-			return isset($this->inputfieldSettings[$name]) ? $this->inputfieldSettings[$name] : null;
+			return $this->inputfieldSettings[$name] ?? null;
 		} else if($value === 'clear') {
 			// clear a setting
 			unset($this->inputfieldSettings[$name]);	

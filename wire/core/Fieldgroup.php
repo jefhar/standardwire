@@ -724,10 +724,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 		if(isset($this->fieldContexts[$field_id])) {
 			if($namespace) {
 				$namespace = self::contextNamespacePrefix . $namespace;
-				if(isset($this->fieldContexts[$field_id][$namespace])) {
-					return $this->fieldContexts[$field_id][$namespace];
-				}
-				return [];
+				return $this->fieldContexts[$field_id][$namespace] ?? [];
 			} else if(isset($this->fieldContexts[$field_id])) {
 				return $this->fieldContexts[$field_id];
 			}

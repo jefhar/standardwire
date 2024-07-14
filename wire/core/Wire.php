@@ -1519,7 +1519,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable {
 		} else {
 			// get messages, warnings or errors specific to this object instance
 			/** @var Notices $value */
-			$value = $this->_notices[$type] === null ? $this->wire(new Notices()) : $this->_notices[$type];
+			$value = $this->_notices[$type] ?? $this->wire(new Notices());
 			if(in_array('first', $options)) {
 				$value = $clear ? $value->shift() : $value->first();
 			} else if(in_array('last', $options)) {

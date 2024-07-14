@@ -189,7 +189,7 @@ class ImageSizer extends Wire {
 		}
 	
 		// if one engine requested reduce array to just that engine
-		if($name) $infos = isset($infos[$name]) ? $infos[$name] : [];
+		if($name) $infos = $infos[$name] ?? [];
 		
 		return $infos;
 	}

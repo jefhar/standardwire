@@ -326,11 +326,11 @@ class Pageimage extends Pagefile {
 				if(isset($top['left'])) {
 					$left = $top['left'];
 					$top = $top['top'];
-					$zoom = isset($top['zoom']) ? $top['zoom'] : 0;
+					$zoom = $top['zoom'] ?? 0;
 				} else {
 					$top = $top[0];
 					$left = $top[1];
-					$zoom = isset($top[2]) ? $top[2] : 0;
+					$zoom = $top[2] ?? 0;
 				}
 			}
 			
@@ -1297,7 +1297,7 @@ class Pageimage extends Pagefile {
 		
 		if($this->wire()->config->installed > 1513336849) { 
 			// New installations from 2017-12-15 forward use an "ms" suffix for images from maxSize() method
-			$suffix = isset($options['suffix']) ? $options['suffix'] : [];
+			$suffix = $options['suffix'] ?? [];
 			if(!is_array($suffix)) $suffix = [];
 			$suffix[] = 'ms';
 			$options['suffix'] = $suffix;
@@ -1595,7 +1595,7 @@ class Pageimage extends Pagefile {
 		
 		if(is_array($markup) || ($markup && strpos($markup, '}') === false)) {
 			$options = $markup;
-			$markup = isset($options['markup']) ? $options['markup'] : '';
+			$markup = $options['markup'] ?? '';
 		} 
 		
 		if(empty($markup)) {

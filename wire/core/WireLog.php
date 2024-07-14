@@ -358,7 +358,7 @@ class WireLog extends Wire {
 	public function getEntries($name, array $options = []) {
 		
 		$log = $this->getFileLog($name);
-		$limit = isset($options['limit']) ? $options['limit'] : 100; 
+		$limit = $options['limit'] ?? 100; 
 		$pageNum = !empty($options['pageNum']) ? $options['pageNum'] : $this->wire()->input->pageNum; 
 		unset($options['pageNum']); 
 		$lines = $log->find($limit, $pageNum, $options); 
@@ -392,7 +392,7 @@ class WireLog extends Wire {
 			$text = empty($url) ? $parts[2] : '';
 			$entry = ['date' => $parts[0], 'user' => $user, 'url'  => $url, 'text' => $text];
 		} else {
-			$entry = ['date' => isset($parts[0]) ? $parts[0] : '', 'user' => isset($parts[1]) ? $parts[1] : '', 'url'  => isset($parts[2]) ? $parts[2] : '', 'text' => isset($parts[3]) ? $parts[3] : ''];
+			$entry = ['date' => $parts[0] ?? '', 'user' => $parts[1] ?? '', 'url'  => $parts[2] ?? '', 'text' => $parts[3] ?? ''];
 		}
 		
 		$entry['date'] = wireDate($this->wire('config')->dateFormat, strtotime($entry['date']));
@@ -551,7 +551,7 @@ class WireLog extends Wire {
 	 * 
 	 */
 	public function getFileLog($name, array $options = []) {
-		$delimiter = isset($options['delimiter']) ? $options['delimiter'] : "\t";
+		$delimiter = $options['delimiter'] ?? "\t";
 		$filename = $this->getFilename($name);
 		$key = "$filename$delimiter";
 		if(isset($this->fileLogs[$key])) return $this->fileLogs[$key];

@@ -492,10 +492,10 @@ abstract class Process extends WireData implements Module {
 				$icon = str_replace(['icon-', 'fa-'],'', (string) $item->{$options['iconKey']});
 				$class = $item->{$options['classKey']};
 			} else if(is_array($item)) {
-				$id = isset($item['id']) ? $item['id'] : '';
-				$name = isset($item['name']) ? $item['name'] : '';
-				$label = isset($item[$options['itemLabel']]) ? $item[$options['itemLabel']] : '';
-				$class = isset($item[$options['classKey']]) ? $item[$options['classKey']] : '';	
+				$id = $item['id'] ?? '';
+				$name = $item['name'] ?? '';
+				$label = $item[$options['itemLabel']] ?? '';
+				$class = $item[$options['classKey']] ?? '';	
 				if(isset($item[$options['iconKey']])) $icon = str_replace(['icon-', 'fa-'],'', (string) $item[$options['iconKey']]);
 			} else {
 				$this->error("Item must be object or array: $item"); 
@@ -516,7 +516,7 @@ abstract class Process extends WireData implements Module {
 			
 			if(!empty($options['labelClassKey'])) {
 				if(is_array($item)) {
-					$labelClass = isset($item[$options['labelClassKey']]) ? $item[$options['labelClassKey']] : '';
+					$labelClass = $item[$options['labelClassKey']] ?? '';
 				} else {
 					$labelClass = is_object($item) ? $item->{$options['labelClassKey']} : '';
 				}

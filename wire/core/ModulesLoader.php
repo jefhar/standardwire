@@ -148,7 +148,7 @@ class ModulesLoader extends ModulesClass {
 
 		// if the module is configurable, then load its config data
 		// and set values for each before initializing the module
-		$extraConfigData = isset($options['configData']) ? $options['configData'] : null;
+		$extraConfigData = $options['configData'] ?? null;
 		$this->modules->configs->setModuleConfigData($module, null, $extraConfigData);
 
 		$moduleName = wireClassName($module, false);
@@ -578,7 +578,7 @@ class ModulesLoader extends ModulesClass {
 						$i = $this->modules->getModuleInfo($className);
 					}
 				}
-				$autoload = isset($i['autoload']) ? $i['autoload'] : true;
+				$autoload = $i['autoload'] ?? true;
 				unset($i);
 			}
 			// check for conditional autoload
@@ -842,7 +842,7 @@ class ModulesLoader extends ModulesClass {
 			$this->createdDates[$moduleID] = $setValue;
 			return $setValue;
 		}
-		return isset($this->createdDates[$moduleID]) ? $this->createdDates[$moduleID] : null;
+		return $this->createdDates[$moduleID] ?? null;
 	}
 
 	/**

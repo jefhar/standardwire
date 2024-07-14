@@ -371,7 +371,7 @@ class Template extends WireData implements Saveable, Exportable {
 		if($key === 'urlSegments') return $this->urlSegments();
 		if($key === 'editUrl') return $this->editUrl();
 
-		return isset($this->settings[$key]) ? $this->settings[$key] : parent::get($key); 
+		return $this->settings[$key] ?? parent::get($key); 
 	}
 	
 	/**

@@ -416,7 +416,7 @@ class ProcessWire extends Wire {
 				$debug = $debugIf();
 			} else {
 				$ip = $config->sessionForceIP;
-				if(empty($ip)) $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+				if(empty($ip)) $ip = $_SERVER['REMOTE_ADDR'] ?? null;
 				if(is_string($debugIf) && strlen($debugIf) && !empty($ip)) {
 					// match exact IP address or regex matching IP address(es)
 					$debugIf = trim($debugIf);
@@ -631,7 +631,7 @@ class ProcessWire extends Wire {
 		// except that a failed status can be backtracked
 		if($this->status >= $status && $this->status != self::statusFailed) return;
 		
-		$name = isset($this->statusNames[$status]) ? $this->statusNames[$status] : 'unknown';
+		$name = $this->statusNames[$status] ?? 'unknown';
 		$path = $config->paths->site;
 		$files = $config->statusFiles;
 
@@ -741,7 +741,7 @@ class ProcessWire extends Wire {
 	 */
 	public function getStatus($getName = false) {
 		if(!$getName) return $this->status;
-		return isset($this->statusNames[$this->status]) ? $this->statusNames[$this->status] : 'unknown';
+		return $this->statusNames[$this->status] ?? 'unknown';
 	}
 
 	/**
@@ -1016,7 +1016,7 @@ class ProcessWire extends Wire {
 	 */
 	public static function getInstance($instanceID = null) {
 		if(is_null($instanceID)) return self::getCurrentInstance();
-		return isset(self::$instances[$instanceID]) ? self::$instances[$instanceID] : null;
+		return self::$instances[$instanceID] ?? null;
 	}
 	
 	/**
@@ -1117,7 +1117,7 @@ class ProcessWire extends Wire {
 		$rootPath = self::getRootPath($rootPath);
 		$httpHost = '';
 		$scheme = '';
-		$siteDir = isset($options['siteDir']) ? $options['siteDir'] : 'site';
+		$siteDir = $options['siteDir'] ?? 'site';
 		$cfg = ['dbName' => ''];
 		
 		if($rootURL && strpos($rootURL, '://')) {

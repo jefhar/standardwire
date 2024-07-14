@@ -78,7 +78,7 @@ class Password extends Wire {
 	 */
 	public function __get($name) {
 		if($name === 'salt' && empty($this->data['salt'])) $this->data['salt'] = $this->salt();
-		return isset($this->data[$name]) ? $this->data[$name] : null;
+		return $this->data[$name] ?? null;
 	}
 
 	/**

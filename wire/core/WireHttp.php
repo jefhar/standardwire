@@ -1277,7 +1277,7 @@ class WireHttp extends Wire {
 	public function getResponseHeaders($key = '') {
 		if(!empty($key)) {
 			$key = strtolower($key);
-			return isset($this->responseHeaders[$key]) ? $this->responseHeaders[$key] : null;
+			return $this->responseHeaders[$key] ?? null;
 		}
 		return $this->responseHeaders;
 	}
@@ -1302,7 +1302,7 @@ class WireHttp extends Wire {
 	public function getResponseHeaderValues($key = '', $forceArrays = false) {
 		if(!empty($key)) {
 			$key = strtolower($key);
-			$value = isset($this->responseHeaderArrays[$key]) ? $this->responseHeaderArrays[$key] : null;
+			$value = $this->responseHeaderArrays[$key] ?? null;
 			if(!$value !== null && count($value) === 1 && !$forceArrays) $value = reset($value);
 		} else if($forceArrays) {
 			$value = $this->responseHeaderArrays;
@@ -1473,7 +1473,7 @@ class WireHttp extends Wire {
 			$filesize = filesize($filename);
 		}
 
-		$contentType = isset($contentTypes[$ext]) ? $contentTypes[$ext] : $contentTypes['?'];
+		$contentType = $contentTypes[$ext] ?? $contentTypes['?'];
 		$forceDownload = $options['forceDownload'];
 		$bytesSent = 0;
 		
@@ -1534,7 +1534,7 @@ class WireHttp extends Wire {
 	 */
 	protected function sendFileRange($filename, $rangeStr = '') {
 	
-		if(empty($rangeStr)) $rangeStr = isset($_SERVER['HTTP_RANGE']) ? $_SERVER['HTTP_RANGE'] : '';
+		if(empty($rangeStr)) $rangeStr = $_SERVER['HTTP_RANGE'] ?? '';
 		if(empty($rangeStr)) return false;
 		
 		$filesize = filesize($filename);
@@ -1675,7 +1675,7 @@ class WireHttp extends Wire {
 	 */
 	public function sendStatusHeader($status) {
 		if(ctype_digit("$status")) {
-			$statusText = isset($this->httpCodes[(int) $status]) ? $this->httpCodes[(int) $status] : '';
+			$statusText = $this->httpCodes[(int) $status] ?? '';
 			$status = "$status $statusText";
 		}
 		if(stripos($status, 'HTTP/') !== 0) {
@@ -1782,7 +1782,7 @@ class WireHttp extends Wire {
 	 * 
 	 */
 	public function setHttpCode($code, $text = '') {
-		if(empty($text)) $text = isset($this->httpCodes[$code]) ? $this->httpCodes[$code] : '?';
+		if(empty($text)) $text = $this->httpCodes[$code] ?? '?';
 		$this->httpCode = $code;
 		$this->httpCodeText = $text;
 	}

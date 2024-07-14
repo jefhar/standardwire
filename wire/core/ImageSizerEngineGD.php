@@ -79,7 +79,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 */
 	public function getLibraryVersion() {
 		$gd = gd_info();
-		return isset($gd['GD Version']) ? $gd['GD Version'] : '';
+		return $gd['GD Version'] ?? '';
 	}
 
 	/**
@@ -113,7 +113,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 				if(self::$webpSupport === null) {
 					// only call it once
 					$gd  = gd_info();
-					self::$webpSupport = isset($gd['WebP Support']) ? $gd['WebP Support'] : false;
+					self::$webpSupport = $gd['WebP Support'] ?? false;
 				}
 				return self::$webpSupport;
 				break;

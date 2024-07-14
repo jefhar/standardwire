@@ -786,8 +786,8 @@ class WireDateTime extends Wire {
 		if(is_array($stop)) {
 			// options specified in $stop argument 
 			$options = $stop;
-			$stop = isset($options['stop']) ? $options['stop'] : null;
-			$abbreviate = isset($options['abbreviate']) ? $options['abbreviate'] : false;
+			$stop = $options['stop'] ?? null;
+			$abbreviate = $options['abbreviate'] ?? false;
 		}
 
 		$options = array_merge($defaults, $options);

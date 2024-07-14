@@ -134,7 +134,7 @@ abstract class DatabaseQuery extends WireData {
 		} else if($optionValue !== null) {
 			$this->bindOptions[$optionName] = $optionValue;
 		}
-		return isset($this->bindOptions[$optionName]) ? $this->bindOptions[$optionName] : null;
+		return $this->bindOptions[$optionName] ?? null;
 	}
 
 	/**
@@ -255,10 +255,10 @@ abstract class DatabaseQuery extends WireData {
 		if(empty($options['key'])) {
 			// auto-generate key
 			$key = ':';
-			$prefix = (isset($options['prefix']) ? $options['prefix'] : $this->bindOptions['prefix']);
+			$prefix = ($options['prefix'] ?? $this->bindOptions['prefix']);
 			$suffix = isset($option['suffix']) && $options['suffix'] ? $options['suffix'] : $this->bindOptions['suffix'];
-			$value = isset($options['value']) ? $options['value'] : null;
-			$global = isset($options['global']) ? $options['global'] : $this->bindOptions['global'];
+			$value = $options['value'] ?? null;
+			$global = $options['global'] ?? $this->bindOptions['global'];
 			
 			if($global) $key .= $prefix . $this->instanceNum;
 			
@@ -343,7 +343,7 @@ abstract class DatabaseQuery extends WireData {
 		if(is_object($query)) {
 			if($query instanceof \PDOStatement) {
 				foreach($bindValues as $k => $v) {
-					$type = isset($this->bindTypes[$k]) ? $this->bindTypes[$k] : $this->pdoParamType($v);
+					$type = $this->bindTypes[$k] ?? $this->pdoParamType($v);
 					$query->bindValue($k, $v, $type);
 				}
 			} else if($query instanceof DatabaseQuery && $query !== $this) {
@@ -452,7 +452,7 @@ abstract class DatabaseQuery extends WireData {
 			
 		} else if(is_string($value)) {
 			// value is SQL string, number or array
-			$params = isset($args[1]) ? $args[1] : null;
+			$params = $args[1] ?? null;
 			if($params !== null && !is_array($params)) $params = [$params];
 			if(is_array($params) && count($params)) $value = $this->methodBindValues($value, $params);
 			
@@ -672,7 +672,7 @@ abstract class DatabaseQuery extends WireData {
 	public function prepare() {
 		$query = $this->wire()->database->prepare($this->getQuery()); 
 		foreach($this->bindValues as $key => $value) {
-			$type = isset($this->bindTypes[$key]) ? $this->bindTypes[$key] : $this->pdoParamType($value);
+			$type = $this->bindTypes[$key] ?? $this->pdoParamType($value);
 			$query->bindValue($key, $value, $type); 
 		}
 		return $query; 

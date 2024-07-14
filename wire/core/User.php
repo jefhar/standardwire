@@ -266,7 +266,7 @@ class User extends Page {
 					if($method) return $page->$method(); // i.e. $page->editable()
 				}
 				$delegated = $permissions->getDelegatedPermissions();
-				$p = isset($delegated[$name]) ? $delegated[$name] : $name;
+				$p = $delegated[$name] ?? $name;
 			} else {
 				$p = $name;
 			}

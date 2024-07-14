@@ -847,9 +847,9 @@ abstract class Fieldtype extends WireData implements Module {
 			$sql .= "$v, ";
 		}
 		
-		$xtra = isset($schema['xtra']) ? $schema['xtra'] : [];
+		$xtra = $schema['xtra'] ?? [];
 		if(is_string($xtra)) $xtra = ['append' => $xtra]; // backwards compat: xtra used to be a string, what 'append' is now. 
-		$append = isset($xtra['append']) ? $xtra['append'] : '';
+		$append = $xtra['append'] ?? '';
 
 		$sql = rtrim($sql, ", ") . ') ' . $append;
 		
@@ -970,7 +970,7 @@ abstract class Fieldtype extends WireData implements Module {
 	public function getDatabaseSchemaVerbose(Field $field, $property = '') {
 	
 		$schema = $this->getDatabaseSchema($field);
-		$info = ['table' => $field->getTable(), 'schema' => $schema, 'all' => isset($schema['xtra']['all']) ? $schema['xtra']['all'] : true, 'cols' => [], 'columns' => [], 'engine' => '', 'charset' => '', 'otherKeys' => $schema['keys'], 'primaryKey' => '', 'primaryKeys' => [], 'transactions' => false];
+		$info = ['table' => $field->getTable(), 'schema' => $schema, 'all' => $schema['xtra']['all'] ?? true, 'cols' => [], 'columns' => [], 'engine' => '', 'charset' => '', 'otherKeys' => $schema['keys'], 'primaryKey' => '', 'primaryKeys' => [], 'transactions' => false];
 		
 		unset($info['otherKeys']['primary']);
 	

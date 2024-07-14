@@ -409,7 +409,7 @@ class Notices extends WireArray {
 	 */
 	public function move(Wire $from, Wire $to, array $options = []) {
 		$n = 0;
-		$types = isset($options['types']) ? $options['types'] : ['errors', 'warnings', 'messages']; 
+		$types = $options['types'] ?? ['errors', 'warnings', 'messages']; 
 		foreach($types as $type) {
 			$method = rtrim($type, 's');
 			foreach($from->$type('clear') as $notice) {

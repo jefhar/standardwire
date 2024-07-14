@@ -546,7 +546,7 @@ class WireTextTools extends Wire {
 			$maxLength = $options['maxLength'];
 		} else if(is_string($maxLength) && ctype_alpha($maxLength)) {
 			$options['type'] = $maxLength;
-			$maxLength = isset($options['maxLength']) ? $options['maxLength'] : $this->strlen($str);
+			$maxLength = $options['maxLength'] ?? $this->strlen($str);
 		}
 
 		if(!$maxLength) $maxLength = 255;
@@ -1012,7 +1012,7 @@ class WireTextTools extends Wire {
 					$fieldValue = $vars->$fieldName;
 				}
 			} else if(is_array($vars)) {
-				$fieldValue = isset($vars[$fieldName]) ? $vars[$fieldName] : null;
+				$fieldValue = $vars[$fieldName] ?? null;
 			}
 			
 			// if value resolves to null and we are not removing null tags, then do not add to replacements
@@ -1110,7 +1110,7 @@ class WireTextTools extends Wire {
 			if(!count($sanitizers)) $sanitizers = $options['sanitizersDefault'];
 			if($dataIsArray) {
 				/** @var array $data */
-				$value = isset($data[$varName]) ? $data[$varName] : null;
+				$value = $data[$varName] ?? null;
 			} else {
 				/** @var WireData|WireInputData $data */
 				$value = $data->get($varName);

@@ -646,7 +646,7 @@ class PageFinder extends Wire {
 					// allow use of some predefined labels for Page statuses
 					$v = strtolower($v);
 					if(empty($statuses)) $statuses = Page::getStatuses();
-					$v = isset($statuses[$v]) ? $statuses[$v] : 1;
+					$v = $statuses[$v] ?? 1;
 				}
 				$values[$k] = $v;
 			}
@@ -1235,7 +1235,7 @@ class PageFinder extends Wire {
 					$selectors->replace($selectorCopy, $selector); 
 					if($count) {
 						if($foundFields === null) {
-							$foundFields = isset($this->pageArrayData['fields']) ? $this->pageArrayData['fields'] : []; 
+							$foundFields = $this->pageArrayData['fields'] ?? []; 
 						}
 						// include only fields that we know will match
 						$replaceFields[$fName] = $fName;
@@ -1254,7 +1254,7 @@ class PageFinder extends Wire {
 				
 				if($findExtends) {
 					if($foundTypes === null) {
-						$foundTypes = isset($this->pageArrayData['extends']) ? $this->pageArrayData['extends'] : [];
+						$foundTypes = $this->pageArrayData['extends'] ?? [];
 					}
 					$fType = $f->type->className();
 					if(isset($foundTypes[$fType])) {
@@ -3147,7 +3147,7 @@ class PageFinder extends Wire {
 	 *
 	 */
 	public function getLimit() {
-		return $this->limit === null ? 0 : $this->limit; 
+		return $this->limit ?? 0; 
 	}
 
 	/**
@@ -3157,7 +3157,7 @@ class PageFinder extends Wire {
 	 *
 	 */
 	public function getStart() {
-		return $this->start === null ? 0 : $this->start; 
+		return $this->start ?? 0; 
 	}
 
 	/**

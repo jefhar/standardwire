@@ -726,7 +726,7 @@ class WireFileTools extends Wire {
 		static $tempDirs = [];
 		if($name && isset($tempDirs[$name])) return $tempDirs[$name];
 		if(is_int($options)) $options = ['maxAge' => $options];
-		$basePath = isset($options['basePath']) ? $options['basePath'] : '';
+		$basePath = $options['basePath'] ?? '';
 		$tempDir = new WireTempDir();
 		$this->wire($tempDir);
 		if(isset($options['remove']) && $options['remove'] === false) $tempDir->setRemove(false);
@@ -1262,7 +1262,7 @@ class WireFileTools extends Wire {
 			// index row by header
 			$a = [];
 			foreach($header as $key => $name) {
-				$a[$name] = isset($row[$key]) ? $row[$key] : '';	
+				$a[$name] = $row[$key] ?? '';	
 			}
 			$row = $a;
 		}
@@ -1906,7 +1906,7 @@ class WireFileTools extends Wire {
 	 * 
 	 */
 	public function filesError($method, $msg, $throw = false, $e = null) {
-		if(is_array($throw)) $throw = isset($throw['throw']) ? $throw['throw'] : false;
+		if(is_array($throw)) $throw = $throw['throw'] ?? false;
 		$msg = "$method: $msg";
 		$this->log($msg, ['name' => 'files-errors']);
 		if($throw) {

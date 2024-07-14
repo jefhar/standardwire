@@ -98,7 +98,7 @@ class ImageInspector extends WireData {
 		$this->info['width'] = $info[0];
 		$this->info['height'] = $info[1];
 		$this->info['imageType'] = $imageType;
-		$this->info['mime'] = isset($this->supportedMimeTypes[$imageType]) ? $this->supportedMimeTypes[$imageType] : 'unsupported';
+		$this->info['mime'] = $this->supportedMimeTypes[$imageType] ?? 'unsupported';
 
 		// Infos about Orientation and optional corrections for rotate and flip
 		$tmp = $this->checkOrientation($this->filename);
@@ -107,8 +107,8 @@ class ImageInspector extends WireData {
 		$this->info['flip'] = $tmp['flip'];                // empty | horizontal | vertical :: 0 | 1 | 2
 
 		// additional, more indepth data
-		$this->info['channels'] = isset($info['channels']) ? $info['channels'] : -1;
-		$this->info['bits'] = isset($info['bits']) ? $info['bits'] : -1;
+		$this->info['channels'] = $info['channels'] ?? -1;
+		$this->info['bits'] = $info['bits'] ?? -1;
 		switch($imageType) {
 			case \IMAGETYPE_GIF:
 				$this->loadImageInfoGif();
@@ -164,7 +164,7 @@ class ImageInspector extends WireData {
   ];
 		$result = ['orientation' => 0, 'rotate' => 0, 'flip' => 0];
 		$supportedExifMimeTypes = ['image/jpeg', 'image/tiff']; // hardcoded by PHP
-		$mime = isset($this->info['mime']) ? $this->info['mime'] : 'no';
+		$mime = $this->info['mime'] ?? 'no';
 
 		if(!function_exists('exif_read_data') || !in_array($mime, $supportedExifMimeTypes)) {
 			return $result;
@@ -218,11 +218,11 @@ class ImageInspector extends WireData {
 		$i['height']		= $gfh->m_nHeight;
 		$i['gifversion']	= $gfh->m_lpVer;
 		$i['animated']		= $gfh->m_bAnimated;
-		$i['delay']         = isset($gi->m_nDelay) ? $gi->m_nDelay : '';
-		$i['trans']         = isset($gi->m_bTrans) ? $gi->m_bTrans : false;
-		$i['transcolor']    = isset($gi->m_nTrans) ? $gi->m_nTrans : '';
+		$i['delay']         = $gi->m_nDelay ?? '';
+		$i['trans']         = $gi->m_bTrans ?? false;
+		$i['transcolor']    = $gi->m_nTrans ?? '';
 		$i['bgcolor']		= $gfh->m_nBgColor;
-		$i['numcolors']		= isset($gfh->m_colorTable->m_nColors) ? $gfh->m_colorTable->m_nColors : 0;
+		$i['numcolors']		= $gfh->m_colorTable->m_nColors ?? 0;
 		$i['interlace']		= $gih->m_bInterlace;
 		$this->info = $i;
 		unset($gif, $gih, $gfh, $gi, $i);

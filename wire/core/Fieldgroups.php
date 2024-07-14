@@ -554,7 +554,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 		// other data
 		foreach($data as $key => $value) {
 			if($key == 'fields' || $key == 'contexts') continue;
-			$old = isset($_data[$key]) ? $_data[$key] : null;
+			$old = $_data[$key] ?? null;
 			if(is_array($old)) $old = wireEncodeJSON($old, true, false);
 			$new = is_array($value) ? wireEncodeJSON($value, true, false) : $value;
 			if($old == $new) continue;

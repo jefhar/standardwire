@@ -231,7 +231,7 @@ class Debug {
 	 *
 	 */
 	static public function getSavedTimer($key) {
-		$value = isset(self::$savedTimers[$key]) ? self::$savedTimers[$key] : null;	
+		$value = self::$savedTimers[$key] ?? null;	
 		if(!is_null($value) && isset(self::$savedTimerNotes[$key])) $value = "$value - " . self::$savedTimerNotes[$key];
 		return (string) $value; 
 	}
@@ -402,7 +402,7 @@ class Debug {
 			}
 			
 			if($class) {
-				$type = isset($trace['type']) ? $trace['type'] : '.';
+				$type = $trace['type'] ?? '.';
 			}
 
 			if(!$options['showHooks']) {

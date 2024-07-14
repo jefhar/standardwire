@@ -117,11 +117,11 @@ class Fuel implements \IteratorAggregate {
 	}
 
 	public function __get($key) {
-		return isset($this->data[$key]) ? $this->data[$key] : null;
+		return $this->data[$key] ?? null;
 	}
 	
 	public function get($key) {
-		return isset($this->data[$key]) ? $this->data[$key] : null;
+		return $this->data[$key] ?? null;
 	}
 
 	#[\ReturnTypeWillChange] 

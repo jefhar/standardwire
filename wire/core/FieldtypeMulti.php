@@ -298,7 +298,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 
 			// cycle through the keys, which represent DB fields (i.e. data, description, etc.) and generate the insert query
 			foreach($keys as $key) {
-				$val = isset($value[$key]) ? $value[$key] : null;
+				$val = $value[$key] ?? null;
 				
 				if($val === null) {
 					// null column
@@ -670,7 +670,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 			$maxSort = 0; 
 			foreach($sleepValue as $v) {
 				if(!is_array($v)) continue;
-				$id = isset($v[$primaryKey]) ? $v[$primaryKey] : 0;
+				$id = $v[$primaryKey] ?? 0;
 				if(!$id) $hasInserts = true;
 				if(isset($v['sort']) && $v['sort'] > $maxSort) $maxSort = $v['sort'];
 			}
@@ -689,7 +689,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 			$keys = array_keys($item);
 			$binds = [':pages_id' => (int) $page->id];
 			$sqls = ['pages_id=:pages_id'];
-			$id = isset($item[$primaryKey]) ? $item[$primaryKey] : 0;
+			$id = $item[$primaryKey] ?? 0;
 			
 			foreach($keys as $key) {
 				$key = $database->escapeCol($key);

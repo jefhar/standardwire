@@ -184,7 +184,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 			// this is a variation with dimensions, return array of info
 			$width = (int) $matches[1];
 			$height = (int) $matches[2];
-			$crop = isset($matches[3]) ? $matches[3] : '';
+			$crop = $matches[3] ?? '';
 			$suffix = isset($matches[4]) ? explode('-', $matches[4]) : [];
 
 		} else if(preg_match($re2, $meat, $matches)) {
@@ -192,7 +192,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 			// this is a variation only with suffix
 			$width = isset($matches[2]) ? (int) $matches[2] : 0;
 			$height = isset($matches[3]) ? (int) $matches[3] : 0;
-			$crop = isset($matches[4]) ? $matches[4] : '';
+			$crop = $matches[4] ?? '';
 			$suffix = explode('-', $matches[1]);
 
 		} else {
@@ -342,7 +342,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 			if(!isset($options[$key])) continue;
 			if(strpos(trim($options[$key]), ' ') === false) continue;
 			$keyPlural = $key . 'es';
-			$value = isset($options[$keyPlural]) ? $options[$keyPlural] : [];
+			$value = $options[$keyPlural] ?? [];
 			$options[$keyPlural] = array_merge($value, explode(' ', trim($options[$key])));
 			unset($options[$key]);
 		}

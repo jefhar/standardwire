@@ -947,7 +947,7 @@ class WireHooks {
 					$matches = true;
 					foreach($argMatches as $argKey => $argMatch) {
 						/** @var Selectors $argMatch */
-						$argVal = isset($arguments[$argKey]) ? $arguments[$argKey] : null;
+						$argVal = $arguments[$argKey] ?? null;
 						if(is_object($argMatch)) {
 							// Selectors object
 							if(is_object($argVal)) {

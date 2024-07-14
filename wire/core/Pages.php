@@ -963,9 +963,9 @@ class Pages extends Wire {
 	
 		$options = $this->editor()->newPageOptions($selector);
 		$error = 'Cannot save new page without a %s';
-		$template = isset($options['template']) ? $options['template'] : null;
-		$parent = isset($options['parent']) ? $options['parent'] : null;
-		$name = isset($options['name']) ? $options['name'] : '';
+		$template = $options['template'] ?? null;
+		$parent = $options['parent'] ?? null;
+		$name = $options['name'] ?? '';
 		
 		if(!$template) throw new WireException(sprintf($error, 'template'));
 		if(!$parent) throw new WireException(sprintf($error, 'parent'));
@@ -1905,8 +1905,8 @@ class Pages extends Wire {
 		if(empty($options)) return $this->wire(new Page());
 
 		$options = $this->editor()->newPageOptions($options);
-		$template = isset($options['template']) ? $options['template'] : null;
-		$parent = isset($options['parent']) ? $options['parent'] : null;
+		$template = $options['template'] ?? null;
+		$parent = $options['parent'] ?? null;
 		$class = empty($options['pageClass']) ? 'Page' : $options['pageClass'];
 
 		unset($options['template'], $options['parent'], $options['pageClass']); 
@@ -2123,7 +2123,7 @@ class Pages extends Wire {
 	 */
 	public function types($type = null) {
 		if(!$type) return $this->types;
-		if(is_string($type)) return isset($this->types[$type]) ? $this->types[$type] : null;
+		if(is_string($type)) return $this->types[$type] ?? null;
 		if(!$type instanceof PagesType) return null;
 		$name = $type->className();
 		$this->types[$name] = $type;

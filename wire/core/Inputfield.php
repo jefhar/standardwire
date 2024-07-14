@@ -935,7 +935,7 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	protected function ___callUnknown($method, $arguments) {
-		$arg = isset($arguments[0]) ? $arguments[0] : null;
+		$arg = $arguments[0] ?? null;
 		if(isset($this->attributes[$method])) {
 			// get or set an attribute
 			return $arg === null ? $this->getAttribute($method) : $this->setAttribute($method, $arg);
@@ -980,7 +980,7 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	public function getAttribute($key) {
-		return isset($this->attributes[$key]) ? $this->attributes[$key] : null; 
+		return $this->attributes[$key] ?? null; 
 	}
 
 	/**
@@ -1008,7 +1008,7 @@ abstract class Inputfield extends WireData implements Module {
 			if(is_null($key) || is_bool($key)) {
 				return $this->wrapAttributes;
 			} else {
-				return isset($this->wrapAttributes[$key]) ? $this->wrapAttributes[$key] : null;
+				return $this->wrapAttributes[$key] ?? null;
 			}
 		} else if($value === false) {
 			unset($this->wrapAttributes[$key]);
