@@ -9,7 +9,7 @@ class SelectorBitwiseAnd extends Selector {
 	#[Override]
  public static function getOperator() { return '&'; }
 	#[Override]
- public static function getCompareType() { return Selector::compareTypeBitwise; }
+ public static function getCompareType(): int { return Selector::compareTypeBitwise; }
 	#[Override]
  public static function getLabel() { return __('Bitwise AND', __FILE__); }
 	#[Override]

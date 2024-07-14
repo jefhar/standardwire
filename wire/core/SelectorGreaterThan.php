@@ -9,7 +9,7 @@ class SelectorGreaterThan extends Selector {
 	#[Override]
  public static function getOperator() { return '>'; }
 	#[Override]
- public static function getCompareType() { return Selector::compareTypeSort; }
+ public static function getCompareType(): int { return Selector::compareTypeSort; }
 	#[Override]
  public static function getLabel() { return __('Greater than', __FILE__); }
 	#[Override]

@@ -9,7 +9,7 @@ class SelectorEqual extends Selector {
 	#[Override]
  public static function getOperator() { return '='; }
 	#[Override]
- public static function getCompareType() { return Selector::compareTypeExact; }
+ public static function getCompareType(): int { return Selector::compareTypeExact; }
 	#[Override]
  public static function getLabel() { return __('Equals', __FILE__); }
 	#[Override]
