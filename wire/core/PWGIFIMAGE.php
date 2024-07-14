@@ -33,7 +33,7 @@ class PWGIFIMAGE {
 		if($extended) $this->m_lzw = new PWGIFLZW();
 		$this->extended = $extended;
 	}
-	public function load($data, &$datLen) {
+	public function load($data, &$datLen): bool {
 		$datLen = 0;
 		while(true) {
 			$b = ord($data[0]);
@@ -78,7 +78,7 @@ class PWGIFIMAGE {
 		}
 		return false;
 	}
-	function skipExt(&$data, &$extLen) {
+	function skipExt(&$data, &$extLen): bool {
 		$extLen = 0;
 		$b = ord($data[0]);
 		$data = substr((string) $data, 1);

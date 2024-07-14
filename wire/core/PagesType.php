@@ -194,7 +194,7 @@ class PagesType extends Wire implements IteratorAggregate, Countable {
 	 * @return bool
 	 *
 	 */
-	public function isValid(Page $page) {
+	public function isValid(Page $page): bool {
 
 		// quick exit when possible
 		if($this->template && $this->template->id === $page->template->id) {

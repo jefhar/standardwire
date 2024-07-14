@@ -115,7 +115,7 @@ class WireArray extends Wire implements IteratorAggregate, ArrayAccess, Countabl
 	 * @return bool True if item is valid and may be added, false if not
 	 *
 	 */
-	public function isValidItem(mixed $item) {
+	public function isValidItem(mixed $item): bool {
 		if($item instanceof Wire) return true;
 		$className = $this->className();
 		if($className === 'WireArray' || $className === 'PaginatedArray') return true;
@@ -133,7 +133,7 @@ class WireArray extends Wire implements IteratorAggregate, ArrayAccess, Countabl
 	 * @return bool True if key is valid and may be used, false if not
 	 *
 	 */
-	public function isValidKey($key) {
+	public function isValidKey($key): bool {
 		// unused $key intentional for descending class/template purposes
 		if($key) {}
 		return true; 
@@ -151,7 +151,7 @@ class WireArray extends Wire implements IteratorAggregate, ArrayAccess, Countabl
 	 * @return bool True if identical, false if not. 
 	 * 
 	 */
-	public function isIdentical(WireArray $items, $strict = true) {
+	public function isIdentical(WireArray $items, $strict = true): bool {
 		if($items === $this) return true; 
 		if($items->className() != $this->className()) return false;
 		if(!$strict) return ((string) $this) === ((string) $items); 
@@ -1805,7 +1805,7 @@ class WireArray extends Wire implements IteratorAggregate, ArrayAccess, Countabl
 	 * @return bool True if item is an iterable array or WireArray (or subclass of WireArray).
 	 *
 	 */
-	public static function iterable(mixed $item) {
+	public static function iterable(mixed $item): bool {
 		if(is_array($item)) return true;
 		if($item instanceof WireArray) return true;
 		return false;

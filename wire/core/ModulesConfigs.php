@@ -407,7 +407,7 @@ class ModulesConfigs extends ModulesClass {
 	 * @return bool True if configured, false if not configurable
 	 *
 	 */
-	public function setModuleConfigData(Module $module, $data = null, $extraData = null) {
+	public function setModuleConfigData(Module $module, $data = null, $extraData = null): bool {
 
 		$configurable = $this->isConfigable($module);
 		if(!$configurable) return false;

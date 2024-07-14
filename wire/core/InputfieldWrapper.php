@@ -1198,7 +1198,7 @@ class InputfieldWrapper extends Inputfield implements Countable, IteratorAggrega
 	 * @return bool
 	 * 
 	 */
-	public function isProcessable(Inputfield $inputfield) {
+	public function isProcessable(Inputfield $inputfield): bool {
 		
 		if(!$inputfield->editable()) return false;
 		
@@ -1259,7 +1259,7 @@ class InputfieldWrapper extends Inputfield implements Countable, IteratorAggrega
 	 * @since 3.0.207
 	 * 
 	 */
-	public function ___allowProcessInput(Inputfield $inputfield) {
+	public function ___allowProcessInput(Inputfield $inputfield): bool {
 		return true;
 	}
 

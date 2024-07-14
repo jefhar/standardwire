@@ -936,7 +936,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @throws WireException
 	 * 
 	 */
-	protected function hasEnoughMemory($filename = '', $double = true, $factor = 1, $action = 'action', $throwIfNot = false) {
+	protected function hasEnoughMemory($filename = '', $double = true, $factor = 1, $action = 'action', $throwIfNot = false): bool {
 		$error = '';
 		if(empty($filename)) $filename = $this->filename;
 		if($filename) {

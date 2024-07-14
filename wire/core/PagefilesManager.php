@@ -331,7 +331,7 @@ class PagefilesManager extends Wire {
 	 * @return bool True on success, false on error (since 3.0.17, previous versions had no return value).
 	 *
 	 */
-	public function emptyPath($rmdir = false, $recursive = true) {
+	public function emptyPath($rmdir = false, $recursive = true): bool {
 		$files = $this->wire()->files;
 		$path = $this->path();
 		if(!is_dir($path)) return true;

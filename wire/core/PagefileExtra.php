@@ -246,7 +246,7 @@ class PagefileExtra extends WireData {
 	 * @return bool Returns true on success, false on fail
 	 * 
 	 */
-	public function ___create() { 
+	public function ___create(): bool { 
 		return false;
 	}
 

@@ -127,7 +127,7 @@ class Fieldtypes extends WireArray {
 	 *
 	 */
 	#[Override]
- public function isValidItem($item) {
+ public function isValidItem($item): bool {
 		if($item instanceof Fieldtype) return true;
 		if($item instanceof ModulePlaceholder && str_starts_with($item->className(), 'Fieldtype')) return true;
 		return false;
@@ -164,7 +164,7 @@ class Fieldtypes extends WireArray {
 	 *
 	 */
 	#[Override]
- protected function usesNumericKeys() {
+ protected function usesNumericKeys(): bool {
 		return false;
 	}
 

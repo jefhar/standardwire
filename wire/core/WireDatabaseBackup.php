@@ -688,7 +688,7 @@ class WireDatabaseBackup {
 	 * @return bool
 	 * 
 	 */
-	protected function backupStartFile($file, array $options) {
+	protected function backupStartFile($file, array $options): bool {
 
 		$fp = fopen($file, 'w+'); 
 		
@@ -717,7 +717,7 @@ class WireDatabaseBackup {
 	 * @return bool
 	 *
 	 */
-	protected function backupEndFile($file, array $summary = [], array $options = []) {
+	protected function backupEndFile($file, array $summary = [], array $options = []): bool {
 
 		$fp = is_resource($file) ? $file : fopen($file, 'a+'); 
 		
@@ -1045,7 +1045,7 @@ class WireDatabaseBackup {
 	 * @return bool True on success, false on failure. Call the errors() method to retrieve errors.
 	 *
 	 */
-	protected function restoreExec($filename, array $options = []) {
+	protected function restoreExec($filename, array $options = []): bool {
 
 		$cmd = $options['execCommand'];
 		$cmd = str_replace(["\n", "\t"], ' ', $cmd);
@@ -1076,7 +1076,7 @@ class WireDatabaseBackup {
 	 * @return bool
 	 *
 	 */
-	protected function restoreUseLine($line) {
+	protected function restoreUseLine($line): bool {
 		if(empty($line) || str_starts_with((string) $line, '--') || str_starts_with((string) $line, '#')) return false;
 		return true;
 	}
@@ -1099,7 +1099,7 @@ class WireDatabaseBackup {
   * @throws Exception|WireException if $options['haltOnErrors'] == true.
   *
   */
- public function restoreMerge($filename1, $filename2, $options) {
+ public function restoreMerge($filename1, $filename2, $options): bool {
 		
 		$options = array_merge($this->restoreOptions, $options); 
 		$creates1 = $this->findCreateTables($filename1, $options); 
@@ -1216,7 +1216,7 @@ class WireDatabaseBackup {
   * @return array of CREATE TABLE statements, associative: indexed by table name
   * @throws Exception if unable to open specified file
   */
- public function findCreateTables($filename, array $options) {
+ public function findCreateTables($filename, array $options): array {
 		$regex = '/^CREATE\s+TABLE\s+`?([^`\s]+)/i';
 		$statements = $this->findStatements($filename, $regex, false);
 		if(!empty($options['findReplaceCreateTable'])) {
@@ -1322,7 +1322,7 @@ class WireDatabaseBackup {
   * @return bool
   * @throws Exception on unknown exec type
   */
- protected function supportsExec(array $options = []) {
+ protected function supportsExec(array $options = []): bool {
 
 		if(!$options['exec']) return false;
 		

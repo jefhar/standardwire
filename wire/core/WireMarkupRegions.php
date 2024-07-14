@@ -966,7 +966,7 @@ class WireMarkupRegions extends Wire {
 	 * @return bool Returns false if it doesn't appear, true if it does
 	 * 
 	 */
-	public function hasAttribute($name, $value, &$html) {
+	public function hasAttribute($name, $value, &$html): bool {
 
 		$pos = null;
 		
@@ -1472,7 +1472,7 @@ class WireMarkupRegions extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function hasRegions(&$html) {
+	public function hasRegions(&$html): bool {
 		if(!str_contains($html, ' id=') && !str_contains($html, 'pw-')) return false;
 		return true;
 	}

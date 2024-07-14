@@ -191,7 +191,7 @@ class Password extends Wire {
 	 * @return bool
 	 *
 	 */
-	public function isBlowfish($str = '') {
+	public function isBlowfish($str = ''): bool {
 		if(!strlen($str)) $str = $this->data['salt'];
 		$prefix = substr((string) $str, 0, 3); 
 		return $prefix === '$2a' || $prefix === '$2x' || $prefix === '$2y'; 
@@ -203,7 +203,7 @@ class Password extends Wire {
 	 * @return bool
 	 *
 	 */
-	public function supportsBlowfish() {
+	public function supportsBlowfish(): bool {
 		return version_compare(PHP_VERSION, '5.3.0') >= 0 && defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH;
 	}
 

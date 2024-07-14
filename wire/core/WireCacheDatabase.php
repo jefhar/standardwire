@@ -141,7 +141,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * 
 	 */
 	#[Override]
- public function delete($name) {
+ public function delete($name): bool {
 		$sql = 'DELETE FROM caches WHERE name=:name';
 		$query = $this->wire()->database->prepare($sql, "cache.delete($name)");
 		$query->bindValue(':name', $name);

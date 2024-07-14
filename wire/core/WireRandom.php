@@ -874,7 +874,7 @@ class WireRandom extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function cryptoSecure() {
+	public function cryptoSecure(): bool {
 		return function_exists('random_int') || function_exists('mcrypt_create_iv');
 	}
 	

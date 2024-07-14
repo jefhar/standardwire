@@ -151,7 +151,7 @@ class PagesNames extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function isUntitledPageName($name) {
+	public function isUntitledPageName($name): bool {
 		[$namePrefix, ] = $this->nameAndNumber($name);
 		return $namePrefix === $this->untitledPageName;
 	}

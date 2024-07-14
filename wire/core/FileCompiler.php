@@ -791,7 +791,7 @@ class FileCompiler extends Wire {
 	 * @return bool Whether or not namespace changes were compiled
 	 * 
 	 */
-	protected function compileNamespace(&$data) {
+	protected function compileNamespace(&$data): bool {
 
 		/*
 		$pos = strpos($data, 'namespace');
@@ -1081,7 +1081,7 @@ class FileCompiler extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function _maintenance($sourcePath, $targetPath) {
+	protected function _maintenance($sourcePath, $targetPath): bool {
 		
 		$config = $this->wire()->config;
 		$files = $this->wire()->files;

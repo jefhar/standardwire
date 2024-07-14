@@ -920,7 +920,7 @@ class PagesPathFinder extends Wire {
 	 * @return bool Return true if shortcut found and result ready, false if not
 	 *
 	 */
-	protected function getShortcut($path) {
+	protected function getShortcut($path): bool {
 
 		$found = false;
 		// $slash = substr($path, -1) === '/' ? '/' : '';
@@ -957,7 +957,7 @@ class PagesPathFinder extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function getShortcutRoot($path) {
+	protected function getShortcutRoot($path): bool {
 		
 		if($path === '') {
 			$this->setResultLanguage('default');
@@ -996,7 +996,7 @@ class PagesPathFinder extends Wire {
 	 * @return bool 
 	 *
 	 */
-	protected function getShortcutExcludeRoot($path) {
+	protected function getShortcutExcludeRoot($path): bool {
 		
 		if(!$this->options['useExcludeRoot']) return false;
 		if(!$this->options['usePagePaths']) return false;
@@ -1061,7 +1061,7 @@ class PagesPathFinder extends Wire {
 	 * @return bool Returns true if found, false if not installed or not found
 	 *
 	 */
-	protected function getShortcutPagePaths(&$path) {
+	protected function getShortcutPagePaths(&$path): bool {
 
 		if(!$this->options['usePagePaths']) return false;
 		$module = $this->pagePathsModule();
@@ -1107,7 +1107,7 @@ class PagesPathFinder extends Wire {
 	 * @return bool
 	 *
 	 */
-	protected function getShortcutGlobalUnique(&$path) {
+	protected function getShortcutGlobalUnique(&$path): bool {
 		
 		if(!$this->options['useGlobalUnique']) return false;
 
@@ -1200,7 +1200,7 @@ class PagesPathFinder extends Wire {
 	 * @return bool
 	 *
 	 */
-	protected function getPathHistory($path) {
+	protected function getPathHistory($path): bool {
 
 		if(!$this->options['useHistory']) return false;
 		

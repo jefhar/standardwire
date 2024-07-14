@@ -102,7 +102,7 @@ class NullPage extends Page implements WireNull {
 	 * 
 	 */
 	#[Override]
- public function isHidden() { return true; }
+ public function isHidden(): bool { return true; }
 
 	/**
 	 * #pw-internal
@@ -111,7 +111,7 @@ class NullPage extends Page implements WireNull {
 	 *
 	 */
 	#[Override]
- public function isNew() { return false; }
+ public function isNew(): bool { return false; }
 
 	/**
 	 * #pw-internal
@@ -197,7 +197,7 @@ class NullPage extends Page implements WireNull {
 	 * 
 	 */
 	#[Override]
- public function hasAccessRole($role, $type = 'view') { return false; }
+ public function hasAccessRole($role, $type = 'view'): bool { return false; }
 
 	/**
 	 * #pw-internal
@@ -207,5 +207,5 @@ class NullPage extends Page implements WireNull {
 	 * 
 	 */
 	#[Override]
- public function isChanged($what = '') { return false; }
+ public function isChanged($what = ''): bool { return false; }
 }

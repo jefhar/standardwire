@@ -147,7 +147,7 @@ class CacheFile extends Wire {
 	 * @return bool
 	 *
 	 */
-	protected function isCacheFileExpired($filename) {
+	protected function isCacheFileExpired($filename): bool {
 		if(!$mtime = @filemtime($filename)) return false;
 		if(($mtime + $this->cacheTimeSeconds < time()) || ($this->globalExpireTime && $mtime < $this->globalExpireTime)) {
 			return true;
@@ -163,7 +163,7 @@ class CacheFile extends Wire {
 	 * @return bool
 	 *
 	 */
-	static protected function isCacheFile($filename) {
+	static protected function isCacheFile($filename): bool {
 		$ext = self::cacheFileExtension; 
 		if(is_file($filename) && substr($filename, -1 * strlen($ext)) == $ext) return true; 
 		return false;

@@ -274,7 +274,7 @@ class Fields extends WireSaveableItems {
 	 *
 	 */
 	#[Override]
- public function ___save(Saveable $item) {
+ public function ___save(Saveable $item): bool {
 
 		if($item->flags & Field::flagFieldgroupContext) throw new WireException("Field $item is not saveable because it is in a specific context"); 
 		if(!strlen($item->name)) throw new WireException("Field name is required"); 
@@ -585,7 +585,7 @@ class Fields extends WireSaveableItems {
 	 * @return bool
 	 *
 	 */
-	protected function ___changeFieldtype(Field $field1, $keepSettings = false) {
+	protected function ___changeFieldtype(Field $field1, $keepSettings = false): bool {
 
 		if(!$field1->prevFieldtype) {
 			throw new WireException("changeFieldType requires that the given field has had a type change");
@@ -945,7 +945,7 @@ class Fields extends WireSaveableItems {
 	 * @return bool True if field is native (and thus should not be used) or false if it's okay to use
 	 *
 	 */
-	public function isNative($name) {
+	public function isNative($name): bool {
 		if(isset(self::$nativeNamesSystem[$name])) return true;
 		if(isset($this->nativeNamesLocal[$name])) return true; 
 		return false; 
@@ -1390,7 +1390,7 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.213
 	 * 
 	 */
-	protected function ___applySetupName(Field $field, $setupName = '') {
+	protected function ___applySetupName(Field $field, $setupName = ''): bool {
 		
 		$setups = $field->type->getFieldSetups();
 		$setup = $setups[$setupName] ?? null;

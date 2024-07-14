@@ -671,7 +671,7 @@ class PagesRequest extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function checkRequestFilePrefix(&$path) {
+	protected function checkRequestFilePrefix(&$path): bool {
 		$filePrefix = $this->wire()->config->pagefileUrlPrefix;
 		if(empty($filePrefix)) return false;
 		if(!strpos($path, '/' . $filePrefix)) return false;
@@ -928,7 +928,7 @@ class PagesRequest extends Wire {
 	 * @return bool True if current request method allowed, false if not
 	 * 
 	 */
-	private function checkRequestMethod(Page $page) {
+	private function checkRequestMethod(Page $page): bool {
 		// @todo replace static allowMethods array with template setting like below
 		// $allowMethods = $page->template->get('requestMethods'); 
 		// $allowMethods = array('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH');

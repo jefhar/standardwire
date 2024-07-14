@@ -32,7 +32,7 @@ class FieldsArray extends WireArray {
 	 *
 	 */
 	#[Override]
- public function isValidKey($key) {
+ public function isValidKey($key): bool {
 		return is_int($key) || ctype_digit($key);
 	}
 

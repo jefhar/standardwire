@@ -24,7 +24,7 @@ class PWGIF {
 		$this->m_lpData  = '';
 		$this->m_bLoaded = false;
 	}
-	public function loadFile($lpszFileName, $iIndex) {
+	public function loadFile($lpszFileName, $iIndex): bool {
 		if($iIndex < 0) {
 			return false;
 		}

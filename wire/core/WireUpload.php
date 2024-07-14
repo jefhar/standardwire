@@ -346,7 +346,7 @@ class WireUpload extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function isValidExtension($name) {
+	protected function isValidExtension($name): bool {
 		
 		$pathInfo = pathinfo($name); 
 		if(!isset($pathInfo['extension'])) return false;
@@ -403,7 +403,7 @@ class WireUpload extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function checkDestinationPath() {
+	protected function checkDestinationPath(): bool {
 		if(!is_dir($this->destinationPath)) {
 			$this->error("Destination path does not exist: $this->destinationPath"); 
 			return false;

@@ -48,7 +48,7 @@ class InputfieldsArray extends WireArray {
 	}
 
 	#[Override]
- public function usesNumericKeys() {
+ public function usesNumericKeys(): bool {
 		return true;
 	}
 

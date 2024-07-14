@@ -31,7 +31,7 @@ class PWPNG {
 		fclose($fh);
 		return $ret;
 	}
-	protected function _parsepngstream($f, $file) {
+	protected function _parsepngstream($f, $file): bool {
 		// Check signature
 		if($this->_readstream($f, 8) != chr(137) . 'PNG' . chr(13) . chr(10) . chr(26) . chr(10)) {
 			$this->Error('Not a PNG file: '.$file);

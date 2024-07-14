@@ -480,7 +480,7 @@ class WireShutdown extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function shutdown() {
+	public function shutdown(): bool {
 		
 		$error = error_get_last();
 		

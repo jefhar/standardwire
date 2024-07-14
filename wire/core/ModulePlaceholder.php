@@ -57,7 +57,7 @@ class ModulePlaceholder extends WireData implements Module {
 		return $this->singular; 
 	}
 
-	public function isAutoload() {
+	public function isAutoload(): bool {
 		return false; 
 	}
 

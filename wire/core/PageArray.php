@@ -156,7 +156,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 *
 	 */
 	#[Override]
- protected function usesNumericKeys() {
+ protected function usesNumericKeys(): bool {
 		return true;
 	}
 

@@ -93,7 +93,7 @@ class Notices extends WireArray {
 	 * @return bool
 	 * 
 	 */
-	protected function allowNotice(Notice $item) {
+	protected function allowNotice(Notice $item): bool {
 		
 		$user = $this->wire()->user;
 		
@@ -225,7 +225,7 @@ class Notices extends WireArray {
 	 * @return bool
 	 *
 	 */
-	protected function storeNotice(Notice $item) {
+	protected function storeNotice(Notice $item): bool {
 		$session = $this->wire()->session;
 		if(!$session) return false;
 		$items = $session->getFor($this, 'items');

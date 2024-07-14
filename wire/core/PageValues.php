@@ -716,7 +716,7 @@ class PageValues extends Wire {
 	 * @return bool
 	 *
 	 */
-	public function processFieldDataQueue(Page $page, array $fieldDataQueue) {
+	public function processFieldDataQueue(Page $page, array $fieldDataQueue): bool {
 
 		$template = $page->template();
 		if(!$template) return false;

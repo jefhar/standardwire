@@ -711,7 +711,7 @@ class Selectors extends WireArray {
 	 * @return bool
 	 *
 	 */
-	public function valueHasVar($value) {
+	public function valueHasVar($value): bool {
 		if(self::stringHasOperator($value)) return false;
 		if(str_contains($value, '.')) {
 			[$name, $subname] = explode('.', $value);
@@ -833,7 +833,7 @@ class Selectors extends WireArray {
 	 * @return array
 	 * 
 	 */
-	protected function getOperatorsFromField(&$field) {
+	protected function getOperatorsFromField(&$field): array {
 		
 		$operators = array_keys(self::$selectorTypes);
 		$operatorsStr = implode('', $operators);

@@ -133,7 +133,7 @@ class User extends Page {
 	 * @return bool Returns false if role not recognized, true otherwise
 	 *
 	 */
-	public function addRole($role) {
+	public function addRole($role): bool {
 		if(is_string($role) || is_int($role)) {
 			$role = $this->wire()->roles->get($role);
 		}
@@ -161,7 +161,7 @@ class User extends Page {
 	 * @return bool false if role not recognized, true otherwise
 	 *
 	 */
-	public function removeRole($role) {
+	public function removeRole($role): bool {
 		if(is_string($role) || is_int($role)) {
 			$role = $this->wire()->roles->get($role);
 		}
@@ -473,7 +473,7 @@ class User extends Page {
 	 * @return bool
 	 *
 	 */ 
-	public function isGuest() {
+	public function isGuest(): bool {
 		return $this->id === $this->wire()->config->guestUserPageID; 
 	}
 
@@ -488,7 +488,7 @@ class User extends Page {
 	 * @return bool
 	 *
 	 */
-	public function isLoggedin() {
+	public function isLoggedin(): bool {
 		if($this->isGuest()) return false;
 		$user = $this->wire()->user;
 		$userId = $user ? $user->id : 0;

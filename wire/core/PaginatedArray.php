@@ -155,7 +155,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @since 3.0.120
 	 * 
 	 */
-	public function hasPagination() {
+	public function hasPagination(): bool {
 		return $this->getTotal() > 0 && $this->count() < $this->getTotal();
 	}
 

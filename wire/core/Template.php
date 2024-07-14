@@ -1336,7 +1336,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 * @since 3.0.153
 	 * 
 	 */
-	public function allowNewPages() {
+	public function allowNewPages(): bool {
 		$pages = $this->wire()->pages;
 		$noParents = (int) $this->noParents;
 		if($noParents === 1) {

@@ -728,7 +728,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @return bool
 	 * 
 	 */
-	public function supportsTransaction($table = '') {
+	public function supportsTransaction($table = ''): bool {
 		$engine = '';
 		if($table) {
 			$query = $this->pdoReader()->prepare('SHOW TABLE STATUS WHERE name=:name'); 
@@ -757,7 +757,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @since 3.0.140
 	 * 
 	 */
-	public function allowTransaction($table = '') {
+	public function allowTransaction($table = ''): bool {
 		return $this->supportsTransaction($table) && !$this->inTransaction();
 	}
 
@@ -1751,7 +1751,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @since 3.0.175
 	 * 
 	 */
-	protected function allowReader($allow = null) {
+	protected function allowReader($allow = null): bool {
 		if($allow !== null) $this->reader['allow'] = (bool) $allow;
 		return $this->reader['has'] && $this->reader['allow'];
 	}

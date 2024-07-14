@@ -35,7 +35,7 @@ class PWGIFFILEHEADER {
 		unSet($this->m_colorTable);
 		unSet($this->m_bAnimated);
 	}
-	public function load($lpData, &$hdrLen) {
+	public function load($lpData, &$hdrLen): bool {
 		$hdrLen = 0;
 		$this->m_lpVer = substr((string) $lpData, 0, 6);
 		if(($this->m_lpVer <> 'GIF87a') && ($this->m_lpVer <> 'GIF89a')) {

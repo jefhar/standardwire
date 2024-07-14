@@ -31,7 +31,7 @@ class PWGIFIMAGEHEADER {
 		unSet($this->m_nTableSize);
 		unSet($this->m_colorTable);
 	}
-	public function load($lpData, &$hdrLen) {
+	public function load($lpData, &$hdrLen): bool {
 		$hdrLen = 0;
 		$this->m_nLeft   = $this->w2i(substr((string) $lpData, 0, 2));
 		$this->m_nTop	= $this->w2i(substr((string) $lpData, 2, 2));

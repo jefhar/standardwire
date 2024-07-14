@@ -237,7 +237,7 @@ class PagesLoader extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function isIdArray(array &$a) {
+	protected function isIdArray(array &$a): bool {
 		if(ctype_digit(implode('', array_keys($a))) && !is_array(reset($a)) && ctype_digit(implode('', $a))) {
 			// regular array of page IDs, we delegate that to getById() method, but with access/visibility control
 			foreach($a as $k => $v) $a[$k] = (int) $v;

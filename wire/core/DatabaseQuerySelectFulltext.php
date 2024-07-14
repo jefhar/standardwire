@@ -1304,7 +1304,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function isShortword($word) {
+	protected function isShortword($word): bool {
 		$minWordLength = $this->getMinWordLength();
 		if($minWordLength && $this->strlen($word) < $minWordLength) return true;
 		return false;
@@ -1317,7 +1317,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function isIndexableWord($word) {
+	protected function isIndexableWord($word): bool {
 		if($this->isShortword($word)) return false;
 		if($this->isStopword($word)) return false;
 		return true;

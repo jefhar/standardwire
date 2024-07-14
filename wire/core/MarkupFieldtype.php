@@ -369,7 +369,7 @@ class MarkupFieldtype extends WireData implements Module {
 	 * @return bool
 	 * 
 	 */
-	protected function isLinkablePageProperty(Page $page, $property) {
+	protected function isLinkablePageProperty(Page $page, $property): bool {
 		if(!in_array($property, $this->linkableProperties)) return false;
 		if(!$page->viewable($property)) return false;
 		return true;

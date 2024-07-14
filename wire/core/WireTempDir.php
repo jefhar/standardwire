@@ -379,7 +379,7 @@ class WireTempDir extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function mkdir($dir, $recursive = false) {
+	protected function mkdir($dir, $recursive = false): bool {
 		/** @var WireFileTools $files */
 		$files = $this->wire('files');
 		$dir = $files->unixDirName($dir);
@@ -415,7 +415,7 @@ class WireTempDir extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function isTempDir($dir) {
+	protected function isTempDir($dir): bool {
 		$files = $this->wire()->files;
 		if(!strlen($dir) || !is_dir($dir)) {
 			// if given a non-directory return false

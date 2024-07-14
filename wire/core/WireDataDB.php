@@ -334,7 +334,7 @@ class WireDataDB extends WireData implements Countable {
 	 * @throws WireException
 	 * 
 	 */
-	public function install() {
+	public function install(): bool {
 		$config = $this->wire()->config;
 		$database = $this->wire()->database;
 		$engine = $config->dbEngine;
@@ -355,7 +355,7 @@ class WireDataDB extends WireData implements Countable {
 	 * @throws WireException
 	 * 
 	 */
-	public function uninstall() {
+	public function uninstall(): bool {
 		$table = $this->table();
 		$this->wire()->database->exec("DROP TABLE `$table`"); 
 		return true;

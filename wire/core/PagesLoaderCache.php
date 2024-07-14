@@ -215,7 +215,7 @@ class PagesLoaderCache extends Wire {
 	 * @return bool True if pages were cached, false if not
 	 *
 	 */
-	public function selectorCache($selector, array $options, PageArray $pages) {
+	public function selectorCache($selector, array $options, PageArray $pages): bool {
 
 		// get the string that will be used for caching
 		$selector = $this->getSelectorCache($selector, $options, true);

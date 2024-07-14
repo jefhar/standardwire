@@ -1527,7 +1527,7 @@ class Pageimage extends Pagefile {
 	 *
 	 */
 	#[Override]
- public function copyToPath($path) {
+ public function copyToPath($path): bool {
 		$files = $this->wire()->files;
 		if(parent::copyToPath($path)) {
 			foreach($this->getVariations() as $variation) {
@@ -1816,7 +1816,7 @@ class Pageimage extends Pagefile {
 	 *
 	 */
 	#[Override]
- public function replaceFile($filename, $move = true) {
+ public function replaceFile($filename, $move = true): bool {
 		if(!parent::replaceFile($filename, $move)) return false;
 		$this->getImageInfo(true);
 		return true;

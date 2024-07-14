@@ -305,7 +305,7 @@ class PagesEditor extends Wire {
 	 * @throws WireException If requested to do so via $throw argument
 	 *
 	 */
-	public function isDeleteable(Page $page, $throw = false) {
+	public function isDeleteable(Page $page, $throw = false): bool {
 
 		$error = false;
 
@@ -618,7 +618,7 @@ class PagesEditor extends Wire {
   * @param array $options
   * @return bool True if it should give $query another shot, false if not
   */
- protected function savePageQueryException(Page $page, $query, $exception, array $options) {
+ protected function savePageQueryException(Page $page, $query, $exception, array $options): bool {
 		
 		$errorCode = $exception->getCode();
 		
@@ -661,7 +661,7 @@ class PagesEditor extends Wire {
   * @return bool
   * @throws Exception|WireException|PDOException If any field-saving failure occurs while in a DB transaction
   */
- protected function savePageFinish(Page $page, $isNew, array $options) {
+ protected function savePageFinish(Page $page, $isNew, array $options): bool {
 		
 		$changes = $page->getChanges(2);
 		$changesValues = $page->getChanges(true);
@@ -1623,7 +1623,7 @@ class PagesEditor extends Wire {
 	 * @since 3.0.189
 	 * 
 	 */
-	public function clear(Page $page, array $options = []) {
+	public function clear(Page $page, array $options = []): bool {
 		
 		$defaults = [
       'clearMethod' => 'delete',

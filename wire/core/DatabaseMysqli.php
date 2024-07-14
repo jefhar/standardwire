@@ -38,7 +38,7 @@ class DatabaseMysqli {
 		return call_user_func_array([$db, $method], $arguments);
 	}
 	
-	public function isInstantiated() {
+	public function isInstantiated(): bool {
 		return $this->db !== null;
 	}
 	

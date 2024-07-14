@@ -202,7 +202,7 @@ class ProcessController extends Wire {
 	 * @throws ProcessControllerPermissionException
 	 *
 	 */
-	protected function hasPermission($permissionName, $throw = true) {
+	protected function hasPermission($permissionName, $throw = true): bool {
 		$user = $this->wire()->user; 
 		if($user->isSuperuser()) return true; 
 		if($permissionName && $user->hasPermission($permissionName)) return true; 
@@ -223,7 +223,7 @@ class ProcessController extends Wire {
 	 * @throws ProcessControllerPermissionException
 	 *
 	 */
-	protected function hasMethodPermission($method, $throw = true) {
+	protected function hasMethodPermission($method, $throw = true): bool {
 		// i.e. executeHelloWorld => helloWorld
 		$urlSegment = $method;
 		if(str_starts_with($method, 'execute')) [, $urlSegment] = explode('execute', $method, 2);
@@ -506,7 +506,7 @@ class ProcessController extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function isAjax() {
+	public function isAjax(): bool {
 		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
 	}
 

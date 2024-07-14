@@ -1087,7 +1087,7 @@ class WireHooks implements Stringable {
 	 * @since 3.0.173
 	 * 
 	 */
-	protected function allowRunPathHook($id, array &$arguments) {
+	protected function allowRunPathHook($id, array &$arguments): bool {
 		
 		$pathHook = $this->pathHooks[$id];
 		$requestPath = $arguments[0];

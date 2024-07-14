@@ -207,7 +207,7 @@ class Role extends Page {
 	 * @return bool Returns false if permission not recognized, true otherwise
 	 *
 	 */
-	public function addPermission($permission) {
+	public function addPermission($permission): bool {
 		if(is_string($permission) || is_int($permission)) {
 			$permission = $this->wire()->permissions->get($permission);
 		}
@@ -227,7 +227,7 @@ class Role extends Page {
 	 * @return bool false if permission not recognized, true otherwise
 	 *
 	 */
-	public function removePermission($permission) {
+	public function removePermission($permission): bool {
 		if(is_string($permission) || is_int($permission)) {
 			$permission = $this->wire()->permissions->get($permission);
 		}

@@ -113,7 +113,7 @@ class ModulesFlags extends ModulesClass {
 	 * @return bool True on success, false on fail
 	 *
 	 */
-	public function setFlag($id, $flag, $add = true) {
+	public function setFlag($id, $flag, $add = true): bool {
 		$id = ctype_digit("$id") ? (int) $id : $this->modules->getModuleID($id);
 		if(!$id) return false;
 		$flag = (int) $flag;

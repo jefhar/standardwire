@@ -170,7 +170,7 @@ class ModulesInfo extends ModulesClass {
 	 * @return bool
 	 * 
 	 */
-	public function moduleInfoCacheEmpty() {
+	public function moduleInfoCacheEmpty(): bool {
 		return empty($this->moduleInfoCache);
 	}
 
@@ -810,7 +810,7 @@ class ModulesInfo extends ModulesClass {
 	 * @return bool
 	 *
 	 */
-	public function loadModuleInfoCache() {
+	public function loadModuleInfoCache(): bool {
 
 		if(empty($this->modulesLastVersions)) {
 			$name = self::moduleLastVersionsCacheName;
@@ -842,7 +842,7 @@ class ModulesInfo extends ModulesClass {
 	 * @return bool
 	 *
 	 */
-	public function loadModuleInfoCacheVerbose($uninstalled = false) {
+	public function loadModuleInfoCacheVerbose($uninstalled = false): bool {
 
 		$name = $uninstalled ? self::moduleInfoCacheUninstalledName : self::moduleInfoCacheVerboseName;
 

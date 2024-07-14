@@ -396,7 +396,7 @@ class TemplateFile extends WireData {
   * @return bool True if Exception $e should be thrown, false if it should be ignored
   * @since 3.0.154
   */
- protected function ___fileFailed($filename, Exception $e) {
+ protected function ___fileFailed($filename, Exception $e): bool {
 		$this->fileFinished();
 		return true;
 	}

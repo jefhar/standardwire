@@ -111,7 +111,7 @@ class Fuel implements IteratorAggregate {
 	 * @return bool Returns true on success
 	 * 
 	 */
-	public function remove($key) {
+	public function remove($key): bool {
 		if(isset($this->data[$key])) {
 			unset($this->data[$key]);
 			unset($this->lock[$key]);

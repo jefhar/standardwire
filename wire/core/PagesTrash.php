@@ -40,7 +40,7 @@ class PagesTrash extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	public function trash(Page $page, $save = true) {
+	public function trash(Page $page, $save = true): bool {
 		
 		if(!$this->pages->isDeleteable($page) || $page->template->noTrash) {
 			throw new WireException("This page (id=$page->id) may not be placed in the trash");
@@ -106,7 +106,7 @@ class PagesTrash extends Wire {
 	 * @return bool
 	 *
 	 */
-	public function restore(Page $page, $save = true) {
+	public function restore(Page $page, $save = true): bool {
 		$info = $this->getRestoreInfo($page, true);
 
 		if($info['restorable']) {

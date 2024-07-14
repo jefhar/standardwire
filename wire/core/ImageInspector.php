@@ -188,7 +188,7 @@ class ImageInspector extends WireData {
 	 * @return bool
 	 *
 	 */
-	protected function loadImageInfoPng() {
+	protected function loadImageInfoPng(): bool {
 		$png = new PWPNG();
 		if(!$png->loadFile($this->filename)) {
 			return false;
@@ -204,7 +204,7 @@ class ImageInspector extends WireData {
 	 * @return bool
 	 *
 	 */
-	protected function loadImageInfoGif() {
+	protected function loadImageInfoGif(): bool {
 		$gif = new PWGIF(false);  // passing true also loads BitmapData
 		$iIndex = 0;
 		if(!$gif->loadFile($this->filename, $iIndex)) {

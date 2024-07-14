@@ -2008,7 +2008,7 @@ class PageFinder extends Wire {
 	 * @return bool Whether or not the query was handled and modified
 	 * 
 	 */
-	protected function whereEmptyValuePossible(Field $field, $col, $selector, $query, $value, &$where) {
+	protected function whereEmptyValuePossible(Field $field, $col, $selector, $query, $value, &$where): bool {
 		
 		
 		// look in table that has no pages_id relation back to pages, using the LEFT JOIN / IS NULL trick
@@ -3436,7 +3436,7 @@ class PageFinder extends Wire {
 	 * @throws PageFinderSyntaxException
 	 * 
 	 */
-	protected function getQueryOwnerField($fieldName, array $data) {
+	protected function getQueryOwnerField($fieldName, array $data): bool {
 		
 		if(!str_ends_with($fieldName, '__owner')) return false;
 		
@@ -3585,7 +3585,7 @@ class PageFinder extends Wire {
 	 * @return bool
 	 *
 	 */
-	protected function hasNativeFieldName($fieldNames) {
+	protected function hasNativeFieldName($fieldNames): bool {
 
 		$fieldName = null;
 

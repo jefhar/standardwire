@@ -666,7 +666,7 @@ class WireCache extends Wire {
 	 * @return bool True on success, false if no cache was cleared
 	 *
 	 */
-	public function delete($name) {
+	public function delete($name): bool {
 		if(str_contains($name, '*')) {
 			$rows = $this->cacher()->find(['names' => [$name], 'get' => ['name']]);
 		} else {
@@ -1241,7 +1241,7 @@ class WireCache extends Wire {
 	 * @return bool
 	 *
 	 */
-	public function looksLikeJSON(&$str) {
+	public function looksLikeJSON(&$str): bool {
 		if(empty($str) || !is_string($str)) return false;
 		$c = substr($str, 0, 1);
 		if($c === '{' && str_ends_with(trim($str), '}')) return true;

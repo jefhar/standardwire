@@ -582,7 +582,7 @@ class FileLog extends Wire {
 	 * @return bool Returns boolean true if valid, false if not.
 	 * 
 	 */
-	protected function isValidLine($line, array $options, &$stopNow) {
+	protected function isValidLine($line, array $options, &$stopNow): bool {
 		//              4  7  10 
 		// $test = '2013-10-22 15:18:43';
 		if(strlen((string) $line) < 20) return false; 

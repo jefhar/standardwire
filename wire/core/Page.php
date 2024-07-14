@@ -3319,7 +3319,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * @return bool
 	 *
  	 */ 
-	public function isTrash() {
+	public function isTrash(): bool {
 		if($this->hasStatus(self::statusTrash)) return true;
 		$trashPageID = (int) $this->wire()->config->trashPageID; 
 		if($this->id === (int) $trashPageID) return true; 
@@ -3350,7 +3350,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * @return bool
 	 * 
 	 */
-	protected function ___isPublic() {
+	protected function ___isPublic(): bool {
 		if($this->status >= Page::statusUnpublished) return false;	
 		$template = $this->getAccessTemplate();
 		if(!$template || !$template->hasRole('guest')) return false;

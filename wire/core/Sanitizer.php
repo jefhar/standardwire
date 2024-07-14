@@ -5619,7 +5619,7 @@ class Sanitizer extends Wire {
 	 * @since 3.0.125
 	 * 
 	 */
-	public function valid($value, $method = 'text', $strict = false) {
+	public function valid($value, $method = 'text', $strict = false): bool {
 		$valid = $this->validate($value, $method);
 		if($valid === null) return false;
 		if($strict && $value !== $valid) return false;

@@ -325,7 +325,7 @@ class RememberTfa extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function clearCookie($name) {
+	protected function clearCookie($name): bool {
 		$name = $this->cookiePrefix() . $name;
 		$cookies = $this->wire()->input->cookie;
 		if($cookies->get($name) === null) return false;
@@ -412,7 +412,7 @@ class RememberTfa extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function fingerprintStringMatches($fpstr) {
+	protected function fingerprintStringMatches($fpstr): bool {
 		$types = $this->getFingerprintTypes($fpstr);
 		$fpnow = $types ? $this->getFingerprintString($types) : '';
 		return ($fpstr && $fpnow && $fpstr === $fpnow);

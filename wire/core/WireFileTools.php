@@ -175,7 +175,7 @@ class WireFileTools extends Wire {
 	 * @throws WireException when it receives incorrect chmod format
 	 *
 	 */
-	public function chmod($path, $recursive = false, $chmod = null) {
+	public function chmod($path, $recursive = false, $chmod = null): bool {
 		
 		if(is_string($recursive) && strlen($recursive) > 2) {
 			// chmod argument specified as $recursive argument or arguments swapped
@@ -254,7 +254,7 @@ class WireFileTools extends Wire {
 	 * @throws WireException if `limitPath` option is used and either $src or $dst is not allowed
 	 *
 	 */
-	public function copy($src, $dst, $options = []) {
+	public function copy($src, $dst, $options = []): bool {
 
 		$defaults = ['recursive' => true, 'hidden' => true, 'allowEmptyDirs' => true, 'limitPath' => false];
 
@@ -1490,7 +1490,7 @@ class WireFileTools extends Wire {
 	 * @throws WireException if file doesn’t exist or is not allowed
 	 *
 	 */
-	public function ___include($filename, array $vars = [], array $options = []) {
+	public function ___include($filename, array $vars = [], array $options = []): bool {
 
 		$paths = $this->wire()->config->paths;
 		$defaults = ['func' => 'include', 'autoExtension' => 'php', 'allowedPaths' => [$paths->templates, $paths->adminTemplates, $paths->modules, $paths->siteModules, $paths->cache]];
@@ -1910,7 +1910,7 @@ class WireFileTools extends Wire {
   * @throws WireFilesException
   * @since 3.0.178
   */
- public function filesError($method, $msg, $throw = false, $e = null) {
+ public function filesError($method, $msg, $throw = false, $e = null): bool {
 		if(is_array($throw)) $throw = $throw['throw'] ?? false;
 		$msg = "$method: $msg";
 		$this->log($msg, ['name' => 'files-errors']);

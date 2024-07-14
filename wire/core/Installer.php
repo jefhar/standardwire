@@ -1377,7 +1377,7 @@ class Installer {
 	 * @return bool
 	 *
 	 */
-	public function err($str) {
+	public function err($str): bool {
 		if(!$this->inSection) {
 			$this->alertErr($str);
 		} else {
@@ -1395,7 +1395,7 @@ class Installer {
 	 * @return bool
 	 *
 	 */
-	public function warn($str) {
+	public function warn($str): bool {
 		if(!$this->inSection) {
 			$this->alertWarn($str);
 		} else {
@@ -1414,7 +1414,7 @@ class Installer {
 	 * @return bool
 	 *
 	 */
-	public function ok($str, $icon = 'check') {
+	public function ok($str, $icon = 'check'): bool {
 		if(!$this->inSection) {
 			$this->alertOk($str);
 		} else {
@@ -1790,7 +1790,7 @@ class Installer {
 	 * @return bool
 	 * 
 	 */
-	public function copyFile($src, $dst) {
+	public function copyFile($src, $dst): bool {
 		if(!@copy($src, $dst)) {
 			$this->alertErr("Unable to copy $src => $dst (please copy manually if possible)"); 
 			return false;
@@ -1807,7 +1807,7 @@ class Installer {
 	 * @return bool
 	 * 
 	 */
-	public function renameFile($src, $dst) {
+	public function renameFile($src, $dst): bool {
 		if(!@rename($src, $dst)) {
 			$this->alertErr("Unable to rename $src => $dst (please rename manually if possible)");
 			return false;
@@ -1825,7 +1825,7 @@ class Installer {
 	 * @return bool
 	 *
 	 */
-	public function copyRecursive($src, $dst, $overwrite = true) {
+	public function copyRecursive($src, $dst, $overwrite = true): bool {
 
 		if(self::TEST_MODE) return true;
 

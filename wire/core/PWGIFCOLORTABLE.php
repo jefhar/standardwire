@@ -17,7 +17,7 @@ class PWGIFCOLORTABLE {
 		unSet($this->m_nColors);
 		unSet($this->m_arColors);
 	}
-	public function load($lpData, $num) {
+	public function load($lpData, $num): bool {
 		$this->m_nColors  = 0;
 		$this->m_arColors = [];
 		for($i = 0; $i < $num; $i++) {

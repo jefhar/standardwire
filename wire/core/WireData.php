@@ -111,7 +111,7 @@ class WireData extends Wire implements IteratorAggregate, ArrayAccess {
 	 * @return bool True if values are equal, false if not
 	 *
 	 */
-	protected function isEqual($key, mixed $value1, mixed $value2) {
+	protected function isEqual($key, mixed $value1, mixed $value2): bool {
 		if($key) {} // intentional to avoid unused argument notice
 		// $key intentionally not used here, but may be used by descending classes
 		return $value1 === $value2; 	
@@ -403,7 +403,7 @@ class WireData extends Wire implements IteratorAggregate, ArrayAccess {
 	 * @return bool True if it has the property, false if not.
 	 *
 	 */
-	public function has($key) {
+	public function has($key): bool {
 		if(isset($this->data[$key])) return true; // optimization
 		return ($this->get($key) !== null); 
 	}

@@ -36,7 +36,7 @@ class ModulesInstaller extends ModulesClass {
 	 * @return bool True if module is installable, false if not
 	 *
 	 */
-	public function isInstallable($class, $now = false) {
+	public function isInstallable($class, $now = false): bool {
 		$installableFiles = $this->modules->installableFiles;
 		if(!array_key_exists($class, $installableFiles)) return false;
 		if(!wireInstanceOf($class, 'Module')) {
@@ -450,7 +450,7 @@ class ModulesInstaller extends ModulesClass {
 	 * @throws WireException
 	 *
 	 */
-	public function uninstall($class) {
+	public function uninstall($class): bool {
 
 		$class = $this->modules->getModuleClass($class);
 		$reason = $this->modules->isUninstallable($class, true);

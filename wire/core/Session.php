@@ -401,7 +401,7 @@ class Session extends Wire implements IteratorAggregate {
 	 * @return bool
 	 * 
 	 */
-	protected function isValidFingerprint() {
+	protected function isValidFingerprint(): bool {
 		$fingerprint = $this->getFingerprint();
 		if($fingerprint === false) return true; // fingerprints off
 		if($fingerprint !== $this->get('_user', 'fingerprint')) return false;

@@ -307,7 +307,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @return bool
 	 * 
 	 */
-	public function ___start($name, $pass) {
+	public function ___start($name, $pass): bool {
 
 		/** @var Sanitizer $sanitizer */
 		$sanitizer = $this->wire('sanitizer');
@@ -382,7 +382,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @return bool True on success, false on fail
 	 * 
 	 */
-	public function startUser(User $user, array $settings) {
+	public function startUser(User $user, array $settings): bool {
 		if($settings) {} // ignore
 		$this->sessionSet(['id' => $user->id, 'name' => $user->name, 'pash' => $this->getUserPash($user), 'type' => $this->className(), 'time' => time()]);
 		return true; 
@@ -419,7 +419,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @return bool
 	 * 
 	 */
-	public function active() {
+	public function active(): bool {
 		return $this->wire()->input->get($this->keyName) === $this->getSessionKey();
 	}
 
@@ -450,7 +450,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @return bool
 	 * 
 	 */
-	public function success() {
+	public function success(): bool {
 		if(!$this->active()) return false;
 		/** @var Tfa $module */
 		$module = $this->getModule();
@@ -872,7 +872,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @return false
 	 * 
 	 */
-	protected function sessionReset($redirectURL = '') {
+	protected function sessionReset($redirectURL = ''): bool {
 		$this->wire()->session->removeAllFor($this->keyName);
 		if($redirectURL) $this->redirect($redirectURL);
 		return false;
@@ -897,7 +897,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @since 3.0.160
 	 *
 	 */
-	public function autoEnableSupported(User $user = null) {
+	public function autoEnableSupported(User $user = null): bool {
 		if($user && $this->className() !== 'Tfa') {
 			// if it doesn't support it without user, then exit now
 			if(!$this->autoEnableSupported()) return false;

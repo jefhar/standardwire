@@ -1169,7 +1169,7 @@ function wireLen($value) {
  * @since 3.0.143
  * 
  */
-function wireEmpty(mixed $value) {
+function wireEmpty(mixed $value): bool {
 	if(empty($value)) return true;
 	if(is_object($value)) {
 		if($value instanceof Countable && !count($value)) return true;

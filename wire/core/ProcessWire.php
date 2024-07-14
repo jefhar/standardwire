@@ -860,7 +860,7 @@ class ProcessWire extends Wire {
 	 * @return bool True if file existed and was included, false if not.
 	 * 
 	 */
-	protected function includeFile($file, array $data = []) {
+	protected function includeFile($file, array $data = []): bool {
 		if(!file_exists($file)) return false;
 		$this->fileSave = $file; // to prevent any possibility of extract() vars from overwriting
 		$config = $this->fuel->get('config'); /** @var Config $config */

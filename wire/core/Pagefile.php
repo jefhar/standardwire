@@ -782,7 +782,7 @@ class Pagefile extends WireData implements WireArrayItem {
   * @since 3.0.142
   *
   */
- public function setFieldValue($name, mixed $value, $changed = null) {
+ public function setFieldValue($name, mixed $value, $changed = null): bool {
 		
 		$template = $this->pagefiles->getFieldsTemplate();
 		if(!$template) return false;
@@ -1430,7 +1430,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @since 3.0.154
 	 * 
 	 */
-	public function replaceFile($filename, $move = true) {
+	public function replaceFile($filename, $move = true): bool {
 		
 		$files = $this->wire()->files;
 		
