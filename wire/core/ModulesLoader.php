@@ -1,8 +1,10 @@
 <?php namespace ProcessWire;
 
 use Exception;
-use PDO;
 use Override;
+use PDO;
+use ProcessWire\Interfaces\Module;
+
 /**
  * ProcessWire Modules: Loader
  *

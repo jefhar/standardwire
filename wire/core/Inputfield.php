@@ -3,6 +3,7 @@
 use Override;
 use ProcessWire\Interfaces\InputfieldHasArrayValue;
 use ProcessWire\Interfaces\InputfieldWrapper;
+use ProcessWire\Interfaces\Module;
 
 /**
  * ProcessWire Inputfield - base class for Inputfield modules.

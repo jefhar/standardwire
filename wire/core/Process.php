@@ -1,6 +1,8 @@
 <?php namespace ProcessWire;
 
 use Override;
+use ProcessWire\Interfaces\Module;
+
 /**
  * ProcessWire Process
  *

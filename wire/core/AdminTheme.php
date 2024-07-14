@@ -1,7 +1,9 @@
 <?php namespace ProcessWire;
 
-use Override;
 use Exception;
+use Override;
+use ProcessWire\Interfaces\Module;
+
 /**
  * ProcessWire Admin Theme Module
  *
@@ -519,4 +521,3 @@ abstract class AdminTheme extends WireData implements Module {
 		*/
 	}
 }
-

@@ -2,6 +2,7 @@
 
 use ProcessWire\Interfaces\FieldtypeLanguageInterface;
 use ProcessWire\Interfaces\InputfieldWrapper;
+use ProcessWire\Interfaces\Module;
 
 /**
  * Multi-language support fields module

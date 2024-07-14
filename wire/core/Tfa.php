@@ -4,6 +4,7 @@ use Override;
 use PDO;
 use ProcessWire\Interfaces\ConfigurableModule;
 use ProcessWire\Interfaces\InputfieldWrapper;
+use ProcessWire\Interfaces\Module;
 
 /**
  * Tfa - ProcessWire Two Factor Authentication module base class

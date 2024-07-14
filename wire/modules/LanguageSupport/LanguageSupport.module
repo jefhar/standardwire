@@ -4,6 +4,7 @@ use ProcessWire\Interfaces\ConfigurableModule;
 use ProcessWire\Interfaces\FieldtypeLanguageInterface;
 use ProcessWire\Interfaces\InputfieldWrapper;
 use ProcessWire\Interfaces\LanguagesValueInterface;
+use ProcessWire\Interfaces\Module;
 
 /**
  * Main multi-language support module

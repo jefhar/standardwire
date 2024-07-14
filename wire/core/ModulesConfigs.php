@@ -6,6 +6,7 @@ use ProcessWire\Interfaces\_Module;
 use ProcessWire\Interfaces\ConfigModule;
 use ProcessWire\Interfaces\ConfigurableModule;
 use ProcessWire\Interfaces\InputfieldWrapper;
+use ProcessWire\Interfaces\Module;
 use ReflectionMethod;
 
 /**

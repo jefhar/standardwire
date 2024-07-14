@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\Module;
+
 /**
  * ProcessWire ModuleJS
  *

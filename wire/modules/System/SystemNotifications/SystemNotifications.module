@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\Module;
+
 /**
  * System Notifications for ProcessWire
  *
@@ -846,4 +848,3 @@ class SystemNotifications extends WireData implements Module {
 
 
 }
-

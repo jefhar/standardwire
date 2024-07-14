@@ -5,6 +5,7 @@ use Override;
 use PDO;
 use ProcessWire\Interfaces\_Module;
 use ProcessWire\Interfaces\InputfieldWrapper;
+use ProcessWire\Interfaces\Module;
 
 /**
  * ProcessWire Modules

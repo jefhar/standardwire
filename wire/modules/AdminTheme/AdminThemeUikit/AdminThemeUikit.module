@@ -3,6 +3,7 @@
 use ProcessWire\Interfaces\ConfigurableModule;
 use ProcessWire\Interfaces\InputfieldHasArrayValue;
 use ProcessWire\Interfaces\InputfieldWrapper;
+use ProcessWire\Interfaces\Module;
 
 /**
  * AdminThemeUikit

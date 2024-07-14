@@ -5,6 +5,7 @@ use Override;
 use PDO;
 use PDOException;
 use ProcessWire\Interfaces\InputfieldWrapper;
+use ProcessWire\Interfaces\Module;
 
 /**
  * ProcessWire Fieldtype Base

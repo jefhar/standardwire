@@ -3,6 +3,7 @@
 use Exception;
 use Override;
 use ProcessWire\Interfaces\_Module;
+use ProcessWire\Interfaces\Module;
 
 /**
  * ProcessWire Modules: Info

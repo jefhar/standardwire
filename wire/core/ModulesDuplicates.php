@@ -1,6 +1,8 @@
 <?php namespace ProcessWire;
 
 use PDO;
+use ProcessWire\Interfaces\Module;
+
 /**
  * ProcessWire Modules Duplicates
  *

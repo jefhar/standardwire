@@ -1,7 +1,9 @@
 <?php namespace ProcessWire;
 
-use PDO;
 use Override;
+use PDO;
+use ProcessWire\Interfaces\Module;
+
 /**
  * ProcessWire Modules: Flags
  *

@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\Module;
+
 /**
  * ProcessWire MarkupPageArray module
  *
@@ -167,4 +169,3 @@ class MarkupPageArray extends WireData implements Module {
 
 
 }
-

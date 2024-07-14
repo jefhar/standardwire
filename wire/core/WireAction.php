@@ -3,6 +3,7 @@
 use Exception;
 use Override;
 use ProcessWire\Interfaces\InputfieldWrapper;
+use ProcessWire\Interfaces\Module;
 
 /**
  * WireAction

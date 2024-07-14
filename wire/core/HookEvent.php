@@ -1,7 +1,9 @@
 <?php namespace ProcessWire;
 
-use ReflectionMethod;
 use Override;
+use ProcessWire\Interfaces\Module;
+use ReflectionMethod;
+
 /**
  * ProcessWire HookEvent
  *
@@ -246,4 +248,3 @@ class HookEvent extends WireData {
 	}
 
 }
-

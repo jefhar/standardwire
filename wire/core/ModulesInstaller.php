@@ -5,6 +5,7 @@ use Exception;
 use PDO;
 use PDOException;
 use ProcessWire\Interfaces\_Module;
+use ProcessWire\Interfaces\Module;
 use ReflectionClass;
 
 /**

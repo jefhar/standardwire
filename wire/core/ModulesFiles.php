@@ -2,9 +2,11 @@
 
 use DirectoryIterator;
 use Exception;
-use ReflectionClass;
-use PDO;
 use Override;
+use PDO;
+use ProcessWire\Interfaces\Module;
+use ReflectionClass;
+
 /**
  * ProcessWire Modules: Files
  *

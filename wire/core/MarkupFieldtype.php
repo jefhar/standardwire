@@ -3,6 +3,7 @@
 use Override;
 use ProcessWire\Interfaces\InputfieldWrapper;
 use ProcessWire\Interfaces\LanguagesValueInterface;
+use ProcessWire\Interfaces\Module;
 
 /**
  * Class MarkupFieldtype

@@ -3,6 +3,7 @@
 use Exception;
 use Override;
 use ProcessWire\Interfaces\ConfigurableModule;
+use ProcessWire\Interfaces\Module;
 use Stringable;
 
 /**

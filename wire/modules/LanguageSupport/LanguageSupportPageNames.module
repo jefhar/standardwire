@@ -2,6 +2,7 @@
 
 use ProcessWire\Interfaces\ConfigurableModule;
 use ProcessWire\Interfaces\InputfieldWrapper;
+use ProcessWire\Interfaces\Module;
 
 /**
  * Multi-language support page names module

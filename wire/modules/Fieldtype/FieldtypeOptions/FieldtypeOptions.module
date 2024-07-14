@@ -3,6 +3,7 @@
 use ProcessWire\Interfaces\InputfieldHasSelectableOptions;
 use ProcessWire\Interfaces\InputfieldHasSortableValue;
 use ProcessWire\Interfaces\InputfieldWrapper;
+use ProcessWire\Interfaces\Module;
 
 /**
  * ProcessWire Select Options Fieldtype

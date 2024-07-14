@@ -1,6 +1,7 @@
 <?php namespace ProcessWire;
 
 use ProcessWire\Interfaces\LanguagesValueInterface;
+use ProcessWire\Interfaces\Module;
 
 /**
  * Class PageFrontEdit

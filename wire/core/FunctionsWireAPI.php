@@ -1,6 +1,7 @@
 <?php namespace ProcessWire;
 
 use ProcessWire\Interfaces\ConfigurableModule;
+use ProcessWire\Interfaces\Module;
 
 /**
  * ProcessWire functions API maps function names to common API variables

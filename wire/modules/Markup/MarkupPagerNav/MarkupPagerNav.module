@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\Module;
+
 require_once(dirname(__FILE__) . '/PagerNav.php'); 
 
 /**
