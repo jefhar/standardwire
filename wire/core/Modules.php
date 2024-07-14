@@ -368,7 +368,7 @@ class Modules extends WireArray {
  	 *
 	 */
 	#[Override]
- public function isValidItem($item) {
+	public function isValidItem(mixed $item): bool {
 		return $item instanceof Module;
 	}
 

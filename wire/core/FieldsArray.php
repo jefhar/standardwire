@@ -20,7 +20,7 @@ class FieldsArray extends WireArray {
 	 *
 	 */
 	#[Override]
- public function isValidItem($item) {
+	public function isValidItem(mixed $item): bool {
 		return $item instanceof Field;
 	}
 
@@ -32,7 +32,7 @@ class FieldsArray extends WireArray {
 	 *
 	 */
 	#[Override]
- public function isValidKey($key): bool {
+	public function isValidKey($key): bool {
 		return is_int($key) || ctype_digit($key);
 	}
 

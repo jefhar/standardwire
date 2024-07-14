@@ -35,7 +35,7 @@ class NotificationArray extends WireArray {
 	 * @return bool
 	 * 
 	 */
-	public function isValidItem($item) {
+	public function isValidItem(mixed $item): bool {
 		return $item instanceof Notification;
 	}
 
@@ -282,4 +282,3 @@ class NotificationArray extends WireArray {
 	}
 	
 }
-

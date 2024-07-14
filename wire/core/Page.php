@@ -3748,7 +3748,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 *
 	 */
 	#[Override]
- protected function isEqual($key, $value1, $value2) {
+	protected function isEqual($key, mixed $value1, mixed $value2): bool {
 		return $this->comparison()->isEqual($this, $key, $value1, $value2); 
 	}
 

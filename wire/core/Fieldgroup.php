@@ -63,7 +63,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 *
 	 */
 	#[Override]
- public function isValidItem($item) {
+	public function isValidItem(mixed $item): bool {
 		return $item instanceof Field; 
 	}
 
@@ -77,7 +77,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 *
 	 */
 	#[Override]
- public function isValidKey($key): bool {
+	public function isValidKey($key): bool {
 		return is_int($key) || ctype_digit("$key"); 
 	}
 
@@ -781,5 +781,3 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	}
 
 }
-
-

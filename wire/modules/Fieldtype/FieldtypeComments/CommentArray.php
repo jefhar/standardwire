@@ -37,7 +37,7 @@ class CommentArray extends PaginatedArray implements WirePaginatable {
 	 * @return bool
 	 *
 	 */
-	public function isValidItem($item) {
+	public function isValidItem(mixed $item): bool {
 		if($item instanceof Comment) {
 			if($this->page) $item->setPage($this->page); 
 			if($this->field) $item->setField($this->field); 
@@ -340,5 +340,3 @@ class CommentArray extends PaginatedArray implements WirePaginatable {
 		return $has;	
 	}
 }
-
-

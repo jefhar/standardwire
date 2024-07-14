@@ -173,12 +173,12 @@ class SelectableOptionArray extends WireArray {
 			parent::__set($key, $value);
 		}
 	}
-	
-	public function isValidItem($item) {
+
+	public function isValidItem(mixed $item): bool {
 		return $item instanceof SelectableOption;
 	}
 
-	public function isValidKey($key) {
+	public function isValidKey($key): bool {
 		return is_int($key);
 	}
 

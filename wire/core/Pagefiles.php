@@ -261,7 +261,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 *
 	 */
 	#[Override]
- public function isValidItem($item) {
+	public function isValidItem(mixed $item): bool {
 		return $item instanceof Pagefile;
 	}
 

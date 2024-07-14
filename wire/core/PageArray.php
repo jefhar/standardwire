@@ -86,7 +86,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 *
 	 */
 	#[Override]
- public function isValidItem($item) {
+	public function isValidItem(mixed $item): bool {
 		return $item instanceof Page; 
 	}
 
@@ -102,7 +102,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 *
 	 */
 	#[Override]
- public function isValidKey($key) {
+	public function isValidKey($key): bool {
 		return ctype_digit("$key");
 	}
 
@@ -757,5 +757,3 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 		}
 	}
 }
-
-

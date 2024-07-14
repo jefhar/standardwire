@@ -18,7 +18,7 @@ class FieldgroupsArray extends WireArray {
 	 *
 	 */
 	#[Override]
- public function isValidItem($item) {
+	public function isValidItem(mixed $item): bool {
 		return $item instanceof Fieldgroup;
 	}
 
@@ -36,7 +36,7 @@ class FieldgroupsArray extends WireArray {
 	 *
 	 */
 	#[Override]
- public function isValidKey($key) {
+	public function isValidKey($key): bool {
 		return is_int($key);
 	}
 

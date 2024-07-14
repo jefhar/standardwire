@@ -1950,7 +1950,7 @@ abstract class Inputfield extends WireData implements Module {
 	 *
 	 */
 	#[Override]
- public function has($key) {
+	public function has($key): bool {
 		$has = parent::has($key); 
 		if(!$has) $has = isset($this->attributes[$key]); 
 		return $has; 

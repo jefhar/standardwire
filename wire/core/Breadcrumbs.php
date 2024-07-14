@@ -23,7 +23,7 @@ use Override;
 class Breadcrumbs extends WireArray {
 
 	#[Override]
- public function isValidItem($item) {
+	public function isValidItem(mixed $item): bool {
 		return $item instanceof Breadcrumb;
 	}
 
@@ -43,5 +43,3 @@ class Breadcrumbs extends WireArray {
 	}
 
 }
-
-

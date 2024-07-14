@@ -127,7 +127,7 @@ class Fieldtypes extends WireArray {
 	 *
 	 */
 	#[Override]
- public function isValidItem($item): bool {
+	public function isValidItem(mixed $item): bool {
 		if($item instanceof Fieldtype) return true;
 		if($item instanceof ModulePlaceholder && str_starts_with($item->className(), 'Fieldtype')) return true;
 		return false;
@@ -141,7 +141,7 @@ class Fieldtypes extends WireArray {
 	 *
 	 */
 	#[Override]
- public function isValidKey($key) {
+	public function isValidKey($key): bool {
 		return is_string($key); 
 	}
 
@@ -253,5 +253,3 @@ class Fieldtypes extends WireArray {
 	#[Override]
  public function getPrev($item, $strict = true) { $this->preload(); return parent::getPrev($item, $strict); }
 }
-
-
