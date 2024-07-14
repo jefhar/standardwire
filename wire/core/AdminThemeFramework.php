@@ -554,7 +554,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 
 		if(!$browserTitle) {
 			if($modal) return $this->wire('processHeadline');
-			$browserTitle = $this->_(strip_tags($this->wire()->page->get('title|name'))) . ' • ProcessWire';
+			$browserTitle = $this->_(strip_tags((string) $this->wire()->page->get('title|name'))) . ' • ProcessWire';
 		}
 
 		if(!$modal) {

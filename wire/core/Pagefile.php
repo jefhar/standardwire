@@ -267,9 +267,9 @@ class Pagefile extends WireData implements WireArrayItem {
 		} else if($key === 'description') {
 			return $this->setDescription($value);
 		} else if($key === 'modified') {
-			$value = ctype_digit("$value") ? (int) $value : strtotime($value);
+			$value = ctype_digit("$value") ? (int) $value : strtotime((string) $value);
 		} else if($key === 'created') {
-			$value = ctype_digit("$value") ? (int) $value : strtotime($value);
+			$value = ctype_digit("$value") ? (int) $value : strtotime((string) $value);
 		} else if($key === 'created_users_id' || $key === 'createdUser') { 
 			$this->setUser($value, 'created');
 			return $this;
@@ -290,7 +290,7 @@ class Pagefile extends WireData implements WireArrayItem {
 			}
 		}
 		
-		if(str_starts_with($key, 'description') && preg_match('/^description(\d+)$/', $value, $matches)) {
+		if(str_starts_with($key, 'description') && preg_match('/^description(\d+)$/', (string) $value, $matches)) {
 			// check if a language description is being set manually by description123 where 123 is language ID
 			$languages = $this->wire()->languages; 
 			if($languages) {
@@ -325,7 +325,7 @@ class Pagefile extends WireData implements WireArrayItem {
 			}
 		} else if(is_int($user)) {
 			$id = $user;
-		} else if(ctype_digit($user)) {
+		} else if(ctype_digit((string) $user)) {
 			$id = (int) $user;
 		} else if(is_string($user)) {
 			$name = $this->wire()->sanitizer->pageName($user);
@@ -333,10 +333,10 @@ class Pagefile extends WireData implements WireArrayItem {
 			$id = $user && $user->id ? $user->id : 0;
 		}
 		if($id < 0) $id = 0;
-		if(str_starts_with($type, 'created')) {
+		if(str_starts_with((string) $type, 'created')) {
 			$this->_createdUser = ($id && $user instanceof User ? $user : null);
 			parent::set('created_users_id', $id); 
-		} else if(str_starts_with($type, 'modified')) {
+		} else if(str_starts_with((string) $type, 'modified')) {
 			$this->_modifiedUser = ($id && $user instanceof User ? $user : null);
 			parent::set('modified_users_id', $id); 
 		}
@@ -931,7 +931,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 */
 	public function basename($ext = true) {
 		$basename = parent::get('basename'); 
-		if(!$ext) $basename = basename($basename, "." . $this->ext());
+		if(!$ext) $basename = basename((string) $basename, "." . $this->ext());
 		return $basename;
 	}
 
@@ -994,9 +994,9 @@ class Pagefile extends WireData implements WireArrayItem {
 			// set tags
 			if(is_array($value)) $value = implode(' ', $value); // convert to string
 			$value = $this->wire()->sanitizer->text($value);
-			if(str_contains($value, "\t")) $value = str_replace("\t", " ", $value);
+			if(str_contains((string) $value, "\t")) $value = str_replace("\t", " ", $value);
 			// collapse extra whitespace
-			while(str_contains($value, "  ")) $value = str_replace("  ", " ", $value);
+			while(str_contains((string) $value, "  ")) $value = str_replace("  ", " ", $value);
 			parent::set('tags', $value);	
 			$tags = $value; 
 		} else {
@@ -1120,7 +1120,7 @@ class Pagefile extends WireData implements WireArrayItem {
 		$numAdded = 0;
 		foreach($addTags as $tag) {
 			if($this->hasTag($tag)) continue; 
-			$tag = $sanitizer->text(trim($tag));
+			$tag = $sanitizer->text(trim((string) $tag));
 			$tag = str_replace(' ', '_', $tag);
 			$tags[strtolower($tag)] = $tag;
 			$numAdded++;

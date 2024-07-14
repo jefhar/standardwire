@@ -21,7 +21,7 @@ class PWGIFCOLORTABLE {
 		$this->m_nColors  = 0;
 		$this->m_arColors = [];
 		for($i = 0; $i < $num; $i++) {
-			$rgb = substr($lpData, $i * 3, 3);
+			$rgb = substr((string) $lpData, $i * 3, 3);
 			if(strlen($rgb) < 3) {
 				return false;
 			}

@@ -151,7 +151,7 @@ class Punycode {
 			if(!str_starts_with($part, (string) static::PREFIX)) {
 				continue;
 			}
-			$part = substr($part, strlen(static::PREFIX));
+			$part = substr($part, strlen((string) static::PREFIX));
 			$part = $this->decodePart($part);
 		}
 		return implode('.', $parts);

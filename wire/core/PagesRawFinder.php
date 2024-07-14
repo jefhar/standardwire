@@ -558,9 +558,9 @@ class PagesRawFinder extends Wire {
 			if($fieldName === '*' || $fieldName === 'pages' || $fieldName === 'pages.*') {
 				// get all columns
 				$colName = '';
-			} else if(str_starts_with($fieldName, 'pages.')) {
+			} else if(str_starts_with((string) $fieldName, 'pages.')) {
 				// pages table column requested by name
-				[, $colName] = explode('.', $fieldName, 2);
+				[, $colName] = explode('.', (string) $fieldName, 2);
 			} else {
 				// column requested by name on its own
 				$colName = $fieldName;
@@ -590,7 +590,7 @@ class PagesRawFinder extends Wire {
 					if(!isset($templatesById[$templateId])) $templatesById[$templateId] = $templates->get($templateId);
 					$template = $templatesById[$templateId]; /** @var Template $template */
 					$slash = $template->slashUrls ? '/' : '';
-					$path = strlen($value) && $value !== '/' ? "$value$slash" : '';
+					$path = strlen((string) $value) && $value !== '/' ? "$value$slash" : '';
 					if(isset($this->runtimeFields['url'])) {
 						$this->values[$id]['url'] = $rootUrl . $path;
 					}
@@ -715,8 +715,8 @@ class PagesRawFinder extends Wire {
 			$orderByCols = $fieldtypeMulti->get('orderByCols');
 			if($fieldtypeMulti->useOrderByCols && !empty($orderByCols)) {
 				foreach($orderByCols as $key => $col) {
-					$desc = str_starts_with($col, '-') ? ' DESC' : '';
-					$col = $sanitizer->fieldName(ltrim($col, '-'));
+					$desc = str_starts_with((string) $col, '-') ? ' DESC' : '';
+					$col = $sanitizer->fieldName(ltrim((string) $col, '-'));
 					if(!array_key_exists($col, $schema)) continue;
 					$sorts[$key] = '`' . $database->escapeCol($col) . '`' . $desc;
 				}
@@ -787,7 +787,7 @@ class PagesRawFinder extends Wire {
 				}
 				
 			} else if($fieldtypeRepeater && count($pageRefCols)) {
-				$repeaterIds = isset($value['data']) ? explode(',', $value['data']) : explode(',', $value);
+				$repeaterIds = isset($value['data']) ? explode(',', (string) $value['data']) : explode(',', (string) $value);
 				foreach($repeaterIds as $repeaterId) {
 					$this->values[$id][$fieldName][$repeaterId] = $repeaterId;
 				}
@@ -1035,7 +1035,7 @@ class PagesRawFinder extends Wire {
 		
 		foreach($fieldNames as $fieldName) {
 			$colName = '';
-			if(strpos($fieldName, '.')) [$fieldName, $colName] = explode('.', $fieldName, 2);
+			if(strpos((string) $fieldName, '.')) [$fieldName, $colName] = explode('.', (string) $fieldName, 2);
 			if(!isset($runtimeFields[$fieldName])) $runtimeFields[$fieldName] = [];
 			if($colName) $runtimeFields[$fieldName][] = $colName;
 		}
@@ -1071,7 +1071,7 @@ class PagesRawFinder extends Wire {
 		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
 			$id = (int) $row['source_id'];
 			$name = $row['name'];
-			$data = json_decode($row['data'], true);
+			$data = json_decode((string) $row['data'], true);
 			if(!isset($this->values[$id]['meta'])) $this->values[$id]['meta'] = [];
 			if($getAll || in_array($name, $names, true)) $this->values[$id]['meta'][$name] = $data;
 		}
@@ -1238,7 +1238,7 @@ class PagesRawFinder extends Wire {
 		}
 
 		// convert selector to CSV string of page IDs
-		$selector = implode(',', array_map('intval', $selector));
+		$selector = implode(',', array_map(intval(...), $selector));
 		
 		$selects = [];
 		$joins = [];
@@ -1355,7 +1355,7 @@ class PagesRawFinder extends Wire {
 	protected function ids($csv = false) {
 		if($this->ids === null) return $csv ? '' : [];
 		if($csv) {
-			if(is_array($this->ids)) $this->ids = implode(',', array_map('intval', $this->ids));
+			if(is_array($this->ids)) $this->ids = implode(',', array_map(intval(...), $this->ids));
 		} else if(is_string($this->ids)) {
 			// this likely cannot occur with current logic but here in case that changes
 			$this->ids = explode(',', $this->ids);
@@ -1446,7 +1446,7 @@ class PagesRawFinder extends Wire {
 			// specific fields requested
 			foreach($this->requestFields as $name) {
 				if(isset($this->renameFields[$name])) $name = $this->renameFields[$name];
-				if(!$this->options['flat'] && strpos($name, '.')) [$name, ] = explode('.', $name, 2);
+				if(!$this->options['flat'] && strpos((string) $name, '.')) [$name, ] = explode('.', (string) $name, 2);
 				$emptyValue[$name] = null;
 			}
 			foreach($values as $key => $value) {

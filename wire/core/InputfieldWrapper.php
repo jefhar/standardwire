@@ -618,7 +618,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 		if(!isset($p[$c])) {
 			$p[$c] = [];
 			foreach(wireClassParents($inputfield) as $parentClass) {
-				if(!str_starts_with($parentClass, 'Inputfield') || $parentClass === 'Inputfield') break;
+				if(!str_starts_with((string) $parentClass, 'Inputfield') || $parentClass === 'Inputfield') break;
 				$p[$c][] = $parentClass;
 			}
 		}
@@ -712,7 +712,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 		
 		$lockedStates = [Inputfield::collapsedNoLocked, Inputfield::collapsedYesLocked, Inputfield::collapsedBlankLocked, Inputfield::collapsedTabLocked];
 		
-		if($useColumnWidth === true && isset($_classes['form']) && str_contains($_classes['form'], 'InputfieldFormNoWidths')) {
+		if($useColumnWidth === true && isset($_classes['form']) && str_contains((string) $_classes['form'], 'InputfieldFormNoWidths')) {
 			$useColumnWidth = false;
 		}
 	
@@ -771,15 +771,15 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 						$text = $inputfield->entityEncode($text, true);
 					}
 					if($inputfield->textFormat != Inputfield::textFormatMarkdown) {
-						$text = str_replace('{out}', nl2br($text), $markup["item_$property"]);
+						$text = str_replace('{out}', nl2br((string) $text), $markup["item_$property"]);
 					}
 				} else {
 					$text = '';
 				}
 				$_property = '{' . $property . '}';
-				if(str_contains($markup['item_content'], $_property)) {
+				if(str_contains((string) $markup['item_content'], $_property)) {
 					$markup['item_content'] = str_replace($_property, $text, $markup['item_content']);
-				} else if(str_contains($markup['item_label'], $_property)) {
+				} else if(str_contains((string) $markup['item_label'], $_property)) {
 					$markup['item_label'] = str_replace($_property, $text, $markup['item_label']);
 				} else if($text && ($property == 'notes' || $property == 'detail')) {
 					$ffOut .= $text;
@@ -805,11 +805,11 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 
 			if(count($errors)) $ffAttrs['class'] .= ' ' . $classes['item_error'];
 			if($required) $ffAttrs['class'] .= ' ' . $classes['item_required']; 
-			if(strlen($showIf) && !$this->getSetting('renderValueMode')) { // note: $this->renderValueMode (rather than $renderValueMode) is intentional
+			if(strlen((string) $showIf) && !$this->getSetting('renderValueMode')) { // note: $this->renderValueMode (rather than $renderValueMode) is intentional
 				$ffAttrs['data-show-if'] = $showIf;
 				$ffAttrs['class'] .= ' ' . $classes['item_show_if'];
 			}
-			if(strlen($requiredIf)) {
+			if(strlen((string) $requiredIf)) {
 				$ffAttrs['data-required-if'] = $requiredIf; 
 				$ffAttrs['class'] .= ' ' . $classes['item_required_if']; 
 			}
@@ -862,7 +862,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 				$icon = $inputfield->getSetting('icon');
 				$icon = $icon ? str_replace('{name}', $sanitizer->name(str_replace(['icon-', 'fa-'], '', $icon)), $markup['item_icon']) : ''; 
 				$toggle = $collapsed == Inputfield::collapsedNever ? '' : $markup['item_toggle']; 
-				if($toggle && !str_contains($toggle, 'title=')) {
+				if($toggle && !str_contains((string) $toggle, 'title=')) {
 					$toggle = str_replace("class=", "title='" . $this->_('Toggle open/close') . "' class=", $toggle);
 				}
 				if($skipLabel === Inputfield::skipLabelHeader || $quietMode) {
@@ -935,18 +935,18 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 			}
 			foreach($ffAttrs as $k => $v) {
 				$k = $this->entityEncode($k);
-				$v = $this->entityEncode(trim($v));
+				$v = $this->entityEncode(trim((string) $v));
 				$attrs .= " $k='$v'";
 			}
 			$markupItemContent = $markup['item_content'];
 			$contentClass = trim($inputfield->getSetting('contentClass') . " $classes[item_content]");
 			if($contentClass) {
-				if(str_contains($markupItemContent, '{class}')) {
+				if(str_contains((string) $markupItemContent, '{class}')) {
 					$markupItemContent = str_replace('{class}', ' ' . $contentClass, $markupItemContent); 
 				} else {
 					$markupItemContent = preg_replace('/( class=[\'"][^\'"]+)/', '$1 ' . $contentClass, $markupItemContent, 1);
 				}
-			} else if(str_contains($markupItemContent, '{class}')) {
+			} else if(str_contains((string) $markupItemContent, '{class}')) {
 				$markupItemContent = str_replace('{class}', '', $markupItemContent); 
 			}
 			if($inputfield->className() != 'InputfieldWrapper') $ffOut = str_replace('{out}', $ffOut, $markupItemContent); 
@@ -1103,7 +1103,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 		$url = $input->url();
 		$queryString = $input->queryString();
 		
-		if(str_contains($queryString, 'renderInputfieldAjax=')) {
+		if(str_contains((string) $queryString, 'renderInputfieldAjax=')) {
 			// in case nested ajax request 
 			$queryString = preg_replace('/&?renderInputfieldAjax=[^&]+/', '', $queryString);
 		}
@@ -1218,8 +1218,8 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 		// if dependencies aren't in use, we can skip the rest
 		if($this->getSetting('useDependencies') === false) return true; 
 		
-		if(strlen($inputfield->getSetting('showIf')) || 
-			($inputfield->getSetting('required') && strlen($inputfield->getSetting('requiredIf')))) {
+		if(strlen((string) $inputfield->getSetting('showIf')) || 
+			($inputfield->getSetting('required') && strlen((string) $inputfield->getSetting('requiredIf')))) {
 			
 			$name = $inputfield->attr('name'); 
 			if(!$name) {
@@ -1790,7 +1790,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 
 			$type = $info['type'];
 			unset($info['type']);
-			if(!str_starts_with($type, 'Inputfield')) $type = "Inputfield" . ucfirst($type);
+			if(!str_starts_with((string) $type, 'Inputfield')) $type = "Inputfield" . ucfirst((string) $type);
 			
 			/** @var Inputfield $f */
 			$f = $modules->get($type);

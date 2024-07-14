@@ -516,7 +516,7 @@ class PagesEditor extends Wire {
 
 		if(is_array($extraData)) foreach($extraData as $column => $value) {
 			$column = $database->escapeCol($column);
-			$data[$column] = (strtoupper($value) === 'NULL' ? NULL : $value);
+			$data[$column] = (strtoupper((string) $value) === 'NULL' ? NULL : $value);
 		}
 
 		if($isNew) {
@@ -1351,7 +1351,7 @@ class PagesEditor extends Wire {
 		if(is_null($time)) {
 			$sql .= 'NOW() ';
 			
-		} else if(is_int($time) || ctype_digit($time)) {
+		} else if(is_int($time) || ctype_digit((string) $time)) {
 			$time = (int) $time;
 			$sql .= ':time ';
 			
@@ -1808,7 +1808,7 @@ class PagesEditor extends Wire {
 
 		// name and parent can be detected from path, when specified
 		if(!empty($options['path'])) {
-			$path = trim($options['path'], '/');
+			$path = trim((string) $options['path'], '/');
 			if(!str_contains($path, '/')) $path = "/$path";
 			$parts = explode('/', $path); // note index[0] is blank
 			$name = array_pop($parts);

@@ -229,7 +229,7 @@ class PagesNames extends Wire {
 			// check for multi-language title
 			/** @var LanguagesPageFieldValue $pageTitle */
 			$pageTitle = $page->title;
-			if(strlen($pageTitle->getDefaultValue())) $format = 'title';
+			if(strlen((string) $pageTitle->getDefaultValue())) $format = 'title';
 		}
 		
 		if(empty($format)) {
@@ -292,8 +292,8 @@ class PagesNames extends Wire {
 		$sanitizer = $this->wire()->sanitizer;
 		
 		$options = array_merge($defaults, $options);
-		if(!strlen($format)) $format = $this->defaultPageNameFormat($page);
-		$format = trim($format);
+		if(!strlen((string) $format)) $format = $this->defaultPageNameFormat($page);
+		$format = trim((string) $format);
 		$formatType = '';
 		$defaultDateFormat = 'ymdHis';
 		$name = '';
@@ -359,7 +359,7 @@ class PagesNames extends Wire {
 			$formatType = 'field';
 		}
 
-		if(!strlen($name)) {
+		if(!strlen((string) $name)) {
 			// requested format did not produce a page name, so now fall-back to something else.
 			// we either have a field name or some predefined string that is not a field name.
 			
@@ -375,7 +375,7 @@ class PagesNames extends Wire {
 				}
 
 				// fallback to untitled format if fields required are not present
-				if(!strlen($name)) {
+				if(!strlen((string) $name)) {
 					$name = $this->pageNameFromFormat($page, 'untitled'); // no options intended
 				}
 
@@ -391,7 +391,7 @@ class PagesNames extends Wire {
 			}
 		}
 
-		if(strlen($name) > $this->nameMaxLength) $name = $this->adjustNameLength($name);
+		if(strlen((string) $name) > $this->nameMaxLength) $name = $this->adjustNameLength($name);
 		
 		$utf8 = $this->wire()->config->pageNameCharset === 'UTF8';
 		$name = $utf8 ? $sanitizer->pageNameUTF8($name) : $sanitizer->pageName($name, Sanitizer::translate);
@@ -456,10 +456,10 @@ class PagesNames extends Wire {
 
 		if($page) {
 			if($options['parent'] === null) $options['parent'] = $page->parent();
-			if(!strlen($name)) {
+			if(!strlen((string) $name)) {
 				if($options['language']) {
 					$name = $page->get("name$options[language]");
-					if(!strlen($name)) $name = $page->name;
+					if(!strlen((string) $name)) $name = $page->name;
 				} else {
 					$name = $page->name;
 				}
@@ -467,7 +467,7 @@ class PagesNames extends Wire {
 			$options['page'] = $page;
 		}
 		
-		if(!strlen($name)) {
+		if(!strlen((string) $name)) {
 			// no name currently present, so we need to determine what kind of name it should have
 			if($page) {
 				$format = $this->defaultPageNameFormat($page, ['fallbackFormat' => $page->id ? 'random' : 'untitled-time', 'parent' => $options['parent']]);
@@ -481,7 +481,7 @@ class PagesNames extends Wire {
 			$name = $this->incrementName($name);
 		}
 		
-		if(strlen($name) > $this->nameMaxLength) $name = $this->adjustNameLength($name);
+		if(strlen((string) $name) > $this->nameMaxLength) $name = $this->adjustNameLength($name);
 
 		return $name;
 	}
@@ -513,20 +513,20 @@ class PagesNames extends Wire {
 			$numberSuffix = '';	
 		}
 	
-		if(strlen($namePrefix) > $maxLength) {
-			$namePrefix = substr($namePrefix, 0, $maxLength);
+		if(strlen((string) $namePrefix) > $maxLength) {
+			$namePrefix = substr((string) $namePrefix, 0, $maxLength);
 		}
 	
 		// find word delimiter closest to end of string
 		foreach($this->delimiters as $c) {
-			$p = strrpos($namePrefix, (string) $c);
+			$p = strrpos((string) $namePrefix, (string) $c);
 			if((int) $p > $pos) $pos = $p;
 		}
 		
 		// use word delimiter pos as maxLength when it’s relatively close to the end
-		if(!$pos || $pos < (strlen($namePrefix) / 1.3)) $pos = $maxLength;
+		if(!$pos || $pos < (strlen((string) $namePrefix) / 1.3)) $pos = $maxLength;
 		
-		$name = substr($namePrefix, 0, $pos);
+		$name = substr((string) $namePrefix, 0, $pos);
 		$name = rtrim($name, $trims);
 
 		// append number suffix if there was one

@@ -172,8 +172,8 @@ class DatabaseQuerySelect extends DatabaseQuery {
 		foreach($this->groupby as $s) {
 			// if it starts with 'HAVING' then we will determine placement
 			// this is a shortcut to combine multiple HAVING statements with ANDs
-			if(stripos($s, 'HAVING ') === 0) {
-				$having[] = substr($s, 7); 
+			if(stripos((string) $s, 'HAVING ') === 0) {
+				$having[] = substr((string) $s, 7); 
 				continue; 
 			}
 			$sql .= "$s,";
@@ -201,8 +201,8 @@ class DatabaseQuerySelect extends DatabaseQuery {
 		if(!count($this->limit)) return '';
 		$limit = $this->limit; 
 		$limit = reset($limit);
-		if(str_contains($limit, ',')) {
-			[$start, $limit] = explode(',', $limit);
+		if(str_contains((string) $limit, ',')) {
+			[$start, $limit] = explode(',', (string) $limit);
 			$start = (int) trim($start);
 			$limit = (int) trim($limit); 
 			$limit = "$start,$limit";

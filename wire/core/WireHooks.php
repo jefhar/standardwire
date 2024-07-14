@@ -266,7 +266,7 @@ class WireHooks implements \Stringable {
 		}
 
 		if($needSort && count($hooks) > 1) {
-			defined("SORT_NATURAL") ? ksort($hooks, SORT_NATURAL) : uksort($hooks, "strnatcmp");
+			defined("SORT_NATURAL") ? ksort($hooks, SORT_NATURAL) : uksort($hooks, strnatcmp(...));
 		}
 		
 		return $hooks;
@@ -613,8 +613,8 @@ class WireHooks implements \Stringable {
 						$argMatch = [];
 						array_shift($args); // blank
 						while(count($args)) {
-							$argKey = (int) trim(array_shift($args));
-							$argVal = trim(array_shift($args), ', ');
+							$argKey = (int) trim((string) array_shift($args));
+							$argVal = trim((string) array_shift($args), ', ');
 							$argMatch[$argKey] = $argVal;
 						}
 					}
@@ -706,7 +706,7 @@ class WireHooks implements \Stringable {
 			if(defined("SORT_NATURAL")) {
 				ksort($hooks[$method], SORT_NATURAL);
 			} else {
-				uksort($hooks[$method], "strnatcmp");
+				uksort($hooks[$method], strnatcmp(...));
 			}
 		}
 		
@@ -780,7 +780,7 @@ class WireHooks implements \Stringable {
 		$options['noAddHooks'] = true; // prevent addHook() from calling addHooks() again
 		
 		foreach($methods as $method) {
-			$method = trim($method);
+			$method = trim((string) $method);
 			$hookID = $this->addHook($object, $method, $toObject, $toMethod, $options);
 			$result[] = $hookID;
 		}
@@ -1009,7 +1009,7 @@ class WireHooks implements \Stringable {
 
 				if(is_null($toObject)) {
 					$toMethodCallable = is_callable($toMethod);
-					if(!$toMethodCallable && !str_contains($toMethod, "\\") && __NAMESPACE__) {
+					if(!$toMethodCallable && !str_contains((string) $toMethod, "\\") && __NAMESPACE__) {
 						$_toMethod = $toMethod;
 						$toMethod = "\\" . __NAMESPACE__ . "\\$toMethod";
 						$toMethodCallable = is_callable($toMethod);
@@ -1092,7 +1092,7 @@ class WireHooks implements \Stringable {
 		
 		// first pre-filter the requestPath against any words matchPath (filters)
 		foreach($pathHook['filters'] as $key => $filter) {
-			$pos = strpos($requestPath, (string) $filter); 
+			$pos = strpos((string) $requestPath, (string) $filter); 
 			if($pos === false || ($key === 0 && $pos !== 0)) $filterFail = true;
 			if($filterFail) break;
 		}
@@ -1102,7 +1102,7 @@ class WireHooks implements \Stringable {
 		// at this point the path hook passed pre-filters and might match
 		
 		$pageNum = $this->wire->wire()->input->pageNum();
-		$slashed = str_ends_with($requestPath, '/') && strlen($requestPath) > 1;
+		$slashed = str_ends_with((string) $requestPath, '/') && strlen((string) $requestPath) > 1;
 		$matchPath = $pathHook['match'];
 		$regexDelim = ''; // populated only for user-specified regex
 		$pageNumArgument = 0; // populate in $arguments when {pageNum} present in match pattern
@@ -1112,11 +1112,11 @@ class WireHooks implements \Stringable {
 			$regexDelim = $matchPath[0];
 		} else {
 			// needs to be in regex format
-			if(str_starts_with($matchPath, '/')) $matchPath = "^$matchPath";
+			if(str_starts_with((string) $matchPath, '/')) $matchPath = "^$matchPath";
 			$matchPath = "#$matchPath$#";
 		}
 
-		if(str_contains($matchPath, '{pageNum}')) {
+		if(str_contains((string) $matchPath, '{pageNum}')) {
 			// the {pageNum} named argument maps to $input->pageNum. remove the {pageNum} argument
 			// from the match path since it is handled differently from other named arguments
 			$find = ['/{pageNum}/', '/{pageNum}', '{pageNum}'];
@@ -1128,21 +1128,21 @@ class WireHooks implements \Stringable {
 			return false;
 		}
 
-		if(strpos($matchPath, ':') && str_contains($matchPath, '(')) {
+		if(strpos((string) $matchPath, ':') && str_contains((string) $matchPath, '(')) {
 			// named arguments in format “(name: value)” converted to named PCRE capture groups
 			$matchPath = preg_replace('#\(([-_a-z0-9]+):#i', '(?P<$1>', $matchPath);
 		}
 		
-		if(str_contains($matchPath, '{')) {
+		if(str_contains((string) $matchPath, '{')) {
 			// named arguments in format “{name}” converted to named PCRE capture groups
 			// note that the match pattern of any URL segment is assumed for this case
 			$matchPath = preg_replace('#\{([_a-z][-_a-z0-9]*)\}#i', '(?P<$1>[^/]+)', $matchPath); 
 		}
 
-		if(!preg_match($matchPath, $requestPath, $matches)) {
+		if(!preg_match($matchPath, (string) $requestPath, $matches)) {
 			// if match fails, try again with trailing slash state reversed
 			if($slashed) {
-				$requestPath2 = rtrim($requestPath, '/');
+				$requestPath2 = rtrim((string) $requestPath, '/');
 			} else {
 				$requestPath2 = "$requestPath/";
 			}
@@ -1150,9 +1150,9 @@ class WireHooks implements \Stringable {
 		}
 		
 		// check on trailing slash
-		if(!str_contains($matchPath, '/?')) {
+		if(!str_contains((string) $matchPath, '/?')) {
 			// either slash or no-slash is required, depending on whether match pattern ends with one
-			$slashRequired = str_ends_with(rtrim($pathHook['match'], $regexDelim . '$)+'), '/');
+			$slashRequired = str_ends_with(rtrim((string) $pathHook['match'], $regexDelim . '$)+'), '/');
 			$this->pathHookRedirect = '';
 			if($slashRequired && !$slashed) {
 				// trailing slash required and not present
@@ -1160,7 +1160,7 @@ class WireHooks implements \Stringable {
 				return false;
 			} else if(!$slashRequired && $slashed) {
 				// lack of trailing slash required and one is present
-				$this->pathHookRedirect = rtrim($requestPath, '/');
+				$this->pathHookRedirect = rtrim((string) $requestPath, '/');
 				return false;
 			}
 		}
@@ -1212,7 +1212,7 @@ class WireHooks implements \Stringable {
 		foreach($arguments as $argument) {
 			if(is_object($argument)) $notes[] = $argument::class;
 			else if(is_array($argument)) $notes[] = "array(" . count($argument) . ")";
-			else if(strlen($argument) > 20) $notes[] = substr($argument, 0, 20) . '...';
+			else if(strlen((string) $argument) > 20) $notes[] = substr((string) $argument, 0, 20) . '...';
 		}
 		$timerName .= "(" . implode(', ', $notes) . ")";
 		if(isset($this->debugTimers[$timerName])) {
@@ -1239,7 +1239,7 @@ class WireHooks implements \Stringable {
 	 *
 	 */
 	public function removeHook(Wire $object, $hookID) {
-		if(is_array($hookID) || strpos($hookID, ',')) {
+		if(is_array($hookID) || strpos((string) $hookID, ',')) {
 			return $this->removeHooks($object, $hookID);
 		}
 		if(!empty($hookID) && substr_count($hookID, ':') === 2) {

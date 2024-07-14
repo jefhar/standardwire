@@ -926,7 +926,7 @@ function wireClassImplements($className, $autoload = true) {
 			$_className = wireClassName($className, false);
 			if(class_exists("\\$_className")) $className = $_className;
 		}
-		$implements = @class_implements(ltrim($className, "\\"), $autoload);
+		$implements = @class_implements(ltrim((string) $className, "\\"), $autoload);
 	}
 	$a = [];
 	if(is_array($implements)) foreach($implements as $k => $v) {
@@ -965,7 +965,7 @@ function wireClassParents($className, $autoload = true) {
 				if($ns) $className = $ns . $_className;
 			}
 		}
-		$parents = @class_parents(ltrim($className, "\\"), $autoload);
+		$parents = @class_parents(ltrim((string) $className, "\\"), $autoload);
 	}
 	$a = [];
 	if(is_array($parents)) foreach($parents as $k => $v) {
@@ -1285,7 +1285,7 @@ function wireRegion($key, $value = null) {
  * @since 3.0.146
  * 
  */
-function wire404($message = '') {
+function wire404($message = ''): never {
 	throw new Wire404Exception($message, Wire404Exception::codeFunction); 
 }
 

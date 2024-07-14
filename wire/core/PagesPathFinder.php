@@ -388,7 +388,7 @@ class PagesPathFinder extends Wire {
 
 			if(!$id) {
 				// if it didn’t resolve to DB page name then it is a URL segment
-				if(strlen($name) > $maxUrlSegmentLength) $name = substr($name, 0, $maxUrlSegmentLength);
+				if(strlen((string) $name) > $maxUrlSegmentLength) $name = substr((string) $name, 0, $maxUrlSegmentLength);
 				$result['urlSegments'][] = $name;
 				if($this->verbose) {
 					$result['parts'][] = ['type' => 'urlSegment', 'value' => $name, 'language' => ''];
@@ -621,7 +621,7 @@ class PagesPathFinder extends Wire {
 		$template = $this->getResultTemplate();
 		$slashUrls = $template ? (int) $template->slashUrls : 0;
 		$useTrailingSlash = $slashUrls ? 1 : -1; // 1=yes, 0=either, -1=no
-		$hadTrailingSlash = str_ends_with($result['request'], '/');
+		$hadTrailingSlash = str_ends_with((string) $result['request'], '/');
 		$https = $template ? (int) $template->https : 0;
 		$appendPath = '';
 
@@ -632,7 +632,7 @@ class PagesPathFinder extends Wire {
 		}
 
 		// if URL segments are present validate them
-		if(strlen($result['urlSegmentStr'])) {
+		if(strlen((string) $result['urlSegmentStr'])) {
 			if($template && ($template->urlSegments || $template->name === 'admin')) {
 				if($template->isValidUrlSegmentStr($result['urlSegmentStr'])) {
 					$appendPath .= "/$result[urlSegmentStr]";
@@ -801,11 +801,11 @@ class PagesPathFinder extends Wire {
 		if(!count($urlSegments)) return;
 
 		$lastSegment = end($urlSegments);
-		if(!ctype_digit(substr($lastSegment, -1))) return;
+		if(!ctype_digit(substr((string) $lastSegment, -1))) return;
 
 		foreach($this->pageNumUrlPrefixes() as $languageName => $pageNumUrlPrefix) {
-			if(!str_starts_with($lastSegment, (string) $pageNumUrlPrefix)) continue;
-			if(!preg_match('!^' . $pageNumUrlPrefix . '(\d+)$!i', $lastSegment, $matches)) continue;
+			if(!str_starts_with((string) $lastSegment, (string) $pageNumUrlPrefix)) continue;
+			if(!preg_match('!^' . $pageNumUrlPrefix . '(\d+)$!i', (string) $lastSegment, $matches)) continue;
 			$segment = $matches[0];
 			$pageNum = (int) $matches[1];
 			$result['pageNum'] = $pageNum;
@@ -928,7 +928,7 @@ class PagesPathFinder extends Wire {
 		// check for pagination segment, which we don’t want in our path here
 		[$pageNum, $pageNumPrefix] = $this->getShortcutPageNum($path);
 		
-		if(!str_contains($path, '/')) {
+		if(!str_contains((string) $path, '/')) {
 			// single directory off root
 			$found = $this->getShortcutRoot($path);
 		}
@@ -1237,8 +1237,8 @@ class PagesPathFinder extends Wire {
 
 		$urlSegmentStr = $info['urlSegmentStr'];
 
-		if(strlen($urlSegmentStr)) {
-			$result['urlSegments'] = explode('/', $info['urlSegmentStr']);
+		if(strlen((string) $urlSegmentStr)) {
+			$result['urlSegments'] = explode('/', (string) $info['urlSegmentStr']);
 			$this->applyResultPageNum($result['parts']);
 		}
 
@@ -1902,7 +1902,7 @@ class PagesPathFinder extends Wire {
 		$segments = $this->languageSegments();
 		$segments[] = Pages::defaultRootName;
 		foreach($segments as $segment) {
-			if($segment === null || !strlen($segment)) continue;
+			if($segment === null || !strlen((string) $segment)) continue;
 			if($path !== "/$segment" && !str_starts_with($path, "/$segment/")) continue;
 			[, $path] = explode("/$segment", $path, 2); 
 			if($path === '') $path = '/';
@@ -1946,8 +1946,8 @@ class PagesPathFinder extends Wire {
 		if(!$adminTemplate || $result['page']['templates_id'] != $adminTemplate->id) return $response;
 
 		// request is for pagination within admin, where we allow either custom or original/default prefix
-		$requestParts = explode('/', trim($result['request'], '/'));
-		$redirectParts = explode('/', trim($result['redirect'], '/'));
+		$requestParts = explode('/', trim((string) $result['request'], '/'));
+		$redirectParts = explode('/', trim((string) $result['redirect'], '/'));
 
 		$requestPrefix = array_pop($requestParts);
 		$redirectPrefix = array_pop($redirectParts);

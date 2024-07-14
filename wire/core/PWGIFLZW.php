@@ -26,7 +26,7 @@ class PWGIFLZW {
 		$this->Buf   = range(0, 279);
 	}
 	function deCompress($data, &$datLen) {
-		$stLen  = strlen($data);
+		$stLen  = strlen((string) $data);
 		$datLen = 0;
 		$ret	= '';
 		// INITIALIZATION
@@ -34,7 +34,7 @@ class PWGIFLZW {
 		while(($iIndex = $this->LZWCommand($data, false)) >= 0) {
 			$ret .= chr($iIndex);
 		}
-		$datLen = $stLen - strlen($data);
+		$datLen = $stLen - strlen((string) $data);
 		if($iIndex != -2) {
 			return false;
 		}
@@ -43,7 +43,7 @@ class PWGIFLZW {
 	function LZWCommand(&$data, $bInit) {
 		if($bInit) {
 			$this->SetCodeSize = ord($data[0]);
-			$data = substr($data, 1);
+			$data = substr((string) $data, 1);
 			$this->CodeSize	= $this->SetCodeSize + 1;
 			$this->ClearCode   = 1 << $this->SetCodeSize;
 			$this->EndCode	 = $this->ClearCode + 1;
@@ -148,7 +148,7 @@ class PWGIFLZW {
 			$this->Buf[0] = $this->Buf[$this->LastByte - 2];
 			$this->Buf[1] = $this->Buf[$this->LastByte - 1];
 			$Count = ord($data[0]);
-			$data  = substr($data, 1);
+			$data  = substr((string) $data, 1);
 			if($Count) {
 				for($i = 0; $i < $Count; $i++) {
 					$this->Buf[2 + $i] = ord($data[$i]);

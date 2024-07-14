@@ -112,7 +112,7 @@ class FieldSelectorInfo extends Wire {
 
 			// determine the 'input' type based on the DB schema definition
 			foreach($this->schemaToInput as $types => $input) {
-				foreach(explode(',', $types) as $type) {
+				foreach(explode(',', (string) $types) as $type) {
 					if(stripos($schemaType, $type) !== 0) continue; 
 					$target['input'] = $input; 
 					break;
@@ -137,7 +137,7 @@ class FieldSelectorInfo extends Wire {
 
 			// use fulltext operators if schema uses a fulltext index	
 			if(isset($schema['keys'][$name])) {
-				if(stripos($schema['keys'][$name], 'FULLTEXT') !== false) {
+				if(stripos((string) $schema['keys'][$name], 'FULLTEXT') !== false) {
 					$target['operators'] = $this->operators['fulltext'];
 				}
 			}
@@ -192,8 +192,8 @@ class FieldSelectorInfo extends Wire {
 		$this->operatorLabels['!=""'] = $this->_('Is Not Empty');
 		foreach($this->operators as $operator) {
 			if(isset($this->operatorLabels[$operator])) continue; 
-			if(!str_starts_with($operator, '!')) continue;
-			$op = ltrim($operator, '!'); 
+			if(!str_starts_with((string) $operator, '!')) continue;
+			$op = ltrim((string) $operator, '!'); 
 			$this->operatorLabels[$operator] = sprintf($this->_('Not: %s'), $this->operatorLabels[$op]); 
 		}
 		return $this->operatorLabels;

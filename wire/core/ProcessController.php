@@ -249,7 +249,7 @@ class ProcessController extends Wire {
 
 		foreach($this->processInfo['nav'] as $navItem) {
 			if(empty($navItem['permission'])) continue;
-			$navSegment = strtolower(trim($navItem['url'], './'));
+			$navSegment = strtolower(trim((string) $navItem['url'], './'));
 			if(empty($navSegment)) continue;
 			if(str_contains($navSegment, '/')) [$navSegment, ] = explode($navSegment, '/', 2);
 			$navSegmentAlt = str_replace('-', '', $navSegment);
@@ -291,8 +291,8 @@ class ProcessController extends Wire {
 				$methodName = ucfirst($urlSegment1);
 				$hyphenName = $urlSegment1;
 			} else {
-				$methodName = trim($sanitizer->pascalCase($urlSegment1, ['allowUnderscore' => true]), '_');
-				$hyphenName = trim($sanitizer->hyphenCase($methodName, ['allowUnderscore' => true]), '_');
+				$methodName = trim((string) $sanitizer->pascalCase($urlSegment1, ['allowUnderscore' => true]), '_');
+				$hyphenName = trim((string) $sanitizer->hyphenCase($methodName, ['allowUnderscore' => true]), '_');
 			}
 			if($hyphenName != strtolower($urlSegment1) && strtolower($methodName) != strtolower($urlSegment1)) {
 				// if urlSegment changed from sanitization, likely not in valid format
@@ -347,7 +347,7 @@ class ProcessController extends Wire {
 		if($method === 'executeNavJSON' && !$this->wire()->config->ajax && !$debug) {
 			// disallow navJSON output when not ajax and not debug mode
 			if(!$this->wire()->user->isLoggedin()) wire404();
-			$navJSON = substr($this->wire()->input->url(), -8); 
+			$navJSON = substr((string) $this->wire()->input->url(), -8); 
 			if($navJSON === 'navJSON/') {
 				$this->wire()->session->location('../');
 			} else if($navJSON === '/navJSON') {
@@ -369,7 +369,7 @@ class ProcessController extends Wire {
 				if($headline === $this->wire('processHeadline')) {
 					$process->headline(str_replace('execute', '', $method));
 				}
-				$href = str_ends_with($this->wire()->input->url(), '/') ? '../' : './';
+				$href = str_ends_with((string) $this->wire()->input->url(), '/') ? '../' : './';
 				$process->breadcrumb($href, $this->processInfo['title']); 
 			}
 		}
@@ -422,7 +422,7 @@ class ProcessController extends Wire {
 		$method3 = ''; // lowercase hyphenated, without leading execute
 		if(strtolower($method) != $method) {
 			// lowercase hyphenated version
-			$method2 = trim(strtolower(preg_replace('/([A-Z]+)/', '-$1', $method)), '-');
+			$method2 = trim(strtolower((string) preg_replace('/([A-Z]+)/', '-$1', $method)), '-');
 			// without a leading 'execute-' or 'execute'
 			$method3 = str_replace(['execute-', 'execute'], '', $method2);
 		}

@@ -57,8 +57,8 @@ class SelectorContainsAdvanced extends SelectorContains {
 				$phrase = str_replace('+', '', trim($phrase, '-')); 
 				if(str_contains($phrase, '-')) $phrase = preg_replace('/([^\w\d])-(.)/', '$1 $2', $phrase); 
 				$value = str_replace($fullMatch, ' ', $value);
-				while(str_contains($phrase, '  ')) $phrase = str_replace('  ', ' ', $phrase);
-				if(!strlen($phrase)) continue;
+				while(str_contains((string) $phrase, '  ')) $phrase = str_replace('  ', ' ', $phrase);
+				if(!strlen((string) $phrase)) continue;
 				$phrase = str_replace('"', '', $phrase);
 				$query = $type . '"' . $phrase . '"' . ($partial ? '*' : ''); 
 				$a = ['type' => $type, 'value' => $phrase, 'query' => $query, 'partial' => $partial, 'phrase' => true];
@@ -67,10 +67,10 @@ class SelectorContainsAdvanced extends SelectorContains {
 		}
 		$words = $this->wire()->sanitizer->wordsArray($value, ['keepChars' => ['+', '-', '*']]);
 		foreach($words as $word) {
-			$type = substr($word, 0, 1);
-			$partial = str_ends_with($word, '*');
+			$type = substr((string) $word, 0, 1);
+			$partial = str_ends_with((string) $word, '*');
 			if($type !== '+' && $type !== '-') $type = '';
-			$word = trim($word, '+-*');
+			$word = trim((string) $word, '+-*');
 			$query = $type . $word . ($partial ? '*' : ''); 
 			$a = ['type' => $type, 'value' => $word, 'query' => $query, 'partial' => $partial, 'phrase' => false];
 			$commands[] = $a;
@@ -84,8 +84,8 @@ class SelectorContainsAdvanced extends SelectorContains {
 		$numOptional = 0; 
 		$commands = $this->valueToCommands($value2);
 		foreach($commands as $command) {
-			$re = '/\b' . preg_quote($command['value']) . ($command['partial'] ? '' : '\b') . '/i';
-			$match = preg_match($re, $value1);
+			$re = '/\b' . preg_quote((string) $command['value']) . ($command['partial'] ? '' : '\b') . '/i';
+			$match = preg_match($re, (string) $value1);
 			if($command['type'] === '+') {
 				// value must be present (+)
 				if(!$match) $fail = true;

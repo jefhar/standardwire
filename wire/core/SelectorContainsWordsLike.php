@@ -20,7 +20,7 @@ class SelectorContainsWordsLike extends Selector {
 		$hasAll = true;
 		$words = $this->wire()->sanitizer->wordsArray($value2);
 		foreach($words as $word) {
-			if(stripos($value1, (string) $word) === false) {
+			if(stripos((string) $value1, (string) $word) === false) {
 				$hasAll = false;
 				break;
 			}

@@ -191,7 +191,7 @@ class Password extends Wire {
 	 */
 	public function isBlowfish($str = '') {
 		if(!strlen($str)) $str = $this->data['salt'];
-		$prefix = substr($str, 0, 3); 
+		$prefix = substr((string) $str, 0, 3); 
 		return $prefix === '$2a' || $prefix === '$2x' || $prefix === '$2y'; 
 	}
 
@@ -220,7 +220,7 @@ class Password extends Wire {
 		$config = $this->wire()->config;
 
 		// if there is no salt yet, make one (for new pass or reset pass)
-		if(strlen($this->data['salt']) < 28) $this->data['salt'] = $this->salt();
+		if(strlen((string) $this->data['salt']) < 28) $this->data['salt'] = $this->salt();
 
 		// if system doesn't support blowfish, but has a blowfish salt, then reset it 
 		if(!$this->supportsBlowfish() && $this->isBlowfish($this->data['salt'])) $this->data['salt'] = $this->salt();
@@ -243,7 +243,7 @@ class Password extends Wire {
 				throw new WireException("This version of PHP is not compatible with the passwords. Did passwords originate on a newer version of PHP?"); 
 			}
 			// our preferred method
-			$hash = crypt($pass . $salt2, $salt1);
+			$hash = crypt($pass . $salt2, (string) $salt1);
 
 		} else {
 			// older style, non-blowfish support

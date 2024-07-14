@@ -18,7 +18,7 @@ class SelectorContainsWords extends Selector {
 	protected function match($value1, $value2) { 
 		$hasAll = true; 
 		$words = $this->wire()->sanitizer->wordsArray($value2); 
-		foreach($words as $word) if(!preg_match('/\b' . preg_quote($word) . '\b/i', $value1)) {
+		foreach($words as $word) if(!preg_match('/\b' . preg_quote((string) $word) . '\b/i', (string) $value1)) {
 			$hasAll = false;
 			break;
 		}

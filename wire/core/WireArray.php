@@ -1380,7 +1380,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 */
 	protected function stableSort(&$data, $properties, $numNeeded = null) {
 
-		$property = trim(array_shift($properties));
+		$property = trim((string) array_shift($properties));
 		$nullable = [];
 		$sortable = [];
 		$reverse = false;

@@ -546,7 +546,7 @@ abstract class Inputfield extends WireData implements Module {
 	public function get($key) {	
 		if($key === 'label') { 
 			$value = parent::get('label');
-			if(strlen($value)) return $value;
+			if(strlen((string) $value)) return $value;
 			if($this->skipLabel & self::skipLabelBlank) return '';
 			return $this->attributes['name']; 
 		} 
@@ -773,7 +773,7 @@ abstract class Inputfield extends WireData implements Module {
 				}
 			}
 
-			if($key === 'name' && strlen($value)) {
+			if($key === 'name' && strlen((string) $value)) {
 				$idAttr = $this->getAttribute('id'); 
 				$nameAttr = $this->getAttribute('name'); 
 				if($idAttr == $this->defaultID || $idAttr == $nameAttr || $idAttr == "Inputfield_$nameAttr") {
@@ -1097,7 +1097,7 @@ abstract class Inputfield extends WireData implements Module {
 
 		// add to $classes array
 		foreach($addClasses as $addClass) {
-			$addClass = trim($addClass); 
+			$addClass = trim((string) $addClass); 
 			if(strlen($addClass)) $classes[$addClass] = $addClass;
 		}
 
@@ -1235,7 +1235,7 @@ abstract class Inputfield extends WireData implements Module {
 			if(!count($classes)) return false;
 			$n = 0;
 			foreach($classes as $c) {
-				$c = trim($c);
+				$c = trim((string) $c);
 				if(empty($c) || $this->hasClass($c, $property)) $n++;
 			}
 			// return whether it had all the given classes
@@ -1327,7 +1327,7 @@ abstract class Inputfield extends WireData implements Module {
 		$removeClasses = is_array($class) ? $class : explode(' ', $class); 
 
 		foreach($removeClasses as $removeClass) {
-			if(strlen($removeClass)) unset($classes[$removeClass]);
+			if(strlen((string) $removeClass)) unset($classes[$removeClass]);
 		}
 
 		if($property === 'class') {
@@ -1372,7 +1372,7 @@ abstract class Inputfield extends WireData implements Module {
 			unset($attributes['value']); 
 
 			// tell PHP to return an array by adding [] to the name attribute, i.e. "myfield[]"
-			if(isset($attributes['name']) && !str_ends_with($attributes['name'], ']')) $attributes['name'] .= '[]';
+			if(isset($attributes['name']) && !str_ends_with((string) $attributes['name'], ']')) $attributes['name'] .= '[]';
 		}
 
 		foreach($attributes as $attr => $value) {
@@ -1392,7 +1392,7 @@ abstract class Inputfield extends WireData implements Module {
 				continue;
 			}
 
-			$str .= "$attr=\"" . htmlspecialchars($value, ENT_QUOTES, "UTF-8") . '" ';
+			$str .= "$attr=\"" . htmlspecialchars((string) $value, ENT_QUOTES, "UTF-8") . '" ';
 		}
 
 		return trim($str); 
@@ -1892,7 +1892,7 @@ abstract class Inputfield extends WireData implements Module {
 		}
 		$label = $this->getSetting('label');
 		if(empty($label)) $label = $this->attr('name');
-		if(strlen($label)) $text .= " - $label"; 
+		if(strlen((string) $label)) $text .= " - $label"; 
 		return parent::error($text, $flags); 
 	}
 

@@ -182,11 +182,11 @@ class Paths extends WireData {
 			$value = $http . $this->_root;
 		} else {
 			$value = parent::get($key);
-			if($value === null || !strlen($value)) {
+			if($value === null || !strlen((string) $value)) {
 				if($altKey) $value = parent::get($altKey);
 				if(empty($value)) return $value;
 			}
-			$pos = strpos($value, '//');
+			$pos = strpos((string) $value, '//');
 			if($pos !== false && ($pos === 0 || ($pos > 0 && $value[$pos-1] === ':'))) {
 				// fully qualified URL
 			} else if($value[0] == '/' || (DIRECTORY_SEPARATOR != '/' && $value[1] == ':')) {

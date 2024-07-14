@@ -76,8 +76,8 @@ class WireRandom extends Wire {
 		foreach(['disallow', 'extras', 'require', 'noStart', 'noEnd'] as $name) {
 			$val = $options[$name];
 			if(is_array($val)) continue;
-			if(strlen($val)) {
-				$options[$name] = str_split($val);
+			if(strlen((string) $val)) {
+				$options[$name] = str_split((string) $val);
 			} else {
 				$options[$name] = [];
 			}
@@ -88,9 +88,9 @@ class WireRandom extends Wire {
 			if(is_array($options[$name])) $options[$name] = implode('', $options[$name]);
 		}
 
-		if(strlen($options['allow'])) {
+		if(strlen((string) $options['allow'])) {
 			// only fast option supports non-alphanumeric characters specified in allow option
-			if(!ctype_alnum($options['allow'])) $options['fast'] = true;
+			if(!ctype_alnum((string) $options['allow'])) $options['fast'] = true;
 			$allowed = $options['allow'];
 
 		} else {
@@ -112,10 +112,10 @@ class WireRandom extends Wire {
 		}
 
 		foreach($options['require'] as $c) {
-			if(!str_contains($allowed, (string) $c)) $allowed = '';
+			if(!str_contains((string) $allowed, (string) $c)) $allowed = '';
 		}
 
-		if(!strlen($allowed)) {
+		if(!strlen((string) $allowed)) {
 			throw new WireException("Specified options prevent any alphanumeric string from being created");
 		}
 
@@ -136,15 +136,15 @@ class WireRandom extends Wire {
 			}
 
 			// enforce returned value having at least one of each requested type (alpha, upper, lower, numeric)
-			if($options['strict'] && !strlen($options['allow'])) {
+			if($options['strict'] && !strlen((string) $options['allow'])) {
 				if($options['alpha'] && $options['upper'] && !preg_match('/[A-Z]/', $value)) continue;
 				if($options['alpha'] && $options['lower'] && !preg_match('/[a-z]/', $value)) continue;
 				if($options['numeric'] && !preg_match('/[0-9]/', $value)) continue;
 			}
 
 			if(strlen($value) > $length) $value = substr($value, 0, $length);
-			if(strlen($options['noStart'])) $value = ltrim($value, $options['noStart']);
-			if(strlen($options['noEnd'])) $value = rtrim($value, $options['noEnd']);
+			if(strlen((string) $options['noStart'])) $value = ltrim($value, $options['noStart']);
+			if(strlen((string) $options['noEnd'])) $value = rtrim($value, $options['noEnd']);
 
 		} while(strlen($value) < $length);
 
@@ -547,7 +547,7 @@ class WireRandom extends Wire {
 		$disallowCase = []; // with both upper and lower versions
 
 		foreach($disallow as $c) {
-			$c = strtolower($c);
+			$c = strtolower((string) $c);
 			$disallowCase[$c] = $c;
 			$c = strtoupper($c);
 			$disallowCase[$c] = $c;
@@ -598,9 +598,9 @@ class WireRandom extends Wire {
 			if($numUpper) {
 				$value = strtolower($value);
 				$test = $this->wire()->sanitizer->alpha($value);
-				if(strlen($test) < $numUpper) {
+				if(strlen((string) $test) < $numUpper) {
 					// there aren't enough characters present to meet requirements, so add some	
-					$value .= $this->alpha($numUpper - strlen($test), ['disallow' => $disallow]);
+					$value .= $this->alpha($numUpper - strlen((string) $test), ['disallow' => $disallow]);
 				}
 				for($i = 0; $i < strlen($value); $i++) {
 					$c = strtoupper($value[$i]);
@@ -640,9 +640,9 @@ class WireRandom extends Wire {
 		if($options['maxDigits'] > 0 || $options['maxDigits'] == -1) {
 			// a maximum number of digits specified
 			$numDigits = 0;
-			for($n = 0; $n < strlen($value); $n++) {
+			for($n = 0; $n < strlen((string) $value); $n++) {
 				$c = $value[$n];
-				$isDigit = ctype_digit($c);
+				$isDigit = ctype_digit((string) $c);
 				if($isDigit) $numDigits++;
 				if($isDigit && $numDigits > $options['maxDigits']) {
 					// convert digit to alpha
@@ -655,12 +655,12 @@ class WireRandom extends Wire {
 		foreach($disallow as $char) {
 			$n = 0;
 			do {
-				$pos = strpos($value, (string) $char);
+				$pos = strpos((string) $value, (string) $char);
 				if($pos === false) break;
-				if(ctype_digit($char)) {
+				if(ctype_digit((string) $char)) {
 					// find a different digit
 					$c = $this->numeric(1, ['disallow' => $disallow]);
-				} else if(strtoupper($char) === $char) {
+				} else if(strtoupper((string) $char) === $char) {
 					// find a different uppercase char
 					$c = strtoupper($this->alpha(1, ['disallow' => $disallowCase]));
 				} else {

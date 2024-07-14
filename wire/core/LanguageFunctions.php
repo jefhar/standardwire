@@ -161,7 +161,7 @@ function __($text, $textdomain = null, $context = '') {
 
 	// if multi-language not installed or not available then just return given text
 	if(!$language || !wire('languages') || !$language->id) {
-		return $encode ? htmlspecialchars($text, ENT_QUOTES, 'UTF-8', $encode === true) : $text;
+		return $encode ? htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8', $encode === true) : $text;
 	}
 	
 	// if _useLimit option not yet defined, define it
@@ -200,10 +200,10 @@ function __($text, $textdomain = null, $context = '') {
 		foreach($textArray as $n => $t) {
 			$tr = $language->translator()->getTranslation($textdomain, $t, $context);
 			if(!$n && $language->isDefault()) {
-				$value = strlen($tr) ? $tr : $t;
+				$value = strlen((string) $tr) ? $tr : $t;
 				break; // default language, do not use alternates
 			}
-			if($t === $tr || !strlen($tr)) continue; // if not translated, start over
+			if($t === $tr || !strlen((string) $tr)) continue; // if not translated, start over
 			$value = $tr;
 			break;
 		}
@@ -232,7 +232,7 @@ function __($text, $textdomain = null, $context = '') {
 		if($encode === null) $encode = 1; 
 	}
 	
-	if($encode) $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8', $encode === true);
+	if($encode) $value = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8', $encode === true);
 	
 	return $value;
 }

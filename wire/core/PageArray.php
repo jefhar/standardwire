@@ -641,7 +641,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	public function ___getMarkup($key = null) {
 		if($key && !is_string($key)) {
 			$out = $this->each($key);
-		} else if(str_contains($key, '{') && strpos($key, '}')) {
+		} else if(str_contains((string) $key, '{') && strpos((string) $key, '}')) {
 			$out = $this->each($key);
 		} else {
 			if(empty($key)) $key = "<li>{title|name}</li>";

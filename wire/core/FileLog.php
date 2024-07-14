@@ -128,7 +128,7 @@ class FileLog extends Wire {
 	 * 
 	 */
 	protected function cleanStr($str) {
-		$str = str_replace(["\r\n", "\r", "\n"], ' ', trim($str)); 
+		$str = str_replace(["\r\n", "\r", "\n"], ' ', trim((string) $str)); 
 		if(strlen($str) > $this->maxLineLength) $str = substr($str, 0, $this->maxLineLength); 
 		if(str_contains($str, ' ^+')) $str = str_replace(' ^=', ' ^ +', $str); // disallowed sequence
 		return $str; 	
@@ -211,7 +211,7 @@ class FileLog extends Wire {
 				$newLength = $chunkLength > $oldLength ? $oldLength - $chunkLength : 0;
 				ftruncate($fp, $newLength); 
 				fseek($fp, 0, SEEK_END);
-				fwrite($fp, $chunk);
+				fwrite($fp, (string) $chunk);
 			}	
 		} else {
 			// already at EOF because we are appending or creating
@@ -501,13 +501,13 @@ class FileLog extends Wire {
 
 		if($options['dateFrom'] || $options['dateTo']) {
 			if(!$options['dateTo']) $options['dateTo'] = time();
-			if(!ctype_digit("$options[dateFrom]")) $options['dateFrom'] = strtotime($options['dateFrom']);
-			if(!ctype_digit("$options[dateTo]")) $options['dateTo'] = strtotime($options['dateTo']);
+			if(!ctype_digit("$options[dateFrom]")) $options['dateFrom'] = strtotime((string) $options['dateFrom']);
+			if(!ctype_digit("$options[dateTo]")) $options['dateTo'] = strtotime((string) $options['dateTo']);
 			$hasFilters = true; 
 		}
 		
 		if($options['toFile']) {
-			$toFile = $this->path() . basename($options['toFile']); 
+			$toFile = $this->path() . basename((string) $options['toFile']); 
 			$fp = fopen($toFile, 'w'); 
 			if(!$fp) throw new \Exception("Unable to open file for writing: $toFile"); 
 		} else {
@@ -532,7 +532,7 @@ class FileLog extends Wire {
 			
 			foreach($chunk as $line) {
 
-				$line = trim($line); 
+				$line = trim((string) $line); 
 				$hash = md5($line); 
 				$valid = !isset($chunkLineHashes[$hash]);
 				$chunkLineHashes[$hash] = 1; 
@@ -583,18 +583,18 @@ class FileLog extends Wire {
 	protected function isValidLine($line, array $options, &$stopNow) {
 		//              4  7  10 
 		// $test = '2013-10-22 15:18:43';
-		if(strlen($line) < 20) return false; 
+		if(strlen((string) $line) < 20) return false; 
 		if($line[19] != $this->delimeter) return false; 
 		if($line[4] != "-") return false;	
 		if($line[7] != "-") return false;
 		if($line[10] != " ") return false; 
 		
 		if(!empty($options['text'])) {
-			if(stripos($line, (string) $options['text']) === false) return false;
+			if(stripos((string) $line, (string) $options['text']) === false) return false;
 		}
 		
 		if(!empty($options['dateFrom']) && !empty($options['dateTo'])) {
-			$parts = explode($this->delimeter, $line);
+			$parts = explode($this->delimeter, (string) $line);
 			$date = strtotime($parts[0]);
 			if($date >= $options['dateFrom'] && $date <= $options['dateTo']) return true;
 			if($date < $options['dateFrom'] && $options['reverse']) $stopNow = true; 

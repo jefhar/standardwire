@@ -487,7 +487,7 @@ class Field extends WireData implements Saveable, Exportable {
 		$a['data'] = $this->data;
 		foreach($a['data'] as $key => $value) {
 			// remove runtime data (properties beginning with underscore)
-			if(str_starts_with($key, '_')) unset($a['data'][$key]);
+			if(str_starts_with((string) $key, '_')) unset($a['data'][$key]);
 		}
 		if($this->settings['flags'] & self::flagAccess) {
 			$a['data']['editRoles'] = $this->editRoles;
@@ -651,7 +651,7 @@ class Field extends WireData implements Saveable, Exportable {
 			if(($f = $fields->get($name)) && $f->id != $this->id) {
 				throw new WireException("Field may not be named '$name' because it is already used by another field ($f->id: $f->name)");
 			}
-			if(str_contains($name, '__')) {
+			if(str_contains((string) $name, '__')) {
 				throw new WireException("Field name '$name' may not have double underscores because this usage is reserved by the core");
 			}
 		}
@@ -1226,7 +1226,7 @@ class Field extends WireData implements Saveable, Exportable {
 			$table = $this->setTable;
 		} else {
 			$name = $this->settings['name'];
-			if(!strlen($name)) throw new WireException("Field 'name' is required");
+			if(!strlen((string) $name)) throw new WireException("Field 'name' is required");
 			$table = self::tablePrefix . $name;
 		}
 		if(self::$lowercaseTables) $table = strtolower($table); 
@@ -1365,8 +1365,8 @@ class Field extends WireData implements Saveable, Exportable {
 	public function getIcon($prefix = false) {
 		$icon = parent::get('icon'); 
 		if(empty($icon)) return '';
-		if(str_starts_with($icon, 'fa-')) $icon = str_replace('fa-', '', $icon);
-		if(str_starts_with($icon, 'icon-')) $icon = str_replace('icon-', '', $icon); 
+		if(str_starts_with((string) $icon, 'fa-')) $icon = str_replace('fa-', '', $icon);
+		if(str_starts_with((string) $icon, 'icon-')) $icon = str_replace('icon-', '', $icon); 
 		return $prefix ? "fa-$icon" : $icon;
 	}
 	
@@ -1474,7 +1474,7 @@ class Field extends WireData implements Saveable, Exportable {
 		if($reindex && count($tagList)) {
 			$tags = [];
 			foreach($tagList as $tag) {
-				$tag = trim($tag);
+				$tag = trim((string) $tag);
 				if(strlen($tag)) $tags[$textTools->strtolower($tag)] = $tag;
 			}
 			$tagList = $tags;

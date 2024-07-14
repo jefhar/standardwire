@@ -424,13 +424,13 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		if(is_array($sqlModes)) {
 			// ["5.7.0" => "remove:mode1,mode2/add:mode3"]
 			foreach($sqlModes as $minVersion => $commands) {
-				if(str_contains($commands, '/')) {
-					$commands = explode('/', $commands);
+				if(str_contains((string) $commands, '/')) {
+					$commands = explode('/', (string) $commands);
 				} else {
 					$commands = [$commands];
 				}
 				foreach($commands as $modes) {
-					$modes = trim($modes);
+					$modes = trim((string) $modes);
 					if(empty($modes)) continue;
 					$action = 'set';
 					if(strpos($modes, ':')) [$action, $modes] = explode(':', $modes);
@@ -745,7 +745,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		} else {
 			$engine = $this->engine;
 		}
-		return strtoupper($engine) === 'INNODB';
+		return strtoupper((string) $engine) === 'INNODB';
 	}
 
 	/**
@@ -901,7 +901,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			if($query->errorCode() == '42S22') {
 				// unknown column error
 				$errorInfo = $query->errorInfo();
-				if(preg_match('/[\'"]([_a-z0-9]+\.[_a-z0-9]+)[\'"]/i', $errorInfo[2], $matches)) {
+				if(preg_match('/[\'"]([_a-z0-9]+\.[_a-z0-9]+)[\'"]/i', (string) $errorInfo[2], $matches)) {
 					$this->unknownColumnError($matches[1]);
 				}
 			}
@@ -1023,7 +1023,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			if(!$query->rowCount()) return [];
 			$row = $query->fetch(\PDO::FETCH_NUM);
 			$query->closeCursor();
-			if(!preg_match_all('/`([_a-z0-9]+)`\s+([a-z][^\r\n]+)/i', $row[1], $matches)) return [];
+			if(!preg_match_all('/`([_a-z0-9]+)`\s+([a-z][^\r\n]+)/i', (string) $row[1], $matches)) return [];
 			foreach($matches[1] as $key => $name) {
 				$columns[$name] = trim(rtrim($matches[2][$key], ','));
 			}
@@ -1040,7 +1040,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			if($verbose === 2) {
 				$columns[$name] = $col;
 			} else if($verbose) {
-				$columns[$name] = ['name' => $name, 'type' => $col['Type'], 'null' => (strtoupper($col['Null']) === 'YES' ? true : false), 'default' => $col['Default'], 'extra' => $col['Extra']];
+				$columns[$name] = ['name' => $name, 'type' => $col['Type'], 'null' => (strtoupper((string) $col['Null']) === 'YES' ? true : false), 'default' => $col['Default'], 'extra' => $col['Extra']];
 			} else {
 				$columns[] = $name;
 			}
@@ -1397,7 +1397,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			$stopwords = null;
 			if($cache) {
 				$stopwords = $cache->get('InnoDB.stopwords');
-				if($stopwords) $stopwords = explode(',', $stopwords);
+				if($stopwords) $stopwords = explode(',', (string) $stopwords);
 			}
 			if(!$stopwords) {
 				$query = $this->prepare('SELECT value FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD');
@@ -1623,7 +1623,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 */
 	public function getVersion($getNumberOnly = false) {
 		$version = $this->getVariable('version', true, false); 
-		if($getNumberOnly && preg_match('/^([\d.]+)/', $version, $matches)) $version = $matches[1];
+		if($getNumberOnly && preg_match('/^([\d.]+)/', (string) $version, $matches)) $version = $matches[1];
 		return $version;
 	}
 
@@ -1809,7 +1809,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	
 		if($mode) {
 			foreach(explode(',', $mode) as $m) {
-				$modes[] = $this->escapeStr(strtoupper($this->wire()->sanitizer->fieldName($m)));
+				$modes[] = $this->escapeStr(strtoupper((string) $this->wire()->sanitizer->fieldName($m)));
 			}
 		}
 		

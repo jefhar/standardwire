@@ -195,13 +195,13 @@ class WireFileTools extends Wire {
 
 		if(is_dir($path)) {
 			// $path is a directory
-			if($chmodDir) if(!@chmod($path, octdec($chmodDir))) $numFails++;
+			if($chmodDir) if(!@chmod($path, octdec((string) $chmodDir))) $numFails++;
 
 			// change mode of files in directory, if recursive
 			if($recursive) foreach(new \DirectoryIterator($path) as $file) {
 				if($file->isDot()) continue;
 				$mod = $file->isDir() ? $chmodDir : $chmodFile;
-				if($mod) if(!@chmod($file->getPathname(), octdec($mod))) $numFails++;
+				if($mod) if(!@chmod($file->getPathname(), octdec((string) $mod))) $numFails++;
 				if($file->isDir()) {
 					if(!$this->chmod($file->getPathname(), true, $chmod)) $numFails++;
 				}
@@ -209,7 +209,7 @@ class WireFileTools extends Wire {
 		} else {
 			// $path is a file
 			$mod = $chmodFile;
-			if($mod) if(!@chmod($path, octdec($mod))) $numFails++;
+			if($mod) if(!@chmod($path, octdec((string) $mod))) $numFails++;
 		}
 
 		return $numFails == 0;
@@ -525,7 +525,7 @@ class WireFileTools extends Wire {
 			
 		} else if(is_array($options)) {
 			$options = array_merge($defaults, $options);
-			if(!empty($options['type'])) $options['type'] = strtolower(trim($options['type']));
+			if(!empty($options['type'])) $options['type'] = strtolower(trim((string) $options['type']));
 			
 		} else if(is_string($options)) {
 			$types = ['file', 'link', 'dir'];
@@ -773,13 +773,13 @@ class WireFileTools extends Wire {
 			if(!is_array($options['extensions'])) {
 				if($options['extensions']) {
 					$options['extensions'] = preg_replace('/[,;\.\s]+/', ' ', $options['extensions']);
-					$options['extensions'] = explode(' ', $options['extensions']); 
+					$options['extensions'] = explode(' ', (string) $options['extensions']); 
 				} else {
 					$options['extensions'] = [];
 				}
 			}
 			foreach($options['extensions'] as $k => $v) {
-				$options['extensions'][$k] = strtolower(trim($v));
+				$options['extensions'][$k] = strtolower(trim((string) $v));
 			}
 		}
 		
@@ -802,7 +802,7 @@ class WireFileTools extends Wire {
 				$dir = $this->unixDirName($file->getPathname());
 				if($options['allowDirs']) {
 					if($options['returnRelative'] && str_starts_with($dir, (string) $options['_startPath'])) {
-						$dir = substr($dir, strlen($options['_startPath']));
+						$dir = substr($dir, strlen((string) $options['_startPath']));
 					}
 					$files[$dir] = $dir;
 				}
@@ -817,7 +817,7 @@ class WireFileTools extends Wire {
 
 			$filename = $this->unixFileName($file->getPathname());
 			if($options['returnRelative'] && str_starts_with($filename, (string) $options['_startPath'])) {
-				$filename = substr($filename, strlen($options['_startPath']));
+				$filename = substr($filename, strlen((string) $options['_startPath']));
 			}
 				
 			$files[] = $filename;
@@ -985,10 +985,10 @@ class WireFileTools extends Wire {
 			return []; // not reachable
 		}
 
-		$dir = strlen($options['dir']) ? rtrim($options['dir'], '/') . '/' : '';
+		$dir = strlen((string) $options['dir']) ? rtrim((string) $options['dir'], '/') . '/' : '';
 
 		foreach($files as $file) {
-			$basename = basename($file);
+			$basename = basename((string) $file);
 			$name = $dir . $basename;
 			if($basename[0] == '.' && $recursive) {
 				if(!$options['allowHidden']) continue;
@@ -1233,7 +1233,7 @@ class WireFileTools extends Wire {
 				if($header !== false) {
 					$row = $this->fgetcsv($fp, $options);
 					foreach($header as $key => $value) {
-						$header[$key] = trim($value);
+						$header[$key] = trim((string) $value);
 					}
 				}
 			} else {
@@ -1270,7 +1270,7 @@ class WireFileTools extends Wire {
 		if($options['convert']) {
 			// convert digit-only strings to integers
 			foreach($row as $key => $value) {
-				if(ctype_digit($value)) $row[$key] = (int) $value;
+				if(ctype_digit((string) $value)) $row[$key] = (int) $value;
 			}
 		}
 
@@ -1356,7 +1356,7 @@ class WireFileTools extends Wire {
 	protected function fgetcsv($fp, $options) {
 		$defaults = ['length' => 0, 'separator' => ',', 'enclosure' => '"', 'escape' => "\\"];
 		$options = array_merge($defaults, $options);
-		return fgetcsv($fp, $options['length'], $options['separator'], $options['enclosure'], $options['escape']); 
+		return fgetcsv($fp, $options['length'], $options['separator'], $options['enclosure'], (string) $options['escape']); 
 	}
 
 	/**
@@ -1415,11 +1415,11 @@ class WireFileTools extends Wire {
 		}
 
 		if($options['defaultPath'] && str_starts_with($filename, './')) {
-			$filename = rtrim($options['defaultPath'], '/') . '/' . substr($filename, 2);
+			$filename = rtrim((string) $options['defaultPath'], '/') . '/' . substr($filename, 2);
 
 		} else if($options['defaultPath'] && !str_starts_with($filename, '/') && strpos($filename, ':') !== 1) {
 			// filename is relative to defaultPath (typically /site/templates/)
-			$filename = rtrim($options['defaultPath'], '/') . '/' . $filename;
+			$filename = rtrim((string) $options['defaultPath'], '/') . '/' . $filename;
 
 		} else if(str_contains($filename, '/')) {
 			// filename is absolute, make sure it's in a location we consider safe
@@ -1624,12 +1624,12 @@ class WireFileTools extends Wire {
 		}
 
 		// single line comment(s) appear before namespace
-		if(str_contains($head, '//')) { 
+		if(str_contains((string) $head, '//')) { 
 			$head = preg_replace('!//.*!', '', $head);
 		}
 		
 		// single or multi-line comments before namespace
-		if(str_contains($head, '/' . '*')) {
+		if(str_contains((string) $head, '/' . '*')) {
 			$head = preg_replace('!/\*.*\*/!s', '', $head);
 		}
 		

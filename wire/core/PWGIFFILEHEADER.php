@@ -37,29 +37,29 @@ class PWGIFFILEHEADER {
 	}
 	public function load($lpData, &$hdrLen) {
 		$hdrLen = 0;
-		$this->m_lpVer = substr($lpData, 0, 6);
+		$this->m_lpVer = substr((string) $lpData, 0, 6);
 		if(($this->m_lpVer <> 'GIF87a') && ($this->m_lpVer <> 'GIF89a')) {
 			return false;
 		}
 		// @Horst: store if we have more then one animation frames
-		$this->m_bAnimated = 1 < preg_match_all('#\x00\x21\xF9\x04.{4}\x00(\x2C|\x21)#s', $lpData);
-		$this->m_nWidth  = $this->w2i(substr($lpData, 6, 2));
-		$this->m_nHeight = $this->w2i(substr($lpData, 8, 2));
+		$this->m_bAnimated = 1 < preg_match_all('#\x00\x21\xF9\x04.{4}\x00(\x2C|\x21)#s', (string) $lpData);
+		$this->m_nWidth  = $this->w2i(substr((string) $lpData, 6, 2));
+		$this->m_nHeight = $this->w2i(substr((string) $lpData, 8, 2));
 		if(!$this->m_nWidth || !$this->m_nHeight) {
 			return false;
 		}
-		$b = ord(substr($lpData, 10, 1));
+		$b = ord(substr((string) $lpData, 10, 1));
 		$this->m_bGlobalClr  = ($b & 0x80) ? true : false;
 		$this->m_nColorRes   = ($b & 0x70) >> 4;
 		$this->m_bSorted	 = ($b & 0x08) ? true : false;
 		$this->m_nTableSize  = 2 << ($b & 0x07);
-		$this->m_nBgColor	= ord(substr($lpData, 11, 1));
-		$this->m_nPixelRatio = ord(substr($lpData, 12, 1));
+		$this->m_nBgColor	= ord(substr((string) $lpData, 11, 1));
+		$this->m_nPixelRatio = ord(substr((string) $lpData, 12, 1));
 		$hdrLen = 13;
 		if($this->m_bGlobalClr) {
 			$this->m_colorTable = new PWGIFCOLORTABLE($this->extended);
 			$tmp1 = $this->m_nTableSize;
-			if(!$this->m_colorTable->load(substr($lpData, $hdrLen), $tmp1)) {
+			if(!$this->m_colorTable->load(substr((string) $lpData, $hdrLen), $tmp1)) {
 				return false;
 			}
 			$this->m_nTableSize = $tmp1;
@@ -68,6 +68,6 @@ class PWGIFFILEHEADER {
 		return true;
 	}
 	private function w2i($str) {
-		return ord(substr($str, 0, 1)) + (ord(substr($str, 1, 1)) << 8);
+		return ord(substr((string) $str, 0, 1)) + (ord(substr((string) $str, 1, 1)) << 8);
 	}
 }

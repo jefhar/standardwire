@@ -294,7 +294,7 @@ class FieldsTableTools extends Wire {
 		if(!isset($schema[$col])) return false; // if there's no schema for this column, fail
 		if($strict && count($schema) > 1) return false; // if there are other columns too, fail
 
-		$type = strtoupper($schema[$col]);
+		$type = strtoupper((string) $schema[$col]);
 		$allowNull = !str_contains($type, 'NOT NULL');
 		
 		if(strpos($type, ' ')) [$type, ] = explode(' ', $type, 2);

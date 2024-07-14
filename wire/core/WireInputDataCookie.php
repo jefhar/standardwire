@@ -357,7 +357,7 @@ class WireInputDataCookie extends WireInputData {
 		$domain = $options['domain'];
 		$remove = $value === null;
 		$expires = null;
-		$samesite = $options['samesite'] ? ucfirst(strtolower($options['samesite'])) : 'Lax';
+		$samesite = $options['samesite'] ? ucfirst(strtolower((string) $options['samesite'])) : 'Lax';
 		
 		if($samesite === 'None') {
 			$secure = true;
@@ -392,7 +392,7 @@ class WireInputDataCookie extends WireInputData {
 		}
 
 		// remove port from domain, as it is not compatible with setcookie()
-		if(str_contains($domain, ':')) [$domain, ] = explode(':', $domain, 2);
+		if(str_contains((string) $domain, ':')) [$domain, ] = explode(':', (string) $domain, 2);
 
 		// check if cookie should be deleted
 		if($remove) [$value, $expires] = ['', 1]; 

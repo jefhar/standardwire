@@ -23,14 +23,14 @@ class SelectorContainsWordsLive extends Selector {
 		$words = $this->wire()->sanitizer->wordsArray($value2); 
 		$lastWord = array_pop($words);
 		foreach($words as $word) {
-			if(!preg_match('/\b' . preg_quote($word) . '\b/i', $value1)) {
+			if(!preg_match('/\b' . preg_quote((string) $word) . '\b/i', (string) $value1)) {
 				// full-word match
 				$hasAll = false;
 				break;
 			}
 		}
 		// last word only needs to match beginning of word
-		$hasAll = $hasAll && preg_match('\b' . preg_quote($lastWord) . '/i', $value1);
+		$hasAll = $hasAll && preg_match('\b' . preg_quote((string) $lastWord) . '/i', (string) $value1);
 		return $this->evaluate($hasAll);
 	}
 }

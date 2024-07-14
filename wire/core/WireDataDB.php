@@ -183,7 +183,7 @@ class WireDataDB extends WireData implements \Countable {
 			$meta = [];
 			while($row = $query->fetch(\PDO::FETCH_NUM)) {
 				[$key, $data] = $row;
-				$meta[$key] = json_decode($data, true);
+				$meta[$key] = json_decode((string) $data, true);
 				parent::set($key, $meta[$key]);
 				if($name !== true) break;
 			}
@@ -302,7 +302,7 @@ class WireDataDB extends WireData implements \Countable {
 		if(!ctype_alnum(str_replace('_', '', $tableName))) {
 			$tableName = preg_replace('/[^_a-zA-Z0-9]/', '_', $tableName);
 		}
-		$this->table = strtolower($tableName);
+		$this->table = strtolower((string) $tableName);
 		return $this->table;
 	}
 

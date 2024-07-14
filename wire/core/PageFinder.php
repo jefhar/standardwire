@@ -544,7 +544,7 @@ class PageFinder extends Wire {
 				$values = is_array($value) ? $value : [$value];
 				foreach($values as $k => $v) {
 					if(ctype_digit("$v")) continue;
-					if(!str_starts_with($v, '/')) continue;
+					if(!str_starts_with((string) $v, '/')) continue;
 					$child = $this->pages->get($v);
 					$values[$k] = $child->id;
 				}
@@ -644,7 +644,7 @@ class PageFinder extends Wire {
 					$v = (int) $v;
 				} else {
 					// allow use of some predefined labels for Page statuses
-					$v = strtolower($v);
+					$v = strtolower((string) $v);
 					if(empty($statuses)) $statuses = Page::getStatuses();
 					$v = $statuses[$v] ?? 1;
 				}
@@ -810,7 +810,7 @@ class PageFinder extends Wire {
 					if($options['returnVerbose']) {
 						// determine score for this row
 						$score = 0.0;
-						foreach($row as $k => $v) if(str_starts_with($k, '_score_')) {
+						foreach($row as $k => $v) if(str_starts_with((string) $k, '_score_')) {
 							$v = (float) $v; 
 							if($v === 111.1 || $v === 222.2 || $v === 333.3) continue; // signal scores of non-match
 							$score += $v;
@@ -1181,8 +1181,8 @@ class PageFinder extends Wire {
 			$findPerField = false;
 			$findExtends = false;
 
-			if(strpos($fieldName, '.')) {
-				$parts = explode('.', $fieldName);
+			if(strpos((string) $fieldName, '.')) {
+				$parts = explode('.', (string) $fieldName);
 				$fieldName = array_shift($parts); 
 				foreach($parts as $k => $part) {
 					if($part === 'fields') {
@@ -1374,7 +1374,7 @@ class PageFinder extends Wire {
 			}
 			
 			$fn = reset($fieldsArray);
-			$parts = explode('.', $fn);
+			$parts = explode('.', (string) $fn);
 			$fieldName = array_shift($parts);
 			$field = $this->isPageField($fieldName);
 			
@@ -1488,9 +1488,9 @@ class PageFinder extends Wire {
 			$findSelector = '';
 			
 			foreach($fields as $fieldName) {
-				if(str_contains($fieldName, '.')) {
+				if(str_contains((string) $fieldName, '.')) {
 					/** @noinspection PhpUnusedLocalVariableInspection */
-					[$unused, $fieldName] = explode('.', $fieldName);
+					[$unused, $fieldName] = explode('.', (string) $fieldName);
 				}
 				$field = $this->fields->get($fieldName);
 				if(!$field) continue;
@@ -1727,9 +1727,9 @@ class PageFinder extends Wire {
 			foreach($fields as $fieldName) {
 
 				// if a specific DB field from the table has been specified, then get it, otherwise assume 'data'
-				if(strpos($fieldName, '.')) {
+				if(strpos((string) $fieldName, '.')) {
 					// if fieldName is "a.b.c" $subfields (plural) retains "b.c" while $subfield is just "b"
-					[$fieldName, $subfields] = explode('.', $fieldName, 2);
+					[$fieldName, $subfields] = explode('.', (string) $fieldName, 2);
 					if(strpos($subfields, '.')) {
 						[$subfield] = explode('.', $subfields); // just the first
 					} else {
@@ -1873,7 +1873,7 @@ class PageFinder extends Wire {
 				$lastSelector = $selector; 	
 			} // fields
 			
-			if(strlen($whereFields)) {
+			if(strlen((string) $whereFields)) {
 				if(strlen($where)) {
 					$where = "($where) $whereFieldsType ($whereFields)";
 				} else {
@@ -2323,10 +2323,10 @@ class PageFinder extends Wire {
 		
 		foreach($values as $value) {
 
-			$fc = substr($value, 0, 1); 
-			$lc = substr($value, -1);
+			$fc = substr((string) $value, 0, 1); 
+			$lc = substr((string) $value, -1);
 			$descending = $fc == '-' || $lc == '-';
-			$value = trim($value, "-+"); 
+			$value = trim((string) $value, "-+"); 
 			$subValue = '';
 			// $terValue = ''; // not currently used, here for future use
 			
@@ -2657,8 +2657,8 @@ class PageFinder extends Wire {
 			$IDs = []; // populated in special cases where we can just match parent IDs
 			$sql = '';
 
-			if(strpos($field, '.')) {
-				[$field, $subfield] = explode('.', $field);
+			if(strpos((string) $field, '.')) {
+				[$field, $subfield] = explode('.', (string) $field);
 				$subfield = $sanitizer->fieldName($subfield);
 			}
 
@@ -2803,7 +2803,7 @@ class PageFinder extends Wire {
 				if($isName && $operator == '~=') {
 					// handle one or more space-separated full words match to 'name' field in any order
 					$s = '';
-					foreach(explode(' ', $value) as $n => $word) {
+					foreach(explode(' ', (string) $value) as $n => $word) {
 						$word = $sanitizer->pageName($word, Sanitizer::toAscii);
 						if($database->getRegexEngine() === 'ICU') {
 							// MySQL 8.0.4+ uses ICU regex engine where "\\b" is used for word boundary
@@ -3493,8 +3493,8 @@ class PageFinder extends Wire {
 			array_shift($fields);
 			$subfields = [$subfields];
 			foreach($fields as $name) {
-				if(str_starts_with($name, "$fieldName.")) {
-					[, $name] = explode('__owner.', $name); 	
+				if(str_starts_with((string) $name, "$fieldName.")) {
+					[, $name] = explode('__owner.', (string) $name); 	
 					$subfields[] = $name;
 				} else {
 					$this->syntaxError(
@@ -3607,7 +3607,7 @@ class PageFinder extends Wire {
 		}
 
 		if($fieldName !== null) {
-			if(strpos($fieldName, '.')) [$fieldName, ] = explode('.', $fieldName, 2);
+			if(strpos((string) $fieldName, '.')) [$fieldName, ] = explode('.', (string) $fieldName, 2);
 			if($this->fields->isNative($fieldName)) return true;
 		}
 
@@ -3643,7 +3643,7 @@ class PageFinder extends Wire {
 	 * @throws PageFinderSyntaxException
 	 * 
 	 */
-	public function syntaxError($message) {
+	public function syntaxError($message): never {
 		throw new PageFinderSyntaxException($message); 
 	}
 }

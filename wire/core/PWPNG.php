@@ -24,10 +24,10 @@ class PWPNG {
 	public function loadFile($lpszFileName) {
 		// READ FILE
 		if(!($fh = @fopen($lpszFileName, 'rb'))) {
-			$this->Error('Can\'t open image file: '.basename($lpszFileName));
+			$this->Error('Can\'t open image file: '.basename((string) $lpszFileName));
 			return false;
 		}
-		$ret = (false === $this->_parsepngstream($fh, basename($lpszFileName))) ? false : true;
+		$ret = (false === $this->_parsepngstream($fh, basename((string) $lpszFileName))) ? false : true;
 		fclose($fh);
 		return $ret;
 	}
@@ -87,11 +87,11 @@ class PWPNG {
 				// Read transparency info
 				$t = $this->_readstream($f,$n);
 				if($ct == 0) {
-					$trns = [ord(substr($t,1,1))];
+					$trns = [ord(substr((string) $t,1,1))];
 				} else if($ct == 2) {
-					$trns = [ord(substr($t, 1, 1)), ord(substr($t, 3, 1)), ord(substr($t, 5, 1))];
+					$trns = [ord(substr((string) $t, 1, 1)), ord(substr((string) $t, 3, 1)), ord(substr((string) $t, 5, 1))];
 				} else {
-					$pos = strpos($t, chr(0));
+					$pos = strpos((string) $t, chr(0));
 					if($pos !== false) $trns = [$pos];
 				}
 				$this->_readstream($f, 4);
@@ -129,7 +129,7 @@ class PWPNG {
 	}
 	protected function _readint($f) {
 		// Read a 4-byte integer from stream
-		$a = unpack('Ni',$this->_readstream($f,4));
+		$a = unpack('Ni',(string) $this->_readstream($f,4));
 		return $a['i'];
 	}
 	protected function Error($msg) {

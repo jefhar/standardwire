@@ -296,7 +296,7 @@ class WireMail extends WireData implements WireMailInterface {
 				$toEmail = $key; 
 				$toName = $value; 
 
-			} else if(str_contains($value, '<') && str_contains($value, '>')) {
+			} else if(str_contains((string) $value, '<') && str_contains((string) $value, '>')) {
 				// toName supplied as: "User Name <user@example.com"
 				[$toEmail, $toName] = $this->extractEmailAndName($value); 
 
@@ -390,7 +390,7 @@ class WireMail extends WireData implements WireMailInterface {
 		if($name) $this->mail['replyToName'] = $this->sanitizeHeaderValue($name); 
 		$this->mail['replyTo'] = $email;
 		if(empty($name) && !empty($this->mail['replyToName'])) $name = $this->mail['replyToName']; 
-		if(strlen($name)) $email = $this->bundleEmailAndName($email, $name); 
+		if(strlen((string) $name)) $email = $this->bundleEmailAndName($email, $name); 
 		$this->header('Reply-To', $email); 
 		return $this; 
 	}
@@ -403,7 +403,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * 
 	 */
 	public function replyToName($name) {
-		if(strlen($this->mail['replyTo'])) return $this->replyTo($this->mail['replyTo'], $name); 
+		if(strlen((string) $this->mail['replyTo'])) return $this->replyTo($this->mail['replyTo'], $name); 
 		$this->mail['replyToName'] = $this->sanitizeHeaderValue($name);
 		return $this; 
 	}
@@ -754,7 +754,7 @@ class WireMail extends WireData implements WireMailInterface {
 			
 			$filename = $sanitizer->text($filename, ['maxLength' => 512, 'truncateTail' => false, 'stripSpace' => '-', 'stripQuotes' => true]);
 			
-			if(stripos($filename, $boundary) !== false) continue;
+			if(stripos((string) $filename, $boundary) !== false) continue;
 			
 			$content = file_get_contents($file);
 			$content = chunk_split(base64_encode($content));

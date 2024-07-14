@@ -37,7 +37,7 @@ class PWGIFIMAGE {
 		$datLen = 0;
 		while(true) {
 			$b = ord($data[0]);
-			$data = substr($data, 1);
+			$data = substr((string) $data, 1);
 			$datLen++;
 			switch($b) {
 				case 0x21: // Extension
@@ -81,7 +81,7 @@ class PWGIFIMAGE {
 	function skipExt(&$data, &$extLen) {
 		$extLen = 0;
 		$b = ord($data[0]);
-		$data = substr($data, 1);
+		$data = substr((string) $data, 1);
 		$extLen++;
 		switch($b) {
 			case 0xF9: // Graphic Control
@@ -114,7 +114,7 @@ class PWGIFIMAGE {
 		return true;
 	}
 	private function w2i($str) {
-		return ord(substr($str, 0, 1)) + (ord(substr($str, 1, 1)) << 8);
+		return ord(substr((string) $str, 0, 1)) + (ord(substr((string) $str, 1, 1)) << 8);
 	}
 	function deInterlace() {
 		$data = $this->m_data;
@@ -138,12 +138,12 @@ class PWGIFIMAGE {
 					break;
 			}
 			for(; $y < $this->m_gih->m_nHeight; $y += $s) {
-				$lne = substr($this->m_data, 0, $this->m_gih->m_nWidth);
-				$this->m_data = substr($this->m_data, $this->m_gih->m_nWidth);
+				$lne = substr((string) $this->m_data, 0, $this->m_gih->m_nWidth);
+				$this->m_data = substr((string) $this->m_data, $this->m_gih->m_nWidth);
 				$data =
-					substr($data, 0, $y * $this->m_gih->m_nWidth) .
+					substr((string) $data, 0, $y * $this->m_gih->m_nWidth) .
 					$lne .
-					substr($data, ($y + 1) * $this->m_gih->m_nWidth);
+					substr((string) $data, ($y + 1) * $this->m_gih->m_nWidth);
 			}
 		}
 		$this->m_data = $data;

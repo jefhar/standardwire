@@ -674,7 +674,7 @@ class PageTraversal {
 				if($language && $languages && $languages->hasPageNames()) {
 					$prefix = $languages->pageNames()->get("pageNumUrlPrefix$language");
 				}
-				if(!strlen($prefix)) $prefix = $config->pageNumUrlPrefix;
+				if(!strlen((string) $prefix)) $prefix = $config->pageNumUrlPrefix;
 				$url = rtrim($url, '/') . '/' . $prefix . ((int) $options['pageNum']);
 				if($template->slashPageNum) $url .= '/';
 			}
@@ -687,7 +687,7 @@ class PageTraversal {
 		}
 
 		if($options['scheme']) {
-			$scheme = strtolower($options['scheme']);
+			$scheme = strtolower((string) $options['scheme']);
 			if(!str_contains($scheme, '://')) $scheme .= '://';
 			if($scheme === 'https://' && $config->noHTTPS) $scheme = 'http' . '://';
 			$host = $options['host'] ?: $config->httpHost;
@@ -781,7 +781,7 @@ class PageTraversal {
 					}
 				} 
 				$key .= wireDate('c', $pathInfo['date']);
-				$urls[$key] = $rootUrl . ltrim($pathInfo['path'], '/');
+				$urls[$key] = $rootUrl . ltrim((string) $pathInfo['path'], '/');
 			}
 		}
 

@@ -804,15 +804,15 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			}
 		}
 		if(is_array($cropping)) {
-			if(str_contains($cropping[0], '%')) {
-				$v = trim($cropping[0], '%');
+			if(str_contains((string) $cropping[0], '%')) {
+				$v = trim((string) $cropping[0], '%');
 				if(ctype_digit(trim($v, '-'))) $v = (int) $v;
 				$cropping[0] = round(min(100, max(0, $v))) . '%';
 			} else {
 				$cropping[0] = (int) $cropping[0];
 			}
-			if(str_contains($cropping[1], '%')) {
-				$v = trim($cropping[1], '%');
+			if(str_contains((string) $cropping[1], '%')) {
+				$v = trim((string) $cropping[1], '%');
 				if(ctype_digit(trim($v, '-'))) $v = (int) $v;
 				$cropping[1] = round(min(100, max(0, $v))) . '%';
 			} else {
@@ -860,8 +860,8 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			// p = percent, d = pixel dimension, z = zoom
 			$zoom = isset($cropping[2]) ? (int) $cropping[2] : 0;
 			$cropping = 
-				(str_contains($cropping[0], '%') ? 'p' : 'd') . 
-				((int) rtrim($cropping[0], '%')) . 'x' . ((int) rtrim($cropping[1], '%'));
+				(str_contains((string) $cropping[0], '%') ? 'p' : 'd') . 
+				((int) rtrim((string) $cropping[0], '%')) . 'x' . ((int) rtrim((string) $cropping[1], '%'));
 			if($zoom > 1 && $zoom < 100) $cropping .= "z$zoom";
 		}
 
@@ -1189,7 +1189,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 *
 	 */
 	public function setFlip($flip) {
-		$flip = strtolower(substr($flip, 0, 1));
+		$flip = strtolower(substr((string) $flip, 0, 1));
 		if($flip == 'v' || $flip == 'h') $this->flip = $flip;
 		return $this;
 	}
@@ -1566,13 +1566,13 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 			// index 0 represents % or pixels from left
 			// index 1 represents % or pixels from top
 			// @interrobang + @u-nikos
-			if(!str_contains($this->cropping[0], '%')) {
+			if(!str_contains((string) $this->cropping[0], '%')) {
 				$pointX = (int) $this->cropping[0];
 			} else {
 				$pointX = $gdWidth * ((int) $this->cropping[0] / 100);
 			}
 
-			if(!str_contains($this->cropping[1], '%')) {
+			if(!str_contains((string) $this->cropping[1], '%')) {
 				$pointY = (int) $this->cropping[1];
 			} else {
 				$pointY = $gdHeight * ((int) $this->cropping[1] / 100);
@@ -1913,7 +1913,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 		// therefore we need index 0 and 1 to be strings with '%' sign included
 		// and index 2 to be an integer between 2 and 70
 		$a = $this->cropping;
-		if(is_array($a) && isset($a[2]) && str_contains($a[0], '%') && str_contains($a[1], '%')) {
+		if(is_array($a) && isset($a[2]) && str_contains((string) $a[0], '%') && str_contains((string) $a[1], '%')) {
 			$zoom = (int) $a[2];
 			if($zoom < 2) $zoom = 0;
 			if($zoom > 70) $zoom = 70;

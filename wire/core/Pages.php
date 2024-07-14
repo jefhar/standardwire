@@ -425,14 +425,14 @@ class Pages extends Wire {
 		}
 		
 		foreach($joinFields as $key => $name) {
-			if(is_int($name) || ctype_digit($name)) {
+			if(is_int($name) || ctype_digit((string) $name)) {
 				$field = $fields->get($name);
 				if(!$field) continue;
 				$name = $field->name;
-			} else if(str_contains($name, '.')) {
-				[$name, ] = explode('.', $name, 2); // subfields not allowed
+			} else if(str_contains((string) $name, '.')) {
+				[$name, ] = explode('.', (string) $name, 2); // subfields not allowed
 			}
-			$joinFields[$key] = trim($name);
+			$joinFields[$key] = trim((string) $name);
 		}
 		
 		$options['joinFields'] = $joinFields;
@@ -1911,7 +1911,7 @@ class Pages extends Wire {
 
 		unset($options['template'], $options['parent'], $options['pageClass']); 
 	
-		if(!str_contains($class, "\\")) $class = wireClassName($class, true);
+		if(!str_contains((string) $class, "\\")) $class = wireClassName($class, true);
 		
 		$page = $this->wire(new $class($template));
 		

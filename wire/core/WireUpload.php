@@ -311,7 +311,7 @@ class WireUpload extends Wire {
 
 		if(empty($_SERVER['HTTP_X_FILENAME'])) return false;
 		
-		$filename = rawurldecode($_SERVER['HTTP_X_FILENAME']); // per #1487
+		$filename = rawurldecode((string) $_SERVER['HTTP_X_FILENAME']); // per #1487
 		$dir = $this->getUploadDir();
 		$tmpName = tempnam($dir, wireClassName($this, false));
 	
@@ -445,8 +445,8 @@ class WireUpload extends Wire {
 		if($value[0] == '.') return false; // no hidden files
 		
 		$value = $this->wire()->sanitizer->filename($value, Sanitizer::translate); 
-		if($this->lowercase) $value = strtolower($value);
-		$value = trim($value, "_");
+		if($this->lowercase) $value = strtolower((string) $value);
+		$value = trim((string) $value, "_");
 		if(!strlen($value)) return false;
 
 		$p = pathinfo($value);
@@ -721,7 +721,7 @@ class WireUpload extends Wire {
 	 * 
 	 */
 	public function setValidExtensions(array $extensions) {
-		foreach($extensions as $ext) $this->validExtensions[] = strtolower($ext); 
+		foreach($extensions as $ext) $this->validExtensions[] = strtolower((string) $ext); 
 		return $this; 
 	}
 

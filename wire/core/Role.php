@@ -181,8 +181,8 @@ class Role extends Page {
 				$rolesPermissions = $accessTemplate->rolesPermissions; 
 				if(!isset($rolesPermissions["$this->id"])) return $has;
 				foreach($rolesPermissions["$this->id"] as $permissionID) {
-					$revoke = str_starts_with($permissionID, '-');
-					if($revoke) $permissionID = ltrim($permissionID, '-');
+					$revoke = str_starts_with((string) $permissionID, '-');
+					if($revoke) $permissionID = ltrim((string) $permissionID, '-');
 					$permissionID = (int) $permissionID;	
 					if($permission->id != $permissionID) continue;
 					if($has) {

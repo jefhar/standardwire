@@ -560,7 +560,7 @@ class PagesLoader extends Wire {
 				$note .= ": " . $pages->first()->path;
 				if($count > 1) $note .= " ... " . $pages->last()->path;
 			}
-			if(!str_ends_with($caller, ')')) $caller .= "($selectorString)";
+			if(!str_ends_with((string) $caller, ')')) $caller .= "($selectorString)";
 			Debug::saveTimer($caller, $note);
 			foreach($pages as $item) {
 				if($item->_debug_loader) continue;
@@ -677,7 +677,7 @@ class PagesLoader extends Wire {
 			if($languages) {
 				foreach($languageIds as $id) {
 					$key = "name$id";
-					if(isset($row[$key]) && str_starts_with($row[$key], 'xn-')) {
+					if(isset($row[$key]) && str_starts_with((string) $row[$key], 'xn-')) {
 						$page->setName($row[$key], $key);
 						unset($row[$key]);
 					}
@@ -685,7 +685,7 @@ class PagesLoader extends Wire {
 			}
 
 			foreach($row as $key => $value) {
-				if(strpos($key, '__')) {
+				if(strpos((string) $key, '__')) {
 					if($value === null) {
 						$row[$key] = 'null'; // ensure detected by later isset in foreach($joinFields)
 					} else {
@@ -1135,7 +1135,7 @@ class PagesLoader extends Wire {
 						$idsByTemplate[$tid][] = $id;
 					}
 				} else {
-					$id = trim($id);
+					$id = trim((string) $id);
 					if(!ctype_digit($id)) continue;
 					$id = (int) $id;
 				}
@@ -1204,7 +1204,7 @@ class PagesLoader extends Wire {
 				$query = $database->prepare("$sql WHERE id=:id");
 				$query->bindValue(':id', (int) reset($ids), \PDO::PARAM_INT); 
 			} else {
-				$ids = array_map('intval', $ids);
+				$ids = array_map(intval(...), $ids);
 				$sql = "$sql WHERE id IN(" . implode(',', $ids) . ")";
 				$query = $database->prepare($sql);
 			}
@@ -1282,7 +1282,7 @@ class PagesLoader extends Wire {
 			}
 			
 			if(count($ids) > 1) {
-				$ids = array_map('intval', $ids);
+				$ids = array_map(intval(...), $ids);
 				$query->where('pages.id IN(' . implode(',', $ids) . ')');
 			} else {
 				$id = reset($ids);
@@ -1692,7 +1692,7 @@ class PagesLoader extends Wire {
 
 		$_path = $path;
 		$path = $sanitizer->pagePathName($path, Sanitizer::toAscii);
-		$pathParts = explode('/', trim($path, '/'));
+		$pathParts = explode('/', trim((string) $path, '/'));
 		$_pathParts = $pathParts;
 		
 		$languages = $options['useLanguages'] ? $this->wire()->languages : null;

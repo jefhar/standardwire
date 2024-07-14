@@ -799,7 +799,7 @@ class Pageimage extends Pagefile {
 	
 		if(!is_array($options['suffix'])) {
 			// convert to array
-			$options['suffix'] = empty($options['suffix']) ? [] : explode(' ', $options['suffix']); 
+			$options['suffix'] = empty($options['suffix']) ? [] : explode(' ', (string) $options['suffix']); 
 		}
 
 		if($options['rotate'] && !in_array(abs((int) $options['rotate']), [90, 180, 270])) {
@@ -809,7 +809,7 @@ class Pageimage extends Pagefile {
 			$options['suffix'][] = ($options['rotate'] > 0 ? "rot" : "tor") . abs($options['rotate']);
 		}
 		if($options['flip']) {
-			$options['suffix'][] = strtolower(substr($options['flip'], 0, 1)) == 'v' ? 'flipv' : 'fliph';
+			$options['suffix'][] = strtolower(substr((string) $options['flip'], 0, 1)) == 'v' ? 'flipv' : 'fliph';
 		}
 		
 		$suffixStr = '';
@@ -817,7 +817,7 @@ class Pageimage extends Pagefile {
 			$suffix = $options['suffix'];
 			sort($suffix); 
 			foreach($suffix as $key => $s) {
-				$s = strtolower($this->wire()->sanitizer->fieldName($s)); 
+				$s = strtolower((string) $this->wire()->sanitizer->fieldName($s)); 
 				if(empty($s)) {
 					unset($suffix[$key]);
 				} else {
@@ -856,7 +856,7 @@ class Pageimage extends Pagefile {
 		$filenameFinalExists = file_exists($filenameFinal);
 
 		if(!empty($options['webpName'])) {
-			$filenameFinalWebp = $this->pagefiles->path() . basename($options['webpName'], '.webp') . '.webp';
+			$filenameFinalWebp = $this->pagefiles->path() . basename((string) $options['webpName'], '.webp') . '.webp';
 		} else if(!empty($webpOptions['useSrcExt'])) {
 			$filenameFinalWebp = $this->pagefiles->path() . $basename . '.webp'; // file.jpg.webp
 		} else {
@@ -1630,13 +1630,13 @@ class Pageimage extends Pagefile {
 			$image = $this->size($w, $h, $options);
 		}
 		
-		if(!empty($options['link']) && !str_contains($markup, '<a ')) {
+		if(!empty($options['link']) && !str_contains((string) $markup, '<a ')) {
 			$markup = "<a href='{original.url}'>$markup</a>";
 		}
 		
 		foreach($properties as $property) {
 			$tag = '{' . $property . '}';
-			if(!str_contains($markup, $tag)) continue;
+			if(!str_contains((string) $markup, $tag)) continue;
 			if(($property === 'alt' || $property === 'class') && isset($options[$property])) {
 				$value = $sanitizer->entities($options[$property]);
 			} else {
@@ -1645,17 +1645,17 @@ class Pageimage extends Pagefile {
 			$replacements[$tag] = $value;
 		}
 		
-		if(strpos($markup, '{class}')) {
+		if(strpos((string) $markup, '{class}')) {
 			$class = isset($options['class']) ? $sanitizer->entities($options['class']) : 'pw-pageimage';
 			$replacements["{class}"] = $class; 
 		}
 		
-		if(str_contains($markup, '{original.')) {
+		if(str_contains((string) $markup, '{original.')) {
 			if(!$original) $original = $image->getOriginal();
 			if(!$original) $original = $image;
 			foreach($properties as $property) {
 				$tag = '{original.' . $property . '}';
-				if(!str_contains($markup, $tag)) continue;
+				if(!str_contains((string) $markup, $tag)) continue;
 				$value = $sanitizer->entities1($original->get($property));
 				$replacements[$tag] = $value;
 			}

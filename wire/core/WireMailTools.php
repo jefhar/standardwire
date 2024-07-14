@@ -75,7 +75,7 @@ class WireMailTools extends Wire {
 		
 		// see if a specific WireMail module is requested
 		if(!empty($settings['module'])) {
-			if(strtolower($settings['module']) === 'wiremail') {
+			if(strtolower((string) $settings['module']) === 'wiremail') {
 				$mail = $this->wire(new WireMail()); 
 			} else {
 				$mail = $modules->getModule($settings['module']);
@@ -188,8 +188,8 @@ class WireMailTools extends Wire {
 			// configure the mail
 			$mail->to($to)->subject($subject);
 			if(strlen($from)) $mail->from($from);
-			if(strlen($options['bodyHTML'])) $mail->bodyHTML($options['bodyHTML']);
-			if(strlen($options['body'])) $mail->body($options['body']);
+			if(strlen((string) $options['bodyHTML'])) $mail->bodyHTML($options['bodyHTML']);
+			if(strlen((string) $options['body'])) $mail->body($options['body']);
 			if(count($options['headers'])) {
 				foreach($options['headers'] as $k => $v) $mail->header($k, $v);
 			}
@@ -440,25 +440,25 @@ class WireMailTools extends Wire {
 
 		$inBlacklist = false;
 		$tt = $this->wire()->sanitizer->getTextTools();
-		$email = trim($tt->strtolower($email));
+		$email = trim((string) $tt->strtolower($email));
 		
 		if(!str_contains($email, '@')) {
 			return $options['why'] ? "Invalid email address" : true;
 		}
 
 		foreach($blacklist as $line) {
-			$line = $tt->strtolower(trim($line));
-			if(!strlen($line)) continue;
-			if(str_starts_with($line, '/')) {
+			$line = $tt->strtolower(trim((string) $line));
+			if(!strlen((string) $line)) continue;
+			if(str_starts_with((string) $line, '/')) {
 				// perform a regex match
 				if(preg_match($line, $email)) $inBlacklist = $line;
-			} else if(strpos($line, '@')) {
+			} else if(strpos((string) $line, '@')) {
 				// full email (@ is present and is not first char)
 				if($email === $line) $inBlacklist = $line;
-			} else if(str_starts_with($line, '.')) {
+			} else if(str_starts_with((string) $line, '.')) {
 				// any hostname at domain (.domain.com)
 				[, $emailDomain] = explode('@', $email);
-				if($emailDomain === ltrim($line, '.')) {
+				if($emailDomain === ltrim((string) $line, '.')) {
 					$inBlacklist = $line;
 				} else if($tt->substr($emailDomain, -1 * $tt->strlen($line)) === $line ) {
 					$inBlacklist = $line;

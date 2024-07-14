@@ -122,12 +122,12 @@ class WireTextTools extends Wire {
 			}
 
 			// ensure list items are on their own line and prefixed with a bullet
-			if(stripos($str, '<li') !== false) {
+			if(stripos((string) $str, '<li') !== false) {
 				$prefix = in_array('li', $options['keepTags']) ? '' : $options['listItemPrefix'];
 				$str = preg_replace('![\s\r\n]+<li[^>]*>[\s\r\n]*!i', "\n<li>$prefix", $str);
 				if($prefix) {
 					$options['replacements']["\n$prefix "] = "\n$prefix"; // prevent extra space
-					$prefix = trim($prefix); 
+					$prefix = trim((string) $prefix); 
 					$options['finishReplacements']["\n$prefix\n$prefix"] = ""; // prevent blank items
 					$options['finishReplacements']["\n$prefix\n"] = "";
 					
@@ -135,24 +135,24 @@ class WireTextTools extends Wire {
 			}
 
 			// convert <br> tags to be just a single newline
-			if(stripos($str, '<br') !== false) {
+			if(stripos((string) $str, '<br') !== false) {
 				$str = str_replace(['<br>', '<br/>', '<br />', '</li>'], "<br>\n", $str);
 				while(stripos($str, "\n<br>") !== false) $str = str_replace("\n<br>", "<br>", $str);
 				while(stripos($str, "<br>\n\n") !== false) $str = str_replace("<br>\n\n", "<br>\n", $str);
 			}
 
 			// make headlines more prominent with underlines or uppercase
-			if(($options['uppercaseHeadlines'] || $options['underlineHeadlines']) && stripos($str, '<h') !== false) {
+			if(($options['uppercaseHeadlines'] || $options['underlineHeadlines']) && stripos((string) $str, '<h') !== false) {
 				$topHtag = '';
 				if($options['underlineHeadlines']) {
 					// determine which is the top level headline tag 
 					for($n = 1; $n <= 6; $n++) {
-						if(stripos($str, "<h$n") === false) continue;
+						if(stripos((string) $str, "<h$n") === false) continue;
 						$topHtag = "h$n";
 						break;
 					}
 				}
-				if(preg_match_all('!<(h[123456])[^>]*>(.+?)</\1>!is', $str, $matches)) {
+				if(preg_match_all('!<(h[123456])[^>]*>(.+?)</\1>!is', (string) $str, $matches)) {
 					foreach($matches[2] as $key => $headline) {
 						$fullMatch = $matches[0][$key];
 						$tagName = strtolower($matches[1][$key]);
@@ -169,8 +169,8 @@ class WireTextTools extends Wire {
 			}
 		
 			// convert "<a href='url'>text</a>" tags to "text (url)"
-			if(($options['linksToUrls'] || $options['linksToMarkdown']) && stripos($str, '<a ') !== false) {
-				if(preg_match_all('!<a\s[^<>]*href=([^\s>]+)[^<>]*>(.+?)</a>!is', $str, $matches)) {
+			if(($options['linksToUrls'] || $options['linksToMarkdown']) && stripos((string) $str, '<a ') !== false) {
+				if(preg_match_all('!<a\s[^<>]*href=([^\s>]+)[^<>]*>(.+?)</a>!is', (string) $str, $matches)) {
 					$links = [];
 					foreach($matches[0] as $key => $fullMatch) {
 						$href = trim($matches[1][$key], '"\'');
@@ -186,8 +186,8 @@ class WireTextTools extends Wire {
 			}
 		
 			// indent within <pre>...</pre> sections
-			if(strlen($options['preIndent']) && str_contains($str, '<pre')) {
-				if(preg_match_all('!<pre(?:>|\s[^>]*>)(.+?)</pre>!is', $str, $matches)) {
+			if(strlen((string) $options['preIndent']) && str_contains((string) $str, '<pre')) {
+				if(preg_match_all('!<pre(?:>|\s[^>]*>)(.+?)</pre>!is', (string) $str, $matches)) {
 					foreach($matches[0] as $key => $fullMatch) {
 						$lines = explode("\n", $matches[1][$key]);
 						foreach($lines as $k => $line) {
@@ -202,8 +202,8 @@ class WireTextTools extends Wire {
 		
 			// strip tags AND their contents for specified tags
 			foreach($options['clearTags'] as $s) {
-				$s = strtolower($s);
-				if(stripos($str, "<$s") === false) continue;
+				$s = strtolower((string) $s);
+				if(stripos((string) $str, "<$s") === false) continue;
 				$str = str_ireplace(["<$s", "</$s"], ["<$s", "</$s"], $str); // adjust case
 				$parts = explode("<$s", $str); 
 				foreach($parts as $key => $part) {
@@ -224,13 +224,13 @@ class WireTextTools extends Wire {
 			// some tags will be allowed to remain
 			$keepTags = '';
 			foreach($options['keepTags'] as $tag) {
-				$keepTags .= "<" . trim($tag, "<>") . ">";
+				$keepTags .= "<" . trim((string) $tag, "<>") . ">";
 			}
-			$str = strip_tags($str, $keepTags);
+			$str = strip_tags((string) $str, $keepTags);
 
 		} else {
 			// not allowing any tags
-			$str = strip_tags($str);
+			$str = strip_tags((string) $str);
 			// if any possible tag characters remain, drop them now
 			$str = str_replace(['<', '>'], ' ', $str);
 		}
@@ -247,17 +247,17 @@ class WireTextTools extends Wire {
 	
 		// collapse any redundant/extra whitespace
 		if($options['collapseSpaces']) {
-			while(str_contains($str, '  ')) $str = str_replace('  ', ' ', $str);
+			while(str_contains((string) $str, '  ')) $str = str_replace('  ', ' ', $str);
 		}
 		
 		// normalize newlines and whitespace around newlines
-		while(str_contains($str, " \n")) $str = str_replace(" \n", "\n", $str);
-		while(str_contains($str, "\n ")) $str = str_replace("\n ", "\n", $str);
-		while(str_contains($str, "\n\n\n")) $str = str_replace("\n\n\n", "\n\n", $str);
+		while(str_contains((string) $str, " \n")) $str = str_replace(" \n", "\n", $str);
+		while(str_contains((string) $str, "\n ")) $str = str_replace("\n ", "\n", $str);
+		while(str_contains((string) $str, "\n\n\n")) $str = str_replace("\n\n\n", "\n\n", $str);
 
-		if(strpos($str, '](')) {
+		if(strpos((string) $str, '](')) {
 			// contains links
-			if(str_contains($str, '[](') || str_contains($str, '[ ](')) {
+			if(str_contains((string) $str, '[](') || str_contains((string) $str, '[ ](')) {
 				// remove links that lack anchor text
 				$str = preg_replace('!\[\s*\]\([^)]*\)!', '', $str);
 			}
@@ -271,7 +271,7 @@ class WireTextTools extends Wire {
 			$str = str_replace(array_keys($options['finishReplacements']), array_values($options['finishReplacements']), $str); 
 		}
 
-		return trim($str);
+		return trim((string) $str);
 	}
 
 	/**
@@ -571,7 +571,7 @@ class WireTextTools extends Wire {
 		// collapse whitespace and strip tags
 		$str = $this->collapse($str, $options);
 		
-		if(trim($options['collapseLinesWith']) && $this->strpos($str, $options['collapseLinesWith'])) {
+		if(trim((string) $options['collapseLinesWith']) && $this->strpos($str, $options['collapseLinesWith'])) {
 			// if lines are collapsed with something other than whitespace, avoid using that string
 			// when the line already ends with sentence punctuation
 			foreach($endSentenceChars as $c) {
@@ -671,7 +671,7 @@ class WireTextTools extends Wire {
 			$result = $this->trim($str, $options['trim']) . $options['more'];
 		}
 		
-		if(strlen($options['more'])) {
+		if(strlen((string) $options['more'])) {
 			// remove any duplicated more strings
 			$more = $options['more'];
 			while(str_contains($result, "$more$more")) {
@@ -701,7 +701,7 @@ class WireTextTools extends Wire {
 		$n = 0;
 		
 		// regex matches specified words, plus digits or single letters followed by period
-		$noEndRegex = '!\b(' . str_replace(' ', '|', preg_quote($options['noEndSentence'])) . '|\d+\.|\w\.)$!';
+		$noEndRegex = '!\b(' . str_replace(' ', '|', preg_quote((string) $options['noEndSentence'])) . '|\d+\.|\w\.)$!';
 		
 		do {
 			
@@ -908,12 +908,12 @@ class WireTextTools extends Wire {
 		
 		if($pos1 === false) return $options['has'] ? false : $tags;
 		
-		if(strlen($options['tagClose'])) {
+		if(strlen((string) $options['tagClose'])) {
 			$pos2 = strpos($str, (string) $options['tagClose']);
 			if($pos2 === false) return $options['has'] ? false : $tags;
 		}
 
-		$regex = '/' . preg_quote($options['tagOpen']) . '([-_.|a-zA-Z0-9]+)' . preg_quote($options['tagClose']) . '/';
+		$regex = '/' . preg_quote((string) $options['tagOpen']) . '([-_.|a-zA-Z0-9]+)' . preg_quote((string) $options['tagClose']) . '/';
 		if($options['has']) return (bool) preg_match($regex, $str);
 		if(!preg_match_all($regex, $str, $matches)) return $tags;
 		
@@ -1097,7 +1097,7 @@ class WireTextTools extends Wire {
 			throw new WireException('$data argument must be associative array, WireData or WireInputData');
 		}
 	
-		[$tagOpen, $tagClose] = [preg_quote($options['tagOpen']), preg_quote($options['tagClose'])]; 
+		[$tagOpen, $tagClose] = [preg_quote((string) $options['tagOpen']), preg_quote((string) $options['tagClose'])]; 
 		
 		$regex = '/OPEN([-_.a-z0-9]+)(:[_,a-z0-9]+CLOSE|CLOSE)/i';
 		$regex = str_replace(['OPEN', 'CLOSE'], [$tagOpen, $tagClose], $regex); 
@@ -1242,8 +1242,8 @@ class WireTextTools extends Wire {
 		$oldArray = preg_split("!($options[split])!", $old, 0, PREG_SPLIT_DELIM_CAPTURE);
 		$newArray = preg_split("!($options[split])!", $new, 0, PREG_SPLIT_DELIM_CAPTURE);
 		$diffArray = $this->diffArray($oldArray, $newArray);
-		[, $delClose] = explode('{out}', $options['del'], 2);
-		[$insOpen, ] = explode('{out}', $options['ins'], 2); 
+		[, $delClose] = explode('{out}', (string) $options['del'], 2);
+		[$insOpen, ] = explode('{out}', (string) $options['ins'], 2); 
 		$out = '';
 		
 		foreach($diffArray as $diff) {

@@ -332,7 +332,7 @@ class ModulesLoader extends ModulesClass {
 
 			if($flags & Modules::flagsSystemCache) {
 				// system cache names are prefixed with a '.' so they load first
-				$this->modules->memcache(ltrim($class, '.'), $row['data']);
+				$this->modules->memcache(ltrim((string) $class, '.'), $row['data']);
 				continue;
 			}
 
@@ -345,7 +345,7 @@ class ModulesLoader extends ModulesClass {
 
 			if($loadSettings) {
 				// preload config data for autoload modules since we'll need it again very soon
-				$data = $row['data'] ? json_decode($row['data'], true) : [];
+				$data = $row['data'] ? json_decode((string) $row['data'], true) : [];
 				$this->modules->configs->configData($moduleID, $data);
 				// populate information about duplicates, if applicable
 				if($flags & Modules::flagsDuplicate) $this->modules->duplicates()->addFromConfigData($class, $data);
@@ -398,7 +398,7 @@ class ModulesLoader extends ModulesClass {
 
 		foreach($modulesFiles->findModuleFiles($path, true) as $pathname) {
 
-			$pathname = trim($pathname);
+			$pathname = trim((string) $pathname);
 			if(empty($pathname)) continue;
 			$basename = basename($pathname);
 			[$moduleName, $ext] = explode('.', $basename, 2); // i.e. "module.php" or "module"

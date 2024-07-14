@@ -180,8 +180,8 @@ class PagesRequest extends Wire {
 		
 		$dirtyUrl = $_SERVER['REQUEST_URI'] ?? '';
 
-		if(!strlen($dirtyUrl) && !empty($_SERVER['QUERY_STRING'])) {
-			if(strlen($_SERVER['QUERY_STRING']) < 4096) {
+		if(!strlen((string) $dirtyUrl) && !empty($_SERVER['QUERY_STRING'])) {
+			if(strlen((string) $_SERVER['QUERY_STRING']) < 4096) {
 				$dirtyUrl = '?' . $_SERVER['QUERY_STRING'];
 			}
 		}
@@ -191,10 +191,10 @@ class PagesRequest extends Wire {
 		if(!isset($_GET['it'])) return;
 	
 		// check if there is an 'it' var present in the request query string, which we don’t want
-		if((str_contains($dirtyUrl, '?it=') || strpos($dirtyUrl, '&it='))) {
+		if((str_contains((string) $dirtyUrl, '?it=') || strpos((string) $dirtyUrl, '&it='))) {
 			// the request URL included a user-inserted 'it' variable in query string
 			// force to use path in request url rather than contents of 'it' var
-			[$it, ] = explode('?', $dirtyUrl, 2);
+			[$it, ] = explode('?', (string) $dirtyUrl, 2);
 			$rootUrl = $this->config->urls->root;
 			if(strlen($rootUrl) > 1) {
 				// root url is a subdirectory, like /pwsite/
@@ -291,13 +291,13 @@ class PagesRequest extends Wire {
 
 		// determine if original URL had anything filtered out of path that will suggest a redirect
 		[$dirtyUrl, ] = explode('?', "$this->dirtyUrl?", 2); // exclude query string
-		if(stripos($dirtyUrl, 'index.php') !== false && stripos($path, 'index.php') === false) {
+		if(stripos($dirtyUrl, 'index.php') !== false && stripos((string) $path, 'index.php') === false) {
 			// force pathFinder to detect a redirect condition without index.php
 			$dirtyUrl = strtolower(rtrim($dirtyUrl, '/'));
-			if(str_ends_with("/$dirtyUrl", '/index.php')) $path = rtrim($path, '/') . '/index.php';
+			if(str_ends_with("/$dirtyUrl", '/index.php')) $path = rtrim((string) $path, '/') . '/index.php';
 		} else if(str_contains($dirtyUrl, '//')) {
 			// force pathFinder to detect redirect sans double slashes, /page/path// => /page/path/
-			$path = rtrim($path, '/') . '//';
+			$path = rtrim((string) $path, '/') . '//';
 		}
 		
 		// get info about requested path
@@ -409,7 +409,7 @@ class PagesRequest extends Wire {
 		if(!$page->id && $isGuest) {
 			// this ensures that no admin requests resolve to a 404 and instead show login form
 			$adminPath = substr($config->urls->admin, strlen($config->urls->root) - 1);
-			if(str_starts_with($this->requestPath, $adminPath)) {
+			if(str_starts_with((string) $this->requestPath, $adminPath)) {
 				$page = $this->pages->get($config->adminRootPageID);
 				$this->redirectUrl = '';
 			}
@@ -515,12 +515,12 @@ class PagesRequest extends Wire {
 
 		if(isset($_GET['it'])) {
 			// normal request
-			$shit = trim($_GET['it']);
+			$shit = trim((string) $_GET['it']);
 
 		} else if(isset($_SERVER['REQUEST_URI'])) {
 			// abnormal request, something about request URL made .htaccess skip it, or index.php called directly
 			$rootUrl = $config->urls->root;
-			$shit = trim($_SERVER['REQUEST_URI']);
+			$shit = trim((string) $_SERVER['REQUEST_URI']);
 			if(str_contains($shit, '?')) [$shit, ] = explode('?', $shit, 2);
 			if($rootUrl != '/') {
 				if(str_starts_with($shit, $rootUrl)) {
@@ -779,7 +779,7 @@ class PagesRequest extends Wire {
 			// check for special case in admin when Process::executeSegment() collides with page name underneath
 			// example: a role named "edit" is created and collides with ProcessPageType::executeEdit()
 			$input = $this->wire()->input;
-			if($user->isLoggedin() && $page->editable() && !strlen($input->urlSegmentStr())) {
+			if($user->isLoggedin() && $page->editable() && !strlen((string) $input->urlSegmentStr())) {
 				$input->setUrlSegment(1, $page->name);
 				return $page->parent;
 			}
@@ -878,7 +878,7 @@ class PagesRequest extends Wire {
 		if(!$scheme) return;
 
 		if($this->redirectUrl) {
-			if(str_contains($this->redirectUrl, '://')) {
+			if(str_contains((string) $this->redirectUrl, '://')) {
 				$url = str_replace(['http://', 'https://'], "$scheme://", $this->redirectUrl);
 			} else {
 				$url = "$scheme://$config->httpHost$this->redirectUrl";
@@ -898,7 +898,7 @@ class PagesRequest extends Wire {
 					if($page->template->slashUrlSegments == 1) $url .= '/';
 				} else {
 					// use whatever the request came with	
-					if(str_ends_with($this->requestPath, '/')) $url .= '/';
+					if(str_ends_with((string) $this->requestPath, '/')) $url .= '/';
 				}
 			}
 
@@ -913,7 +913,7 @@ class PagesRequest extends Wire {
 					if($page->template->slashPageNum == 1) $url .= '/';
 				} else {
 					// use whatever setting the URL came with
-					if(str_ends_with($this->requestPath, '/')) $url .= '/';
+					if(str_ends_with((string) $this->requestPath, '/')) $url .= '/';
 				}
 			}
 		}
@@ -934,7 +934,7 @@ class PagesRequest extends Wire {
 		// $allowMethods = array('GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH');
 		$allowMethods = []; // feature disabled until further development
 		if(empty($allowMethods)) return true; // all allowed when none selected
-		$method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : '';
+		$method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper((string) $_SERVER['REQUEST_METHOD']) : '';
 		if(empty($method)) return true;
 		if(in_array($method, $allowMethods, true)) return true;
 		if($method === 'GET' || $method === 'POST') {

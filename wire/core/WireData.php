@@ -169,8 +169,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	public function get($key) {
 		if(is_object($key)) $key = "$key";
 		if(array_key_exists($key, $this->data)) return $this->data[$key]; 
-		if(strpos($key, '|')) {
-			$keys = explode('|', $key); 
+		if(strpos((string) $key, '|')) {
+			$keys = explode('|', (string) $key); 
 			foreach($keys as $k) {
 				/** @noinspection PhpAssignmentInConditionInspection */
 				if($value = $this->get($k)) return $value;

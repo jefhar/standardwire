@@ -982,7 +982,7 @@ abstract class Fieldtype extends WireData implements Module {
 	
 		if(!$property || $property == 'primaryKey' || $property == 'primaryKeys') {
 			if(isset($schema['keys']['primary'])) {
-				$x = explode('(', rtrim($schema['keys']['primary'], ')'));
+				$x = explode('(', rtrim((string) $schema['keys']['primary'], ')'));
 				$primaryKeys = explode(',', $x[1]);
 				foreach($primaryKeys as $k => $col) {
 					$primaryKeys[$k] = trim($col, '` ');
@@ -994,7 +994,7 @@ abstract class Fieldtype extends WireData implements Module {
 	
 		if(!$property || in_array($property, ['engine', 'charset', 'transactions'])) {
 			if(isset($schema['xtra']['append'])) {
-				$append = str_replace([' =', '= '], '=', strtoupper($schema['xtra']['append']));
+				$append = str_replace([' =', '= '], '=', strtoupper((string) $schema['xtra']['append']));
 				foreach(explode(' ', $append) as $x) {
 					if(!str_contains($x, '=')) continue;
 					[$a, $b] = explode('=', $x);
@@ -1049,7 +1049,7 @@ abstract class Fieldtype extends WireData implements Module {
 		if($options['trimMeta']) unset($schema['keys'], $schema['xtra']); 
 		if($options['trimDefault']) unset($schema['pages_id'], $schema['sort']); 
 		
-		$findType = $options['findType'] ? strtolower(trim($options['findType'], '*')) : false; // find in column type
+		$findType = $options['findType'] ? strtolower(trim((string) $options['findType'], '*')) : false; // find in column type
 		$findAllType = $findType && $findType !== $options['findType']; // find all variations of findType
 		$useFind = $findType || $options['findAutoIncrement'] || $options['findDefaultNULL'];
 	
@@ -1058,7 +1058,7 @@ abstract class Fieldtype extends WireData implements Module {
 		
 		foreach($schema as $colName => $colSchema) {
 			$match = null;
-			$colSchema = strtolower($colSchema) . ' ';
+			$colSchema = strtolower((string) $colSchema) . ' ';
 			[$colType, $colMeta] = explode(' ', $colSchema, 2);
 			
 			if($options['findAutoIncrement'] && $match !== false) {
@@ -1313,7 +1313,7 @@ abstract class Fieldtype extends WireData implements Module {
 				if(is_null($v)) {
 					// check if schema explicitly allows NULL
 					if(empty($schema)) $schema = $this->getDatabaseSchema($field); 
-					$sql2 .= isset($schema[$k]) && stripos($schema[$k], ' DEFAULT NULL') ? ",NULL" : ",''";
+					$sql2 .= isset($schema[$k]) && stripos((string) $schema[$k], ' DEFAULT NULL') ? ",NULL" : ",''";
 				} else {
 					$bindKey = ':v' . (++$n);
 					$bindValues[$bindKey] = $v;
@@ -1330,7 +1330,7 @@ abstract class Fieldtype extends WireData implements Module {
 			if(is_null($value)) {
 				// check if schema explicitly allows NULL
 				$schema = $this->getDatabaseSchema($field); 
-				$null = isset($schema['data']) && stripos($schema['data'], ' DEFAULT NULL') ? "NULL" : "''";
+				$null = isset($schema['data']) && stripos((string) $schema['data'], ' DEFAULT NULL') ? "NULL" : "''";
 				$sql = "INSERT INTO `$table` (pages_id, data) VALUES(:page_id, $null) ";	
 			} else {
 				$bindValues[":value"] = $value;

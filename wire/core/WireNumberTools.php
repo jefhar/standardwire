@@ -181,7 +181,7 @@ class WireNumberTools extends Wire {
 
 		$bytes = (int) $bytes;
 		$options = array_merge($defaults, $options);
-		$type = empty($options['type']) ? '' : strtolower(substr($options['type'], 0, 1));
+		$type = empty($options['type']) ? '' : strtolower(substr((string) $options['type'], 0, 1));
 		$small = $options['small'] ?? false;
 		$labels = $options['labels'];
 

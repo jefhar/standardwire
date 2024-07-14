@@ -335,7 +335,7 @@ class WireShutdown extends Wire {
 		if(empty($spices)) $spices = ['Oops', 'Darn', 'Dangit', 'Oh no', 'Ah snap', 'So sorry', 'Well well', 'Ouch', 'Arrgh', 'Umm', 'Snapsicles', 'Oh snizzle', 'Look', 'What the', 'Uff da', 'Yikes', 'Aw shucks', 'Oye', 'Rats', 'Hmm', 'Yow', 'Not again', 'Look out', 'Hey now', 'Breaking news', 'Excuse me'];
 		
 		$spice = $spices[array_rand($spices)];
-		if(!ctype_punct(substr($spice, -1))) $spice .= '…';
+		if(!ctype_punct(substr((string) $spice, -1))) $spice .= '…';
 		
 		$message = "$spice $message";
 		
@@ -425,7 +425,7 @@ class WireShutdown extends Wire {
 		}
 
 		// encode message the same way that PHP does by default
-		$message = htmlspecialchars($this->error['message'], ENT_COMPAT | ENT_HTML401, ini_get('default_charset'), false);
+		$message = htmlspecialchars((string) $this->error['message'], ENT_COMPAT | ENT_HTML401, ini_get('default_charset'), false);
 		
 		if(str_contains($out, $message)) {
 			// encoded message present in output
@@ -507,7 +507,7 @@ class WireShutdown extends Wire {
 			$session = $this->wire()->session;
 			if($session) {
 				$ip = $session->getIP();
-				if(strlen($ip)) $name = "$name ($ip)";
+				if(strlen((string) $ip)) $name = "$name ($ip)";
 			}
 		}
 
@@ -647,7 +647,7 @@ class WireShutdown extends Wire {
 		
 		$emailSubject = $this->fatalErrorResponse['emailSubject'];
 		if(empty($emailSubject)) $emailSubject = $this->labels['email-subject'];
-		if(!str_contains($emailSubject, '{host}') && $this->config) $emailSubject .= " - {host}";
+		if(!str_contains((string) $emailSubject, '{host}') && $this->config) $emailSubject .= " - {host}";
 		if($this->config) $emailSubject = str_replace('{host}', $this->config->httpHost, $emailSubject);
 		
 		$emailModule = $this->fatalErrorResponse['emailModule'];

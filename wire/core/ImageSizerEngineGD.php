@@ -575,7 +575,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 		}
 
 		// calculate the sharpen divisor
-		$divisor = array_sum(array_map('array_sum', $sharpenMatrix));
+		$divisor = array_sum(array_map(array_sum(...), $sharpenMatrix));
 		$offset = 0;
 
 		// TODO 4 -c errorhandling: Throw WireException?

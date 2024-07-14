@@ -241,7 +241,7 @@ class WireTempDir extends Wire {
 		}
 	
 		if($this->tempDirRoot && is_dir($this->tempDirRoot)) {
-			if($this->createdName && strpos($this->tempDirRoot, "/.$this->createdName")) {
+			if($this->createdName && strpos((string) $this->tempDirRoot, "/.$this->createdName")) {
 				// if tempDirRoot is just for this PW instance, we can remove it now
 				$this->rmdir($this->tempDirRoot, true);
 			} else {
@@ -400,7 +400,7 @@ class WireTempDir extends Wire {
 	protected function rmdir($dir, $recursive = false) {
 		$files = $this->wire()->files;
 		$dir = $files->unixDirName($dir);
-		if(!strlen($dir) || !is_dir($dir)) return true;
+		if(!strlen((string) $dir) || !is_dir($dir)) return true;
 		if(!$this->isTempDir($dir)) return false;
 		if(is_file($dir . self::hiddenFileName)) $this->wire('files')->unlink($dir . self::hiddenFileName, true);
 		return $files->rmdir($dir, $recursive, true);

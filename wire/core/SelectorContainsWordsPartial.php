@@ -20,7 +20,7 @@ class SelectorContainsWordsPartial extends Selector {
 		$hasAll = true;
 		$words = $this->wire()->sanitizer->wordsArray($value2); 
 		foreach($words as $word) {
-			if(!preg_match('/\b' . preg_quote($word) . '/i', $value1)) {
+			if(!preg_match('/\b' . preg_quote((string) $word) . '/i', (string) $value1)) {
 				$hasAll = false;
 				break;
 			}

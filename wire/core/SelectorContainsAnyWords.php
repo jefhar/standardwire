@@ -19,8 +19,8 @@ class SelectorContainsAnyWords extends Selector {
 		$hasAny = false;
 		$words = $this->wire()->sanitizer->wordsArray($value2);
 		foreach($words as $word) {
-			if(stripos($value1, (string) $word) !== false) {
-				if(preg_match('!\b' . preg_quote($word) . '\b!i', $value1)) {
+			if(stripos((string) $value1, (string) $word) !== false) {
+				if(preg_match('!\b' . preg_quote((string) $word) . '\b!i', (string) $value1)) {
 					$hasAny = true;
 					break;
 				}

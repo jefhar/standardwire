@@ -342,7 +342,7 @@ class Config extends WireData {
 			$dir = Paths::normalizeSeparators($dir);
 
 			// if given path is inclusive of root path, make path relative to site root
-			if(str_starts_with($dir, (string) $rootPath)) $dir = substr($dir, strlen($rootPath));
+			if(str_starts_with($dir, (string) $rootPath)) $dir = substr($dir, strlen((string) $rootPath));
 
 			// ensure trailing slash
 			if(!str_ends_with($dir, '/')) $dir .= '/';
@@ -358,7 +358,7 @@ class Config extends WireData {
 			// given a custom URL
 			$rootUrl = $this->urls->get('root');
 			// if URL begins at PW installation root, remove the root part of the URL
-			if(str_starts_with($url, (string) $rootUrl)) $url = substr($url, strlen($rootUrl)); 
+			if(str_starts_with($url, (string) $rootUrl)) $url = substr($url, strlen((string) $rootUrl)); 
 			// ensure trailing slash
 			if(!str_ends_with($url, '/') && !str_contains($url, '?') && !str_contains($url, '#')) $url .= '/';
 		}
@@ -836,27 +836,27 @@ class Config extends WireData {
 		if(empty($_SERVER['REQUEST_URI'])) return '';
 		$url = $_SERVER['REQUEST_URI'];
 		$query = '';
-		if(str_contains($url, '?')) {
-			[$url, $query] = explode('?', $url, 2);
+		if(str_contains((string) $url, '?')) {
+			[$url, $query] = explode('?', (string) $url, 2);
 		}
 		if($get === 'query') {
 			$url = $query;
 		} else if($get === 'path') {
 			$rootUrl = $this->urls->root;
-			if($rootUrl !== '/' && str_starts_with($url, $rootUrl)) {
-				$url = substr($url, strlen($rootUrl) - 1);
+			if($rootUrl !== '/' && str_starts_with((string) $url, $rootUrl)) {
+				$url = substr((string) $url, strlen($rootUrl) - 1);
 			}
 		}
-		if(!strlen($url)) return '';
+		if(!strlen((string) $url)) return '';
 		if(is_array($match)) {
 			$found = false;
 			foreach($match as $m) {
-				if(str_contains($url, (string) $m)) $found = true;
+				if(str_contains((string) $url, (string) $m)) $found = true;
 				if($found) break;
 			}
 			if(count($match) && !$found) $url = '';
 		} else if(strlen($match)) {
-			if(!str_contains($url, $match)) $url = '';
+			if(!str_contains((string) $url, $match)) $url = '';
 		}
 		return $url;
 	}
@@ -921,13 +921,13 @@ class Config extends WireData {
 	 */
 	public function requestMethod($match = '') {
 		$methods = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'];
-		$method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : '';
+		$method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper((string) $_SERVER['REQUEST_METHOD']) : '';
 		$key = array_search($method, $methods);
 		$method = $key === false ? 'OTHER' : $methods[$key];
 		if(is_array($match)) {
 			$found = '';
 			foreach($match as $m) {
-				$m = strtoupper($m);
+				$m = strtoupper((string) $m);
 				if($m === $method) $found = $method;
 				if($found) break;
 			}
@@ -1025,7 +1025,7 @@ class Config extends WireData {
 		}
 
 		foreach($urls as $url) {
-			if(strpos($url, $coreVersionStr)) {
+			if(strpos((string) $url, $coreVersionStr)) {
 				// url already has core version present in it
 				if($useVersion === false) {
 					// use as-is since this is already what's requested
@@ -1033,15 +1033,15 @@ class Config extends WireData {
 					continue;
 				}
 				// remove existing core-version query string
-				[$u, $r] = explode($coreVersionStr, $url, 2);
+				[$u, $r] = explode($coreVersionStr, (string) $url, 2);
 				if(!strlen($r)) $url = $u;
 			}
-			if(str_contains($url, '?') || str_contains($url, '//')) {
+			if(str_contains((string) $url, '?') || str_contains((string) $url, '//')) {
 				// leave URL with query string or scheme:// alone
 				$a[] = $url;
-			} else if($useVersion === true && str_starts_with($url, $rootUrl)) {
+			} else if($useVersion === true && str_starts_with((string) $url, $rootUrl)) {
 				// use filemtime based version
-				$f = $rootPath . substr($url, strlen($rootUrl));
+				$f = $rootPath . substr((string) $url, strlen($rootUrl));
 				if(is_readable($f)) {
 					$a[] = "$url?" . base_convert((int) filemtime($f), 10, 36);
 				} else {

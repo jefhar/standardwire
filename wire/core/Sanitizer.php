@@ -341,8 +341,8 @@ class Sanitizer extends Wire {
 				}
 
 				foreach($replacements as $from => $to) {
-					if(mb_strpos($value, $from) !== false) {
-						$value = mb_eregi_replace($from, $to, $value);
+					if(mb_strpos($value, (string) $from) !== false) {
+						$value = mb_eregi_replace((string) $from, (string) $to, $value);
 					}
 				}
 			}
@@ -377,10 +377,10 @@ class Sanitizer extends Wire {
 
 		// remove leading or trailing dashes, underscores, dots
 		if($beautify) {
-			if($replacementChar !== null && strlen($replacementChar)) {
+			if($replacementChar !== null && strlen((string) $replacementChar)) {
 				if(!str_contains($extras, (string) $replacementChar)) $extras .= $replacementChar;
 			}
-			$value = trim($value, $extras);
+			$value = trim((string) $value, $extras);
 		}
 
 		return $value; 
@@ -448,14 +448,14 @@ class Sanitizer extends Wire {
 				if(empty($options['allowDoubledReplacement'])) {
 					// replace double'd replacements
 					$r = "$replacement$replacement";
-					while(str_contains($value, $r)) $value = str_replace($r, $replacement, $value);
+					while(str_contains((string) $value, $r)) $value = str_replace($r, $replacement, $value);
 				}
 	
 				// replace double dots
-				while(str_contains($value, '..')) $value = str_replace('..', '.', $value);
+				while(str_contains((string) $value, '..')) $value = str_replace('..', '.', $value);
 			}
 			
-			if(strlen($value) > $maxLength) $value = substr($value, 0, $maxLength); 
+			if(strlen((string) $value) > $maxLength) $value = substr((string) $value, 0, $maxLength); 
 		}
 		
 		return $value; 
@@ -547,13 +547,13 @@ class Sanitizer extends Wire {
 		if(!ctype_graph($value)) {
 			// contains non-visible characters
 			$value = preg_replace('/[\s\r\n\t]+/', '-', $value);
-			if(!ctype_graph($value)) $value = ''; // fail
+			if(!ctype_graph((string) $value)) $value = ''; // fail
 		}
 		
 		if($value !== '') {
 			// replace non-word, non-digit, non-punct characters
 			$value = preg_replace('/[^-_.:\w\d]+/', '-', $value);
-			$value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+			$value = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 		}
 		
 		if($value === 'data-') $value = ''; // data attribute with no name is disallowed
@@ -1261,7 +1261,7 @@ class Sanitizer extends Wire {
 			$value = str_replace(str_split($this->digitASCII), '', $value);
 			if(!ctype_alpha($value)) $value = preg_replace('/[^a-zA-Z]+/', '', $value);
 		}	
-		if(strlen($value) > $maxLength) $value = substr($value, 0, $maxLength);
+		if(strlen((string) $value) > $maxLength) $value = substr((string) $value, 0, $maxLength);
 		return $value;
 	}
 
@@ -1300,7 +1300,7 @@ class Sanitizer extends Wire {
 			$value = str_replace(str_split('_' . $this->alphaASCII), '', $value);
 			if(!ctype_digit($value)) $value = preg_replace('/[^\d]+/', '', $value);
 		}
-		if(strlen($value) > $maxLength) $value = substr($value, 0, $maxLength);
+		if(strlen((string) $value) > $maxLength) $value = substr((string) $value, 0, $maxLength);
 		return $value; 
 	}
 
@@ -1437,7 +1437,7 @@ class Sanitizer extends Wire {
 		if(!is_string($value)) return '';
 		$a = ["\n", "\r", "<CR>", "<LF>", "0x0A", "0x0D", "%0A", "%0D"]; // newlines
 		$value = trim(str_ireplace($a, ' ', stripslashes($value)));
-		if($headerName) $value = trim(preg_replace('/[^-_a-zA-Z0-9]/', '-', trim($value, ':')), '-'); 
+		if($headerName) $value = trim((string) preg_replace('/[^-_a-zA-Z0-9]/', '-', trim($value, ':')), '-'); 
 		return $value;
 	}
 	
@@ -1495,20 +1495,20 @@ class Sanitizer extends Wire {
 			$sep = $separator ?? '';
 			$value = $this->nameFilter($value, $keepChars, $sep, Sanitizer::translate, $maxLength); 
 		} else if($maxLength) {
-			$length = $this->multibyteSupport ? mb_strlen($value) : strlen($value);
+			$length = $this->multibyteSupport ? mb_strlen((string) $value) : strlen((string) $value);
 			if($length > $maxLength) {
-				$value = $this->multibyteSupport ? mb_substr($value, 0, $maxLength) : substr($value, 0, $maxLength);
+				$value = $this->multibyteSupport ? mb_substr((string) $value, 0, $maxLength) : substr((string) $value, 0, $maxLength);
 			}
 		}
 		
 		if(!empty($options['beautify'])) {
 			foreach($keepChars as $s) {
-				while(str_contains($value, "$s$s")) $value = str_replace("$s$s", $s, $value);
+				while(str_contains((string) $value, "$s$s")) $value = str_replace("$s$s", $s, $value);
 			}
-			$value = trim($value, implode('', $keepChars));
+			$value = trim((string) $value, implode('', $keepChars));
 		}
 		
-		if($minWordLength > 1 && strlen($value) < $minWordLength) $value = '';
+		if($minWordLength > 1 && strlen((string) $value) < $minWordLength) $value = '';
 		
 		return $value;
 	}
@@ -1659,7 +1659,7 @@ class Sanitizer extends Wire {
 		}
 
 		if($options['inCharset'] != $options['outCharset']) {
-			$value = iconv($options['inCharset'], $options['outCharset'], $value);
+			$value = iconv((string) $options['inCharset'], (string) $options['outCharset'], $value);
 		}
 		
 		if($options['convertEntities']) {
@@ -1916,7 +1916,7 @@ class Sanitizer extends Wire {
 				$regex = '!<(?:/?(?:ul|ol)(?:>|\s[^><]*))>!i';
 				$value = preg_replace($regex, '', $value);
 			}
-			if(stripos($value, '</p>') || stripos($value, '</h') || stripos($value, '</div>')) {
+			if(stripos((string) $value, '</p>') || stripos((string) $value, '</h') || stripos((string) $value, '</div>')) {
 				$regex =
 					'!<(?:' .
 						'/?(?:p|h\d|div)(?:>|\s[^><]*)' .
@@ -1925,13 +1925,13 @@ class Sanitizer extends Wire {
 					')>!is';
 				$value = preg_replace($regex, $newline, $value);
 			}
-			if(stripos($value, '</li>')) {
+			if(stripos((string) $value, '</li>')) {
 				$value = preg_replace('!</li>\s*<li!is', "$options[separator]<li", $value);
 			}
 		}
 	
 		// remove tags
-		$value = trim(strip_tags($value));
+		$value = trim(strip_tags((string) $value));
 
 		if($newline != "\n") {
 			// if newline is not "\n", don't allow them to be repeated together
@@ -2447,7 +2447,7 @@ class Sanitizer extends Wire {
 		$options['useQuotes'] = true; // must be allowed to use quotes when needed in OR condition
 		foreach($value as $v) {
 			$v = $this->selectorValueV2($v, $options);
-			if(!strlen($v)) $v = '""'; // required blank value in OR condition
+			if(!strlen((string) $v)) $v = '""'; // required blank value in OR condition
 			$a[] = $v;
 		}
 		return implode('|', $a);
@@ -2496,7 +2496,7 @@ class Sanitizer extends Wire {
 		if($emptyValue === '' && $options['quoteEmpty']) $emptyValue = '""';
 		
 		// identify any operator-specific blacklist items
-		if($op && (str_contains($op, '~') || str_contains($op, '*')) || str_contains($op, '#')) {
+		if($op && (str_contains((string) $op, '~') || str_contains((string) $op, '*')) || str_contains((string) $op, '#')) {
 			$blacklist[] = '@'; // @ not supported by fulltext match/against in InnoDB
 			if($op === '#=') {
 				// advanced search operator allows command characters
@@ -2605,14 +2605,14 @@ class Sanitizer extends Wire {
 		// reductions and replacements
 		$reductions = ['..' => '.', './' => ' ', '  ' => ' '];
 		foreach($reductions as $f => $r) {
-			if(!str_contains($value, $f)) continue;
+			if(!str_contains((string) $value, $f)) continue;
 			if(in_array($f, $options['whitelist'])) continue;
 			do {
 				$value = str_replace($f, $r, $value);
 			} while(str_contains($value, $f));
 		}
 		
-		$value = trim($value); // trim any kind of whitespace
+		$value = trim((string) $value); // trim any kind of whitespace
 		$value = trim($value, $trims); // chars to remove from begin and end 
 		$value = trim($value); // in case whitespace introduced by above
 
@@ -2679,7 +2679,7 @@ class Sanitizer extends Wire {
 			$a = [];
 			foreach($value as $v) {
 				$v = $this->selectorValue($v, $options);
-				if($options['useQuotes'] && !strlen($v)) $v = '""';
+				if($options['useQuotes'] && !strlen((string) $v)) $v = '""';
 				$a[] = $v;
 			}
 			return implode('|', $a);
@@ -2744,7 +2744,7 @@ class Sanitizer extends Wire {
 			$value = preg_replace('/\s\s+/u', ' ', $value);
 		}
 
-		$value = trim($value); // trim any kind of whitespace
+		$value = trim((string) $value); // trim any kind of whitespace
 		$value = trim($value, '+,'); // chars to remove from begin and end 
 		if(str_contains($value, '!')) $needsQuotes = true;
 
@@ -2963,22 +2963,22 @@ class Sanitizer extends Wire {
 				$str = preg_replace('/\[([^\]]+)\]\(([^)]+)\)/', $linkMarkup, $str);
 			}
 			
-			if(str_contains($str, '**') && in_array('strong', $options['allow']) && !in_array('strong', $options['disallow'])) {
+			if(str_contains((string) $str, '**') && in_array('strong', $options['allow']) && !in_array('strong', $options['disallow'])) {
 				// strong
 				$str = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $str);
 			}
 
-			if(str_contains($str, '*') && in_array('em', $options['allow']) && !in_array('em', $options['disallow'])) {
+			if(str_contains((string) $str, '*') && in_array('em', $options['allow']) && !in_array('em', $options['disallow'])) {
 				// em
 				$str = preg_replace('/\*([^*\n]+)\*/', '<em>$1</em>', $str);
 			}
 
-			if(str_contains($str, "`") && in_array('code', $options['allow']) && !in_array('code', $options['disallow'])) {
+			if(str_contains((string) $str, "`") && in_array('code', $options['allow']) && !in_array('code', $options['disallow'])) {
 				// code
 				$str = preg_replace('/`+([^`]+)`+/', '<code>$1</code>', $str);
 			}
 
-			if(str_contains($str, '~~') && in_array('s', $options['allow']) && !in_array('s', $options['disallow'])) {
+			if(str_contains((string) $str, '~~') && in_array('s', $options['allow']) && !in_array('s', $options['disallow'])) {
 				// strikethrough
 				$str = preg_replace('/~~(.+?)~~/', '<s>$1</s>', $str);
 			}
@@ -3086,7 +3086,7 @@ class Sanitizer extends Wire {
 			// manually convert decimal and hex entities (when possible)
 			$str = preg_replace_callback('/(&#[0-9A-F]+;)/i', fn($matches) => mb_convert_encoding($matches[1], $encoding, "HTML-ENTITIES"), $str);
 		}
-		if(str_contains($str, '&')) {
+		if(str_contains((string) $str, '&')) {
 			// strip out any entities that remain
 			$str = preg_replace('/&(?:#[0-9A-F]|[A-Z]+);/i', ' ', $str);
 		}
@@ -3202,7 +3202,7 @@ class Sanitizer extends Wire {
 		} else {
 			$str = str_replace($whitespace, $rep, $str);
 		}
-		if(strlen($rep)) {
+		if(strlen((string) $rep)) {
 			if($options['collapse']) {
 				while(str_contains($str, "$rep$rep")) {
 					$str = str_replace("$rep$rep", $rep, $str);
@@ -3425,7 +3425,7 @@ class Sanitizer extends Wire {
 				$whitespaceHTML = $this->whitespaceHTML;
 				foreach($this->whitespaceUTF8 as $value) {
 					$whitespaceHTML[] = "&#x$value;"; // hex entity
-					$whitespaceHTML[] = "&#" . hexdec($value) . ';'; // decimal entity
+					$whitespaceHTML[] = "&#" . hexdec((string) $value) . ';'; // decimal entity
 				}
 			}
 			$whitespace = $html === 1 ? $whitespaceHTML : array_merge($whitespaceUTF8, $whitespaceHTML); 
@@ -3558,7 +3558,7 @@ class Sanitizer extends Wire {
 			if($options['version'] >= 2) {
 				$value = preg_replace('/[\x{10000}-\x{10FFFF}]/u', $options['replaceWith'], $value);
 			} else {
-				if(strlen($value) > 3 && max(array_map('ord', str_split($value))) >= 240) {
+				if(strlen($value) > 3 && max(array_map(ord(...), str_split($value))) >= 240) {
 					// string contains 4-byte characters
 					$regex =
 						'!(?:' .
@@ -3627,7 +3627,7 @@ class Sanitizer extends Wire {
 			$value = str_replace(['-_', '_-'], '_', $value);
 		}
 		
-		return strtolower(trim($value, $hyphen)); 
+		return strtolower(trim((string) $value, $hyphen)); 
 	}
 	
 	/**
@@ -3698,7 +3698,7 @@ class Sanitizer extends Wire {
 			$value = preg_replace('/([^' . $allow . ' ]+)([' . $allow . ']+)/', '$1 $2', $value);
 			$value = preg_replace('/[^' . $allow . ' ]+/', '', $value);
 
-			$parts = explode(' ', $value);
+			$parts = explode(' ', (string) $value);
 			$value = '';
 
 			foreach($parts as $n => $part) {
@@ -3972,7 +3972,7 @@ class Sanitizer extends Wire {
 			$value = preg_replace('/[^-_a-z0-9]/', '_', $value);
 		}
 		
-		return trim($value, '-');
+		return trim((string) $value, '-');
 	}
 
 	/**
@@ -4413,7 +4413,7 @@ class Sanitizer extends Wire {
 			foreach($value as $k => $v) {
 				if($keySanitizer && !is_int($k)) {
 					$k = $this->$keySanitizer($k);
-					if(!strlen($k)) continue;
+					if(!strlen((string) $k)) continue;
 				}
 				if($options['maxDepth'] > 0 && is_array($v)) {
 					$clean[$k] = $v; // array already sanitized by recursive call
@@ -4779,10 +4779,10 @@ class Sanitizer extends Wire {
 		if(count($options['keepChars'])) {
 			$n = 0;
 			foreach($options['keepChars'] as $c) {
-				if(!str_contains($value, (string) $c)) continue;
+				if(!str_contains((string) $value, (string) $c)) continue;
 				do {
 					$token = "$n{$replacementPrefix}CHR$n";
-				} while(str_contains($value, $token) && ++$n); 
+				} while(str_contains((string) $value, $token) && ++$n); 
 				$value = str_replace($c, $token, $value);
 				$replacements[$token] = $c;
 			}
@@ -5170,10 +5170,10 @@ class Sanitizer extends Wire {
 		foreach($this->sanitizers as $method => $types) {
 			$v = $this->$method($value);
 			$results[$method] = $v;
-			if(str_contains($types, 'm')) continue; // allows any type (m=mixed)
+			if(str_contains((string) $types, 'm')) continue; // allows any type (m=mixed)
 			$type = strtolower(gettype($v));
 			$type = $type[0] === 'd' ? 'f' : $type[0];
-			if(!str_contains($types, $type)) $fails[$method] = "$type!=$types";
+			if(!str_contains((string) $types, $type)) $fails[$method] = "$type!=$types";
 		}
 		if(count($fails)) $results['FAILS'] = $fails;
 		return $results;

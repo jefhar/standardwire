@@ -254,8 +254,8 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		if(empty($info['crop'])) {
 			// attempt to extract crop info from suffix
 			foreach($info['suffix'] as /* $key => */ $suffix) {
-				if(str_starts_with($suffix, 'cropx')) {
-					$info['crop'] = ltrim($suffix, 'crop'); // i.e. x123y456
+				if(str_starts_with((string) $suffix, 'cropx')) {
+					$info['crop'] = ltrim((string) $suffix, 'crop'); // i.e. x123y456
 				}
 			}
 		}
@@ -340,10 +340,10 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		// if suffix or noSuffix option contains space, convert it to suffixes or noSuffixes array option
 		foreach(['suffix', 'noSuffix'] as $key) {
 			if(!isset($options[$key])) continue;
-			if(!str_contains(trim($options[$key]), ' ')) continue;
+			if(!str_contains(trim((string) $options[$key]), ' ')) continue;
 			$keyPlural = $key . 'es';
 			$value = $options[$keyPlural] ?? [];
-			$options[$keyPlural] = array_merge($value, explode(' ', trim($options[$key])));
+			$options[$keyPlural] = array_merge($value, explode(' ', trim((string) $options[$key])));
 			unset($options[$key]);
 		}
 
@@ -487,11 +487,11 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 						$o['hidpi'] = true;
 					} else if($s == 'is') {
 						// this is a known core suffix that we allow
-					} else if(str_starts_with($s, 'cropx')) {
+					} else if(str_starts_with((string) $s, 'cropx')) {
 						// skip cropx suffix (already known from $info[crop])
 						unset($info['suffix'][$k]);
 						// continue;
-					} else if(str_starts_with($s, 'pid') && preg_match('/^pid\d+$/', $s)) {
+					} else if(str_starts_with((string) $s, 'pid') && preg_match('/^pid\d+$/', (string) $s)) {
 						// allow pid123 to pass through 
 					} else if(in_array($s, $suffix)) {
 						// suffix is one provided in $suffix argument
@@ -545,7 +545,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 			}
 			*/
 
-			if($info['crop'] && preg_match('/^x(\d+)y(\d+)$/', $info['crop'], $matches)) {
+			if($info['crop'] && preg_match('/^x(\d+)y(\d+)$/', (string) $info['crop'], $matches)) {
 				// dimensional cropping info contained in filename
 				$cropX = (int) $matches[1];
 				$cropY = (int) $matches[2];

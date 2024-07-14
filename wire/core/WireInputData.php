@@ -306,16 +306,16 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 				// tests to confirm a preg_match is necessary (wildcard mode only)
 				$passes = true;
 				foreach($tests as $test) {
-					$passes = str_contains($match, $test);
+					$passes = str_contains((string) $match, $test);
 					if(!$passes) break;
 				}
 				if(!$passes) continue;
 			}
 			
 			if($isRE) {
-				if(!preg_match($pattern, $match)) continue;
+				if(!preg_match($pattern, (string) $match)) continue;
 			} else {
-				if(!str_contains($match, $pattern)) continue;
+				if(!str_contains((string) $match, $pattern)) continue;
 			}
 			
 			if($options['sanitizer']) {

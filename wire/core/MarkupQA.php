@@ -477,7 +477,7 @@ class MarkupQA extends Wire {
 	public function wakeupLinks(&$value) {
 
 		// if there's no data-pwid attribute present, then there's nothing to do here
-		if(!str_contains($value, 'data-pwid=')) return [];
+		if(!str_contains((string) $value, 'data-pwid=')) return [];
 		
 		$re = '!' . 
 			'(<a[^\t<>]*?)' . // 1:"start" which includes "<a" and everything up until data-pwid attribute
@@ -487,7 +487,7 @@ class MarkupQA extends Wire {
 			'([^<>]*>)' . // 5:"end" which includes everything else and closing ">", i.e. query string, other attrs, etc.
 			'!i';
 		
-		if(!preg_match_all($re, $value, $matches)) return [];
+		if(!preg_match_all($re, (string) $value, $matches)) return [];
 		
 		$replacements = [];
 		$languages = $this->wire()->languages;
@@ -529,7 +529,7 @@ class MarkupQA extends Wire {
 			$livePath = $pages->getPath($pageID, ['language' => $language]);
 			
 			if($urlSegmentStr) {
-				$livePath = rtrim($livePath, '/') . "/$urlSegmentStr";
+				$livePath = rtrim((string) $livePath, '/') . "/$urlSegmentStr";
 				if(substr($path, '-1') === '/') $livePath .= '/';
 			}
 			
@@ -543,22 +543,22 @@ class MarkupQA extends Wire {
 			if($livePath) {
 				$ignore = false;
 				foreach($this->ignorePaths() as $ignorePath) {
-					if(!str_starts_with($livePath, (string) $ignorePath)) continue;
+					if(!str_starts_with((string) $livePath, (string) $ignorePath)) continue;
 					if($debug) $this->message("MarkupQA wakeupLinks path $livePath matches ignored path $ignorePath");
 					$ignore = true;
 					break;
 				}
 				if($path && !str_ends_with($path, '/')) {
 					// no trailing slash, retain the editors wishes here
-					$livePath = rtrim($livePath, '/');
+					$livePath = rtrim((string) $livePath, '/');
 				}
 				if($ignore) {
 					// path should be ignored and left as-is
-				} else if(str_contains($livePath, '/trash/')) {
+				} else if(str_contains((string) $livePath, '/trash/')) {
 					// linked page is in trash, we won't update it but we'll produce a warning
 					$this->linkWarning("$path => $livePath (" . $this->_('it is in the trash') . ')');
 					continue;
-				} else if(str_starts_with($livePath, (string) $adminPath)) {
+				} else if(str_starts_with((string) $livePath, (string) $adminPath)) {
 					// do not update paths that point in admin
 					$this->linkWarning("$path => $livePath (" . $this->_('points to the admin') . ')');
 					continue;
@@ -878,7 +878,7 @@ class MarkupQA extends Wire {
 	protected function checkImgExists(Pageimage $pagefile, $img, $src, &$value) {
 		
 
-		$basename = basename($src);
+		$basename = basename((string) $src);
 		$pathname = $pagefile->pagefiles->path() . $basename;
 
 		if(file_exists($pathname)) return 0; // no action necessary

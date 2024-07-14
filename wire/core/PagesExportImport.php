@@ -583,7 +583,7 @@ class PagesExportImport extends Wire {
 			
 			if(!$field) {
 				if(is_array($value) && !count($value)) continue;
-				if(!is_array($value) && !strlen($value)) continue;
+				if(!is_array($value) && !strlen((string) $value)) continue;
 				$missingFields[$name] = $name;
 				continue;
 			}
@@ -728,7 +728,7 @@ class PagesExportImport extends Wire {
 			} else if(ctype_digit("$options[parent]")) {
 				$parent = $pages->get((int) $options['parent']);
 			} else {
-				$parent = $pages->get('/' . ltrim($options['parent'], '/'));
+				$parent = $pages->get('/' . ltrim((string) $options['parent'], '/'));
 			}
 			if($parent->id) {
 				$options['changeParent'] = true;
@@ -737,9 +737,9 @@ class PagesExportImport extends Wire {
 			} else {
 				$errors[] = "Specified parent does not exist: $options[parent]";
 			}
-		} else if(strrpos($path, '/')) {
+		} else if(strrpos((string) $path, '/')) {
 			// determine parent from imported page path
-			$parts = explode('/', trim($path, '/'));
+			$parts = explode('/', trim((string) $path, '/'));
 			array_pop($parts); // pop off name
 			$parentPath = '/' . implode('/', $parts);
 			if(strlen($parentPath) > 1) $parentPath .= '/';
@@ -774,7 +774,7 @@ class PagesExportImport extends Wire {
 		}
 
 		if($usePrevious){
-			$key = rtrim($path, '/');
+			$key = rtrim((string) $path, '/');
 			if($key) $previousPaths[$path] = true;
 		}
 		
@@ -822,7 +822,7 @@ class PagesExportImport extends Wire {
 		
 		foreach(['created', 'modified', 'published'] as $dateType) {
 			if(isset($settings[$dateType])) {
-				$page->set($dateType, strtotime($settings[$dateType]));
+				$page->set($dateType, strtotime((string) $settings[$dateType]));
 			}
 		}
 

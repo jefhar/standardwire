@@ -538,7 +538,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 				$this->query->orderby("$preScoreField DESC");
 			}
 			if(!empty($data['matchValue'])) {
-				$bindValue = trim($data['matchValue']); 
+				$bindValue = trim((string) $data['matchValue']); 
 				$bindKey = $this->query->bindValueGetKey($this->escapeAgainst($bindValue));
 				$matchAgainst = "$matchType($tableField) AGAINST($bindKey WITH QUERY EXPANSION)";
 			}
@@ -569,7 +569,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 			foreach($data['likeWords'] as $word) {
 				$isStopword = isset($data['stopWords'][$word]);
 				if($isStopword && !$this->allowStopwords) continue;
-				if(!strlen($word)) continue;
+				if(!strlen((string) $word)) continue;
 				if($partial || ($partialLast && $word === $data['lastWord'])) {
 					// just match partial word from beginning
 					$likeValue = $this->rlikeValue($word);
@@ -650,7 +650,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 			// match entire phrase with LIKE as secondary qualifier that includes last word
 			// so that we can perform a partial match on the last word only. This is necessary
 			// because we can’t use partial match qualifiers in or out of quoted phrases.
-			$lastWord = strlen($lastWord) ? $this->escapeAgainst($lastWord) : '';
+			$lastWord = strlen((string) $lastWord) ? $this->escapeAgainst($lastWord) : '';
 			if(strlen($lastWord) && !$this->isStopword($lastWord)) {
 				// if word is indexable let it contribute to final score
 				// expand the againstValue to include the last word as a required partial match
@@ -976,7 +976,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 		// iterate through all words to build boolean query values
 		foreach($allWords as $word) {
 			
-			$length = strlen($word);
+			$length = strlen((string) $word);
 			if(!$length || isset($booleanValues[$word])) continue;
 			
 			if($this->isStopword($word)) {
@@ -1039,7 +1039,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 				$likeWords[$word] = $word;
 				if($numOkayWords && isset($booleanValues[$word])) {
 					// make word non-required in boolean query
-					$booleanValues[$word] = ltrim($booleanValues[$word], '+'); 
+					$booleanValues[$word] = ltrim((string) $booleanValues[$word], '+'); 
 				} else {
 					// boolean query requires at least one good word to work,
 					// so if there aren't any, remove this word from boolean query

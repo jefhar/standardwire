@@ -351,7 +351,7 @@ class PageValues extends Wire {
 			return '';
 		}
 
-		$parts = strpos($key, '.') ? explode('.', $key) : [$key];
+		$parts = strpos((string) $key, '.') ? explode('.', (string) $key) : [$key];
 		$value = $page;
 
 		do {
@@ -419,7 +419,7 @@ class PageValues extends Wire {
 			$value = $sanitizer->markupToText($value, $options);
 		}
 		// if stripping tags from non-empty value made it empty, just indicate that it was markup and length
-		if(!strlen(trim($value))) $value = "markup($length)";
+		if(!strlen(trim((string) $value))) $value = "markup($length)";
 		return $value;
 	}
 
@@ -828,7 +828,7 @@ class PageValues extends Wire {
 		if(is_array($field)) {
 			$result = false;
 			foreach($field as $f) {
-				$f = trim($f);
+				$f = trim((string) $f);
 				if(!empty($f) && $this->hasField($page, $f)) $result = $f;
 				if($result) break;
 			}

@@ -245,7 +245,7 @@ abstract class Selector extends WireData {
 	public function fields() {
 		$field = parent::get('field');
 		if(is_array($field)) return $field;
-		if(!strlen($field)) return [];
+		if(!strlen((string) $field)) return [];
 		return [$field]; 
 	}
 

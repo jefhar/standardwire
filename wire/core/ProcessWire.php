@@ -351,9 +351,9 @@ class ProcessWire extends Wire {
 		if(!$config->httpHost) $config->httpHost = $this->getHttpHost($config); 
 
 		if($config->https === null) {
-			$config->https = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')
+			$config->https = (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) == 'on')
 				|| (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
-				|| (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'); // AWS LOAD BALANCER
+				|| (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower((string) $_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'); // AWS LOAD BALANCER
 		}
 		
 		$config->ajax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
@@ -464,10 +464,10 @@ class ProcessWire extends Wire {
 			// validate from an allowed whitelist of http hosts
 			$key = false; 
 			if(isset($_SERVER['SERVER_NAME'])) {
-				$key = array_search(strtolower($_SERVER['SERVER_NAME']) . $port, $httpHosts, true); 
+				$key = array_search(strtolower((string) $_SERVER['SERVER_NAME']) . $port, $httpHosts, true); 
 			}
 			if($key === false && isset($_SERVER['HTTP_HOST'])) {
-				$key = array_search(strtolower($_SERVER['HTTP_HOST']), $httpHosts, true); 
+				$key = array_search(strtolower((string) $_SERVER['HTTP_HOST']), $httpHosts, true); 
 			}
 			if($key === false) {
 				// no valid host found, default to first in whitelist
@@ -491,7 +491,7 @@ class ProcessWire extends Wire {
 			}
 
 			// sanitize since it did not come from a whitelist
-			if(!preg_match('/^[-a-zA-Z0-9.:]+$/D', $host)) $host = ''; 
+			if(!preg_match('/^[-a-zA-Z0-9.:]+$/D', (string) $host)) $host = ''; 
 		}
 
 		return $host; 
@@ -593,7 +593,7 @@ class ProcessWire extends Wire {
 		if($config->wireInputLazy) $input->setLazy(true);
 
 		// populate admin URL before modules init()
-		$config->urls->admin = $config->urls->root . ltrim($pages->getPath($config->adminRootPageID), '/');
+		$config->urls->admin = $config->urls->root . ltrim((string) $pages->getPath($config->adminRootPageID), '/');
 
 		$notices->init();
 		if($this->debug) Debug::saveTimer('boot.load', 'includes all boot.load timers');
@@ -638,7 +638,7 @@ class ProcessWire extends Wire {
 		if($status == self::statusReady || $status == self::statusInit) {
 			// before status include file, i.e. "readyBefore" or "initBefore"
 			$nameBefore = $name . 'Before';
-			$file = empty($files[$nameBefore]) ? null : $path . basename($files[$nameBefore]);
+			$file = empty($files[$nameBefore]) ? null : $path . basename((string) $files[$nameBefore]);
 			if($file !== null) $this->includeFile($file, $data);
 		}
 
@@ -657,7 +657,7 @@ class ProcessWire extends Wire {
 		} 
 	
 		// after status include file, names like 'init', 'ready', etc.
-		$file = empty($files[$name]) ? null : $path . basename($files[$name]);
+		$file = empty($files[$name]) ? null : $path . basename((string) $files[$name]);
 		if($file !== null) $this->includeFile($file, $data);
 
 		if($status == self::statusFinished) {
@@ -669,9 +669,9 @@ class ProcessWire extends Wire {
 		} else if($status == self::statusReady) {
 			// additional 'admin' or 'site' options for ready status
 			if(!empty($files['readyAdmin']) && $config->admin === true) {
-				$this->includeFile($path . basename($files['readyAdmin']), $data);
+				$this->includeFile($path . basename((string) $files['readyAdmin']), $data);
 			} else if(!empty($files['readySite']) && $config->admin === false) {
-				$this->includeFile($path . basename($files['readySite']), $data);
+				$this->includeFile($path . basename((string) $files['readySite']), $data);
 			}
 		}
 	}
@@ -1081,7 +1081,7 @@ class ProcessWire extends Wire {
 
 		if(empty($rootPath) && !empty($_SERVER['SCRIPT_FILENAME'])) {
 			// first try to determine from the script filename
-			$parts = explode(DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_FILENAME']);
+			$parts = explode(DIRECTORY_SEPARATOR, (string) $_SERVER['SCRIPT_FILENAME']);
 			array_pop($parts); // most likely: index.php
 			$rootPath = implode('/', $parts) . '/';
 			if(!file_exists($rootPath . 'wire/core/ProcessWire.php')) $rootPath = '';
@@ -1149,10 +1149,10 @@ class ProcessWire extends Wire {
 		} 
 
 		if(isset($_SERVER['HTTP_HOST'])) {
-			$host = $httpHost ?: strtolower($_SERVER['HTTP_HOST']);
+			$host = $httpHost ?: strtolower((string) $_SERVER['HTTP_HOST']);
 
 			// when serving pages from a web server
-			if(is_null($_rootURL)) $rootURL = rtrim(dirname($_SERVER['SCRIPT_NAME']), "/\\") . '/';
+			if(is_null($_rootURL)) $rootURL = rtrim(dirname((string) $_SERVER['SCRIPT_NAME']), "/\\") . '/';
 			$realScriptFile = empty($_SERVER['SCRIPT_FILENAME']) ? '' : realpath($_SERVER['SCRIPT_FILENAME']);
 			$realIndexFile = realpath($rootPath . "/index.php");
 

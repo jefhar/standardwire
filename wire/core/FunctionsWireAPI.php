@@ -50,7 +50,7 @@ function _wirePagesAPI($_apiVar, $selector) {
 		// i.e. "contact"
 		return $pages->get("name=$selector");
 
-	} else if(str_contains($selector, '/') && wireSanitizer('pagePathName', $selector) === $selector) {
+	} else if(str_contains((string) $selector, '/') && wireSanitizer('pagePathName', $selector) === $selector) {
 		// i.e. "/path/to/page/"
 		return $pages->get($selector);
 
@@ -72,7 +72,7 @@ function _wireDataAPI($_apiVar, $key, $value) {
 	/** @var WireData $item */
 	$item = wire($_apiVar);
 	if(!$item) return null;
-	if(strlen($key)) {
+	if(strlen((string) $key)) {
 		if(is_null($value)) {
 			return $item->get($key);
 		} else {

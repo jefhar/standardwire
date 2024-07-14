@@ -436,7 +436,7 @@ class WireHttp extends Wire {
 		if(!in_array(strtoupper($method), $this->allowHttpMethods)) $method = 'POST';
 		
 		foreach($options['use'] as $use) {
-			$use = strtolower($use);
+			$use = strtolower((string) $use);
 			if($use === 'curl' && !$options['allowCURL']) {
 				$error[] = 'CURL is not available';
 			} else if($use === 'curl') {
@@ -531,7 +531,7 @@ class WireHttp extends Wire {
 			$content = '';
 		}
 
-		$this->setHeader('content-length', strlen($content));
+		$this->setHeader('content-length', strlen((string) $content));
 
 		$header = '';
 		foreach($this->headers as $key => $value) {
@@ -554,7 +554,7 @@ class WireHttp extends Wire {
 		$fopenOptions = ['http' => $http]; 
 		if(isset($options['fopen'])) $fopenOptions = array_merge($options['fopen'], $fopenOptions);
 
-		set_error_handler([$this, '_errorHandler']);
+		set_error_handler($this->_errorHandler(...));
 		$context = stream_context_create($fopenOptions);
 		$fp = fopen($url, 'rb', false, $context);
 		restore_error_handler();
@@ -781,7 +781,7 @@ class WireHttp extends Wire {
 			$content = '';
 		}
 
-		$this->setHeader('content-length', strlen($content));
+		$this->setHeader('content-length', strlen((string) $content));
 
 		$proto = $this->wire()->config->serverProtocol;
 		$request = "$method $path$query $proto\r\nHost: $host\r\n";
@@ -796,7 +796,7 @@ class WireHttp extends Wire {
 		$errno = '';
 		$errstr = '';
 
-		set_error_handler([$this, '_errorHandler']);
+		set_error_handler($this->_errorHandler(...));
 		if(false !== ($fs = fsockopen($scheme . $host, $port, $errno, $errstr, $timeout))) {
 			fwrite($fs, "$request\r\n$content");
 			while(!feof($fs)) {
@@ -1018,7 +1018,7 @@ class WireHttp extends Wire {
 		);
 
 		// download the file
-		set_error_handler([$this, '_errorHandler']);
+		set_error_handler($this->_errorHandler(...));
 		$result = false;
 		
 		if($bufferSize > 0) {
@@ -1327,7 +1327,7 @@ class WireHttp extends Wire {
 		$httpCode = 0;
 
 		if(!empty($responseHeader[0])) {
-			[, $httpCode] = explode(' ', trim($responseHeader[0]), 2); 
+			[, $httpCode] = explode(' ', trim((string) $responseHeader[0]), 2); 
 			$httpCode = trim($httpCode);
 			if(strpos($httpCode, ' ')) [$httpCode, $httpText] = explode(' ', $httpCode, 2);
 			$httpCode = (int) $httpCode;
@@ -1345,10 +1345,10 @@ class WireHttp extends Wire {
 		$this->responseHeaderArrays = [];
 
 		foreach($responseHeader as $header) {
-			$pos = strpos($header, ':');
+			$pos = strpos((string) $header, ':');
 			if($pos !== false) {
-				$key = trim(strtolower(substr($header, 0, $pos)));
-				$value = trim(substr($header, $pos+1));
+				$key = trim(strtolower(substr((string) $header, 0, $pos)));
+				$value = trim(substr((string) $header, $pos+1));
 			} else {
 				$key = $header;
 				$value = '';
@@ -1386,7 +1386,7 @@ class WireHttp extends Wire {
 					$valueArray = $value;
 					$valueStr = count($value) ? reset($value) : '';
 				} else {
-					$valueArray = strlen($value) ? [$value] : [];
+					$valueArray = strlen((string) $value) ? [$value] : [];
 					$valueStr = $value;
 				}
 				$this->responseHeaders[$key] = $valueStr;
@@ -1460,9 +1460,9 @@ class WireHttp extends Wire {
 			// sending data string
 			if(empty($options['downloadFilename'])) throw new WireException('The "downloadFilename" option is required'); 
 			if($options['data'] === null) throw new WireException('The "data" option is required');
-			$info = pathinfo($options['downloadFilename']);
+			$info = pathinfo((string) $options['downloadFilename']);
 			$ext = strtolower($info['extension']);
-			$filesize = strlen($options['data']);
+			$filesize = strlen((string) $options['data']);
 			$options['partial'] = false;
 		} else {
 			// sending contents of file
@@ -1477,9 +1477,9 @@ class WireHttp extends Wire {
 		$bytesSent = 0;
 		
 		if($options['exit']) $this->wire()->session->close();
-		if(is_null($forceDownload)) $forceDownload = str_starts_with($contentType, '+');
+		if(is_null($forceDownload)) $forceDownload = str_starts_with((string) $contentType, '+');
 		if(ini_get('zlib.output_compression')) ini_set('zlib.output_compression', 'Off');
-		$contentType = ltrim($contentType, '+');
+		$contentType = ltrim((string) $contentType, '+');
 		
 		if($forceDownload) {
 			$downloadFilename = empty($options['downloadFilename']) ? $info['basename'] : $options['downloadFilename'];
@@ -1540,7 +1540,7 @@ class WireHttp extends Wire {
 		$rangeEnd = $filesize - 1;
 
 		// client has provided an HTTP_RANGE header containing a byte range
-		[$rangeType, $rangeBytes] = explode('=', $rangeStr, 2);
+		[$rangeType, $rangeBytes] = explode('=', (string) $rangeStr, 2);
 		
 		if(strtolower($rangeType) !== 'bytes') return null; // unrecognized range type prefix
 		if(str_contains($rangeBytes, ',')) return null; // unsupported multibyte range
@@ -1618,7 +1618,7 @@ class WireHttp extends Wire {
 		$httpCode = (int) $options['httpCode'];
 		
 		if(!$httpCode && isset($headers['httpcode'])) { 
-			if(ctype_digit($headers['httpcode'])) $httpCode = (int) $headers['httpcode'];
+			if(ctype_digit((string) $headers['httpcode'])) $httpCode = (int) $headers['httpcode'];
 		}
 		
 		if($httpCode > 0) {
@@ -1630,7 +1630,7 @@ class WireHttp extends Wire {
 		
 		$a = [];
 		foreach($headers as $key => $value) {
-			$key = strtolower($key);
+			$key = strtolower((string) $key);
 			if($value === null || $key === 'httpcode') continue;
 			if(count($options['replacements'])) {
 				$value = str_replace(array_keys($options['replacements']), array_values($options['replacements']), $value);

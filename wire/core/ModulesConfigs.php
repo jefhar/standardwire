@@ -117,7 +117,7 @@ class ModulesConfigs extends ModulesClass {
 			$query->execute();
 			$data = $query->fetchColumn();
 			$query->closeCursor();
-			if(strlen($data)) $data = wireDecodeJSON($data);
+			if(strlen((string) $data)) $data = wireDecodeJSON($data);
 			if(empty($data)) $data = [];
 			$this->configData[(int) $id] = $data;
 		}
@@ -231,12 +231,12 @@ class ModulesConfigs extends ModulesClass {
 				if($info['configurable'] === true) return $info['configurable'];
 				if($info['configurable'] === 1 || $info['configurable'] === "1") return true;
 				if(is_int($info['configurable']) || ctype_digit("$info[configurable]")) return (int) $info['configurable'];
-				if(str_starts_with($info['configurable'], (string) $className)) {
+				if(str_starts_with((string) $info['configurable'], (string) $className)) {
 					if(empty($info['file'])) {
 						$info['file'] = $this->modules->files->getModuleFile($className);
 					}
 					if($info['file']) {
-						return dirname($info['file']) . "/$info[configurable]";
+						return dirname((string) $info['file']) . "/$info[configurable]";
 					}
 				}
 			}

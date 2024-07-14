@@ -553,7 +553,7 @@ class ModulesInfo extends ModulesClass {
 
 			// populate requiresVersions
 			foreach($info['requires'] as $key => $class) {
-				if(!ctype_alnum($class)) {
+				if(!ctype_alnum((string) $class)) {
 					// has a version string
 					[$class, $operator, $version] = $this->extractModuleOperatorVersion($class);
 					$info['requires'][$key] = $class; // convert to just class
@@ -977,7 +977,7 @@ class ModulesInfo extends ModulesClass {
 						// no need to store these false, null, 0, or blank array properties
 						unset($data[$moduleID][$key]);
 
-					} else if($key === 'namespace' && (empty($value) || trim($value, "\\") === $defaultTrimNS)) {
+					} else if($key === 'namespace' && (empty($value) || trim((string) $value, "\\") === $defaultTrimNS)) {
 						// no need to cache default namespace in module info
 						unset($data[$moduleID][$key]);
 
@@ -1051,7 +1051,7 @@ class ModulesInfo extends ModulesClass {
 				$versionChanges[$moduleName] = "$fromVersion => $toVersion: $moduleName";
 				$editUrl = $this->modules->configs->getModuleEditUrl($moduleName, false) . '&upgrade=1';
 				$this->modulesLastVersions[$id] = $moduleVersions[$id];
-				if(str_starts_with($moduleName, 'Fieldtype')) {
+				if(str_starts_with((string) $moduleName, 'Fieldtype')) {
 					// apply update now, to Fieldtype modules only (since they are loaded differently)
 					$this->modules->getModule($moduleName);
 				} else {
@@ -1272,7 +1272,7 @@ class ModulesInfo extends ModulesClass {
 			$options['file'] = $this->modules->getModuleFile($moduleName);
 		}
 
-		if(str_contains($options['file'], $this->modules->coreModulesDir)) {
+		if(str_contains((string) $options['file'], $this->modules->coreModulesDir)) {
 			// all core modules use \ProcessWire\ namespace
 			$namespace = strlen(__NAMESPACE__) ? __NAMESPACE__ . "\\" : "";
 			return $namespace;

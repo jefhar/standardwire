@@ -187,14 +187,14 @@ class Installer {
 		if(!count($profiles)) $this->err("No profiles found!");
 		
 		foreach($profiles as $name => $profile) {
-			$title = empty($profile['title']) ? ucfirst($profile['name']) : $profile['title'];
+			$title = empty($profile['title']) ? ucfirst((string) $profile['name']) : $profile['title'];
 			$options .= "<option value='$name'>$title</option>"; 
 			$out .= "<div class='profile-preview' id='$name' style='display: none;'>";
 			if(!empty($profile['summary'])) $out .= "<p>$profile[summary]</p>";
 				else $out .= "<p class='detail'>No summary.</p>";
 			if(!empty($profile['screenshot'])) {
 				$file = $profile['screenshot'];
-				if(!str_contains($file, '/')) $file = "$name/install/$file";
+				if(!str_contains((string) $file, '/')) $file = "$name/install/$file";
 				$out .= "<p><img src='$file' alt='$name screenshot' style='max-width: 100%;' /></p>";
 			} else {
 				$out .= "<p class='detail'>No screenshot.</p>";
@@ -448,7 +448,7 @@ class Installer {
 			if(str_starts_with($key, 'chmod')) {
 				$values[$key] = (int) $value;
 			} else if($key != 'httpHosts') {
-				$values[$key] = htmlspecialchars($value, ENT_QUOTES, 'utf-8'); 
+				$values[$key] = htmlspecialchars((string) $value, ENT_QUOTES, 'utf-8'); 
 			}
 		}
 		
@@ -543,7 +543,7 @@ class Installer {
 			"What host names will this installation run on now and in the future? Please enter one host per line. " . 
 			"You can also modify this setting later by editing the <code>\$config->httpHosts</code> setting in the <u>/site/config.php</u> file."
 		);
-		$rows = substr_count($values['httpHosts'], "\n") + 2; 
+		$rows = substr_count((string) $values['httpHosts'], "\n") + 2; 
 		$this->textarea('httpHosts', '', $values['httpHosts'], $rows); 
 		$this->sectionStop();
 		
@@ -602,8 +602,8 @@ class Installer {
 		$timezones = $this->timezones();
 		if(isset($timezones[$timezone])) {
 			$value = $timezones[$timezone]; 
-			if(strpos($value, '|')) {
-				[$label, $value] = explode('|', $value);
+			if(strpos((string) $value, '|')) {
+				[$label, $value] = explode('|', (string) $value);
 				if($label) {} // ignore
 			}
 			$values['timezone'] = $value; 
@@ -614,7 +614,7 @@ class Installer {
 		// http hosts
 		$values['httpHosts'] = [];
 		$httpHosts = $this->post('httpHosts', 'textarea');
-		if(strlen($httpHosts)) {
+		if(strlen((string) $httpHosts)) {
 			$httpHosts = str_replace(["'", '"'], '', $httpHosts);
 			$httpHosts = explode("\n", $httpHosts);
 			foreach($httpHosts as $key => $host) {
@@ -632,7 +632,7 @@ class Installer {
 		
 		foreach($fields as $field) {
 			$value = $this->post($field, 'string');
-			$value = substr($value, 0, 255); 
+			$value = substr((string) $value, 0, 255); 
 			if(str_contains($value, "'")) $value = str_replace("'", "\\" . "'", $value); // allow for single quotes (i.e. dbPass)
 			$values[$field] = trim($value); 
 		}
@@ -673,7 +673,7 @@ class Installer {
 		}
 
 		$this->h("fa-database Test Database and Save Configuration");
-		$this->alertOk("Database connection successful to " . htmlspecialchars($values['dbName'])); 
+		$this->alertOk("Database connection successful to " . htmlspecialchars((string) $values['dbName'])); 
 		
 		$options = ['dbCharset' => strtolower($values['dbCharset']), 'dbEngine' => $values['dbEngine']];
 
@@ -741,12 +741,12 @@ class Installer {
 	 */
 	protected function dbCreateDatabase($dsn, $values, $driver_options) {
 		
-		$dbCharset = preg_replace('/[^a-z0-9]/', '', strtolower(substr($values['dbCharset'], 0, 64)));
-		$dbName = preg_replace('/[^_a-zA-Z0-9]/', '', substr($values['dbName'], 0, 64));
+		$dbCharset = preg_replace('/[^a-z0-9]/', '', strtolower(substr((string) $values['dbCharset'], 0, 64)));
+		$dbName = preg_replace('/[^_a-zA-Z0-9]/', '', substr((string) $values['dbName'], 0, 64));
 		$dbNameTest = str_replace('_', '', $dbName);
 
 		if(ctype_alnum($dbNameTest) && $dbName === $values['dbName']
-			&& ctype_alnum($dbCharset) && $dbCharset === $values['dbCharset']) {
+			&& ctype_alnum((string) $dbCharset) && $dbCharset === $values['dbCharset']) {
 			
 			// valid database name with no changes after sanitization
 
@@ -806,7 +806,7 @@ class Installer {
 			"\n\$config->dbPass = '$values[dbPass]';" . 
 			"\n\$config->dbPort = '$values[dbPort]';";
 		
-		if(!empty($values['dbCharset']) && strtolower($values['dbCharset']) != 'utf8') $cfg .= "\n\$config->dbCharset = '$values[dbCharset]';";
+		if(!empty($values['dbCharset']) && strtolower((string) $values['dbCharset']) != 'utf8') $cfg .= "\n\$config->dbCharset = '$values[dbCharset]';";
 		if(!empty($values['dbEngine']) && $values['dbEngine'] == 'InnoDB') $cfg .= "\n\$config->dbEngine = 'InnoDB';";
 		
 		$cfg .= 
@@ -1037,8 +1037,8 @@ class Installer {
 		}
 		if($options['dbCharset'] != 'utf8') {
 			$replace['CHARSET=utf8'] = "CHARSET=$options[dbCharset]";
-			if(strtolower($options['dbCharset']) === 'utf8mb4') {
-				if(strtolower($options['dbEngine']) === 'innodb') {
+			if(strtolower((string) $options['dbCharset']) === 'utf8mb4') {
+				if(strtolower((string) $options['dbEngine']) === 'innodb') {
 					$replace['(255)'] = '(191)'; 
 					$replace['(250)'] = '(191)'; 
 				} else {
@@ -1072,7 +1072,7 @@ class Installer {
 
 		foreach($values as $key => $value) {
 			if($wire && $wire->input->post($key)) $value = $wire->input->post($key);
-			$value = htmlentities($value, ENT_QUOTES, "UTF-8"); 
+			$value = htmlentities((string) $value, ENT_QUOTES, "UTF-8"); 
 			$clean[$key] = $value;
 		}
 
@@ -1185,7 +1185,7 @@ class Installer {
 
 		if(!$input->post('username') || !$input->post('userpass')) $this->err("Missing account information"); 
 		if($input->post('userpass') !== $input->post('userpass_confirm')) $this->err("Passwords do not match");
-		if(strlen($input->post('userpass')) < 6) $this->err("Password must be at least 6 characters long"); 
+		if(strlen((string) $input->post('userpass')) < 6) $this->err("Password must be at least 6 characters long"); 
 
 		$username = $sanitizer->pageName($input->post('username')); 
 		if($username != $input->post('username')) $this->err("Username must be only a-z 0-9");
@@ -1197,7 +1197,7 @@ class Installer {
 		if(strlen($adminName) < 2) $this->err("Admin login URL must be at least 2 characters long"); 
 
 		$email = strtolower($sanitizer->email($input->post('useremail'))); 
-		if($email != strtolower($input->post('useremail'))) $this->err("Email address did not validate");
+		if($email != strtolower((string) $input->post('useremail'))) $this->err("Email address did not validate");
 
 		if($this->numErrors) {
 			$this->adminAccount($wire);
@@ -1608,7 +1608,7 @@ class Installer {
 		echo "\n\t<select class='uk-select' name='timezone'>";
 		foreach($this->timezones() as $key => $timezone) {
 			$label = $timezone;
-			if(strpos($label, '|')) [$label, $timezone] = explode('|', $label);
+			if(strpos((string) $label, '|')) [$label, $timezone] = explode('|', (string) $label);
 			$selected = $timezone == $value ? "selected='selected'" : '';
 			$label = str_replace('_', ' ', $label);
 			echo "\n\t\t<option value=\"$key\" $selected>$label</option>";
@@ -1686,7 +1686,7 @@ class Installer {
 		if($value === null && empty($sanitizer)) return null;
 		
 		if(version_compare(PHP_VERSION, "5.4.0", "<") && function_exists('get_magic_quotes_gpc')) {
-			if(get_magic_quotes_gpc()) $value = stripslashes($value);
+			if(get_magic_quotes_gpc()) $value = stripslashes((string) $value);
 		}
 		
 		switch($sanitizer) {
@@ -1718,22 +1718,22 @@ class Installer {
 				$value = trim((string) $value);
 				break;
 			case 'pageName':	
-				$value = strtolower($value); 
+				$value = strtolower((string) $value); 
 				// no-break: passthrough to 'name' intentional...
 			case 'name':	
 				$value = trim((string) $value);
 				if(strlen($value)) {
 					$value = preg_replace('/[^-._a-z0-9]/', '-', $value);
-					while(str_contains($value, '--')) $value = str_replace('--', '-', $value);
-					$value = trim($value, '-');
+					while(str_contains((string) $value, '--')) $value = str_replace('--', '-', $value);
+					$value = trim((string) $value, '-');
 				}
 				break;
 			case 'fieldName':
 				$value = trim((string) $value);
 				if(strlen($value)) {
 					$value = preg_replace('/[^_a-zA-Z0-9]/', '_', $value);
-					while(str_contains($value, '__')) $value = str_replace('__', '_', $value);
-					$value = trim($value, '_');
+					while(str_contains((string) $value, '__')) $value = str_replace('__', '_', $value);
+					$value = trim((string) $value, '_');
 				}
 				break;
 			case 'bool':	
@@ -1766,7 +1766,7 @@ class Installer {
 		$path = rtrim($path, '/') . '/';
 		$isDir = is_dir($path);
 		if($isDir || mkdir($path)) {
-			chmod($path, octdec($this->chmodDir));
+			chmod($path, octdec((string) $this->chmodDir));
 			if($showNote && !$isDir) $this->alertOk("Created directory: $path"); 
 			$result = true;
 		} else {
@@ -1777,7 +1777,7 @@ class Installer {
 		if($result && $block && !file_exists($file)) {
 			$data = ['# Start ProcessWire:pwball (install)', '# Block all access (fallback if root .htaccess missing)', '<IfModule mod_authz_core.c>', '  Require all denied', '</IfModule>', '<IfModule !mod_authz_core.c>', '  Order allow,deny', '  Deny from all', '</IfModule>', '# End ProcessWire:pwball'];
 			file_put_contents($file, implode("\n", $data));
-			chmod($file, octdec($this->chmodFile));
+			chmod($file, octdec((string) $this->chmodFile));
 		}
 		return $result;
 	}
@@ -1795,7 +1795,7 @@ class Installer {
 			$this->alertErr("Unable to copy $src => $dst (please copy manually if possible)"); 
 			return false;
 		}
-		chmod($dst, octdec($this->chmodFile));
+		chmod($dst, octdec((string) $this->chmodFile));
 		return true;
 	}
 
@@ -1812,7 +1812,7 @@ class Installer {
 			$this->alertErr("Unable to rename $src => $dst (please rename manually if possible)");
 			return false;
 		}
-		chmod($dst, octdec($this->chmodFile));
+		chmod($dst, octdec((string) $this->chmodFile));
 		return true;
 	}
 
@@ -1844,7 +1844,7 @@ class Installer {
 					// don't replace existing files when $overwrite == false;
 				} else {
 					copy($src . $file, $dst . $file);
-					chmod($dst . $file, octdec($this->chmodFile));
+					chmod($dst . $file, octdec((string) $this->chmodFile));
 				}
 			}
 		}

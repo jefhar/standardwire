@@ -50,7 +50,7 @@ class WireDebugInfo extends Wire {
 	public function getHooksInfo(Wire $obj) {
 		$hooks = [];
 		foreach($obj->getHooks() as $hook) {
-			[$class, $priority] = explode(':', $hook['id']);
+			[$class, $priority] = explode(':', (string) $hook['id']);
 			$key = '';
 			$value = '';
 			if($hook['options']['before']) $key .= "before ";

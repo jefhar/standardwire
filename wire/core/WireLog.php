@@ -143,7 +143,7 @@ class WireLog extends Wire {
 				$input = $this->wire()->input;
 				$sanitizer = $this->wire()->sanitizer;
 				$url = $input ? $input->httpUrl() : '';
-				if(strlen($url) && $input) {
+				if(strlen((string) $url) && $input) {
 					if(count($input->get)) {
 						$url .= "?";
 						foreach($input->get as $k => $v) {
@@ -153,7 +153,7 @@ class WireLog extends Wire {
 						}
 						$url = rtrim($url, "&");
 					}
-					if(strlen($url) > 500) $url = substr($url, 0, 500) . " ...";
+					if(strlen((string) $url) > 500) $url = substr((string) $url, 0, 500) . " ...";
 				} else {
 					$url = '?';
 				}
@@ -382,7 +382,7 @@ class WireLog extends Wire {
 	 */
 	public function lineToEntry($line) {
 		
-		$parts = explode("\t", $line, 4);
+		$parts = explode("\t", (string) $line, 4);
 	
 		if(count($parts) == 2) {
 			$entry = ['date' => $parts[0], 'user' => '', 'url'  => '', 'text' => $parts[1]];

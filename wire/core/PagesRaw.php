@@ -172,7 +172,7 @@ class PagesRaw extends Wire {
 		if(!is_array($cols)) $cols = empty($cols) ? [] : [$cols];
 
 		foreach($cols as $key => $col) {
-			if(!ctype_alnum($col) && $sanitizer->fieldName($col) !== $col) {
+			if(!ctype_alnum((string) $col) && $sanitizer->fieldName($col) !== $col) {
 				unset($cols[$key]);
 			} else {
 				$cols[$key] = $database->escapeCol($col);

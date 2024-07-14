@@ -293,7 +293,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 			$str = sprintf($this->_('%1$s %2$d to %3$d of %4$d'), $label, $start, $end, $total); // Pagination item quantity, i.e. Items 1 to 10 of 50
 		}
 		
-		return trim($str); 
+		return trim((string) $str); 
 	}
 
 

@@ -212,7 +212,7 @@ class ModulesFiles extends ModulesClass {
 			// see if it's a predefined core type that can be determined from the type
 			// this should only come into play if module has moved or had a load error
 			foreach($this->coreTypes as $typeName) {
-				if(!str_starts_with($moduleName, (string) $typeName)) continue;
+				if(!str_starts_with((string) $moduleName, (string) $typeName)) continue;
 				$checkFiles = ["$typeName/$moduleName/$moduleName.module", "$typeName/$moduleName/$moduleName.module.php", "$typeName/$moduleName.module", "$typeName/$moduleName.module.php"];
 				$path1 = $config->paths->modules;
 				foreach($checkFiles as $checkFile) {
@@ -242,7 +242,7 @@ class ModulesFiles extends ModulesClass {
 					$moduleID = $this->moduleID($moduleName);
 					$namespace = $this->modules->info->moduleInfoCache($moduleID, 'namespace');
 					if(!empty($namespace)) {
-						$className = rtrim($namespace, "\\") . "\\$moduleName";
+						$className = rtrim((string) $namespace, "\\") . "\\$moduleName";
 					} else {
 						$className = strlen(__NAMESPACE__) ? "\\" . __NAMESPACE__ . "\\$moduleName" : $moduleName;
 					}
@@ -288,7 +288,7 @@ class ModulesFiles extends ModulesClass {
 			if(class_exists(__NAMESPACE__ . "\\$moduleName", false)) return true;
 			// next do a slower check, figuring out namespace
 			$ns = $this->modules->info->getModuleNamespace($moduleName, ['file' => $file]);
-			$className = trim($ns, "\\") . "\\$moduleName";
+			$className = trim((string) $ns, "\\") . "\\$moduleName";
 			if(class_exists($className, false)) return true;
 			// if this point is reached, module is not yet in memory in either instance
 			// temporarily set the $wire instance to 2nd instance during include()
@@ -359,7 +359,7 @@ class ModulesFiles extends ModulesClass {
 		if(__NAMESPACE__) {
 			$compile = $namespace === '\\' || empty($namespace);
 		} else {
-			$compile = trim($namespace, '\\') === 'ProcessWire';
+			$compile = trim((string) $namespace, '\\') === 'ProcessWire';
 		}
 
 		// compile if necessary
@@ -520,7 +520,7 @@ class ModulesFiles extends ModulesClass {
 		$options = ['extensions' => ['csv'], 'recursive' => false, 'excludeHidden' => true];
 
 		foreach($this->wire()->files->find($path, $options) as $file) {
-			$basename = basename($file, '.csv');
+			$basename = basename((string) $file, '.csv');
 			$items[$basename] = $file;
 		}
 
@@ -557,7 +557,7 @@ class ModulesFiles extends ModulesClass {
 	 */
 	public function getFileNamespace($file) {
 		$namespace = $this->wire()->files->getNamespace($file);
-		if($namespace !== "\\") $namespace = "\\" . trim($namespace, "\\") . "\\";
+		if($namespace !== "\\") $namespace = "\\" . trim((string) $namespace, "\\") . "\\";
 		return $namespace;
 	}
 	
@@ -592,8 +592,8 @@ class ModulesFiles extends ModulesClass {
 		}
 
 		$className = array_shift($parts);
-		if(str_contains($className, '\\')) {
-			$className = trim($className, '\\');
+		if(str_contains((string) $className, '\\')) {
+			$className = trim((string) $className, '\\');
 			$a = explode('\\', $className);
 			$value['className'] = "\\$className\\";
 			$value['class'] = array_pop($a);
@@ -610,7 +610,7 @@ class ModulesFiles extends ModulesClass {
 				$value['extends'] = array_shift($parts);
 			} else if($next == 'implements') {
 				$implements = array_shift($parts);
-				if(strlen($implements)) {
+				if(strlen((string) $implements)) {
 					$implements = str_replace(' ', '', $implements);
 					$value['implements'] = explode(',', $implements);
 				}

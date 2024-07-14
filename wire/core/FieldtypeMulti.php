@@ -524,8 +524,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 			// one or more orderByCols is defined, enabling sorting and potential pagination
 			$sorts = [];
 			foreach($orderByCols as $key => $col) {
-				$desc = str_starts_with($col, '-') ? ' DESC' : '';
-				$col = $sanitizer->fieldName(ltrim($col, '-'));
+				$desc = str_starts_with((string) $col, '-') ? ' DESC' : '';
+				$col = $sanitizer->fieldName(ltrim((string) $col, '-'));
 				if($col === 'random') {
 					$sorts = ['RAND()'];
 					break;
@@ -809,7 +809,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 		$value = $query->fetchColumn();
 		$query->closeCursor();
 		if($value === null) return $noValue;
-		if(!is_int($value) && ctype_digit(ltrim($value, '-'))) $value = (int) $value;
+		if(!is_int($value) && ctype_digit(ltrim((string) $value, '-'))) $value = (int) $value;
 		return $value;
 	}
 

@@ -888,8 +888,8 @@ class Session extends Wire implements \IteratorAggregate {
 				$ip = $_SERVER['REMOTE_ADDR'];
 			}
 			// It's possible for X_FORWARDED_FOR to have more than one CSV separated IP address, per @tuomassalo
-			if(str_contains($ip, ',') && $useClient !== 2) {
-				[$ip] = explode(',', $ip);
+			if(str_contains((string) $ip, ',') && $useClient !== 2) {
+				[$ip] = explode(',', (string) $ip);
 			}
 			// sanitize: if IP contains something other than digits, periods, commas, spaces, 
 			// then don't use it and instead fallback to the REMOTE_ADDR. 
@@ -908,21 +908,21 @@ class Session extends Wire implements \IteratorAggregate {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 
-		if(str_contains($ip, ':')) {
+		if(str_contains((string) $ip, ':')) {
 			// attempt to identify an IPv4 version when an integer required for return value
 			if($int && $ip === '::1') {
 				$ip = '127.0.0.1';
-			} else if($int && strpos($ip, '.') && preg_match('!(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})!', $ip, $m)) {
+			} else if($int && strpos((string) $ip, '.') && preg_match('!(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})!', (string) $ip, $m)) {
 				$ip = $m[1]; // i.e. 0:0:0:0:0:ffff:192.1.56.10 => 192.1.56.10
 			} else {
 				$ipv6 = true;
 			}
 		}
 
-		if($useClient === 2 && str_contains($ip, ',')) {
+		if($useClient === 2 && str_contains((string) $ip, ',')) {
 			// return multiple IPs
 			$ips = [];
-			foreach(explode(',', $ip) as $ip) {
+			foreach(explode(',', (string) $ip) as $ip) {
 				if($ipv6) {
 					$ip = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
 					if($ip !== false && $int) $ip = crc32($ip);
@@ -944,7 +944,7 @@ class Session extends Wire implements \IteratorAggregate {
 
 		} else {
 			// sanitize by converting to and from integer
-			$ip = ip2long(trim($ip));
+			$ip = ip2long(trim((string) $ip));
 			if(!$int) $ip = long2ip($ip);
 		}
 
@@ -993,7 +993,7 @@ class Session extends Wire implements \IteratorAggregate {
 			$name = $sanitizer->pageNameUTF8($name);
 		}
 		
-		if(!strlen($name)) return null;
+		if(!strlen((string) $name)) return null;
 		
 		$allowAttempt = $this->allowLoginAttempt($name); 
 		
@@ -1281,7 +1281,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 */
 	protected function sessionCookieSameSite($value = null) {
 		$samesite = $value ?? $this->config->sessionCookieSameSite;
-		$samesite = empty($samesite) ? 'Lax' : ucfirst(strtolower($samesite));
+		$samesite = empty($samesite) ? 'Lax' : ucfirst(strtolower((string) $samesite));
 		if(!in_array($samesite, ['Strict', 'Lax', 'None'], true)) $samesite = 'Lax';
 		return $samesite;
 	}

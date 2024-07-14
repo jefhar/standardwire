@@ -418,7 +418,7 @@ class Debug {
 			
 			if($type === '->' && isset($apiVars[$class])) {
 				// use API var name when available
-				if(strtolower($class) === strtolower(ltrim($apiVars[$class], '$'))) {
+				if(strtolower((string) $class) === strtolower(ltrim($apiVars[$class], '$'))) {
 					$class = $apiVars[$class];
 				} else {
 					$class = "$class " . $apiVars[$class];
@@ -439,7 +439,7 @@ class Debug {
 			}
 			
 			if(!$options['showHooks'] && $isHookableCall === '___') {
-				$function = substr($function, 3);
+				$function = substr((string) $function, 3);
 			}
 			
 			if(!empty($args)) {

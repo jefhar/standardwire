@@ -225,7 +225,7 @@ abstract class Notice extends WireData {
 			[$icon, $value] = explode(' ', $value, 2);
 			[, $icon] = explode('-', $icon, 2);
 			$icon = $this->wire()->sanitizer->name($icon);
-			if(strlen($icon)) $this->set('icon', $icon);
+			if(strlen((string) $icon)) $this->set('icon', $icon);
 		} else if($key === 'flags') {
 			$this->flags($value);
 			return $this;
@@ -303,7 +303,7 @@ abstract class Notice extends WireData {
 			$this->icon = substr($name, 5); 
 			$flag = 0;
 		} else {
-			$flag = array_search($name, array_map('strtolower', self::$flagNames));
+			$flag = array_search($name, array_map(strtolower(...), self::$flagNames));
 		}
 		return $flag ?: 0;
 	}

@@ -411,7 +411,7 @@ class Notices extends WireArray {
 		$n = 0;
 		$types = $options['types'] ?? ['errors', 'warnings', 'messages']; 
 		foreach($types as $type) {
-			$method = rtrim($type, 's');
+			$method = rtrim((string) $type, 's');
 			foreach($from->$type('clear') as $notice) {
 				$text = $notice->text; 
 				if(isset($options['prefix'])) $text = "$options[prefix]$text";

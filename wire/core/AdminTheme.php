@@ -365,7 +365,7 @@ abstract class AdminTheme extends WireData implements Module {
 		if(empty($name)) {
 			return $this->classes;
 		} else if(isset($this->classes[$name])) {
-			return $getArray ? explode(' ', $this->classes[$name]) : $this->classes[$name];
+			return $getArray ? explode(' ', (string) $this->classes[$name]) : $this->classes[$name];
 		} else {
 			return $getArray ? [] : '';
 		}
@@ -390,9 +390,9 @@ abstract class AdminTheme extends WireData implements Module {
 			}
 		} else if(!$replace && isset($this->classes[$name])) {
 			$classes = $this->classes[$name];
-			if(str_contains($classes, $class)) {
+			if(str_contains((string) $classes, $class)) {
 				// avoid re-adding class if it is already present
-				if(array_search($class, explode(' ', $classes)) !== false) return; 
+				if(array_search($class, explode(' ', (string) $classes)) !== false) return; 
 			}
 			$this->classes[$name] = trim($classes . ' ' . ltrim($class));	
 		} else {

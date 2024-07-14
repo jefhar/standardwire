@@ -38,7 +38,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 			$n = 0;
 			foreach($options['names'] as $name) {
 				$n++;
-				if(str_contains($name, '*')) {
+				if(str_contains((string) $name, '*')) {
 					$name = str_replace('*', '%', $name);
 					$whereNames[] = "name LIKE :name$n";
 				} else {
@@ -52,9 +52,9 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 			$n = 0;
 			foreach($options['expires'] as $expires) {
 				$operator = '=';
-				if(strpos($expires, ' ')) {
+				if(strpos((string) $expires, ' ')) {
 					// string in format: '>= YYYY-MM-DD HH:MM:SS'
-					[$op, $expires] = explode(' ', $expires, 2);
+					[$op, $expires] = explode(' ', (string) $expires, 2);
 					if($database->isOperator($op)) $operator = $op;
 				}
 				$n++;
@@ -68,7 +68,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 		}
 		
 		if(count($whereExpires)) {
-			$mode = strtoupper($options['expiresMode']) === 'AND' ? 'AND' : 'OR';
+			$mode = strtoupper((string) $options['expiresMode']) === 'AND' ? 'AND' : 'OR';
 			$where[] = '(' . implode(" $mode ", $whereExpires) . ')';
 		}
 

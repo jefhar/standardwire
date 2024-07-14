@@ -35,8 +35,8 @@ header("X-Frame-Options: SAMEORIGIN");
  */
 function _hookSessionRedirectModal(HookEvent $event) {
 	$url = $event->arguments(0);    
-	if(!str_contains($url, 'modal=1') && !str_contains($url, '://')) {
-		$url .= (!str_contains($url, '?') ? '?' : '&') . 'modal=1';
+	if(!str_contains((string) $url, 'modal=1') && !str_contains((string) $url, '://')) {
+		$url .= (!str_contains((string) $url, '?') ? '?' : '&') . 'modal=1';
 		$event->arguments(0, $url);    
 	}
 }
@@ -52,9 +52,9 @@ function _checkForHttpHostError(Config $config) {
 	$valid = false;
 	$httpHost = strtolower($config->httpHost); 
 
-	if(isset($_SERVER['HTTP_HOST']) && $httpHost === strtolower($_SERVER['HTTP_HOST'])) {
+	if(isset($_SERVER['HTTP_HOST']) && $httpHost === strtolower((string) $_SERVER['HTTP_HOST'])) {
 		$valid = true; 
-	} else if(isset($_SERVER['SERVER_NAME']) && $httpHost === strtolower($_SERVER['SERVER_NAME'])) {
+	} else if(isset($_SERVER['SERVER_NAME']) && $httpHost === strtolower((string) $_SERVER['SERVER_NAME'])) {
 		$valid = true; 
 	} else if(in_array($httpHost, $config->httpHosts)) {
 		$valid = true; 
@@ -62,7 +62,7 @@ function _checkForHttpHostError(Config $config) {
 
 	if(!$valid) $config->error(
 		__('Unrecognized HTTP host:') . "'"  . 
-		htmlentities($_SERVER['HTTP_HOST'], ENT_QUOTES, 'UTF-8') . "' - " . 
+		htmlentities((string) $_SERVER['HTTP_HOST'], ENT_QUOTES, 'UTF-8') . "' - " . 
 		__('Please update your $config->httpHosts setting in /site/config.php') . " - " . 
 		"<a target='_blank' href='https://processwire.com/api/variables/config/#httphosts'>" . __('read more') . "</a>", 
 		Notice::allowMarkup
@@ -77,7 +77,7 @@ function _checkForHttpHostError(Config $config) {
  */
 function _checkForTwoFactorAuth(Session $session) {
 	$tfaUrl = $session->getFor('_user', 'requireTfa'); // contains URL to configure TFA
-	if(!$tfaUrl || str_starts_with($tfaUrl, (string) $session->wire('page')->url())) return;
+	if(!$tfaUrl || str_starts_with((string) $tfaUrl, (string) $session->wire('page')->url())) return;
 	$sanitizer = $session->wire('sanitizer');
 	$session->wire('user')->warning(
 		'<strong>' . $sanitizer->entities1(__('Action required')) . '</strong> ' .

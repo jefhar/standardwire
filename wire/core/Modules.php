@@ -505,7 +505,7 @@ class Modules extends WireArray {
 		
 		if(!$module && !$moduleID) {
 			// make non case-sensitive for module name ($key)
-			$lowerKey = strtolower($key);
+			$lowerKey = strtolower((string) $key);
 			foreach($this->moduleNames as $className) {
 				if(strtolower($className) !== $lowerKey) continue;
 				$module = parent::get($className);
@@ -2131,7 +2131,7 @@ class Modules extends WireArray {
 	 */
 	public function formatVersion($version) {
 		
-		$version = trim($version);
+		$version = trim((string) $version);
 
 		if(!ctype_digit(str_replace('.', '', $version))) {
 			// if version has some characters other than digits or periods, remove them
@@ -2141,10 +2141,10 @@ class Modules extends WireArray {
 		if(ctype_digit("$version")) {
 			// version contains only digits
 			// make sure version is at least 3 characters in length, left padded with 0s
-			$len = strlen($version); 
+			$len = strlen((string) $version); 
 
 			if($len < 3) {
-				$version = str_pad($version, 3, "0", STR_PAD_LEFT);
+				$version = str_pad((string) $version, 3, "0", STR_PAD_LEFT);
 
 			} else if($len > 3) {
 				// they really need to use a string for this type of version, 
@@ -2152,15 +2152,15 @@ class Modules extends WireArray {
 			}
 
 			$version = 
-				substr($version, 0, 1) . '.' . 
-				substr($version, 1, 1) . '.' . 
-				substr($version, 2); 
+				substr((string) $version, 0, 1) . '.' . 
+				substr((string) $version, 1, 1) . '.' . 
+				substr((string) $version, 2); 
 			
-		} else if(str_contains($version, '.')) {
+		} else if(str_contains((string) $version, '.')) {
 			// version is a formatted string
-			if(strpos($version, '.') == strrpos($version, '.')) {
+			if(strpos((string) $version, '.') == strrpos((string) $version, '.')) {
 				// only 1 period, like: 2.0, convert that to 2.0.0
-				if(preg_match('/^\d\.\d$/', $version)) $version .= ".0";
+				if(preg_match('/^\d\.\d$/', (string) $version)) $version .= ".0";
 			}
 			
 		} else {
@@ -2449,7 +2449,7 @@ class Modules extends WireArray {
 		if(!$this->saveCacheReady) {
 			$this->saveCacheReady = true;
 			$col = $database->getColumns('modules', 'data');
-			if(strtolower($col['type']) === 'text') {
+			if(strtolower((string) $col['type']) === 'text') {
 				try {
 					// increase size of data column for cache storage in 3.0.218
 					$database->exec("ALTER TABLE modules MODIFY `data` MEDIUMTEXT NOT NULL");

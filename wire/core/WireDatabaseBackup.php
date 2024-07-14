@@ -281,7 +281,7 @@ class WireDatabaseBackup {
 				else $value = '';
 			if(empty($value) && !empty($_value)) $value = $_value; // i.e. dbCharset
 			if($key == 'dbPath' && $value) {
-				$value = rtrim($value, '/') . '/';
+				$value = rtrim((string) $value, '/') . '/';
 				if(!is_dir($value)) $value = '';
 			}
 			$this->databaseConfig[$key] = $value;
@@ -625,7 +625,7 @@ class WireDatabaseBackup {
 				$n++;
 			} while(file_exists($this->path . $options['filename'])); 
 		} else {
-			$options['filename'] = basename($options['filename']); 
+			$options['filename'] = basename((string) $options['filename']); 
 		}
 	
 		set_time_limit($options['maxSeconds']); 
@@ -731,7 +731,7 @@ class WireDatabaseBackup {
 		}
 		
 		foreach($options['extraSQL'] as $sql) {
-			fwrite($fp, "\n" . rtrim($sql, '; ') . ";\n"); 
+			fwrite($fp, "\n" . rtrim((string) $sql, '; ') . ";\n"); 
 		}
 		
 		$footer = "# " . self::fileFooter;
@@ -801,7 +801,7 @@ class WireDatabaseBackup {
 
 			$conditions = [];
 			foreach($options['whereSQL'] as $_table => $_conditions) {
-				if($_table === $table || ($_table[0] == '/' && preg_match($_table, $table))) $conditions = array_merge($conditions, $_conditions); 
+				if($_table === $table || ($_table[0] == '/' && preg_match($_table, (string) $table))) $conditions = array_merge($conditions, $_conditions); 
 			}
 			if(count($conditions)) {
 				$sql .= "WHERE ";
@@ -823,7 +823,7 @@ class WireDatabaseBackup {
 						$value = 'NULL';
 					} else {
 						if($hasReplace) foreach($options['findReplace'] as $find => $replace) {
-							if(strpos($value, (string) $find)) $value = str_replace($find, $replace, $value);
+							if(strpos((string) $value, (string) $find)) $value = str_replace($find, $replace, $value);
 						}
 						$value = $database->quote($value);
 					}
@@ -1084,7 +1084,7 @@ class WireDatabaseBackup {
 	 *
 	 */
 	protected function restoreUseLine($line) {
-		if(empty($line) || str_starts_with($line, '--') || str_starts_with($line, '#')) return false;
+		if(empty($line) || str_starts_with((string) $line, '--') || str_starts_with((string) $line, '#')) return false;
 		return true;
 	}
 
@@ -1137,12 +1137,12 @@ class WireDatabaseBackup {
 			foreach($tableInserts as $insert) {
 				// check if table existed in both dump files, and has no duplicate update statement
 				$regex = '/\s+ON\s+DUPLICATE\s+KEY\s+UPDATE\s+[^\'";]+;$/i';
-				if(isset($creates1[$table]) && !preg_match($regex, $insert)) {
+				if(isset($creates1[$table]) && !preg_match($regex, (string) $insert)) {
 					// line doesn't already contain an ON DUPLICATE section, so we need to add it
-					$pos1 = strpos($insert, '(') + 1; 
-					$pos2 = strpos($insert, ')') - $pos1;
-					$fields = substr($insert, $pos1, $pos2);
-					$insert = rtrim($insert, '; ') . " ON DUPLICATE KEY UPDATE ";
+					$pos1 = strpos((string) $insert, '(') + 1; 
+					$pos2 = strpos((string) $insert, ')') - $pos1;
+					$fields = substr((string) $insert, $pos1, $pos2);
+					$insert = rtrim((string) $insert, '; ') . " ON DUPLICATE KEY UPDATE ";
 					foreach(explode(',', $fields) as $name) {
 						$name = trim($name); 
 						$insert .= "$name=VALUES($name), ";
@@ -1233,7 +1233,7 @@ class WireDatabaseBackup {
 		if(!empty($options['findReplaceCreateTable'])) {
 			foreach($options['findReplaceCreateTable'] as $find => $replace) {
 				foreach($statements as $key => $line) {
-					if(!str_contains($line, (string) $find)) continue;
+					if(!str_contains((string) $line, (string) $find)) continue;
 					$line = str_replace($find, $replace, $line);
 					$statements[$key] = $line;
 				}
@@ -1300,7 +1300,7 @@ class WireDatabaseBackup {
 	 */
 	protected function sanitizePath($path) {
 		if(DIRECTORY_SEPARATOR != '/') $path = str_replace(DIRECTORY_SEPARATOR, '/', $path); 
-		$path = rtrim($path, '/') . '/'; // ensure it ends with trailing slash
+		$path = rtrim((string) $path, '/') . '/'; // ensure it ends with trailing slash
 		return $path; 
 	}
 
@@ -1314,10 +1314,10 @@ class WireDatabaseBackup {
 	 */
 	protected function sanitizeFilename($filename) {
 		if(DIRECTORY_SEPARATOR != '/') $filename = str_replace(DIRECTORY_SEPARATOR, '/', $filename);
-		if(!str_contains($filename, '/')) {
+		if(!str_contains((string) $filename, '/')) {
 			$filename = $this->path . $filename;
 		}
-		if(!str_contains($filename, '/')) {
+		if(!str_contains((string) $filename, '/')) {
 			$path = $this->getPath();
 			if(!strlen($path)) throw new \Exception("Please supply full path to file, or call setPath('/backup/files/path/') first");
 			$filename = $path . $filename; 
@@ -1343,7 +1343,7 @@ class WireDatabaseBackup {
 		
 		if(empty($this->databaseConfig['dbUser'])) return false; // no db config options provided
 		
-		if(preg_match('{^(?:\[dbPath\])?([_a-zA-Z0-9]+)\s}', $options['execCommand'], $matches)) {
+		if(preg_match('{^(?:\[dbPath\])?([_a-zA-Z0-9]+)\s}', (string) $options['execCommand'], $matches)) {
 			$type = $matches[1]; 
 		} else {
 			throw new \Exception("Unable to determine command for exec"); 

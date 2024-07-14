@@ -21,7 +21,7 @@ abstract class WireSessionHandler extends WireData implements Module {
 	public function wired() {
 		if(!$this->sessionExists()) {
 			$this->addHookBefore('Session::init', $this, 'hookSessionInit');
-			register_shutdown_function('session_write_close');
+			register_shutdown_function(session_write_close(...));
 		}
 	}
 
@@ -49,12 +49,12 @@ abstract class WireSessionHandler extends WireData implements Module {
 	 */
 	public function attach() {
 		session_set_save_handler(
-			[$this, 'open'],
-			[$this, 'close'],
-			[$this, 'read'],
-			[$this, 'write'],
-			[$this, 'destroy'],
-			[$this, 'gc']
+			$this->open(...),
+			$this->close(...),
+			$this->read(...),
+			$this->write(...),
+			$this->destroy(...),
+			$this->gc(...)
 		);
 	}
 

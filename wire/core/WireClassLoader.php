@@ -92,7 +92,7 @@ class WireClassLoader {
 	 */
 	public function __construct($wire = null) {
 		if($wire) $this->wire = $wire;
-		spl_autoload_register([$this, 'loadClass']);
+		spl_autoload_register($this->loadClass(...));
 	}
 
 	/**
@@ -387,7 +387,7 @@ class WireClassLoader {
 					if($pos !== 0) continue; 
 				} else {
 					// suffixes: class name must end with suffix
-					if(substr($name, -1 * strlen($fix)) !== $fix) continue; 
+					if(substr($name, -1 * strlen((string) $fix)) !== $fix) continue; 
 				}
 				
 				// if still here then we have a class name that matches a prefix/suffix, check if in path

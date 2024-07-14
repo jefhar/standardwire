@@ -530,7 +530,7 @@ class Fields extends WireSaveableItems {
 			$query->bindValue(':fieldgroup_id', $fieldgroup_id, \PDO::PARAM_INT);
 			$query->execute();
 			[$existingData] = $query->fetch(\PDO::FETCH_NUM);
-			$existingData = strlen($existingData) ? json_decode($existingData, true) : [];
+			$existingData = strlen((string) $existingData) ? json_decode((string) $existingData, true) : [];
 			if(!is_array($existingData)) $existingData = [];
 			foreach($data as $k => $v) {
 				// disallow namespace within namespace

@@ -363,8 +363,8 @@ abstract class Process extends WireData implements Module {
 		
 		$info = $modules->getModuleInfoVerbose($this);
 		$name = $sanitizer->pageName($name);
-		if(!strlen($name)) {
-			$name = strtolower(preg_replace('/([A-Z])/', '-$1', str_replace('Process', '', $this->className())));
+		if(!strlen((string) $name)) {
+			$name = strtolower((string) preg_replace('/([A-Z])/', '-$1', str_replace('Process', '', $this->className())));
 		}
 		$adminPage = $pages->get($config->adminRootPageID); 
 		if($parent instanceof Page) {
@@ -375,7 +375,7 @@ abstract class Process extends WireData implements Module {
 			$parent = $pages->get($parent);
 		} else if($parent) {
 			$parent = $sanitizer->pageName($parent);
-			if(strlen($parent)) $parent = $adminPage->child("include=all, name=$parent");
+			if(strlen((string) $parent)) $parent = $adminPage->child("include=all, name=$parent");
 		}
 		if(!$parent || !$parent->id) $parent = $adminPage; // default
 		$page = $parent->child("include=all, name=$name"); // does it already exist?
@@ -529,7 +529,7 @@ abstract class Process extends WireData implements Module {
 			$data['list'][$_label] = ['url' => str_replace(['{id}', '{name}'], [$id, $name], $options['edit']), 'label' => $label, 'icon' => $icon, 'className' => $class];
 		}
 		// sort alpha, case insensitive
-		if($options['sort']) uksort($data['list'], 'strcasecmp');
+		if($options['sort']) uksort($data['list'], strcasecmp(...));
 		$data['list'] = array_values($data['list']); 
 		
 		if(!empty($options['getArray'])) return $data;

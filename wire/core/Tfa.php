@@ -1005,7 +1005,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		if(empty($data)) {
 			$tfaSettings = [$className => $defaults];
 		} else {
-			$tfaSettings = json_decode($data, true);
+			$tfaSettings = json_decode((string) $data, true);
 			if(!is_array($tfaSettings)) $tfaSettings = [];
 			if(isset($tfaSettings[$className])) {
 				$tfaSettings[$className] = array_merge($defaults, $tfaSettings[$className]);

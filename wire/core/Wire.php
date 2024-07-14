@@ -319,12 +319,12 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 				$className = $cache[$className];
 			} else {
 				$_className = $className;
-				$part = substr($className, 1);
+				$part = substr((string) $className, 1);
 				if(strtolower($part) != $part) {
 					// contains more than 1 uppercase character, convert to hyphenated lowercase
-					$className = substr($className, 0, 1) . preg_replace('/([A-Z])/', '-$1', $part);
+					$className = substr((string) $className, 0, 1) . preg_replace('/([A-Z])/', '-$1', $part);
 				}
-				$className = strtolower($className);
+				$className = strtolower((string) $className);
 				$cache[$_className] = $className;
 			}
 		}

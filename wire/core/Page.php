@@ -980,11 +980,11 @@ class Page extends WireData implements \Countable, WireMatchable {
 				if($key && isset($this->settings[(string)$key])) return $this->settings[$key];
 				if($key === 'meta' && !$this->wire()->fields->get('meta')) return $this->meta(); // always WireDataDB
 			
-				$ulpos = strpos($key, '_');
+				$ulpos = strpos((string) $key, '_');
 				
-				if($ulpos === 0 && str_ends_with($key, '_') && !$this->wire()->fields->get($key)) {
+				if($ulpos === 0 && str_ends_with((string) $key, '_') && !$this->wire()->fields->get($key)) {
 					if($this->wire()->sanitizer->fieldName($key) === $key) {
-						return $this->renderField(substr($key, 1, -1));
+						return $this->renderField(substr((string) $key, 1, -1));
 					}
 				}
 				
@@ -993,17 +993,17 @@ class Page extends WireData implements \Countable, WireMatchable {
 				if(!ctype_alnum("$k")) {
 					// key has formatting beyond just a field/property name
 					
-					if(str_contains($key, '{') && strpos($key, '}')) {
+					if(str_contains((string) $key, '{') && strpos((string) $key, '}')) {
 						// populate a formatted string with {tag} vars
 						return $this->getMarkup($key);
 					}
 
-					if(str_contains($key, '|')) {
+					if(str_contains((string) $key, '|')) {
 						$value = $this->values()->getFieldFirstValue($this, $key);
 						if($value !== null) return $value; 
 					}
 
-					if(strpos($key, '[')) { 
+					if(strpos((string) $key, '[')) { 
 						return $this->values()->getBracketValue($this, $key);
 					}
 
@@ -1016,11 +1016,11 @@ class Page extends WireData implements \Countable, WireMatchable {
 					}
 
 					// check if it's a field.subfield property
-					if(strpos($key, '.')) {
+					if(strpos((string) $key, '.')) {
 						return $this->values()->getDotValue($this, $key);
 					}
 					
-					if($ulpos !== false && strpos($key, '_OR_')) {
+					if($ulpos !== false && strpos((string) $key, '_OR_')) {
 						// convert '_OR_' to '|'
 						$value = $this->values()->getFieldFirstValue($this, str_replace('_OR_', '|', $key));
 						if($value !== null) return $value;

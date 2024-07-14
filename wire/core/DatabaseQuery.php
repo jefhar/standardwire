@@ -288,9 +288,9 @@ abstract class DatabaseQuery extends WireData {
 			
 		} else {
 			// provided key, make sure it is valid and unique (this part is not typically used)
-			$key = ltrim($options['key'], ':') . 'X';
+			$key = ltrim((string) $options['key'], ':') . 'X';
 			if(!ctype_alnum(str_replace('_', '', $key))) $key = $this->wire()->database->escapeCol($key);
-			if(empty($key) || ctype_digit($key[0]) || isset($this->bindKeys[":$key"])) {
+			if(empty($key) || ctype_digit((string) $key[0]) || isset($this->bindKeys[":$key"])) {
 				// if key is not valid, then auto-generate one instead
 				unset($options['key']);
 				$key = $this->getUniqueBindKey($options);
@@ -332,9 +332,9 @@ abstract class DatabaseQuery extends WireData {
 		
 		if(!empty($options['inSQL'])) {
 			foreach(array_keys($bindValues) as $bindKey) {
-				if(!str_contains($options['inSQL'], (string) $bindKey)) {
+				if(!str_contains((string) $options['inSQL'], (string) $bindKey)) {
 					unset($bindValues[$bindKey]);
-				} else if(!preg_match('/' . $bindKey . '\b/', $options['inSQL'])) {
+				} else if(!preg_match('/' . $bindKey . '\b/', (string) $options['inSQL'])) {
 					unset($bindValues[$bindKey]);
 				}
 			}
@@ -463,7 +463,7 @@ abstract class DatabaseQuery extends WireData {
 		if(is_array($value)) {
 			$curValue = array_merge($curValue, $value);
 		} else {
-			$curValue[] = trim($value, ", ");
+			$curValue[] = trim((string) $value, ", ");
 		}
 		
 		$this->set($method, $curValue); 
@@ -641,11 +641,11 @@ abstract class DatabaseQuery extends WireData {
 			$values = $this->$method;
 			if(!is_array($values)) return ''; 
 			foreach($values as $key => $value) {
-				if(!strlen(trim($value))) unset($values[$key]); // remove any blank values
+				if(!strlen(trim((string) $value))) unset($values[$key]); // remove any blank values
 			}
 			if(!count($values)) return '';
 			$sql = trim(implode($split, $values)); 
-			if(!strlen($sql) || $sql === trim($split)) return '';
+			if(!strlen($sql) || $sql === trim((string) $split)) return '';
 			$sql = $prepend . $sql . $append;
 		}
 		

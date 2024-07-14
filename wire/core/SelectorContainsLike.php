@@ -15,5 +15,5 @@ class SelectorContainsLike extends SelectorContains {
 	}
 	public static function getLabel() { return __('Contains text like', __FILE__); }
 	public static function getDescription() { return SelectorContains::buildDescription('phrase like'); }
-	protected function match($value1, $value2) { return $this->evaluate(stripos($value1, $value2) !== false); }
+	protected function match($value1, $value2) { return $this->evaluate(stripos((string) $value1, $value2) !== false); }
 }

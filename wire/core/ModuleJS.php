@@ -137,7 +137,7 @@ abstract class ModuleJS extends WireData implements Module {
 		if(count($this->requested)) {
 			foreach($this->requested as $name) {
 				$url = $this->components[$name]; 
-				if(!str_contains($url, '/')) {
+				if(!str_contains((string) $url, '/')) {
 					if($debug) $version = filemtime($config->paths->$class . $url);
 					$url = $config->urls->$class . $url;
 				}
@@ -162,7 +162,7 @@ abstract class ModuleJS extends WireData implements Module {
 		$class = $this->className();
 		$config = $this->wire()->config;
 		
-		if(!ctype_alnum($name)) $name = $this->wire()->sanitizer->name($name);
+		if(!ctype_alnum((string) $name)) $name = $this->wire()->sanitizer->name($name);
 
 		if(!isset($this->components[$name])) {
 			$this->error("Unrecognized $class component requested: $name");
@@ -172,7 +172,7 @@ abstract class ModuleJS extends WireData implements Module {
 		if($this->initialized) {
 			$url = $this->components[$name];
 			$version = $config->version;
-			if(!str_contains($url, '/')) {
+			if(!str_contains((string) $url, '/')) {
 				$file = $config->paths->$class . $url;
 				$url = $config->urls->$class . $url;
 				if($config->debug) $version = filemtime($file);

@@ -480,7 +480,7 @@ class WireDateTime extends Wire {
 			$value = $this->relativeTimeStr($ts, 1, false);
 		} else if($format == 'ts') {
 			$value = $ts;
-		} else if(str_contains($format, '%') && version_compare(PHP_VERSION, '8.1.0', '<')) {
+		} else if(str_contains((string) $format, '%') && version_compare(PHP_VERSION, '8.1.0', '<')) {
 			$value = $this->strftime($format, $ts);
 		} else {
 			$value = date($format, $ts);
@@ -513,7 +513,7 @@ class WireDateTime extends Wire {
 		$str = trim($str);
 		if(empty($str)) return $options['emptyReturnValue'];
 		if(str_starts_with($str, '00')) {
-			$test = trim(preg_replace('/[^\d]/', '', $str), '0');
+			$test = trim((string) preg_replace('/[^\d]/', '', $str), '0');
 			if(!strlen($test)) return $options['emptyReturnValue'];
 		}
 		if($options['baseTimestamp'] === null) return strtotime($str);
@@ -732,7 +732,7 @@ class WireDateTime extends Wire {
 			$out = preg_replace('/\s\s+/', ' ', $out);
 		}
 		
-		return trim($out);
+		return trim((string) $out);
 	}
 
 	/**
@@ -818,7 +818,7 @@ class WireDateTime extends Wire {
 		
 		if($stop === null) $stop = time();
 		if(!ctype_digit("$start")) $start = strtotime($start);
-		if(!ctype_digit("$stop")) $stop = strtotime($stop);
+		if(!ctype_digit("$stop")) $stop = strtotime((string) $stop);
 		
 		if($start > $stop) {
 			[$start, $stop] = [$stop, $start];

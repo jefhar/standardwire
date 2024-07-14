@@ -159,7 +159,7 @@ class FileCompiler extends Wire {
 		if(empty($this->globalOptions['cachePath'])) {
 			$this->cachePath = $config->paths->cache . $this->className() . '/';
 		} else {
-			$this->cachePath = rtrim($this->globalOptions['cachePath'], '/') . '/';
+			$this->cachePath = rtrim((string) $this->globalOptions['cachePath'], '/') . '/';
 		}
 
 		if(!strlen(__NAMESPACE__)) {
@@ -366,11 +366,11 @@ class FileCompiler extends Wire {
 
 		$this->initTargetPath();
 
-		$cacheName = md5($sourcePathname);
+		$cacheName = md5((string) $sourcePathname);
 		$sourceHash = md5_file($sourcePathname);
 		$targetHash = '';
 		
-		$targetPathname = $this->targetPath . ltrim($sourceFile, '/');
+		$targetPathname = $this->targetPath . ltrim((string) $sourceFile, '/');
 		$compileNow = true;
 		
 		if(is_file($targetPathname)) {
@@ -393,7 +393,7 @@ class FileCompiler extends Wire {
 		}
 		
 		if($compileNow) {
-			$sourcePath = dirname($sourcePathname);
+			$sourcePath = dirname((string) $sourcePathname);
 			$targetPath = dirname($targetPathname);
 			$targetData = file_get_contents($sourcePathname);
 			if(stripos($targetData, 'FileCompiler=0')) return $sourcePathname; // bypass if it contains this string
@@ -455,9 +455,9 @@ class FileCompiler extends Wire {
 		$this->initRawPHP($data);
 			
 		if($this->options['includes']) {
-			$dataHash = md5($data);
+			$dataHash = md5((string) $data);
 			$this->compileIncludes($data, $sourceFile);
-			if(md5($data) != $dataHash) $this->initRawPHP($data);
+			if(md5((string) $data) != $dataHash) $this->initRawPHP($data);
 		}
 		
 		if($this->options['namespace']) {
@@ -500,7 +500,7 @@ class FileCompiler extends Wire {
 			}
 		}
 		
-		if(stripos($data, "FileCompiler=?") !== false) {
+		if(stripos((string) $data, "FileCompiler=?") !== false) {
 			// Allow for a token that gets replaced so a file can detect if it's compiled
 			$data = str_replace("FileCompiler=?", "FileCompiler=Yes", $data);
 		}
@@ -520,7 +520,7 @@ class FileCompiler extends Wire {
 		
 		$inComment = false;
 		$inPHP = false;
-		$lines = explode("\n", $data);
+		$lines = explode("\n", (string) $data);
 		$numChanges = 0;
 		$commentIdentifier = '!PWFC!';
 		
@@ -703,7 +703,7 @@ class FileCompiler extends Wire {
 		$test = $open;
 		foreach(['"', "'"] as $quote) {
 			// skip when words like "require" are in a string
-			if(!str_contains($test, $quote)) continue;
+			if(!str_contains((string) $test, $quote)) continue;
 			$test = str_replace('\\' . $quote, '', $test); // ignore quotes that are escaped
 			if(!str_contains($test, $quote)) continue;
 			if(substr_count($test, $quote) % 2 > 0) {
@@ -833,9 +833,9 @@ class FileCompiler extends Wire {
 		// update classes and interfaces
 		foreach($classes as $class) {
 			
-			if(__NAMESPACE__ && !str_starts_with($class, __NAMESPACE__ . '\\')) continue; // limit only to ProcessWire classes/interfaces
-			if(str_contains($class, '\\')) {
-				[$ns, $class] = explode('\\', $class, 2); // reduce to just class without namespace
+			if(__NAMESPACE__ && !str_starts_with((string) $class, __NAMESPACE__ . '\\')) continue; // limit only to ProcessWire classes/interfaces
+			if(str_contains((string) $class, '\\')) {
+				[$ns, $class] = explode('\\', (string) $class, 2); // reduce to just class without namespace
 			} else {
 				$ns = '';
 			}
@@ -1084,8 +1084,8 @@ class FileCompiler extends Wire {
 		$config = $this->wire()->config;
 		$files = $this->wire()->files;
 		
-		$sourcePath = rtrim($sourcePath, '/') . '/';
-		$targetPath = rtrim($targetPath, '/') . '/';
+		$sourcePath = rtrim((string) $sourcePath, '/') . '/';
+		$targetPath = rtrim((string) $targetPath, '/') . '/';
 		$sourceURL = str_replace($config->paths->root, '/', $sourcePath);
 		$targetURL = str_replace($config->paths->root, '/', $targetPath);
 		$useLog = $this->globalOptions['logNotices'];

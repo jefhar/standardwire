@@ -265,7 +265,7 @@ class PagesParents extends Wire {
 		$bind = [];
 		$column = $options['column'];
 		$columns = $options['columns'];
-		if(empty($columns) && strlen($column)) $columns = [$column];
+		if(empty($columns) && strlen((string) $column)) $columns = [$column];
 		$getPages = empty($columns) && !$options['_level'] && !$options['debug']; 
 		$forceRecursive = $options['recursive'] && !$options['useIndexTable']; 
 		$indexByID = $getPages || $forceRecursive ? true : $options['indexByID'];

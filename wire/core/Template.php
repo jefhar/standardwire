@@ -583,10 +583,10 @@ class Template extends WireData implements Saveable, Exportable {
 			
 			foreach($permissionIDs as $permissionID) {
 			
-				$test = ltrim($permissionID, '-');
+				$test = ltrim((string) $permissionID, '-');
 				if(!ctype_digit($test)) {
 					// convert permission name to ID
-					$revoke = str_starts_with($permissionID, '-');
+					$revoke = str_starts_with((string) $permissionID, '-');
 					$permissionID = $permissions->get("name=$test")->id;
 					if(!$permissionID) continue;
 					if($revoke) $permissionID = "-$permissionID";
@@ -900,7 +900,7 @@ class Template extends WireData implements Saveable, Exportable {
 			if(count($value)) {
 				// we'll take it
 				foreach($value as $k => $v) {
-					$v = trim($v); // trim whitespace
+					$v = trim((string) $v); // trim whitespace
 					$v = trim($v, '/'); // remove leading/trailing slashes
 					if($v !== $value[$k]) $value[$k] = $v; 
 				}
@@ -947,8 +947,8 @@ class Template extends WireData implements Saveable, Exportable {
 			// only specific URL segments are allowed
 			$urlSegmentStr = trim($urlSegmentStr, '/');
 			foreach($rules as $rule) {
-				if(stripos($rule, 'regex:') === 0) {
-					$regex = '{' . trim(substr($rule, 6)) . '}';
+				if(stripos((string) $rule, 'regex:') === 0) {
+					$regex = '{' . trim(substr((string) $rule, 6)) . '}';
 					$valid = preg_match($regex, $urlSegmentStr);
 				} else if($urlSegmentStr === $rule) {
 					$valid = true;
@@ -1589,8 +1589,8 @@ class Template extends WireData implements Saveable, Exportable {
 		$icon = $this->wire()->sanitizer->pageName($icon); 
 		$current = $this->getIcon(false); 	
 		$label = $this->pageLabelField;
-		if(str_starts_with($icon, "icon-")) $icon = str_replace("icon-", "fa-", $icon); // convert icon-str to fa-str
-		if($icon && !str_starts_with($icon, "fa-")) $icon = "fa-$icon"; // convert anon icon to fa-icon
+		if(str_starts_with((string) $icon, "icon-")) $icon = str_replace("icon-", "fa-", $icon); // convert icon-str to fa-str
+		if($icon && !str_starts_with((string) $icon, "fa-")) $icon = "fa-$icon"; // convert anon icon to fa-icon
 		if($current) {
 			// replace icon currently in pageLabelField with new one
 			$label = str_replace(["fa-$current", "icon-$current"], $icon, $label);

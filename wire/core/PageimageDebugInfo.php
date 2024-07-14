@@ -211,7 +211,7 @@ class PageimageDebugInfo extends WireData {
 		$m = 0;
 		preg_match_all('#^(.*)=>#mU', $content, $stack);
 		$lines = $stack[1];
-		$indents = array_map('strlen', $lines);
+		$indents = array_map(strlen(...), $lines);
 		if($indents) $m = max($indents) + 1;
 		$content = preg_replace_callback(
 			'#^(.*)=>\\n\s+(\S)#Um',

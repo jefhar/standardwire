@@ -973,7 +973,7 @@ class WireInput extends Wire {
 				if($segmentStr) $url = rtrim($url, '/') . '/' . $segmentStr;
 				if($pageNum > 1) $url = rtrim($url, '/') . '/' . $this->pageNumStr($pageNum); 
 				if(isset($_SERVER['REQUEST_URI'])) {
-					$info = parse_url($_SERVER['REQUEST_URI']);
+					$info = parse_url((string) $_SERVER['REQUEST_URI']);
 					if(!empty($info['path']) && str_ends_with($info['path'], '/')) $url .= '/'; // trailing slash
 				}
 				if($pageNum > 1) {
@@ -993,7 +993,7 @@ class WireInput extends Wire {
 			
 		} else if(isset($_SERVER['REQUEST_URI'])) {
 			// page not yet available, attempt to pull URL from request uri
-			$info = parse_url($_SERVER['REQUEST_URI']);
+			$info = parse_url((string) $_SERVER['REQUEST_URI']);
 			$parts = explode('/', $info['path']);
 			$charset = $config ? $config->pageNameCharset : '';
 			foreach($parts as $i => $part) {
@@ -1233,7 +1233,7 @@ class WireInput extends Wire {
 			} else if($slashUrlSegments === 0) {
 				// use current request as model for whether slash should be used
 				$testUrl = rtrim($pageUrl, '/') . "/$urlSegmentStr/";
-				if(str_contains($requestUrl, $testUrl)) $url .= '/';	
+				if(str_contains((string) $requestUrl, $testUrl)) $url .= '/';	
 			} else if($slashUrlSegments < 0) {
 				// no trailing slash
 			}
@@ -1249,7 +1249,7 @@ class WireInput extends Wire {
 			} else if($slashPageNum === 0) {
 				// use current request as model for whether slash should be used
 				$testUrl = rtrim($url, '/') . "/$pageNumStr/";
-				if(str_contains($requestUrl, $testUrl)) $url .= '/';	
+				if(str_contains((string) $requestUrl, $testUrl)) $url .= '/';	
 			} else if($slashPageNum < 0) {
 				// no trailing slash
 			}
@@ -1262,8 +1262,8 @@ class WireInput extends Wire {
 		}
 	
 		// add in query string if applicable
-		if(strlen($queryString)) {
-			$url .= '?' . ltrim($queryString, '?'); 
+		if(strlen((string) $queryString)) {
+			$url .= '?' . ltrim((string) $queryString, '?'); 
 		}
 	
 		// bundle in scheme and host and return canonical URL
@@ -1287,8 +1287,8 @@ class WireInput extends Wire {
 	 *
 	 */
 	public function fragment() {
-		if(!str_contains($_SERVER['REQUEST_URI'], '#')) return '';
-		$info = parse_url($_SERVER['REQUEST_URI']);
+		if(!str_contains((string) $_SERVER['REQUEST_URI'], '#')) return '';
+		$info = parse_url((string) $_SERVER['REQUEST_URI']);
 		return empty($info['fragment']) ? '' : $info['fragment']; 
 	}
 
@@ -1408,8 +1408,8 @@ class WireInput extends Wire {
 			$a = [];
 			foreach($values as $name => $value) {
 				$newName = $method ? $sanitizer->$method($name) : $name;
-				if($max && strlen($newName) > $max) {
-					$newName = substr($newName, 0, $max);
+				if($max && strlen((string) $newName) > $max) {
+					$newName = substr((string) $newName, 0, $max);
 				}
 				if($newName === $name) {
 					$a[$name] = $value;
@@ -1432,8 +1432,8 @@ class WireInput extends Wire {
 					continue;
 				} 
 				$newValue = $method ? $sanitizer->$method($value) : $value;
-				if($max && strlen($newValue) > $max) {
-					$newValue = substr($newValue, 0, $max);
+				if($max && strlen((string) $newValue) > $max) {
+					$newValue = substr((string) $newValue, 0, $max);
 				}
 				if($newValue === $value) {
 					$a[$name] = $value;
@@ -1447,7 +1447,7 @@ class WireInput extends Wire {
 		if(!count($values)) return '';
 	
 		// prevent double encoding if an encoded & was provided in $options
-		if(strtolower($separator) === '&amp;' && $options['entityEncode']) {
+		if(strtolower((string) $separator) === '&amp;' && $options['entityEncode']) {
 			$separator = '&';
 		}
 
@@ -1466,13 +1466,13 @@ class WireInput extends Wire {
 		}
 	
 		// if query string exceeds max allowed length then truncate it
-		if($options['maxLength'] && strlen($queryString) > $options['maxLength']) { 
-			while(strlen($queryString) > $options['maxLength'] && strpos($queryString, (string) $separator)) {
-				$a = explode($separator, $queryString);
+		if($options['maxLength'] && strlen((string) $queryString) > $options['maxLength']) { 
+			while(strlen((string) $queryString) > $options['maxLength'] && strpos((string) $queryString, (string) $separator)) {
+				$a = explode($separator, (string) $queryString);
 				array_pop($a);
 				$queryString = implode($separator, $a);
 			}
-			if(strlen($queryString) > $options['maxLength']) $queryString = '';
+			if(strlen((string) $queryString) > $options['maxLength']) $queryString = '';
 		}
 		
 		return $queryString;
@@ -1511,7 +1511,7 @@ class WireInput extends Wire {
 	 */
 	public function requestMethod($method = '') {
 		if(isset($_SERVER['REQUEST_METHOD'])) {
-			$m = strtoupper($_SERVER['REQUEST_METHOD']);
+			$m = strtoupper((string) $_SERVER['REQUEST_METHOD']);
 			$requestMethod = $this->requestMethods[$m] ?? '';
 		} else {
 			$requestMethod = '';
@@ -1678,7 +1678,7 @@ class WireInput extends Wire {
 		if(!$getArray) {
 			if($lastReturnType === 'a') {
 				$getArray = true; // array return value implied
-			} else if(str_contains($lastReturnType, 'a')) {
+			} else if(str_contains((string) $lastReturnType, 'a')) {
 				$getArray = 1; // array return value possible
 			}
 		}
@@ -1693,7 +1693,7 @@ class WireInput extends Wire {
 				if(!count($value)) {
 					// nothing to do with value
 					$value = [];
-				} else if($getArray && !str_contains($returnType, 'a')) {
+				} else if($getArray && !str_contains((string) $returnType, 'a')) {
 					// sanitize array with sanitizer that does not do arrays, 1 item at a time
 					$a = [];
 					foreach($value as $v) {

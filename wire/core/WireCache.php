@@ -302,8 +302,8 @@ class WireCache extends Wire {
 		$wildcards = [];
 
 		foreach($names as $s) {
-			if(str_contains($s, '%')) $s = str_replace('%', '*', $s);
-			if(!str_contains($s, '*')) continue;
+			if(str_contains((string) $s, '%')) $s = str_replace('%', '*', $s);
+			if(!str_contains((string) $s, '*')) continue;
 			// retrieve all caches matching wildcard
 			$getMultiple = true;
 			$wildcards[$s] = $s;
@@ -875,7 +875,7 @@ class WireCache extends Wire {
 			$this->cacheNameSelectors = [];
 			$rows = $this->cacher()->find(['expires' => ['= ' . self::expireSelector]]);
 			foreach($rows as $row) {
-				$data = json_decode($row['data'], true);
+				$data = json_decode((string) $row['data'], true);
 				if($data === false || !isset($data['selector'])) continue;
 				$name = $row['name'];
 				/** @var Selectors $selectors */
@@ -1019,7 +1019,7 @@ class WireCache extends Wire {
 			if(count($exclude)) {
 				$skip = false;
 				foreach($exclude as $value) {
-					if(stripos($row['name'], (string) $value) !== 0) continue;
+					if(stripos((string) $row['name'], (string) $value) !== 0) continue;
 					$skip = true;
 					break;
 				}
@@ -1030,7 +1030,7 @@ class WireCache extends Wire {
 
 			if(isset($row['data']) && $this->looksLikeJSON($row['data'])) {
 				// json encoded
-				$data = json_decode($row['data'], true);
+				$data = json_decode((string) $row['data'], true);
 				if(is_array($data)) {
 					if(array_key_exists('WireCache', $data)) {
 						if(isset($data['selector'])) {
@@ -1059,7 +1059,7 @@ class WireCache extends Wire {
 					$info['expires'] = $verbose ? 'when any page or template is modified' : 'save';
 				} else if($row['expires'] < WireCache::expireSave) {
 					// potential template ID encoded as date string
-					$templateId = strtotime($row['expires']);
+					$templateId = strtotime((string) $row['expires']);
 					$template = $templates->get($templateId);
 					if($template) {
 						$info['expires'] = $verbose ? "when '$template->name' page or template is modified" : 'save';
@@ -1076,7 +1076,7 @@ class WireCache extends Wire {
 			if(isset($row['size'])) {
 				$info['size'] = $row['size'];
 			} else if(isset($row['data'])) {
-				$info['size'] = strlen($row['data']);
+				$info['size'] = strlen((string) $row['data']);
 			}
 
 			$all[] = $info;
@@ -1134,7 +1134,7 @@ class WireCache extends Wire {
 		$files = $this->wire()->files;
 		$filename = $files->unixFileName($filename);
 
-		if(!str_starts_with($filename, '/') && !str_contains($filename, ':') && !str_contains($filename, '//')) {
+		if(!str_starts_with((string) $filename, '/') && !str_contains((string) $filename, ':') && !str_contains((string) $filename, '//')) {
 			// make relative to current path
 			$currentPath = $files->currentPath();
 			if($files->fileInPath($filename, $currentPath)) {

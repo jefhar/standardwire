@@ -274,7 +274,7 @@ class WireMarkupRegions extends Wire {
 			// partial class match
 			$class = rtrim($class, '*');
 			foreach($classes as $c) {
-				if(str_starts_with($c, $class)) {
+				if(str_starts_with((string) $c, $class)) {
 					$has = $c;
 					break;
 				}
@@ -458,7 +458,7 @@ class WireMarkupRegions extends Wire {
 	
 		$selfClose = empty($tagInfo['close']);
 		$closeHint = "$tagInfo[close]<!--#$tagID-->";
-		$closeQty = $selfClose ? 1 : substr_count($region, $tagInfo['close']);
+		$closeQty = $selfClose ? 1 : substr_count($region, (string) $tagInfo['close']);
 
 		if(!$closeQty) {
 			// there is no close tag, meaning all of markupAfter is the region
@@ -500,14 +500,14 @@ class WireMarkupRegions extends Wire {
 				foreach($openTags as $openTag) {
 					if(str_contains($test, $openTag)) $openCnt += substr_count($test, $openTag);
 				}
-				$closeCnt = substr_count($test, $tagInfo['close']);
+				$closeCnt = substr_count($test, (string) $tagInfo['close']);
 				if($openCnt == $closeCnt) {
 					// open and close tags balance, meaning we've found our region
 					$region = $test;
 					break;
 				} else {
 					// tags within don't balance, so try again
-					$testStart = $testPos + strlen($tagInfo['close']);
+					$testStart = $testPos + strlen((string) $tagInfo['close']);
 				}
 			} while($doCnt < $maxDoCnt && $testStart < strlen($region));
 			
@@ -771,15 +771,15 @@ class WireMarkupRegions extends Wire {
 		}
 		
 		do {
-			$pos = stripos($markup, $open, $startPos);
+			$pos = stripos((string) $markup, $open, $startPos);
 			if($pos === false) break;	
-			$endPos = stripos($markup, $close, $pos); 		
+			$endPos = stripos((string) $markup, $close, $pos); 		
 			if($endPos === false) {
-				$endPos = strlen($markup);
+				$endPos = strlen((string) $markup);
 			} else {
 				$endPos += strlen($close);
 			}
-			$regions[] = substr($markup, $pos, $endPos - $pos);
+			$regions[] = substr((string) $markup, $pos, $endPos - $pos);
 			$startPos = $endPos; 
 		} while(1);
 		
@@ -811,7 +811,7 @@ class WireMarkupRegions extends Wire {
 			foreach($regions as $region) {
 				$pos = strpos($markup, (string) $region['html']);
 				if($pos === false) continue;
-				$content = trim($region['region']);
+				$content = trim((string) $region['region']);
 				if(strpos($content, 'pw-optional') && $level < 10) {
 					// go resursive if pw-optional elements are nested
 					$level++;
@@ -827,10 +827,10 @@ class WireMarkupRegions extends Wire {
 					// not empty, remove just the pw-optional attribute
 					$open = $region['open'];
 					$open = str_ireplace(" $attrName", '', $open);
-					$markup = substr($markup, 0, $pos) . $open . substr($markup, $pos + strlen($region['open']));
+					$markup = substr($markup, 0, $pos) . $open . substr($markup, $pos + strlen((string) $region['open']));
 				} else {
 					// empty optional region, can be removed
-					$markup = substr($markup, 0, $pos) . substr($markup, $pos + strlen($region['html']));
+					$markup = substr($markup, 0, $pos) . substr($markup, $pos + strlen((string) $region['html']));
 					if($debug) {
 						$optional = '[sm]' . ($level ? "nested (×$level) optional region" : "optional region") . '[/sm]';
 						$this->debugNotes[] = "REMOVED #$region[pwid] $optional"; 
@@ -873,13 +873,13 @@ class WireMarkupRegions extends Wire {
 				if($attrs[$name] === $value) continue;
 				if($name === 'class') {
 					// merge classes
-					$classes = explode(' ', $value);
+					$classes = explode(' ', (string) $value);
 					$classes = array_merge($tagInfo['classes'], $classes);
 					$classes = array_unique($classes);
 					// identify remove classes
 					foreach($classes as $key => $class) {
-						if(!str_starts_with($class, '-')) continue;
-						$removeClass = ltrim($class, '-');
+						if(!str_starts_with((string) $class, '-')) continue;
+						$removeClass = ltrim((string) $class, '-');
 						unset($classes[$key]);
 						while(false !== ($k = array_search($removeClass, $classes))) unset($classes[$k]);
 					}
@@ -935,18 +935,18 @@ class WireMarkupRegions extends Wire {
 				// attribute without value, i.e. "checked" or "selected" or "data-uk-grid", etc. 
 				$str .= "$name ";
 				continue;
-			} else if($name == 'class' && !strlen($value)) {
+			} else if($name == 'class' && !strlen((string) $value)) {
 				continue;
 			}
 				
 			$q = $quote;
-			if(!$q && !ctype_alnum($value)) $q = '"';
+			if(!$q && !ctype_alnum((string) $value)) $q = '"';
 			
 			if($encode) {
 				// entity encode value
 				$value = $sanitizer->entities($value);
 				
-			} else if(str_contains($value, '"') && !str_contains($value, "'")) {
+			} else if(str_contains((string) $value, '"') && !str_contains((string) $value, "'")) {
 				// if value has a quote in it, use single quotes rather than double quotes
 				$q = "'";
 			}
@@ -1262,7 +1262,7 @@ class WireMarkupRegions extends Wire {
 			$htmlRegions = $this->stripRegions('<!--', $htmlRegions);
 			$selector = $options['useClassActions'] ? ".pw-*, id=" : "[pw-action], id=";
 			$regions = $this->find($selector, $htmlRegions, ['verbose' => true, 'leftover' => true, 'debugNote' => (isset($options['debugNote']) ? "$options[debugNote] => " : "") . "populate($callQty)"]);
-			$leftoverMarkup = trim($regions["leftover"]);
+			$leftoverMarkup = trim((string) $regions["leftover"]);
 			unset($regions["leftover"]);
 			
 		} else {
@@ -1273,7 +1273,7 @@ class WireMarkupRegions extends Wire {
 			$recursionLevel--;
 			$this->removeRegionTags($htmlDocument);
 			if($recursionLevel) return 0;
-			if(strpos($htmlDocument, 'pw-optional')) $htmlDocument = $this->stripOptional($htmlDocument, $debug);
+			if(strpos((string) $htmlDocument, 'pw-optional')) $htmlDocument = $this->stripOptional($htmlDocument, $debug);
 			if($debug) {
 				if(!count($this->debugNotes)) $this->debugNotes[] = 'No regions';
 				$this->populateDebugNotes($htmlDocument, $this->debugNotes, $debugTimer);
@@ -1323,16 +1323,16 @@ class WireMarkupRegions extends Wire {
 				if($debugAction == 'replace' && empty($region['close'])) $debugAction = 'attr-update';
 				$pwid = empty($region['pwid']) ? $region['actionTarget'] : $region['pwid']; 
 				$open = $region['open'];
-				$openLen = strlen($open);
-				if($openLen > 50) $open = substr($open, 0, 30) . '[sm]... +' . ($openLen - 30) . ' bytes[/sm]>';
-				$debugRegionStart = "[sm]" . trim(substr($region['region'], 0, 80));  
+				$openLen = strlen((string) $open);
+				if($openLen > 50) $open = substr((string) $open, 0, 30) . '[sm]... +' . ($openLen - 30) . ' bytes[/sm]>';
+				$debugRegionStart = "[sm]" . trim(substr((string) $region['region'], 0, 80));  
 				$pos = strrpos($debugRegionStart, '>');
 				if($pos) $debugRegionStart = substr($debugRegionStart, 0, $pos+1);
-				$debugRegionStart .= " … [b]" . strlen($region['region']) . " bytes[/b][/sm]";
+				$debugRegionStart .= " … [b]" . strlen((string) $region['region']) . " bytes[/b][/sm]";
 				//$debugRegionEnd = substr($region['region'], -30); 
 				//$pos = strpos($debugRegionEnd, '</'); 
 				//if($pos !== false) $debugRegionEnd = substr($debugRegionEnd, $pos);
-				$region['note'] = strtoupper($debugAction) . " [b]#{$pwid}[/b] " .
+				$region['note'] = strtoupper((string) $debugAction) . " [b]#{$pwid}[/b] " .
 					($region['actionTarget'] != $pwid ? "(target=$region[actionTarget])" : "") . 
 					"[sm]with[/sm] $open"; 
 				if($region['close']) {
@@ -1365,7 +1365,7 @@ class WireMarkupRegions extends Wire {
 			$htmlDocument = $this->update($u['actionTarget'], $u['regionHTML'], $htmlDocument, ['action' => $u['action'], 'mergeAttr' => $u['mergeAttr']]);
 		}
 
-		$htmlRegions = trim($htmlRegions);
+		$htmlRegions = trim((string) $htmlRegions);
 			
 		if($debug) {
 			$leftoverBytes = strlen($leftoverMarkup);
@@ -1401,7 +1401,7 @@ class WireMarkupRegions extends Wire {
 			$numUpdates += $this->populate($htmlDocument, $xregions, $options);
 		}
 		
-		if($recursionLevel === 1 && strlen($htmlRegions) && $this->hasRegions($htmlRegions)) {
+		if($recursionLevel === 1 && strlen((string) $htmlRegions) && $this->hasRegions($htmlRegions)) {
 			// see if more regions can be pulled from leftover $htmlRegions
 			$numUpdates += $this->populate($htmlDocument, $htmlRegions, $options);
 		}
@@ -1422,7 +1422,7 @@ class WireMarkupRegions extends Wire {
 				$this->debugNotes = [];
 				$debugTimer = Debug::timer();
 			}
-			if(strpos($htmlDocument, 'pw-optional')) {
+			if(strpos((string) $htmlDocument, 'pw-optional')) {
 				// strip optional regions
 				$htmlDocument = $this->stripOptional($htmlDocument, $debug);
 			}
@@ -1457,7 +1457,7 @@ class WireMarkupRegions extends Wire {
 			$updated = true;
 		}
 		
-		if(stripos($html, ' data-pw-id=') || stripos($html, ' pw-id=')) {
+		if(stripos((string) $html, ' data-pw-id=') || stripos((string) $html, ' pw-id=')) {
 			$html = preg_replace('/(<[^>]+)(?: data-pw-id| pw-id)=["\']?[^>\s"\']+["\']?/i', '$1', $html);
 			$updated = true;
 		}

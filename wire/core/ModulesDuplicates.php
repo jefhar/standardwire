@@ -92,7 +92,7 @@ class ModulesDuplicates extends Wire {
 	public function addDuplicate($className, $pathname, $current = false) {
 		if(!isset($this->duplicates[$className])) $this->duplicates[$className] = [];
 		$rootPath = $this->wire()->config->paths->root;
-		if(str_starts_with($pathname, (string) $rootPath)) $pathname = str_replace($rootPath, '/', $pathname);
+		if(str_starts_with((string) $pathname, (string) $rootPath)) $pathname = str_replace($rootPath, '/', $pathname);
 		if(!in_array($pathname, $this->duplicates[$className])) {
 			$this->duplicates[$className][] = $pathname;
 		}
