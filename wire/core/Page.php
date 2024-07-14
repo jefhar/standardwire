@@ -2516,7 +2516,7 @@ class Page extends WireData implements Countable, WireMatchable {
   */
  #[ReturnTypeWillChange]
  #[Override] 
-	public function getIterator() {
+	public function getIterator(): ArrayObject {
 		$a = $this->settings; 
 		$template = $this->template();
 		if($template && $template->fieldgroup) {

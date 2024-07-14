@@ -363,7 +363,7 @@ class WireDataDB extends WireData implements Countable {
 
 	#[ReturnTypeWillChange]
  #[Override] 
-	public function getIterator() {
+	public function getIterator(): ArrayObject {
 		return new ArrayObject($this->getArray());
 	}
 

@@ -1118,7 +1118,7 @@ class ProcessWire extends Wire {
 	 * @return Config
 	 * 
 	 */
-	public static function buildConfig($rootPath = '', $rootURL = null, array $options = []) {
+	public static function buildConfig($rootPath = '', $rootURL = null, array $options = []): Config {
 	
 		$rootPath = self::getRootPath($rootPath);
 		$httpHost = '';

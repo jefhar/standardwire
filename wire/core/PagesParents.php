@@ -879,7 +879,7 @@ class PagesParents extends Wire {
 	 * @return PageArray
 	 * 
 	 */
-	protected function descendents(Page $page, $selector = 'include=all') {
+	protected function descendents(Page $page, $selector = 'include=all'): PageArray {
 		$children = new PageArray();
 		foreach($page->children($selector) as $child) {
 			$children->add($child); 

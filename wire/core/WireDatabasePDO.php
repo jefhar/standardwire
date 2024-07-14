@@ -244,7 +244,8 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @throws WireException
 	 *
 	 */
-	public static function getInstance(Config $config) {
+	public static function getInstance(Config $config): WireDatabasePDO
+	{
 
 		if(!class_exists('\PDO')) {
 			throw new WireException('Required PDO class (database) not found - please add PDO support to your PHP.');
@@ -1703,7 +1704,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
   * @throws WireException|Exception on fatal error
   * @see WireDatabaseBackup::backup(), WireDatabaseBackup::restore()
   */
- public function backups() {
+ public function backups(): WireDatabaseBackup {
 	
 		$path = $this->wire()->config->paths->assets . 'backups/database/';
 		if(!is_dir($path)) {
@@ -1850,4 +1851,3 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 }
-

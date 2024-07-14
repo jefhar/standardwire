@@ -1297,7 +1297,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 * @since 3.0.153
 	 * 
 	 */
-	protected function familyTemplates($property, $setValue = null) {
+	protected function familyTemplates($property, $setValue = null): TemplatesArray {
 		
 		$templates = $this->wire()->templates;
 		$value = new TemplatesArray();

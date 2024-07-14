@@ -1932,7 +1932,7 @@ class Pages extends Wire {
 	 * @return NullPage
 	 * 
 	 */
-	public function newNullPage() {
+	public function newNullPage(): NullPage {
 		$page = new NullPage();
 		$this->wire($page);
 		return $page;

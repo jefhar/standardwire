@@ -1327,7 +1327,7 @@ function WireArray($items = []) {
  * @return WireData
  * @since 3.0.126
  */
-function WireData($data = []) {
+function WireData($data = []): WireData {
 	$wireData = new WireData();
 	if(is_array($data)) {
 		if(!empty($data)) $wireData->setArray($data);

@@ -209,7 +209,7 @@ class Templates extends WireSaveableItems {
 	 * @since 3.0.170
 	 * 
 	 */
-	public function add($name, array $properties = []) {
+	public function add($name, array $properties = []): Template {
 
 		if(!is_string($name)) {
 			throw new WireException("You must specify the template name to add"); 
