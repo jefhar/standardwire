@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\ConfigurableModule;
+
 /**
  * ProcessWire Markup RSS Module
  *
@@ -529,5 +531,3 @@ class MarkupRSS extends WireData implements Module, ConfigurableModule {
 	}
 
 }
-
-

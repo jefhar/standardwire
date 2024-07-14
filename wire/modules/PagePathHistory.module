@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\ConfigurableModule;
+
 /**
  * ProcessWire Page Path History
  *

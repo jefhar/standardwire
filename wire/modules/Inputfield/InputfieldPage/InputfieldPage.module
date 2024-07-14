@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\ConfigurableModule;
+
 /**
  * An Inputfield for handling relational Page inputs
  *

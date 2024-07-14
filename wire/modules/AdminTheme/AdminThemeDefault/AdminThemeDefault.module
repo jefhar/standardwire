@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\ConfigurableModule;
+
 /**
  * Class AdminThemeDefault
  * 
@@ -83,4 +85,3 @@ class AdminThemeDefault extends AdminTheme implements Module, ConfigurableModule
 	}
 	*/
 }
-

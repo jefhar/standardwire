@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\ConfigurableModule;
+
 class AdminThemeReno extends AdminTheme implements Module, ConfigurableModule {
 
 	/**

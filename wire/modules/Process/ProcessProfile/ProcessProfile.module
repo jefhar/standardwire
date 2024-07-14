@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\ConfigurableModule;
+
 /**
  * ProcessWire User Profile Editor
  *
@@ -474,4 +476,3 @@ class ProcessProfile extends Process implements ConfigurableModule, WirePageEdit
 
 
 }
-

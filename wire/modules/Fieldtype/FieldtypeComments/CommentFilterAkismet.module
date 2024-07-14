@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\ConfigurableModule;
+
 /**
  * ProcessWire FieldtypeComments > CommentFilter > CommentFilterAkismet
  *
@@ -219,6 +221,3 @@ class CommentFilterAkismet extends CommentFilter implements Module, Configurable
 
 	}
 }
-
-
-
