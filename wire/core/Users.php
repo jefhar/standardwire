@@ -255,7 +255,7 @@ class Users extends PagesType {
 	 *
 	 */
 	#[Override]
- public function ___saveReady(Page $page) {
+	public function ___saveReady(Page $page): array {
 		/** @var User $user */
 		$user = $page;
 		// add guest role if user doesn't already have it
