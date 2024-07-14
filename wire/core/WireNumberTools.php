@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Exception;
+use PDO;
 /**
  * Tools for working with numbers
  *
@@ -65,14 +67,14 @@ class WireNumberTools extends Wire {
 			$uniqueNum = (int) $query->fetchColumn();
 			$query->closeCursor();
 			return $uniqueNum;
-		} catch(\Exception) {
+		} catch(Exception) {
 			return 0;
 		}
 
 		try {
 			$database->query("INSERT INTO $table SET id=null");
 			$uniqueNum = (int) $database->lastInsertId();
-		} catch(\Exception) {
+		} catch(Exception) {
 			$uniqueNum = 0;
 		}
 
@@ -87,7 +89,7 @@ class WireNumberTools extends Wire {
 		if(($uniqueNum % 10 === 0) && $uniqueNum >= 10) {
 			// maintain only 10 unique IDs in the DB table at a time
 			$query = $database->prepare("DELETE FROM $table WHERE id<:id");
-			$query->bindValue(':id', $uniqueNum, \PDO::PARAM_INT);
+			$query->bindValue(':id', $uniqueNum, PDO::PARAM_INT);
 			$query->execute();
 		}
 

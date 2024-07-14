@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Role Page
  *
@@ -19,7 +20,6 @@
  * @property int $id Numeric page ID of role. 
  *
  */
-
 class Role extends Page { 
 
 	/**
@@ -36,7 +36,7 @@ class Role extends Page {
 	 * Wired to API
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function wired() {
 		parent::wired();
 		if(!$this->template) $this->template = $this->getPredefinedTemplate();
@@ -246,7 +246,7 @@ class Role extends Page {
 	 * @return Roles
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getPagesManager() {
 		return $this->wire()->roles;
 	}

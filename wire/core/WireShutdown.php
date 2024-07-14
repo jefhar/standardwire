@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Exception;
 /**
  * ProcessWire shutdown handler
  *
@@ -12,7 +13,6 @@
  * @method void fatalError(array $error)
  *
  */
-
 class WireShutdown extends Wire {
 
 	/**
@@ -609,7 +609,7 @@ class WireShutdown extends Wire {
 			$log = $this->wire(new FileLog($config->paths->logs . 'errors.txt'));
 			$log->setDelimeter("\t");
 			$saved = $log->save("$userName\t$url\t$message"); 
-		} catch(\Exception) {
+		} catch(Exception) {
 			$saved = false;
 		}
 		return $saved;
@@ -716,7 +716,7 @@ class WireShutdown extends Wire {
 			if($emailFrom) $mail->from($emailFrom);
 			if($emailFromName) $mail->fromName($emailFromName);
 			$sent = $mail->send();
-		} catch(\Exception) {
+		} catch(Exception) {
 			$sent = false;
 		}
 		

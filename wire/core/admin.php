@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Exception;
 /**
  * Controller for ProcessWire Admin
  *
@@ -181,7 +182,7 @@ if($page->process && $page->process != 'ProcessPageView') {
 			$wire->error($e->getMessage()); 	
 		}
 
-	} catch(\Exception $e) {
+	} catch(Exception $e) {
 		$wire->setStatusFailed($e, "Error from $page->process", $page); 
 		$msg = $e->getMessage(); 
 		if($config->debug) {

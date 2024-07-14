@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Countable;
+use Traversable;
 /**
  * ProcessWire Functions
  *
@@ -1088,7 +1090,7 @@ function wireIsCallable($var, $syntaxOnly = false, &$callableName = '') {
 function wireCount(mixed $value) {
 	if($value === null) return 0; 
 	if(is_array($value)) return count($value); 
-	if($value instanceof \Countable) return count($value);
+	if($value instanceof Countable) return count($value);
 	return 1;
 }
 
@@ -1170,7 +1172,7 @@ function wireLen($value) {
 function wireEmpty(mixed $value) {
 	if(empty($value)) return true;
 	if(is_object($value)) {
-		if($value instanceof \Countable && !count($value)) return true;
+		if($value instanceof Countable && !count($value)) return true;
 		if($value instanceof WireNull) return true; // 3.0.149+
 		if(method_exists($value, '__toString')) $value = (string) $value;
 	}
@@ -1314,23 +1316,22 @@ function WireArray($items = []) {
 
 /**
  * Create a new WireData instance and optionally add given associative array of data to it
- * 
+ *
  * ~~~~~
- * $data = WireData([ 'hello' => 'world', 'foo' => 'bar' ]); 
+ * $data = WireData([ 'hello' => 'world', 'foo' => 'bar' ]);
  * ~~~~~
- * 
+ *
  * #pw-group-arrays
- * 
- * @param array|\Traversable $data Can be an associative array or Traversable object of data to set, or omit if not needed
+ *
+ * @param array|Traversable $data Can be an associative array or Traversable object of data to set, or omit if not needed
  * @return WireData
  * @since 3.0.126
- * 
  */
 function WireData($data = []) {
 	$wireData = new WireData();
 	if(is_array($data)) {
 		if(!empty($data)) $wireData->setArray($data);
-	} else if($data instanceof \Traversable) {
+	} else if($data instanceof Traversable) {
 		foreach($data as $k => $v) $wireData->set($k, $v);
 	}
 	$wireData->resetTrackChanges(true);

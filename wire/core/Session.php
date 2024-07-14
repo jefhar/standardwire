@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use IteratorAggregate;
+use Override;
+use ReturnTypeWillChange;
+use ArrayObject;
 /**
  * ProcessWire Session
  *
@@ -45,8 +49,7 @@
  * @todo add a default $config->apiUser to be used when non-HTTP/bootstrap usage
  *
  */
-
-class Session extends Wire implements \IteratorAggregate {
+class Session extends Wire implements IteratorAggregate {
 
 	/**
 	 * Fingerprint bitmask: Use remote addr (recommended)
@@ -813,7 +816,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @return SessionCSRF|mixed|null
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		return $this->get($name); 
 	}
@@ -830,24 +833,23 @@ class Session extends Wire implements \IteratorAggregate {
 	}
 
 	/**
-	 * Allow iteration of session variables
-	 * 
-	 * ~~~~~
-	 * foreach($session as $key => $value) {
-     *    echo "<li>$key: $value</li>";	
-	 * } 
-	 * ~~~~~
-	 * 
-	 * #pw-internal
-	 * 
-	 * @return \ArrayObject
-	 *
-	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+  * Allow iteration of session variables
+  *
+  * ~~~~~
+  * foreach($session as $key => $value) {
+  *    echo "<li>$key: $value</li>";	
+  * }
+  * ~~~~~
+  *
+  * #pw-internal
+  *
+  * @return ArrayObject
+  */
+ #[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
 		$data = $this->sessionInit ? $_SESSION[$this->sessionKey] : $this->data;
-		return new \ArrayObject($data); 
+		return new ArrayObject($data); 
 	}
 
 	/**
@@ -1507,7 +1509,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function message($text, $flags = 0) {
 		$this->queueNoticeText($text, 'messages', $flags); 
 		return $this;
@@ -1523,7 +1525,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @return $this
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function error($text, $flags = 0) {
 		$this->queueNoticeText($text, 'errors', $flags); 
 		return $this; 
@@ -1539,7 +1541,7 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function warning($text, $flags = 0) {
 		$this->queueNoticeText($text, 'warnings', $flags);
 		return $this;

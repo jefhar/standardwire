@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use PDO;
+use PDOStatement;
+use Override;
+use PDOException;
 /**
  * ProcessWire DatabaseQuery
  *
@@ -206,10 +210,10 @@ abstract class DatabaseQuery extends WireData {
 		}
 		
 		$type = match (strtolower(substr($type, 0, 3))) {
-      'str' => \PDO::PARAM_STR,
-      'int' => \PDO::PARAM_INT,
-      'boo' => \PDO::PARAM_BOOL,
-      'nul' => \PDO::PARAM_NULL,
+      'str' => PDO::PARAM_STR,
+      'int' => PDO::PARAM_INT,
+      'boo' => PDO::PARAM_BOOL,
+      'nul' => PDO::PARAM_NULL,
       default => null,
   };
 		
@@ -305,24 +309,24 @@ abstract class DatabaseQuery extends WireData {
 	}
 
 	/**
-	 * Get bind values, with options
-	 * 
-	 * - If given a \PDOStatement or DatabaseQuery, it is assumed to be the `query` option. 
-	 * - When copying, you may prefer to use the copyBindValuesTo() method instead (more readable).
-	 * 
-	 * Note: The $options argument was added in 3.0.156, prior to this it was a $method argument, 
-	 * which was never used so has been removed. 
-	 * 
-	 * @param string|\PDOStatement|DatabaseQuery|array $options Optionally specify an option:
-	 *  - `query` (\PDOStatement|DatabaseQuery): Copy bind values to this query object (default=null)
-	 *  - `count` (bool): Get a count of values rather than array of values (default=false) 3.0.157+
-	 *  - `inSQL` (string): Only get bind values referenced in this given SQL statement
-	 * @return array|int Returns one of the following:
-	 *  - Associative array in format [ ":column" => "value" ] where each "value" is int, string or NULL. 
-	 *  - if `count` option specified as true then it returns a count of values instead. 
-	 * 
-	 */
-	public function getBindValues($options = []) {
+  * Get bind values, with options
+  *
+  * - If given a \PDOStatement or DatabaseQuery, it is assumed to be the `query` option.
+  * - When copying, you may prefer to use the copyBindValuesTo() method instead (more readable).
+  *
+  * Note: The $options argument was added in 3.0.156, prior to this it was a $method argument,
+  * which was never used so has been removed.
+  *
+  * @param string|PDOStatement|DatabaseQuery|array $options Optionally specify an option:
+  *  - `query` (\PDOStatement|DatabaseQuery): Copy bind values to this query object (default=null)
+  *  - `count` (bool): Get a count of values rather than array of values (default=false) 3.0.157+
+  *  - `inSQL` (string): Only get bind values referenced in this given SQL statement
+  * @return array|int Returns one of the following:
+  *  - Associative array in format [ ":column" => "value" ] where each "value" is int, string or NULL.
+  *  - if `count` option specified as true then it returns a count of values instead.
+  *
+  */
+ public function getBindValues($options = []) {
 		
 		$defaults = ['query' => is_object($options) ? $options : null, 'count' => false, 'inSQL' => ''];
 		
@@ -341,7 +345,7 @@ abstract class DatabaseQuery extends WireData {
 		}
 	
 		if(is_object($query)) {
-			if($query instanceof \PDOStatement) {
+			if($query instanceof PDOStatement) {
 				foreach($bindValues as $k => $v) {
 					$type = $this->bindTypes[$k] ?? $this->pdoParamType($v);
 					$query->bindValue($k, $v, $type);
@@ -356,19 +360,18 @@ abstract class DatabaseQuery extends WireData {
 	}
 
 	/**
-	 * Copy bind values from this query to another given DatabaseQuery or \PDOStatement
-	 * 
-	 * This is a more readable interface to the getBindValues() method and does the same 
-	 * thing as passing a DatabaseQuery or PDOStatement to the getBindValues() method. 
-	 * 
-	 * @param DatabaseQuery|\PDOStatement $query
-	 * @param array $options Additional options
-	 *  - `inSQL` (string): Only copy bind values that are referenced in given SQL string
-	 * @return int Number of bind values that were copied
-	 * @since 3.0.157
-	 * 
-	 */
-	public function copyBindValuesTo($query, array $options = []) {
+  * Copy bind values from this query to another given DatabaseQuery or \PDOStatement
+  *
+  * This is a more readable interface to the getBindValues() method and does the same
+  * thing as passing a DatabaseQuery or PDOStatement to the getBindValues() method.
+  *
+  * @param DatabaseQuery|PDOStatement $query
+  * @param array $options Additional options
+  *  - `inSQL` (string): Only copy bind values that are referenced in given SQL string
+  * @return int Number of bind values that were copied
+  * @since 3.0.157
+  */
+ public function copyBindValuesTo($query, array $options = []) {
 		$options['query'] = $query;
 		if(!isset($options['count'])) $options['count'] = true;
 		return $this->getBindValues($options);
@@ -432,7 +435,7 @@ abstract class DatabaseQuery extends WireData {
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __call($method, $arguments) {
 		$args = &$arguments;
 		
@@ -537,7 +540,7 @@ abstract class DatabaseQuery extends WireData {
 	 * @param mixed $value
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __set($key, $value) {
 		if(is_array($this->$key)) $this->__call($key, [$value]); 
 	}
@@ -547,7 +550,7 @@ abstract class DatabaseQuery extends WireData {
 	 * @return array|mixed|null
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __get($key) {
 		
 		if($key === 'query' || $key === 'sql') {
@@ -656,23 +659,21 @@ abstract class DatabaseQuery extends WireData {
 	}
 
 	/**
-	 * Get the WHERE portion of the query
-	 * 
-	protected function getQueryWhere() {
-		$where = $this->where; 
-		if(!count($where)) return '';
-		$sql = "\nWHERE " . implode(" \nAND ", $where)  . " ";
-		return $sql;
-	}
-	 */
-
-	/**
-	 * Prepare and return a PDOStatement
-	 * 
-	 * @return \PDOStatement
-	 * 
-	 */
-	public function prepare() {
+ * Get the WHERE portion of the query
+ * 
+ 	protected function getQueryWhere() {
+ 		$where = $this->where; 
+ 		if(!count($where)) return '';
+ 		$sql = "\nWHERE " . implode(" \nAND ", $where)  . " ";
+ 		return $sql;
+ 	}
+ */
+ /**
+  * Prepare and return a PDOStatement
+  *
+  * @return PDOStatement
+  */
+ public function prepare() {
 		$query = $this->wire()->database->prepare($this->getQuery()); 
 		foreach($this->bindValues as $key => $value) {
 			$type = $this->bindTypes[$key] ?? $this->pdoParamType($value);
@@ -690,27 +691,26 @@ abstract class DatabaseQuery extends WireData {
 	 */
 	protected function pdoParamType($value) {
 		if(is_int($value)) {
-			$type = \PDO::PARAM_INT;
+			$type = PDO::PARAM_INT;
 		} else if($value === null) {
-			$type = \PDO::PARAM_NULL;
+			$type = PDO::PARAM_NULL;
 		} else {
-			$type = \PDO::PARAM_STR;
+			$type = PDO::PARAM_STR;
 		}
 		return $type;
 	}
 
 	/**
-	 * Execute the query with the current database handle
-	 * 
-	 * @param array $options
-	 *  - `throw` (bool): Throw exceptions? (default=true)
-	 *  - `maxTries` (int): Max times to retry if connection lost during query. (default=3)
-	 *  - `returnQuery` (bool): Return PDOStatement query? If false, returns bool result of execute. (default=true)
-	 * @return \PDOStatement|bool
-	 * @throws WireDatabaseQueryException|\PDOException
-	 *
-	 */
-	public function execute(array $options = []) {
+  * Execute the query with the current database handle
+  *
+  * @param array $options
+  *  - `throw` (bool): Throw exceptions? (default=true)
+  *  - `maxTries` (int): Max times to retry if connection lost during query. (default=3)
+  *  - `returnQuery` (bool): Return PDOStatement query? If false, returns bool result of execute. (default=true)
+  * @return PDOStatement|bool
+  * @throws WireDatabaseQueryException|PDOException
+  */
+ public function execute(array $options = []) {
 		
 		$defaults = ['throw' => true, 'maxTries' => 3, 'returnQuery' => true];
 	
@@ -726,7 +726,7 @@ abstract class DatabaseQuery extends WireData {
 			try {
 				$query = $this->prepare();
 				$result = $query->execute();
-			} catch(\PDOException $e) {
+			} catch(PDOException $e) {
 				$msg = $e->getMessage();
 				$code = (int) $e->getCode();
 				$retry = $code === 2006 || stripos($msg, 'MySQL server has gone away') !== false;

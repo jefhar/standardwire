@@ -1,13 +1,14 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that matches one string value that happens to have all of its words present in another string value (regardless of individual word location)
  *
  */
 class SelectorContainsWords extends Selector { 
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '~='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -15,11 +16,11 @@ class SelectorContainsWords extends Selector {
 			Selector::compareTypeWords | 
 			Selector::compareTypeFulltext; 
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Contains all words', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('words-all words-whole fulltext'); }
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) { 
 		$hasAll = true; 
 		$words = $this->wire()->sanitizer->wordsArray($value2); 

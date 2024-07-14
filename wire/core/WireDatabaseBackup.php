@@ -1,5 +1,11 @@
 <?php namespace ProcessWire;
 
+use Exception;
+use PDO;
+use DirectoryIterator;
+use PDOStatement;
+use PDOException;
+use SplFileInfo;
 /**
  * #pw-summary ProcessWire Database Backup and Restore
  * #pw-summary-initialization It’s not typically necessary to call these initialization methods unless doing manual initialization.
@@ -54,7 +60,6 @@
  * 
  *
  */
-
 class WireDatabaseBackup {
 	
 	public const fileHeader = '--- WireDatabaseBackup';
@@ -164,10 +169,9 @@ class WireDatabaseBackup {
  ];
 	
 	/**
-	 * @var null|\PDO
-	 * 
-	 */
-	protected $database = null;
+  * @var null|PDO
+  */
+ protected $database = null;
 
 	/**
 	 * @var array
@@ -227,20 +231,19 @@ class WireDatabaseBackup {
 	protected $counts = [];
 
 	/**
-	 * Construct
-	 * 
-	 * You should follow-up the construct call with one or both of the following:
-	 * 
-	 * 	- $backups->setDatabase(PDO|WireDatabasePDO);
-	 * 	- $backups->setDatabaseConfig(array|object);
-	 * 
-	 * #pw-group-initialization
-	 * 
-	 * @param string $path Path where database files are stored
-	 * @throws \Exception
-	 * 
-	 */
-	public function __construct($path = '') {
+  * Construct
+  *
+  * You should follow-up the construct call with one or both of the following:
+  *
+  * 	- $backups->setDatabase(PDO|WireDatabasePDO);
+  * 	- $backups->setDatabaseConfig(array|object);
+  *
+  * #pw-group-initialization
+  *
+  * @param string $path Path where database files are stored
+  * @throws Exception
+  */
+ public function __construct($path = '') {
 		if(strlen($path)) $this->setPath($path);
 	}
 
@@ -257,23 +260,22 @@ class WireDatabaseBackup {
 	}
 
 	/**
-	 * Set the database configuration information
-	 * 
-	 * #pw-group-initialization
-	 * 
-	 * @param array|Config|object $config Containing these properties: 
-	 *  - dbUser
-	 *  - dbHost
-	 *  - dbPort
-	 *  - dbName
-	 * 	- dbPass
-	 *  - dbPath (optional)
-	 *  - dbCharset (optional)
-	 * @return $this
-	 * @throws \Exception if missing required config settings
-	 * 
-	 */
-	public function setDatabaseConfig($config) {
+  * Set the database configuration information
+  *
+  * #pw-group-initialization
+  *
+  * @param array|Config|object $config Containing these properties:
+  *  - dbUser
+  *  - dbHost
+  *  - dbPort
+  *  - dbName
+  * 	- dbPass
+  *  - dbPath (optional)
+  *  - dbCharset (optional)
+  * @return $this
+  * @throws Exception if missing required config settings
+  */
+ public function setDatabaseConfig($config) {
 		
 		foreach($this->databaseConfig as $key => $_value) {
 			if(is_object($config) && isset($config->$key)) $value = $config->$key;
@@ -294,7 +296,7 @@ class WireDatabaseBackup {
 		}
 
 		if(count($missing)) {
-			throw new \Exception("Missing required config for: " . implode(', ', $missing));
+			throw new Exception("Missing required config for: " . implode(', ', $missing));
 		}
 		
 		// $charset = $this->databaseConfig['dbCharset'];
@@ -304,37 +306,35 @@ class WireDatabaseBackup {
 	}
 
 	/**
-	 * Set the PDO database connection
-	 * 
-	 * #pw-group-initialization
-	 * 
-	 * @param \PDO|WireDatabasePDO $database
-	 * @throws \PDOException on invalid connection
-	 * 
-	 */
-	public function setDatabase($database) {
+  * Set the PDO database connection
+  *
+  * #pw-group-initialization
+  *
+  * @param PDO|WireDatabasePDO $database
+  * @throws PDOException on invalid connection
+  */
+ public function setDatabase($database) {
 		$query = $database->prepare('SELECT DATABASE()'); 
 		$query->execute();
-		[$dbName] = $query->fetch(\PDO::FETCH_NUM); 
+		[$dbName] = $query->fetch(PDO::FETCH_NUM); 
 		if($dbName) $this->databaseConfig['dbName'] = $dbName; 
 		$this->database = $database;
 	}
 
 	/**
-	 * Get current database connection, initiating the connection if not yet active
-	 * 
-	 * #pw-advanced
-	 * 
-	 * @return \PDO
-	 * @throws \Exception
-	 * 
-	 */
-	public function getDatabase() {
+  * Get current database connection, initiating the connection if not yet active
+  *
+  * #pw-advanced
+  *
+  * @return PDO
+  * @throws Exception
+  */
+ public function getDatabase() {
 		
 		if($this->database) return $this->database; 
 		
 		$config = $this->databaseConfig; 
-		if(empty($config['dbUser'])) throw new \Exception("Please call setDatabaseConfig(config) to supply config information so we can connect."); 
+		if(empty($config['dbUser'])) throw new Exception("Please call setDatabaseConfig(config) to supply config information so we can connect."); 
 		
 		if($config['dbSocket']) {
 			$dsn = "mysql:unix_socket=$config[dbSocket];dbname=$config[dbName];";
@@ -343,9 +343,9 @@ class WireDatabaseBackup {
 			if($config['dbPort']) $dsn .= ";port=$config[dbPort]";
 		}
 		
-		$options = [\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES '$config[dbCharset]'", \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
+		$options = [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES '$config[dbCharset]'", PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
 		
-		$database = new \PDO($dsn, $config['dbUser'], $config['dbPass'], $options);
+		$database = new PDO($dsn, $config['dbUser'], $config['dbPass'], $options);
 		$this->setDatabase($database); 
 		return $database;
 	}
@@ -409,19 +409,18 @@ class WireDatabaseBackup {
 	}
 
 	/**
-	 * Set path where database files are stored
-	 * 
-	 * #pw-group-initialization
-	 * 
-	 * @param string $path
-	 * @return $this
-	 * @throws \Exception if path has a problem
-	 * 
-	 */
-	public function setPath($path) {
+  * Set path where database files are stored
+  *
+  * #pw-group-initialization
+  *
+  * @param string $path
+  * @return $this
+  * @throws Exception if path has a problem
+  */
+ public function setPath($path) {
 		$path = $this->sanitizePath($path); 
-		if(!is_dir($path)) throw new \Exception("Path doesn't exist: $path");
-		if(!is_writable($path)) throw new \Exception("Path isn't writable: $path");
+		if(!is_dir($path)) throw new Exception("Path doesn't exist: $path");
+		if(!is_writable($path)) throw new Exception("Path isn't writable: $path");
 		$this->path = $path;
 		return $this;
 	}
@@ -439,18 +438,17 @@ class WireDatabaseBackup {
 	}
 	
 	/**
-	 * Return array of all backup files
-	 *
-	 * To get additional info on any of them, call getFileInfo($basename) method
-	 * 
-	 * #pw-group-reporting
-	 *
-	 * @param bool $getObjects Get SplFileInfo objects rather than basenames? (3.0.214+)
-	 * @return array|\SplFileInfo[] Array of strings (basenames), or array of SplFileInfo objects (when requested)
-	 *
-	 */
-	public function getFiles($getObjects = false) {
-		$dir = new \DirectoryIterator($this->path);
+  * Return array of all backup files
+  *
+  * To get additional info on any of them, call getFileInfo($basename) method
+  *
+  * #pw-group-reporting
+  *
+  * @param bool $getObjects Get SplFileInfo objects rather than basenames? (3.0.214+)
+  * @return array|SplFileInfo[] Array of strings (basenames), or array of SplFileInfo objects (when requested)
+  */
+ public function getFiles($getObjects = false) {
+		$dir = new DirectoryIterator($this->path);
 		$files = [];
 		foreach($dir as $file) {
 			if($file->isDot() || $file->isDir()) continue;
@@ -563,14 +561,14 @@ class WireDatabaseBackup {
 		$query = $this->database->prepare('SHOW TABLES');
 		$query->execute();
 		/** @noinspection PhpAssignmentInConditionInspection */
-		while($row = $query->fetch(\PDO::FETCH_NUM)) $this->tables[$row[0]] = $row[0];
+		while($row = $query->fetch(PDO::FETCH_NUM)) $this->tables[$row[0]] = $row[0];
 		$query->closeCursor();
 
 		if($count) {
 			foreach($this->tables as $table) {
 				$query = $this->database->prepare("SELECT COUNT(*) FROM `$table`");
 				$query->execute();
-				$row = $query->fetch(\PDO::FETCH_NUM);
+				$row = $query->fetch(PDO::FETCH_NUM);
 				$this->counts[$table] = (int) $row[0];
 			}
 			$query->closeCursor();
@@ -582,37 +580,35 @@ class WireDatabaseBackup {
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ /**
+  * Perform a database export/dump
+  *
+  * #pw-group-actions
+  *
+  * @param array $options Options to modify default behavior:
+  * - `filename` (string): filename for backup: default is to make a dated filename, but this can also be used (basename only, no path)
+  * - `description` (string): optional description of this backup
+  * - `tables` (array): if specified, export will only include these tables
+  * - `user` (string): username to associate with the backup file (string), optional
+  * - `excludeTables` (array): exclude creating or inserting into these tables
+  * - `excludeCreateTables` (array): exclude creating these tables, but still export data
+  * - `excludeExportTables` (array): exclude exporting data, but still create tables
+  * - `whereSQL` (array): SQL conditions for export of individual tables [table => [SQL conditions]]. The `table` portion (index) may also be a full PCRE regexp, must start with `/` to be recognized as regex.
+  * - `maxSeconds` (int): max number of seconds allowed for execution (default=1200)
+  * - `allowDrop` (bool): use DROP TABLES statements before CREATE TABLE statements? (default=true)
+  * - `allowUpdate` (bool): use UPDATE ON DUPLICATE KEY so that INSERT statements can UPDATE when rows already present (all tables). (default=false)
+  * - `allowUpdateTables` (array): table names that will use UPDATE ON DUPLICATE KEY (does NOT require allowUpdate=true)
+  * - `findReplace` (array): find and replace in row data during backup. Example: ['databass' => 'database']
+  * - `findReplaceCreateTable` (array): find and replace in create table statements
+  *    Example: ['DEFAULT CHARSET=latin1;' => 'DEFAULT CHARSET=utf8;']
+  * - `extraSQL` (array): additional SQL queries to append at the bottom. Example: ['UPDATE pages SET created=NOW()']
+  * @return string Full path and filename of database export file, or false on failure.
+  * @throws Exception on fatal error
+  * @see WireDatabaseBackup::restore()
+  */
+ public function backup(array $options = []) {
 
-	/**
-	 * Perform a database export/dump
-	 * 
-	 * #pw-group-actions
-	 * 
-	 * @param array $options Options to modify default behavior:
-	 * - `filename` (string): filename for backup: default is to make a dated filename, but this can also be used (basename only, no path)
-	 * - `description` (string): optional description of this backup
-	 * - `tables` (array): if specified, export will only include these tables
-	 * - `user` (string): username to associate with the backup file (string), optional
-	 * - `excludeTables` (array): exclude creating or inserting into these tables
-	 * - `excludeCreateTables` (array): exclude creating these tables, but still export data
-	 * - `excludeExportTables` (array): exclude exporting data, but still create tables
-	 * - `whereSQL` (array): SQL conditions for export of individual tables [table => [SQL conditions]]. The `table` portion (index) may also be a full PCRE regexp, must start with `/` to be recognized as regex.
-	 * - `maxSeconds` (int): max number of seconds allowed for execution (default=1200)
-	 * - `allowDrop` (bool): use DROP TABLES statements before CREATE TABLE statements? (default=true)
-	 * - `allowUpdate` (bool): use UPDATE ON DUPLICATE KEY so that INSERT statements can UPDATE when rows already present (all tables). (default=false)
-	 * - `allowUpdateTables` (array): table names that will use UPDATE ON DUPLICATE KEY (does NOT require allowUpdate=true)
-	 * - `findReplace` (array): find and replace in row data during backup. Example: ['databass' => 'database']
-	 * - `findReplaceCreateTable` (array): find and replace in create table statements
-	 *    Example: ['DEFAULT CHARSET=latin1;' => 'DEFAULT CHARSET=utf8;']
-	 * - `extraSQL` (array): additional SQL queries to append at the bottom. Example: ['UPDATE pages SET created=NOW()']
-	 * @return string Full path and filename of database export file, or false on failure.
-	 * @throws \Exception on fatal error
-	 * @see WireDatabaseBackup::restore()
-	 * 
-	 */
-	public function backup(array $options = []) {
-
-		if(!$this->path) throw new \Exception("Please call setPath('/backup/files/path/') first"); 
+		if(!$this->path) throw new Exception("Please call setPath('/backup/files/path/') first"); 
 		$this->errors(true); 
 		$options = array_merge($this->backupOptions, $options); 
 	
@@ -778,7 +774,7 @@ class WireDatabaseBackup {
 				if($options['allowDrop']) fwrite($fp, "\nDROP TABLE IF EXISTS `$table`;");
 				$query = $database->prepare("SHOW CREATE TABLE `$table`");
 				$query->execute();
-				$row = $query->fetch(\PDO::FETCH_NUM);
+				$row = $query->fetch(PDO::FETCH_NUM);
 				$createTable = $row[1]; 
 				foreach($options['findReplaceCreateTable'] as $find => $replace) {
 					$createTable = str_replace($find, $replace, $createTable); 
@@ -793,7 +789,7 @@ class WireDatabaseBackup {
 			$query = $database->prepare("SHOW COLUMNS FROM `$table`");
 			$query->execute();
 			/** @noinspection PhpAssignmentInConditionInspection */
-			while($row = $query->fetch(\PDO::FETCH_NUM)) $columns[] = $row[0];
+			while($row = $query->fetch(PDO::FETCH_NUM)) $columns[] = $row[0];
 			$query->closeCursor();
 			$columnsStr = '`' . implode('`, `', $columns) . '`';
 
@@ -815,7 +811,7 @@ class WireDatabaseBackup {
 			$this->executeQuery($query);
 
 			/** @noinspection PhpAssignmentInConditionInspection */
-			while($row = $query->fetch(\PDO::FETCH_NUM)) {
+			while($row = $query->fetch(PDO::FETCH_NUM)) {
 				$numInserts++;
 				$out = "\nINSERT INTO `$table` ($columnsStr) VALUES(";
 				foreach($row as $value) {
@@ -890,36 +886,33 @@ class WireDatabaseBackup {
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	/**
-	 * Restore/import a MySQL database dump file 
-	 * 
-	 * This method is designed to restore dump files created by the backup() method of this
-	 * class, however it *may* also work with dump files created from other sources like 
-	 * mysqldump or PhpMyAdmin.
-	 * 
-	 * #pw-group-actions
-	 * 
-	 * @param string $filename Filename to restore, optionally including path (if no path, then path set to construct is assumed)
-	 * @param array $options Options to modify default behavior: 
-	 * - `tables` (array): table names to restore (empty=all)
-	 * - `allowDrop` (bool): allow DROP TABLE statements (default=true)
-	 * - `dropAll` (bool): DROP ALL tables before restore? The allowDrop optional must also be true. (default=false)
-	 * - `haltOnError` (bool): halt execution when an error occurs? (default=false)
-	 * - `maxSeconds` (int): max number of seconds allowed for execution (default=1200)
-	 * - `findReplace` (array): find and replace in row data. Example: ['databass' => 'database']
-	 * - `findReplaceCreateTable` (array): find and replace in create table statements.   
-	 *    Example: ['DEFAULT CHARSET=utf8;' => 'DEFAULT CHARSET=utf8mb4;'] 
-	 * @return true on success, false on failure. Call the errors() method to retrieve errors.
-	 * @throws \Exception on fatal error
-	 * @see WireDatabaseBackup::backup()
-	 *
-	 */
-	public function restore($filename, array $options = []) {
+ /**
+  * Restore/import a MySQL database dump file
+  *
+  * This method is designed to restore dump files created by the backup() method of this
+  * class, however it *may* also work with dump files created from other sources like
+  * mysqldump or PhpMyAdmin.
+  *
+  * #pw-group-actions
+  *
+  * @param string $filename Filename to restore, optionally including path (if no path, then path set to construct is assumed)
+  * @param array $options Options to modify default behavior:
+  * - `tables` (array): table names to restore (empty=all)
+  * - `allowDrop` (bool): allow DROP TABLE statements (default=true)
+  * - `dropAll` (bool): DROP ALL tables before restore? The allowDrop optional must also be true. (default=false)
+  * - `haltOnError` (bool): halt execution when an error occurs? (default=false)
+  * - `maxSeconds` (int): max number of seconds allowed for execution (default=1200)
+  * - `findReplace` (array): find and replace in row data. Example: ['databass' => 'database']
+  * - `findReplaceCreateTable` (array): find and replace in create table statements.  
+  *    Example: ['DEFAULT CHARSET=utf8;' => 'DEFAULT CHARSET=utf8mb4;']
+  * @return true on success, false on failure. Call the errors() method to retrieve errors.
+  * @throws Exception on fatal error
+  * @see WireDatabaseBackup::backup()
+  */
+ public function restore($filename, array $options = []) {
 
 		$filename = $this->sanitizeFilename($filename); 
-		if(!file_exists($filename)) throw new \Exception("Restore file does not exist: $filename");
+		if(!file_exists($filename)) throw new Exception("Restore file does not exist: $filename");
 		$options = array_merge($this->restoreOptions, $options);
 		set_time_limit($options['maxSeconds']);
 		$success = false;
@@ -1024,7 +1017,7 @@ class WireDatabaseBackup {
 				if($command === 'CREATE') $numTables++;
 				$numQueries++;
 				
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$this->error($e->getMessage());
 				if($options['haltOnError']) break;
 			}
@@ -1089,24 +1082,24 @@ class WireDatabaseBackup {
 	}
 
 	/**
-	 * Restore from 2 SQL files while resolving table differences (think of it as array_merge for a DB restore)
-	 * 
-	 * The CREATE TABLE and INSERT statements in filename2 take precedence of those in filename1.
-	 * INSERT statements from both will be executed, with filename2 INSERTs updating those of filename1.
-	 * CREATE TABLE statements in filename1 won't be executed if they also exist in filename2.
-	 * 
-	 * This method assumes both files follow the SQL dump format created by this class. 
-	 * 
-	 * #pw-advanced
-	 * 
-	 * @param string $filename1 Original filename
-	 * @param string $filename2 Filename that may have statements that will update/override those in filename1
-	 * @param array $options
-	 * @return bool True on success, false on fail. 
-	 * @throws \Exception|WireException if $options['haltOnErrors'] == true. 
-	 * 
-	 */
-	public function restoreMerge($filename1, $filename2, $options) {
+  * Restore from 2 SQL files while resolving table differences (think of it as array_merge for a DB restore)
+  *
+  * The CREATE TABLE and INSERT statements in filename2 take precedence of those in filename1.
+  * INSERT statements from both will be executed, with filename2 INSERTs updating those of filename1.
+  * CREATE TABLE statements in filename1 won't be executed if they also exist in filename2.
+  *
+  * This method assumes both files follow the SQL dump format created by this class.
+  *
+  * #pw-advanced
+  *
+  * @param string $filename1 Original filename
+  * @param string $filename2 Filename that may have statements that will update/override those in filename1
+  * @param array $options
+  * @return bool True on success, false on fail.
+  * @throws Exception|WireException if $options['haltOnErrors'] == true.
+  *
+  */
+ public function restoreMerge($filename1, $filename2, $options) {
 		
 		$options = array_merge($this->restoreOptions, $options); 
 		$creates1 = $this->findCreateTables($filename1, $options); 
@@ -1157,14 +1150,13 @@ class WireDatabaseBackup {
 	}
 
 	/**
-	 * Drop all tables from database
-	 * 
-	 * @return int Quantity of tables dropped
-	 * @throws \Exception
-	 * @since 3.0.130
-	 * 
-	 */
-	public function dropAllTables() {
+  * Drop all tables from database
+  *
+  * @return int Quantity of tables dropped
+  * @throws Exception
+  * @since 3.0.130
+  */
+ public function dropAllTables() {
 		
 		$database = $this->getDatabase();
 		$tables = $this->getAllTables(false, false);
@@ -1183,21 +1175,19 @@ class WireDatabaseBackup {
 		
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Returns array of all create table statements, indexed by table name
-	 *
-	 * @param string $filename to extract all CREATE TABLE statements from
-	 * @param string $regex Regex (PCRE) to match for statement to be returned, must stuff table name into first match
-	 * @param bool $multi Whether there can be multiple matches per table
-	 * @return array of statements, indexed by table name. If $multi is true, it will be array of arrays.
-	 * @throws \Exception if unable to open specified file
-	 *
-	 */
-	protected function findStatements($filename, $regex, $multi = true) {
+ /**
+  * Returns array of all create table statements, indexed by table name
+  *
+  * @param string $filename to extract all CREATE TABLE statements from
+  * @param string $regex Regex (PCRE) to match for statement to be returned, must stuff table name into first match
+  * @param bool $multi Whether there can be multiple matches per table
+  * @return array of statements, indexed by table name. If $multi is true, it will be array of arrays.
+  * @throws Exception if unable to open specified file
+  */
+ protected function findStatements($filename, $regex, $multi = true) {
 		$filename = $this->sanitizeFilename($filename); 
 		$fp = fopen($filename, 'r');
-		if(!$fp) throw new \Exception("Unable to open: $filename"); 
+		if(!$fp) throw new Exception("Unable to open: $filename"); 
 		$statements = [];
 		while(!feof($fp)) {
 			$line = trim(fgets($fp));
@@ -1217,17 +1207,16 @@ class WireDatabaseBackup {
 	}
 
 	/**
-	 * Returns array of all create table statements, indexed by table name
-	 * 
-	 * #pw-internal
-	 * 
-	 * @param string $filename to extract all CREATE TABLE statements from
-	 * @param array $options
-	 * @return array of CREATE TABLE statements, associative: indexed by table name
-	 * @throws \Exception if unable to open specified file
-	 *
-	 */
-	public function findCreateTables($filename, array $options) {
+  * Returns array of all create table statements, indexed by table name
+  *
+  * #pw-internal
+  *
+  * @param string $filename to extract all CREATE TABLE statements from
+  * @param array $options
+  * @return array of CREATE TABLE statements, associative: indexed by table name
+  * @throws Exception if unable to open specified file
+  */
+ public function findCreateTables($filename, array $options) {
 		$regex = '/^CREATE\s+TABLE\s+`?([^`\s]+)/i';
 		$statements = $this->findStatements($filename, $regex, false);
 		if(!empty($options['findReplaceCreateTable'])) {
@@ -1258,16 +1247,15 @@ class WireDatabaseBackup {
 	}
 
 	/**
-	 * Execute an SQL query, either a string or PDOStatement
-	 * 
-	 * @param string|\PDOStatement $query
-	 * @param bool|array $options May be boolean (for haltOnError), or array containing the property (i.e. $options array)
-	 *  - `haltOnError` (bool): Halt execution when error occurs? (default=false)
-	 * @return bool Query result
-	 * @throws \Exception if haltOnError, otherwise it populates $this->errors
-	 * 
-	 */
-	protected function executeQuery($query, $options = []) {
+  * Execute an SQL query, either a string or PDOStatement
+  *
+  * @param string|PDOStatement $query
+  * @param bool|array $options May be boolean (for haltOnError), or array containing the property (i.e. $options array)
+  *  - `haltOnError` (bool): Halt execution when error occurs? (default=false)
+  * @return bool Query result
+  * @throws Exception if haltOnError, otherwise it populates $this->errors
+  */
+ protected function executeQuery($query, $options = []) {
 		$defaults = ['haltOnError' => false];
 		if(is_bool($options)) {
 			$defaults['haltOnError'] = $options;
@@ -1278,10 +1266,10 @@ class WireDatabaseBackup {
 		try {
 			if(is_string($query)) {
 				$result = $this->getDatabase()->exec($query); 
-			} else if($query instanceof \PDOStatement) {
+			} else if($query instanceof PDOStatement) {
 				$result = $query->execute();
 			}
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			if(empty($options['haltOnError'])) {
 				$this->error($e->getMessage());
 			} else {
@@ -1305,39 +1293,36 @@ class WireDatabaseBackup {
 	}
 
 	/**
-	 * For filename: Normalizes slashes and ensures it starts with a path
-	 * 
-	 * @param $filename
-	 * @return string
-	 * @throws \Exception if path has not yet been set
-	 * 
-	 */
-	protected function sanitizeFilename($filename) {
+  * For filename: Normalizes slashes and ensures it starts with a path
+  *
+  * @param $filename
+  * @return string
+  * @throws Exception if path has not yet been set
+  */
+ protected function sanitizeFilename($filename) {
 		if(DIRECTORY_SEPARATOR != '/') $filename = str_replace(DIRECTORY_SEPARATOR, '/', $filename);
 		if(!str_contains((string) $filename, '/')) {
 			$filename = $this->path . $filename;
 		}
 		if(!str_contains((string) $filename, '/')) {
 			$path = $this->getPath();
-			if(!strlen($path)) throw new \Exception("Please supply full path to file, or call setPath('/backup/files/path/') first");
+			if(!strlen($path)) throw new Exception("Please supply full path to file, or call setPath('/backup/files/path/') first");
 			$filename = $path . $filename; 
 		}
 		return $filename; 
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Determine if exec is available for the given command
-	 * 
-	 * Note that WireDatabaseBackup does not currently use exec() mode so this is here for future use. 
-	 * 
-	 * @param array $options
-	 * @return bool
-	 * @throws \Exception on unknown exec type
-	 * 
-	 */
-	protected function supportsExec(array $options = []) {
+ /**
+  * Determine if exec is available for the given command
+  *
+  * Note that WireDatabaseBackup does not currently use exec() mode so this is here for future use.
+  *
+  * @param array $options
+  * @return bool
+  * @throws Exception on unknown exec type
+  */
+ protected function supportsExec(array $options = []) {
 
 		if(!$options['exec']) return false;
 		
@@ -1346,7 +1331,7 @@ class WireDatabaseBackup {
 		if(preg_match('{^(?:\[dbPath\])?([_a-zA-Z0-9]+)\s}', (string) $options['execCommand'], $matches)) {
 			$type = $matches[1]; 
 		} else {
-			throw new \Exception("Unable to determine command for exec"); 
+			throw new Exception("Unable to determine command for exec"); 
 		}
 
 		if($type == 'mysqldump') {
@@ -1370,7 +1355,7 @@ class WireDatabaseBackup {
 			}
 			
 		} else {
-			throw new \Exception("Unrecognized exec command: $type"); 
+			throw new Exception("Unrecognized exec command: $type"); 
 		}
 		
 		// first check if exec is available (http://stackoverflow.com/questions/3938120/check-if-exec-is-disabled)

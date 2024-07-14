@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Inputfield - base class for Inputfield modules.
  * 
@@ -496,7 +497,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return Inputfield|WireData
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 
 		if($key === 'parent') { 
@@ -544,7 +545,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return mixed|null Value of property or attribute, or NULL if not found. 
 	 *
 	 */ 
-	#[\Override]
+	#[Override]
  public function get($key) {	
 		if($key === 'label') { 
 			$value = parent::get('label');
@@ -936,7 +937,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * @since 3.0.110
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function ___callUnknown($method, $arguments) {
 		$arg = $arguments[0] ?? null;
 		if(isset($this->attributes[$method])) {
@@ -1883,7 +1884,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function error($text, $flags = 0) {
 		// Override Wire's error method and place errors in the context of their inputfield
 		$session = $this->wire()->session;
@@ -1948,7 +1949,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return bool True if it has it, false if it doesn't 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function has($key) {
 		$has = parent::has($key); 
 		if(!$has) $has = isset($this->attributes[$key]); 
@@ -1998,7 +1999,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return Inputfield|WireData $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function trackChange($what, $old = null, $new = null) {
 		if($what != 'value') return $this;
 		return parent::trackChange($what, $old, $new); 
@@ -2081,7 +2082,7 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$info = ['className' => $this->className(), 'attributes' => $this->attributes, 'wrapAttributes' => $this->wrapAttributes];
 		if(is_object($this->parent)) {

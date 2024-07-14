@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use Exception;
 /**
  * ProcessWire WireUpload
  *
@@ -10,7 +12,6 @@
  * https://processwire.com
  *
  */
-
 class WireUpload extends Wire {
 
 	/**
@@ -174,7 +175,7 @@ class WireUpload extends Wire {
 	 * Wired to API
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function wired() {
 		parent::wired();
 		$this->init();
@@ -574,7 +575,7 @@ class WireUpload extends Wire {
 			if(!count($files)) {
 				throw new WireException($this->_('No files found in ZIP file'));
 			}
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->error($e->getMessage());
 			$fileTools->rmdir($tmpDir, true);
 			$fileTools->unlink($zipFile);
@@ -831,7 +832,7 @@ class WireUpload extends Wire {
 	 * @return Wire|WireUpload
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function error($text, $flags = 0) {
 		$this->errors[] = $text; 
 		return parent::error($text, $flags); 

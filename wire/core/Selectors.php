@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 require_once(PROCESSWIRE_CORE_PATH . "Selector.php"); 
 
 /**
@@ -153,7 +154,7 @@ class Selectors extends WireArray {
 	 * @return WireArray This instance.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function import($items) {
 		if(is_string($items)) {
 			$this->extractString($items); 	
@@ -172,7 +173,7 @@ class Selectors extends WireArray {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Selector; 
 	}
@@ -185,7 +186,7 @@ class Selectors extends WireArray {
 	 * @return Selector
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new SelectorEqual('',''));
 	}
@@ -1198,7 +1199,7 @@ class Selectors extends WireArray {
 	 * @return string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		$str = '';
 		foreach($this as $selector) {
@@ -1213,7 +1214,7 @@ class Selectors extends WireArray {
 	 * @return array
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$info = parent::__debugInfo();
 		$info['string'] = $this->__toString();
@@ -1227,7 +1228,7 @@ class Selectors extends WireArray {
 	 * @return array|mixed|null|string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function debugInfoItem($item) {
 		if($item instanceof Selector) return $item->__debugInfo();
 		return parent::debugInfoItem($item);

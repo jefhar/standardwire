@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use Override;
+use ReturnTypeWillChange;
+use Traversable;
 /**
  * The Permissions class serves as the $permissions API variable. 
  * 
@@ -117,7 +120,7 @@ class Permissions extends PagesType {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___save(Page $page) {
 		return parent::___save($page);
 	}
@@ -133,7 +136,7 @@ class Permissions extends PagesType {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___delete(Page $page, $recursive = false) {
 		return parent::___delete($page, $recursive);
 	}
@@ -147,7 +150,7 @@ class Permissions extends PagesType {
 	 * @return Permission|NullPage Returns a Permission page on success, or a NullPage on error
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___add($name) {
 		/** @var Permission|NullPage $value */
 		$value = parent::___add($name);
@@ -289,20 +292,19 @@ class Permissions extends PagesType {
 	}
 
 	/**
-	 * Returns all installed Permission pages and enables foreach() iteration of $permissions
-	 * 
-	 * ~~~~~
-	 * // Example of listing all permissions
-	 * foreach($permissions as $permission) {
-	 *   echo "<li>$permission->name</li>";
-	 * }
-	 * ~~~~~
-	 *
-	 * @return array|PageArray|\Traversable
-	 *
-	 */
-	#[\ReturnTypeWillChange]
- #[\Override]
+  * Returns all installed Permission pages and enables foreach() iteration of $permissions
+  *
+  * ~~~~~
+  * // Example of listing all permissions
+  * foreach($permissions as $permission) {
+  *   echo "<li>$permission->name</li>";
+  * }
+  * ~~~~~
+  *
+  * @return array|PageArray|Traversable
+  */
+ #[ReturnTypeWillChange]
+ #[Override]
 	public function getIterator() {
 		return parent::getIterator();
 	}
@@ -319,7 +321,7 @@ class Permissions extends PagesType {
 	 * 
 	 */
 
-	#[\Override]
+	#[Override]
  public function ___saved(Page $page, array $changes = [], $values = []) {
 		$this->wire()->cache->delete(self::cacheName);
 		parent::___saved($page, $changes, $values);
@@ -334,7 +336,7 @@ class Permissions extends PagesType {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function ___deleted(Page $page) {
 		$this->wire()->cache->delete(self::cacheName);
 		parent::___deleted($page);

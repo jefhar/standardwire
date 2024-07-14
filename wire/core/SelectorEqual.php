@@ -1,18 +1,19 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that matches equality between two values
  *
  */
 class SelectorEqual extends Selector {
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { return Selector::compareTypeExact; }
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Equals', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return __('Given value is the same as value compared to.', __FILE__); }
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) { return $this->evaluate($value1 == $value2); }
 }

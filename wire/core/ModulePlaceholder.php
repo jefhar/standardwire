@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire ModulePlaceholder
  *
@@ -17,7 +18,6 @@
  * @property string $name alias of className
  *
  */
-
 class ModulePlaceholder extends WireData implements Module {
 
 	protected $class = '';
@@ -47,7 +47,7 @@ class ModulePlaceholder extends WireData implements Module {
 		$this->ns = (string) $ns;
 	}
 
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key == 'className' || $key == 'class' || $key == 'name') return $this->class;
 		return parent::get($key); 
@@ -61,7 +61,7 @@ class ModulePlaceholder extends WireData implements Module {
 		return false; 
 	}
 
-	#[\Override]
+	#[Override]
  public function className($options = null) {
 		if($options === true || !empty($options['namespace'])) {
 			return trim("$this->ns", '\\') . '\\' . $this->class;

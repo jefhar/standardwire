@@ -1,13 +1,15 @@
 <?php namespace ProcessWire;
 
+use Exception;
+use Override;
 /**
  * ProcessWire TemplateFile
  *
  * A template file that will be loaded and executed as PHP and its output returned.
- * 
+ *
  * ProcessWire 3.x, Copyright 2022 by Ryan Cramer
  * https://processwire.com
- * 
+ *
  * @property bool $halt Set to true to halt during render, or use method $this->halt();
  * @property-read string $filename Primary file to render.
  * @property-read array $prependFilename Optional file name(s) used for prepend.
@@ -15,10 +17,8 @@
  * @property-read string $currentFilename Current file being rendered (whether primary, prepend, append).
  * @property-read bool $trim Whether or not leading/trailing whitespace is trimmed from output (3.0.154+).
  * @method string render()
- * @method bool fileFailed($filename, \Exception $e)
- *
+ * @method bool fileFailed($filename, Exception $e)
  */
-
 class TemplateFile extends WireData {
 
 	/**
@@ -279,13 +279,12 @@ class TemplateFile extends WireData {
 	}
 
 	/**
-	 * Render the template: execute it and return its output
-	 *
-	 * @return string The output of the Template File
-	 * @throws WireException|\Exception Throws WireException if file not exist + any exceptions thrown by included file(s)
-	 *
-	 */
-	public function ___render() {
+  * Render the template: execute it and return its output
+  *
+  * @return string The output of the Template File
+  * @throws WireException|Exception Throws WireException if file not exist + any exceptions thrown by included file(s)
+  */
+ public function ___render() {
 		
 		/** @noinspection PhpIncludeInspection */
 
@@ -313,7 +312,7 @@ class TemplateFile extends WireData {
 				require($_filename);
 				$this->fileFinished();
 			}
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			if($this->fileFailed($this->currentFilename, $e)) throw $this->renderFailed($e);
 		}
 		
@@ -326,7 +325,7 @@ class TemplateFile extends WireData {
 				$this->fileReady($this->filename);
 				$this->returnValue = require($this->filename);
 				$this->fileFinished();
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				if($this->fileFailed($this->filename, $e)) throw $this->renderFailed($e);
 			}
 		}
@@ -339,7 +338,7 @@ class TemplateFile extends WireData {
 				require($_filename);
 				$this->fileFinished();
 			}
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			if($this->fileFailed($this->currentFilename, $e)) throw $this->renderFailed($e);
 		}
 		
@@ -388,17 +387,16 @@ class TemplateFile extends WireData {
 	}
 	
 	/**
-	 * Called when render of specific file failed with Exception
-	 *
-	 * #pw-hooker
-	 *
-	 * @param string $filename
-	 * @param \Exception $e
-	 * @return bool True if Exception $e should be thrown, false if it should be ignored
-	 * @since 3.0.154
-	 *
-	 */
-	protected function ___fileFailed($filename, \Exception $e) {
+  * Called when render of specific file failed with Exception
+  *
+  * #pw-hooker
+  *
+  * @param string $filename
+  * @param Exception $e
+  * @return bool True if Exception $e should be thrown, false if it should be ignored
+  * @since 3.0.154
+  */
+ protected function ___fileFailed($filename, Exception $e) {
 		$this->fileFinished();
 		return true;
 	}
@@ -460,14 +458,13 @@ class TemplateFile extends WireData {
 	}
 
 	/**
-	 * Called when overall render failed
-	 * 
-	 * @param \Exception $e
-	 * @return \Exception
-	 * @since 3.0.154
-	 * 
-	 */
-	protected function renderFailed(\Exception $e) {
+  * Called when overall render failed
+  *
+  * @param Exception $e
+  * @return Exception
+  * @since 3.0.154
+  */
+ protected function renderFailed(Exception $e) {
 		$this->renderFinished();
 		return $e; 
 	}
@@ -493,7 +490,7 @@ class TemplateFile extends WireData {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getArray() {
 		return array_merge($this->wire()->fuel->getArray(), parent::getArray()); 
 	}
@@ -505,7 +502,7 @@ class TemplateFile extends WireData {
 	 * @return mixed Returns the value of the requested property, or NULL if it doesn't exist
 	 *	
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key === 'filename') return $this->filename; 
 		if($key === 'appendFilename' || $key === 'appendFilenames') return $this->appendFilename; 
@@ -525,7 +522,7 @@ class TemplateFile extends WireData {
 	 * @return $this|WireData
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 		if($key === 'halt') {
 			$this->halt($value);
@@ -595,7 +592,7 @@ class TemplateFile extends WireData {
 	 * @return string
 	 *	
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		if(!$this->filename) return $this->className();
 		return $this->filename; 

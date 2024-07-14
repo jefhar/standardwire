@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use DirectoryIterator;
+use PDO;
+use Exception;
 /**
  * class Installer
  *
@@ -149,7 +152,7 @@ class Installer {
 		$profiles = []; 
 		$dirTests = ['install', 'templates', 'assets'];
 		$fileTests = ['config.php', 'templates/admin.php', 'install/install.sql'];
-		foreach(new \DirectoryIterator(__DIR__) as $dir) {
+		foreach(new DirectoryIterator(__DIR__) as $dir) {
 			if($dir->isDot() || !$dir->isDir()) continue; 
 			$name = $dir->getBasename();
 			$path = rtrim($dir->getPathname(), '/') . '/';
@@ -649,12 +652,12 @@ class Installer {
 			error_reporting(0); 
 			
 			$dsn = "mysql:dbname=$values[dbName];host=$values[dbHost];port=$values[dbPort]";
-			$driver_options = [\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'", \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
+			$driver_options = [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'", PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
 			
 			try {
-				$database = new \PDO($dsn, $values['dbUser'], $values['dbPass'], $driver_options);
+				$database = new PDO($dsn, $values['dbUser'], $values['dbPass'], $driver_options);
 				
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				
 				if($e->getCode() == 1049) {
 					// If schema does not exist, try to create it
@@ -680,7 +683,7 @@ class Installer {
 		// check if MySQL is new enough to support InnoDB with fulltext indexes
 		if($options['dbEngine'] == 'InnoDB') {
 			$query = $database->query("SELECT VERSION()");
-			[$dbVersion] = $query->fetch(\PDO::FETCH_NUM);
+			[$dbVersion] = $query->fetch(PDO::FETCH_NUM);
 			if(version_compare($dbVersion, "5.6.4", "<")) {
 				$options['dbEngine'] = 'MyISAM';
 				$values['dbEngine'] = 'MyISAM';
@@ -690,7 +693,7 @@ class Installer {
 		
 		// check if database already has tables present
 		$query = $database->query("SHOW TABLES");
-		$tables = $query->fetchAll(\PDO::FETCH_COLUMN);
+		$tables = $query->fetchAll(PDO::FETCH_COLUMN);
 		$numTables = count($tables);
 		$dbTablesAction = $this->post('dbTablesAction', 'string');
 		
@@ -725,21 +728,20 @@ class Installer {
 	}
 
 	/**
-	 * Create database
-	 * 
-	 * Note: only handles database names that stick to ascii _a-zA-Z0-9.
-	 * For database names falling outside that set, they should be created
-	 * ahead of time. 
-	 * 
-	 * Contains contributions from @plauclair PR #950
-	 * 
-	 * @param string $dsn
-	 * @param array $values
-	 * @param array $driver_options
-	 * @return \PDO|null
-	 * 
-	 */
-	protected function dbCreateDatabase($dsn, $values, $driver_options) {
+  * Create database
+  *
+  * Note: only handles database names that stick to ascii _a-zA-Z0-9.
+  * For database names falling outside that set, they should be created
+  * ahead of time.
+  *
+  * Contains contributions from @plauclair PR #950
+  *
+  * @param string $dsn
+  * @param array $values
+  * @param array $driver_options
+  * @return PDO|null
+  */
+ protected function dbCreateDatabase($dsn, $values, $driver_options) {
 		
 		$dbCharset = preg_replace('/[^a-z0-9]/', '', strtolower(substr((string) $values['dbCharset'], 0, 64)));
 		$dbName = preg_replace('/[^_a-zA-Z0-9]/', '', substr((string) $values['dbName'], 0, 64));
@@ -752,13 +754,13 @@ class Installer {
 
 			try {
 				$dsn2 = "mysql:host=$values[dbHost];port=$values[dbPort]";
-				$database = new \PDO($dsn2, $values['dbUser'], $values['dbPass'], $driver_options);
+				$database = new PDO($dsn2, $values['dbUser'], $values['dbPass'], $driver_options);
 				$database->exec("CREATE SCHEMA IF NOT EXISTS `$dbName` DEFAULT CHARACTER SET `$dbCharset`");
 				// reconnect
-				$database = new \PDO($dsn, $values['dbUser'], $values['dbPass'], $driver_options);
+				$database = new PDO($dsn, $values['dbUser'], $values['dbPass'], $driver_options);
 				$this->alertOk("Created database: $dbName"); 
 
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$this->alertErr("Failed to create database with name $dbName");
 				$this->alertErr($e->getMessage()); 
 				$database = null;
@@ -895,13 +897,12 @@ class Installer {
 	}
 
 	/**
-	 * Step 3b: Import profile
-	 * 
-	 * @param \PDO $database
-	 * @param array $options
-	 *
-	 */
-	protected function profileImport($database, array $options) {
+  * Step 3b: Import profile
+  *
+  * @param PDO $database
+  * @param array $options
+  */
+ protected function profileImport($database, array $options) {
 
 		if(self::TEST_MODE) {
 			$this->alertOk("TEST MODE: Skipping profile import"); 
@@ -918,7 +919,7 @@ class Installer {
 		try {
 			$query = $database->prepare("SHOW COLUMNS FROM pages"); 
 			$result = $query->execute();
-		} catch(\Exception) {
+		} catch(Exception) {
 			$result = false;
 			$query = null;
 		}
@@ -989,7 +990,7 @@ class Installer {
 			return;
 		}
 
-		$dir = new \DirectoryIterator($fromPath);
+		$dir = new DirectoryIterator($fromPath);
 
 		foreach($dir as $file) {
 
@@ -1018,15 +1019,14 @@ class Installer {
 	}
 	
 	/**
-	 * Import profile SQL dump
-	 * 
-	 * @param \PDO $database
-	 * @param string $file1
-	 * @param string $file2
-	 * @param array $options
-	 *
-	 */
-	protected function profileImportSQL($database, $file1, $file2, array $options = []) {
+  * Import profile SQL dump
+  *
+  * @param PDO $database
+  * @param string $file1
+  * @param string $file2
+  * @param array $options
+  */
+ protected function profileImportSQL($database, $file1, $file2, array $options = []) {
 		$defaults = ['dbEngine' => 'MyISAM', 'dbCharset' => 'utf8'];
 		$options = array_merge($defaults, $options); 
 		if(self::TEST_MODE) return;
@@ -1233,7 +1233,7 @@ class Installer {
 				$wire->pages->save($admin);
 			}
 
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->err($e->getMessage()); 
 			$this->adminAccount($wire); 
 			return;

@@ -1,13 +1,14 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that matches all given words in whole or in part starting with
  *
  */
 class SelectorContainsWordsPartial extends Selector {
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '~*='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -16,11 +17,11 @@ class SelectorContainsWordsPartial extends Selector {
 			Selector::compareTypeWords | 
 			Selector::compareTypeFulltext; 
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Contains all partial words', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('words-all words-partial words-partial-begin fulltext'); }
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) {
 		$hasAll = true;
 		$words = $this->wire()->sanitizer->wordsArray($value2); 

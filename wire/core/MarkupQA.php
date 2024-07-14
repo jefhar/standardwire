@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use PDO;
+use Override;
 /**
  * HTML Markup Quality Assurance
  * 
@@ -20,8 +22,7 @@
  * ProcessWire 3.x, Copyright 2023 by Ryan Cramer
  * https://processwire.com
  * 
- */ 
-
+ */
 class MarkupQA extends Wire {
 	
 	public const errorLogName = 'markup-qa-errors';
@@ -659,7 +660,7 @@ class MarkupQA extends Wire {
 			$query = $database->prepare($sql);
 			$query->execute();
 
-			while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+			while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 				$pageID = (int) $row['pages_id'];
 				if(isset($foundIDs[$pageID])) continue;
 				$row = implode(' ', $row);
@@ -950,7 +951,7 @@ class MarkupQA extends Wire {
 	 * @return $this
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function error($text, $flags = 0) {
 		$logText = "$text (field={$this->field->name}, id={$this->page->id}, path={$this->page->path})";
 		$this->wire()->log->save(self::errorLogName, $logText);

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire ImageSizer with Engines for ProcessWire 3.x
  *
@@ -450,7 +451,7 @@ class ImageSizer extends Wire {
 		return $this->engine;
 	}
 	
-	#[\Override]
+	#[Override]
  public function __get($name) { return $this->getEngine()->__get($name); }
 
 	/**

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Exception;
 /**
  * Random generators for ProcessWire 
  * 
@@ -18,7 +19,6 @@
  * ~~~~~
  * 
  */
-
 class WireRandom extends Wire {
 	
 	/**
@@ -771,7 +771,7 @@ class WireRandom extends Wire {
 				try {
 					$buffer = random_bytes($rawLength);
 					if($buffer) $valid = true;
-				} catch(\Exception) {
+				} catch(Exception) {
 					$valid = false;
 				}
 				if($test) $tests['random_bytes'] = $buffer;

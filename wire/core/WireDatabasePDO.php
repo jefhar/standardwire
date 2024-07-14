@@ -1,5 +1,10 @@
 <?php namespace ProcessWire;
 
+use PDO;
+use PDOException;
+use PDOStatement;
+use Exception;
+use Override;
 /**
  * ProcessWire PDO Database
  *
@@ -9,7 +14,6 @@
  * https://processwire.com
  *
  */
-
 /**
  * Database class provides a layer on top of mysqli
  * 
@@ -129,12 +133,11 @@ class WireDatabasePDO extends Wire implements WireDatabase {
  ];
 
 	/**
-	 * Last used PDO connection
-	 *
-	 * @var null|\PDO
-	 *
-	 */
-	protected $pdoLast = null;
+  * Last used PDO connection
+  *
+  * @var null|PDO
+  */
+ protected $pdoLast = null;
 
 	/**
 	 * Whether or not our _init() has been called for the current $pdo connection
@@ -256,12 +259,12 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 
 		if(!is_array($options)) $options = [];
 
-		if(!isset($options[\PDO::ATTR_ERRMODE])) {
-			$options[\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
+		if(!isset($options[PDO::ATTR_ERRMODE])) {
+			$options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 		}
 
-		if($initCommand && !isset($options[\PDO::MYSQL_ATTR_INIT_COMMAND])) {
-			$options[\PDO::MYSQL_ATTR_INIT_COMMAND] = $initCommand;
+		if($initCommand && !isset($options[PDO::MYSQL_ATTR_INIT_COMMAND])) {
+			$options[PDO::MYSQL_ATTR_INIT_COMMAND] = $initCommand;
 		}
 
 		$dsnArray = ['socket' => $config->dbSocket, 'name' => $config->dbName, 'host' => $config->dbHost, 'port' => $config->dbPort];
@@ -414,7 +417,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			// custom PDO statement for debug mode
 			$this->debugMode = true;
 			$pdo->setAttribute(
-				\PDO::ATTR_STATEMENT_CLASS,
+				PDO::ATTR_STATEMENT_CLASS,
 				[__NAMESPACE__ . "\\WireDatabasePDOStatement", [$this]]
 			);
 		}
@@ -441,33 +444,31 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 	/**
-	 * Return the actual current PDO connection instance
-	 *
-	 * If connection is lost, this will restore it automatically.
-	 *
-	 * #pw-group-connection
-	 *
-	 * @param string|\PDOStatement|null SQL, statement, or statement type (reader or primary) (3.0.175+)
-	 *
-	 * @return \PDO
-	 *
-	 */
-	public function pdo($type = null) {
+  * Return the actual current PDO connection instance
+  *
+  * If connection is lost, this will restore it automatically.
+  *
+  * #pw-group-connection
+  *
+  * @param string|\PDOStatement|null SQL, statement, or statement type (reader or primary) (3.0.175+)
+  *
+  * @return PDO
+  */
+ public function pdo($type = null) {
 		if($type === null) return $this->pdoWriter();
 		return $this->pdoType($type);
 	}
 
 	/**
-	 * Return read-write (primary) PDO connection 
-	 *
-	 * @return \PDO
-	 * @since 3.0.175
-	 *
-	 */
-	protected function pdoWriter() {
+  * Return read-write (primary) PDO connection
+  *
+  * @return PDO
+  * @since 3.0.175
+  */
+ protected function pdoWriter() {
 		if(!$this->writer['pdo']) {
 			$this->writer['init'] = false;
-			$pdo = new \PDO(
+			$pdo = new PDO(
 				$this->pdoConfig['dsn'],
 				$this->pdoConfig['user'],
 				$this->pdoConfig['pass'],
@@ -483,13 +484,12 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 	/**
-	 * Return read-only PDO connection if available or read/write PDO connection if not
-	 * 
-	 * @return \PDO
-	 * @since 3.0.175
-	 * 
-	 */
-	protected function pdoReader() {
+  * Return read-only PDO connection if available or read/write PDO connection if not
+  *
+  * @return PDO
+  * @since 3.0.175
+  */
+ protected function pdoReader() {
 		if(!$this->allowReader()) return $this->pdoWriter();
 		
 		if($this->reader['pdo']) {
@@ -514,8 +514,8 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			// try readers till we find one that gives us a connection
 			$reader = array_shift($readers);
 			try {
-				$pdo = new \PDO($reader['dsn'], $reader['user'], $reader['pass'], $reader['options']);
-			} catch(\PDOException $e) {
+				$pdo = new PDO($reader['dsn'], $reader['user'], $reader['pass'], $reader['options']);
+			} catch(PDOException $e) {
 				$pdo = null;
 				$lastException = $e;
 			}
@@ -531,14 +531,13 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 	
 	/**
-	 * Return correct PDO instance type (reader or writer) based on given statement
-	 *
-	 * @param string|\PDOStatement $query
-	 * @param bool $getName Get name of PDO type rather than instance? (default=false)
-	 * @return \PDO|string
-	 *
-	 */
-	protected function pdoType(&$query, $getName = false) {
+  * Return correct PDO instance type (reader or writer) based on given statement
+  *
+  * @param string|PDOStatement $query
+  * @param bool $getName Get name of PDO type rather than instance? (default=false)
+  * @return PDO|string
+  */
+ protected function pdoType(&$query, $getName = false) {
 
 		$reader = 'reader';
 		$writer = 'writer';
@@ -592,13 +591,12 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 	/**
-	 * Return last used PDO connection
-	 *
-	 * @return \PDO
-	 * @since 3.0.175
-	 * 
-	 */
-	protected function pdoLast() {
+  * Return last used PDO connection
+  *
+  * @return PDO
+  * @since 3.0.175
+  */
+ protected function pdoLast() {
 		if($this->pdoLast) {
 			$pdo = $this->pdoLast;
 			if($pdo === $this->reader['pdo'] && !$this->reader['allow']) $pdo = null;
@@ -679,17 +677,16 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 	/**
-	 * Executes an SQL statement, returning a result set as a PDOStatement object
-	 * 
-	 * #pw-group-queries
-	 * 
-	 * @param string $statement
-	 * @param string $note
-	 * @return \PDOStatement
-	 * @link http://php.net/manual/en/pdo.query.php
-	 * 
-	 */
-	public function query($statement, $note = '') {
+  * Executes an SQL statement, returning a result set as a PDOStatement object
+  *
+  * #pw-group-queries
+  *
+  * @param string $statement
+  * @param string $note
+  * @return PDOStatement
+  * @link http://php.net/manual/en/pdo.query.php
+  */
+ public function query($statement, $note = '') {
 		if($this->debugMode) $this->queryLog($statement, $note); 
 		$pdo = $this->pdoType($statement);
 		return $pdo->query($statement); 
@@ -738,7 +735,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			$query->bindValue(':name', $table); 
 			$query->execute();
 			if($query->rowCount()) {
-				$row = $query->fetch(\PDO::FETCH_ASSOC);
+				$row = $query->fetch(PDO::FETCH_ASSOC);
 				$engine = empty($row['engine']) ? '' : $row['engine'];
 			}
 			$query->closeCursor();
@@ -810,26 +807,25 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 	/**
-	 * Prepare an SQL statement for accepting bound parameters
-	 * 
-	 * #pw-group-queries
-	 * 
-	 * @param string $statement
-	 * @param array|string|bool $driver_options Optionally specify one of the following: 
-	 *  - Boolean true for WireDatabasePDOStatement rather than PDOStatement (also assumed when debug mode is on) 3.0.162+
-	 *  - Driver options array 
-	 *  - or you may specify the $note argument here
-	 * @param string $note Debug notes to save with query in debug mode
-	 * @return \PDOStatement|WireDatabasePDOStatement
-	 * @link http://php.net/manual/en/pdo.prepare.php
-	 * 
-	 */
-	public function prepare($statement, $driver_options = [], $note = '') {
+  * Prepare an SQL statement for accepting bound parameters
+  *
+  * #pw-group-queries
+  *
+  * @param string $statement
+  * @param array|string|bool $driver_options Optionally specify one of the following:
+  *  - Boolean true for WireDatabasePDOStatement rather than PDOStatement (also assumed when debug mode is on) 3.0.162+
+  *  - Driver options array
+  *  - or you may specify the $note argument here
+  * @param string $note Debug notes to save with query in debug mode
+  * @return PDOStatement|WireDatabasePDOStatement
+  * @link http://php.net/manual/en/pdo.prepare.php
+  */
+ public function prepare($statement, $driver_options = [], $note = '') {
 		if(is_string($driver_options)) {
 			$note = $driver_options; 
 			$driver_options = [];
 		} else if($driver_options === true) {
-			$driver_options = [\PDO::ATTR_STATEMENT_CLASS => [__NAMESPACE__ . "\\WireDatabasePDOStatement", [$this]]];
+			$driver_options = [PDO::ATTR_STATEMENT_CLASS => [__NAMESPACE__ . "\\WireDatabasePDOStatement", [$this]]];
 		}
 		$pdo = $this->reader['has'] ? $this->pdoType($statement) : $this->pdoWriter();
 		$pdoStatement = $pdo->prepare($statement, $driver_options);
@@ -844,21 +840,20 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 	/**
-	 * Execute an SQL statement string
-	 * 
-	 * If given a PDOStatement, this method behaves the same as the execute() method. 
-	 * 
-	 * #pw-group-queries
-	 * 
-	 * @param string|\PDOStatement $statement
-	 * @param string $note
-	 * @return bool|int
-	 * @throws \PDOException
-	 * @link http://php.net/manual/en/pdo.exec.php
-	 * 
-	 */
-	public function exec($statement, $note = '') {
-		if($statement instanceof \PDOStatement) {
+  * Execute an SQL statement string
+  *
+  * If given a PDOStatement, this method behaves the same as the execute() method.
+  *
+  * #pw-group-queries
+  *
+  * @param string|PDOStatement $statement
+  * @param string $note
+  * @return bool|int
+  * @throws PDOException
+  * @link http://php.net/manual/en/pdo.exec.php
+  */
+ public function exec($statement, $note = '') {
+		if($statement instanceof PDOStatement) {
 			return $this->execute($statement);
 		}
 		if($this->debugMode) $this->queryLog($statement, $note); 
@@ -867,36 +862,35 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 	
 	/**
-	 * Execute a PDO statement, with retry and error handling
-	 * 
-	 * Given a PDOStatement ($query) this method will execute the statement and return
-	 * true or false as to whether it was successful. 
-	 * 
-	 * Unlike other PDO methods, this one (native to ProcessWire) will retry queries
-	 * if they failed due to a lost connection. By default it will retry up to 3 times,
-	 * but you can adjust this number as needed in the arguments. 
-	 * 
-	 * ~~~~~
-	 * // prepare the query
-	 * $query = $database->prepare("SELECT id, name FROM pages LIMIT 10");
-	 * // you can do the following, rather than native PDO $query->execute(); 
-	 * $database->execute($query);
-	 * ~~~~~
-	 * 
-	 * #pw-group-queries
-	 *
-	 * @param \PDOStatement $query
-	 * @param bool $throw Whether or not to throw exception on query error (default=true)
-	 * @param int $maxTries Deprecated/argument does nothing (was: “Max number of times it will attempt to retry query on error”)
-	 * @return bool True on success, false on failure. Note if you want this, specify $throw=false in your arguments.
-	 * @throws \PDOException
-	 *
-	 */
-	public function execute(\PDOStatement $query, $throw = true, $maxTries = 3) {
+  * Execute a PDO statement, with retry and error handling
+  *
+  * Given a PDOStatement ($query) this method will execute the statement and return
+  * true or false as to whether it was successful.
+  *
+  * Unlike other PDO methods, this one (native to ProcessWire) will retry queries
+  * if they failed due to a lost connection. By default it will retry up to 3 times,
+  * but you can adjust this number as needed in the arguments.
+  *
+  * ~~~~~
+  * // prepare the query
+  * $query = $database->prepare("SELECT id, name FROM pages LIMIT 10");
+  * // you can do the following, rather than native PDO $query->execute();
+  * $database->execute($query);
+  * ~~~~~
+  *
+  * #pw-group-queries
+  *
+  * @param PDOStatement $query
+  * @param bool $throw Whether or not to throw exception on query error (default=true)
+  * @param int $maxTries Deprecated/argument does nothing (was: “Max number of times it will attempt to retry query on error”)
+  * @return bool True on success, false on failure. Note if you want this, specify $throw=false in your arguments.
+  * @throws PDOException
+  */
+ public function execute(PDOStatement $query, $throw = true, $maxTries = 3) {
 
 		try {
 			$result = $query->execute();
-		} catch(\PDOException $e) {
+		} catch(PDOException $e) {
 			$result = false;
 			if($query->errorCode() == '42S22') {
 				// unknown column error
@@ -1021,7 +1015,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		if($verbose === 3) {
 			$query = $this->query("SHOW CREATE TABLE $table");
 			if(!$query->rowCount()) return [];
-			$row = $query->fetch(\PDO::FETCH_NUM);
+			$row = $query->fetch(PDO::FETCH_NUM);
 			$query->closeCursor();
 			if(!preg_match_all('/`([_a-z0-9]+)`\s+([a-z][^\r\n]+)/i', (string) $row[1], $matches)) return [];
 			foreach($matches[1] as $key => $name) {
@@ -1035,7 +1029,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		$query = $this->prepare($sql);
 		if($getColumn) $query->bindValue(':column', $getColumn);
 		$query->execute();
-		while($col = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($col = $query->fetch(PDO::FETCH_ASSOC)) {
 			$name = $col['Field'];
 			if($verbose === 2) {
 				$columns[$name] = $col;
@@ -1078,7 +1072,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		$query = $this->prepare($sql);
 		if($getIndex) $query->bindValue(':name', $getIndex); 
 		$query->execute();
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			$name = $row['Key_name'];
 			if($verbose === 2) {
 				$indexes[] = $row;
@@ -1185,12 +1179,12 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		$table = $this->escapeTable($table);
 		try {
 			$query = $this->prepare("SHOW COLUMNS FROM `$table` WHERE Field=:column");
-			$query->bindValue(':column', $column, \PDO::PARAM_STR);
+			$query->bindValue(':column', $column, PDO::PARAM_STR);
 			$query->execute();
 			$numRows = (int) $query->rowCount();
-			if($numRows) $exists = $getInfo ? $query->fetch(\PDO::FETCH_ASSOC) : true;
+			if($numRows) $exists = $getInfo ? $query->fetch(PDO::FETCH_ASSOC) : true;
 			$query->closeCursor();
-		} catch(\Exception) {
+		} catch(Exception) {
 			// most likely given table does not exist
 			$exists = false;
 		}
@@ -1231,20 +1225,20 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	public function indexExists($table, $indexName, $getInfo = false) {
 		$table = $this->escapeTable($table);
 		$query = $this->prepare("SHOW INDEX FROM `$table` WHERE Key_name=:name");
-		$query->bindValue(':name', $indexName, \PDO::PARAM_STR);
+		$query->bindValue(':name', $indexName, PDO::PARAM_STR);
 		try {
 			$query->execute();
 			$numRows = (int) $query->rowCount();
 			if($numRows && $getInfo) {
 				$exists = [];
-				while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+				while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 					$exists[] = $row;
 				}
 			} else {
 				$exists = $numRows > 0;
 			}
 			$query->closeCursor();
-		} catch(\Exception) {
+		} catch(Exception) {
 			// most likely given table does not exist
 			$exists = false;
 		}
@@ -1252,18 +1246,17 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 	/**
-	 * Rename table columns without changing type
-	 * 
-	 * #pw-group-schema
-	 * 
-	 * @param string $table
-	 * @param array $columns Associative array with one or more of `[ 'old_name' => 'new_name' ]`
-	 * @return int Number of columns renamed
-	 * @since 3.0.185
-	 * @throws \PDOException
-	 * 
-	 */
-	public function renameColumns($table, array $columns) {
+  * Rename table columns without changing type
+  *
+  * #pw-group-schema
+  *
+  * @param string $table
+  * @param array $columns Associative array with one or more of `[ 'old_name' => 'new_name' ]`
+  * @return int Number of columns renamed
+  * @since 3.0.185
+  * @throws PDOException
+  */
+ public function renameColumns($table, array $columns) {
 		
 		$qty = 0;
 		
@@ -1295,19 +1288,18 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 	
 	/**
-	 * Rename a table column without changing type
-	 * 
-	 * #pw-group-schema
-	 * 
-	 * @param string $table
-	 * @param string $oldName
-	 * @param string $newName
-	 * @return bool
-	 * @throws \PDOException
-	 * @since 3.0.185
-	 * 
-	 */
-	public function renameColumn($table, $oldName, $newName) {
+  * Rename a table column without changing type
+  *
+  * #pw-group-schema
+  *
+  * @param string $table
+  * @param string $oldName
+  * @param string $newName
+  * @return bool
+  * @throws PDOException
+  * @since 3.0.185
+  */
+ public function renameColumn($table, $oldName, $newName) {
 		$columns = [$oldName => $newName];
 		return $this->renameColumns($table, $columns) > 0;
 	}
@@ -1334,7 +1326,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @return bool True if valid, false if not
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isOperator($str, $operatorType = self::operatorTypeAny, $get = false) {
 		
 		$len = strlen($str);
@@ -1403,7 +1395,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 			if(!$stopwords) {
 				$query = $this->prepare('SELECT value FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD');
 				$query->execute();
-				$stopwords = $query->fetchAll(\PDO::FETCH_COLUMN, 0);
+				$stopwords = $query->fetchAll(PDO::FETCH_COLUMN, 0);
 				$query->closeCursor();
 				if($cache) $cache->save('InnoDB.stopwords', implode(',', $stopwords), WireCache::expireDaily);
 			}
@@ -1548,11 +1540,10 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 	/**
-	 * @param string $name
-	 * @return mixed|null|\PDO
-	 * 
-	 */
-	#[\Override]
+  * @param string $name
+  * @return mixed|null|PDO
+  */
+ #[Override]
  public function __get($name) {
 		if($name === 'pdo') return $this->pdo();
 		if($name === 'pdoReader') return $this->pdoReader();
@@ -1599,7 +1590,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		$query->bindValue(':name', $name);
 		$query->execute();
 		if($query->rowCount()) {
-			[, $value] = $query->fetch(\PDO::FETCH_NUM);
+			[, $value] = $query->fetch(PDO::FETCH_NUM);
 			$this->variableCache[$name] = $value;
 		} else {
 			$value = null;
@@ -1702,18 +1693,17 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	}
 
 	/**
-	 * Retrieve new instance of WireDatabaseBackups ready to use with this connection
-	 * 
-	 * See `WireDatabaseBackup` class for usage. 
-	 * 
-	 * #pw-group-custom
-	 * 
-	 * @return WireDatabaseBackup
-	 * @throws WireException|\Exception on fatal error
-	 * @see WireDatabaseBackup::backup(), WireDatabaseBackup::restore()
-	 * 
-	 */
-	public function backups() {
+  * Retrieve new instance of WireDatabaseBackups ready to use with this connection
+  *
+  * See `WireDatabaseBackup` class for usage.
+  *
+  * #pw-group-custom
+  *
+  * @return WireDatabaseBackup
+  * @throws WireException|Exception on fatal error
+  * @see WireDatabaseBackup::backup(), WireDatabaseBackup::restore()
+  */
+ public function backups() {
 	
 		$path = $this->wire()->config->paths->assets . 'backups/database/';
 		if(!is_dir($path)) {
@@ -1805,7 +1795,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 		if(empty($action)) $action = 'get';
 		
 		if($action !== 'get' && $minVersion) {
-			$serverVersion = $this->getAttribute(\PDO::ATTR_SERVER_VERSION);
+			$serverVersion = $this->getAttribute(PDO::ATTR_SERVER_VERSION);
 			if(version_compare($serverVersion, $minVersion, '<')) return false;
 		}
 	

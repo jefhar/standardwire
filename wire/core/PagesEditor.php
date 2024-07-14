@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use Exception;
+use PDO;
+use PDOException;
+use PDOStatement;
 /**
  * ProcessWire Pages Editor
  * 
@@ -8,8 +12,7 @@
  * ProcessWire 3.x, Copyright 2021 by Ryan Cramer
  * https://processwire.com
  * 
- */ 
-
+ */
 class PagesEditor extends Wire {
 
 	/**
@@ -325,20 +328,19 @@ class PagesEditor extends Wire {
 	}
 	
 	/**
-	 * Auto-populate some fields for a new page that does not yet exist
-	 *
-	 * Currently it does this:
-	 * 
-	 * - Assigns a parent if one is not already assigned.
-	 * - Sets up a unique page->name based on the format or title if one isn't provided already.
-	 * - Assigns a sort value.
-	 * - Populates any default values for fields. 
-	 *
-	 * @param Page $page
-	 * @throws \Exception|WireException|\PDOException if failure occurs while in DB transaction
-	 *
-	 */
-	public function setupNew(Page $page) {
+  * Auto-populate some fields for a new page that does not yet exist
+  *
+  * Currently it does this:
+  *
+  * - Assigns a parent if one is not already assigned.
+  * - Sets up a unique page->name based on the format or title if one isn't provided already.
+  * - Assigns a sort value.
+  * - Populates any default values for fields.
+  *
+  * @param Page $page
+  * @throws Exception|WireException|PDOException if failure occurs while in DB transaction
+  */
+ public function setupNew(Page $page) {
 
 		$parent = $page->parent();
 
@@ -380,7 +382,7 @@ class PagesEditor extends Wire {
 				if("$blankValue" !== "$defaultValue") {
 					$page->set($field->name, $defaultValue);
 				}
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$this->trackException($e, false, true);
 				if($this->wire()->database->inTransaction()) throw $e;
 			}
@@ -474,17 +476,16 @@ class PagesEditor extends Wire {
 	}
 
 	/**
-	 * Execute query to save to pages table
-	 *
-	 * triggers hooks: saveReady, statusChangeReady (when status changed)
-	 *
-	 * @param Page $page
-	 * @param array $options
-	 * @return bool
-	 * @throws WireException|\Exception
-	 *
-	 */
-	protected function savePageQuery(Page $page, array $options) {
+  * Execute query to save to pages table
+  *
+  * triggers hooks: saveReady, statusChangeReady (when status changed)
+  *
+  * @param Page $page
+  * @param array $options
+  * @return bool
+  * @throws WireException|Exception
+  */
+ protected function savePageQuery(Page $page, array $options) {
 
 		$isNew = $page->isNew();
 		$database = $this->wire()->database;
@@ -568,12 +569,12 @@ class PagesEditor extends Wire {
 			$query = $database->prepare("INSERT INTO pages SET $sql");
 		}  else {
 			$query = $database->prepare("UPDATE pages SET $sql WHERE id=:page_id");
-			$query->bindValue(":page_id", (int) $page->id, \PDO::PARAM_INT);
+			$query->bindValue(":page_id", (int) $page->id, PDO::PARAM_INT);
 		}
 
 		foreach($data as $column => $value) {
 			if(is_null($value)) continue; // already bound above
-			$query->bindValue(":$column", $value, is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
+			$query->bindValue(":$column", $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
 		}
 
 		$tries = 0;
@@ -584,7 +585,7 @@ class PagesEditor extends Wire {
 			$keepTrying = false;
 			try {
 				$result = $database->execute($query);
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$keepTrying = $this->savePageQueryException($page, $query, $e, $options);
 				if(!$keepTrying) throw $e;
 			}
@@ -601,24 +602,23 @@ class PagesEditor extends Wire {
 	}
 
 	/**
-	 * Handle Exception for savePageQuery()
-	 * 
-	 * While setupNew() already attempts to uniqify a page name with an incrementing
-	 * number, there is a chance that two processes running at once might end up with
-	 * the same number, so we account for the possibility here by re-trying queries
-	 * that trigger duplicate-entry exceptions.
-	 * 
-	 * Example of actual exception text, for reference:
-	 * Integrity constraint violation: 1062 Duplicate entry 'background-3552' for key 'name3894_parent_id'
-	 * 
-	 * @param Page $page
-	 * @param \PDOStatement $query
-	 * @param \PDOException|\Exception $exception
-	 * @param array $options
-	 * @return bool True if it should give $query another shot, false if not
-	 * 
-	 */
-	protected function savePageQueryException(Page $page, $query, $exception, array $options) {
+  * Handle Exception for savePageQuery()
+  *
+  * While setupNew() already attempts to uniqify a page name with an incrementing
+  * number, there is a chance that two processes running at once might end up with
+  * the same number, so we account for the possibility here by re-trying queries
+  * that trigger duplicate-entry exceptions.
+  *
+  * Example of actual exception text, for reference:
+  * Integrity constraint violation: 1062 Duplicate entry 'background-3552' for key 'name3894_parent_id'
+  *
+  * @param Page $page
+  * @param PDOStatement $query
+  * @param PDOException|Exception $exception
+  * @param array $options
+  * @return bool True if it should give $query another shot, false if not
+  */
+ protected function savePageQueryException(Page $page, $query, $exception, array $options) {
 		
 		$errorCode = $exception->getCode();
 		
@@ -651,18 +651,17 @@ class PagesEditor extends Wire {
 	}
 
 	/**
-	 * Save individual Page fields and supporting actions
-	 *
-	 * triggers hooks: saved, added, moved, renamed, templateChanged
-	 *
-	 * @param Page $page
-	 * @param bool $isNew
-	 * @param array $options
-	 * @return bool
-	 * @throws \Exception|WireException|\PDOException If any field-saving failure occurs while in a DB transaction
-	 *
-	 */
-	protected function savePageFinish(Page $page, $isNew, array $options) {
+  * Save individual Page fields and supporting actions
+  *
+  * triggers hooks: saved, added, moved, renamed, templateChanged
+  *
+  * @param Page $page
+  * @param bool $isNew
+  * @param array $options
+  * @return bool
+  * @throws Exception|WireException|PDOException If any field-saving failure occurs while in a DB transaction
+  */
+ protected function savePageFinish(Page $page, $isNew, array $options) {
 		
 		$changes = $page->getChanges(2);
 		$changesValues = $page->getChanges(true);
@@ -712,7 +711,7 @@ class PagesEditor extends Wire {
 			} else {
 				try {
 					$fieldtype->savePageField($page, $field);
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$label = $field->getLabel();
 					$message = $e->getMessage();
 					if(str_contains($message, $label)) $label = $name;
@@ -880,8 +879,8 @@ class PagesEditor extends Wire {
 				$userID = (int) ($user ? $user->id : $this->wire()->config->superUserPageID);
 				$database = $this->wire()->database;
 				$query = $database->prepare("UPDATE pages SET modified_users_id=:userID, modified=NOW() WHERE id=:pageID");
-				$query->bindValue(':userID', $userID, \PDO::PARAM_INT);
-				$query->bindValue(':pageID', $page->id, \PDO::PARAM_INT);
+				$query->bindValue(':userID', $userID, PDO::PARAM_INT);
+				$query->bindValue(':pageID', $page->id, PDO::PARAM_INT);
 				$database->execute($query);
 			}
 			$return = true;
@@ -1014,7 +1013,7 @@ class PagesEditor extends Wire {
 			// single page ID or Page object
 			$pageID = (int) "$pageID";
 			$query = $database->prepare("$sql WHERE id=:page_id");
-			$query->bindValue(":page_id", $pageID, \PDO::PARAM_INT);
+			$query->bindValue(":page_id", $pageID, PDO::PARAM_INT);
 			$database->execute($query);
 			$rowCount = $query->rowCount();
 		}
@@ -1029,7 +1028,7 @@ class PagesEditor extends Wire {
 
 			// update all children to have the same status
 			$query = $database->prepare("$sql WHERE parent_id=:parent_id");
-			$query->bindValue(":parent_id", $parentID, \PDO::PARAM_INT);
+			$query->bindValue(":parent_id", $parentID, PDO::PARAM_INT);
 			$database->execute($query);
 			$rowCount += $query->rowCount();
 			$query->closeCursor();
@@ -1043,11 +1042,11 @@ class PagesEditor extends Wire {
 				"ORDER BY pages.sort"
 			);
 			
-			$query->bindValue(':parent_id', $parentID, \PDO::PARAM_INT);
+			$query->bindValue(':parent_id', $parentID, PDO::PARAM_INT);
 			$database->execute($query);
 			
 			/** @noinspection PhpAssignmentInConditionInspection */
-			while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+			while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 				$parentIDs[] = (int) $row['id'];
 			}
 			
@@ -1120,7 +1119,7 @@ class PagesEditor extends Wire {
 		
 		$database = $this->wire()->database;
 		$query = $database->prepare("DELETE FROM pages WHERE id=:page_id LIMIT 1"); // QA
-		$query->bindValue(":page_id", $page->id, \PDO::PARAM_INT);
+		$query->bindValue(":page_id", $page->id, PDO::PARAM_INT);
 		$query->execute();
 
 		$this->pages->sortfields()->delete($page);
@@ -1136,20 +1135,19 @@ class PagesEditor extends Wire {
 	}
 	
 	/**
-	 * Clone an entire page (including fields, file assets, and optionally children) and return it.
-	 *
-	 * @param Page $page Page that you want to clone
-	 * @param Page $parent New parent, if different (default=same parent)
-	 * @param bool $recursive Clone the children too? (default=true)
-	 * @param array|string $options Optional options that can be passed to clone or save
-	 * 	- forceID (int): force a specific ID
-	 * 	- set (array): Array of properties to set to the clone (you can also do this later)
-	 * 	- recursionLevel (int): recursion level, for internal use only.
-	 * @return Page|NullPage the newly cloned page or a NullPage() with id=0 if unsuccessful.
-	 * @throws WireException|\Exception on fatal error
-	 *
-	 */
-	public function _clone(Page $page, Page $parent = null, $recursive = true, $options = []) {
+  * Clone an entire page (including fields, file assets, and optionally children) and return it.
+  *
+  * @param Page $page Page that you want to clone
+  * @param Page $parent New parent, if different (default=same parent)
+  * @param bool $recursive Clone the children too? (default=true)
+  * @param array|string $options Optional options that can be passed to clone or save
+  * 	- forceID (int): force a specific ID
+  * 	- set (array): Array of properties to set to the clone (you can also do this later)
+  * 	- recursionLevel (int): recursion level, for internal use only.
+  * @return Page|NullPage the newly cloned page or a NullPage() with id=0 if unsuccessful.
+  * @throws WireException|Exception on fatal error
+  */
+ public function _clone(Page $page, Page $parent = null, $recursive = true, $options = []) {
 		
 		$defaults = ['forceID' => 0, 'set' => [], 'recursionLevel' => 0];
 
@@ -1212,7 +1210,7 @@ class PagesEditor extends Wire {
 		$options['ignoreFamily'] = true; // skip family checks during clone
 		try {
 			$this->pages->save($copy, $options);
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->cloning--;
 			$copy->setQuietly('_cloning', null); 
 			$page->of($of);
@@ -1281,22 +1279,21 @@ class PagesEditor extends Wire {
 	}
 
 	/**
-	 * Update page modified/created/published time to now (or given time)
-	 * 
-	 * @param Page|PageArray|array $pages May be Page, PageArray or array of page IDs (integers)
-	 * @param null|int|string|array $options Omit (null) to update to now, or unix timestamp or strtotime() recognized time string, 
-	 *  or if you do not need this argument, you may optionally substitute the $type argument here, 
-	 *  or in 3.0.183+ you can also specify array of options here instead:
-	 *  - `time` (string|int|null): Unix timestamp or strtotime() recognized string to use, omit for use current time (default=null)
-	 *  - `type` (string): One of 'modified', 'created', 'published' (default='modified')
-	 *  - `user` (bool|User): True to also update modified/created user to current user, or specify User object to use (default=false)
-	 * @param string $type Date type to update, one of 'modified', 'created' or 'published' (default='modified') Added 3.0.147
-	 *  Skip this argument if using options array for previous argument or if using the default type 'modified'.
-	 * @throws WireException|\PDOException if given invalid format for $modified argument or failed database query
-	 * @return bool True on success, false on fail
-	 * 
-	 */
-	public function touch($pages, $options = null, $type = 'modified') {
+  * Update page modified/created/published time to now (or given time)
+  *
+  * @param Page|PageArray|array $pages May be Page, PageArray or array of page IDs (integers)
+  * @param null|int|string|array $options Omit (null) to update to now, or unix timestamp or strtotime() recognized time string,
+  *  or if you do not need this argument, you may optionally substitute the $type argument here,
+  *  or in 3.0.183+ you can also specify array of options here instead:
+  *  - `time` (string|int|null): Unix timestamp or strtotime() recognized string to use, omit for use current time (default=null)
+  *  - `type` (string): One of 'modified', 'created', 'published' (default='modified')
+  *  - `user` (bool|User): True to also update modified/created user to current user, or specify User object to use (default=false)
+  * @param string $type Date type to update, one of 'modified', 'created' or 'published' (default='modified') Added 3.0.147
+  *  Skip this argument if using options array for previous argument or if using the default type 'modified'.
+  * @throws WireException|PDOException if given invalid format for $modified argument or failed database query
+  * @return bool True on success, false on fail
+  */
+ public function touch($pages, $options = null, $type = 'modified') {
 		
 		$defaults = ['time' => (is_string($options) || is_int($options) ? $options : null), 'type' => $type, 'user' => false];
 
@@ -1368,7 +1365,7 @@ class PagesEditor extends Wire {
 		$sql .= 'WHERE id IN(' . implode(',', $ids) . ')';
 		$query = $database->prepare($sql);
 		if(strpos($sql, ':time')) $query->bindValue(':time', date('Y-m-d H:i:s', $time));
-		if(strpos($sql, ':user')) $query->bindValue(':user', $user->id, \PDO::PARAM_INT);
+		if(strpos($sql, ':user')) $query->bindValue(':user', $user->id, PDO::PARAM_INT);
 		
 		return $database->execute($query);
 	}
@@ -1428,9 +1425,9 @@ class PagesEditor extends Wire {
 		// determine if any other siblings have same sort value
 		$sql = 'SELECT id FROM pages WHERE parent_id=:parent_id AND sort=:sort AND id!=:id';
 		$query = $database->prepare($sql);
-		$query->bindValue(':parent_id', $page->parent_id, \PDO::PARAM_INT);
-		$query->bindValue(':sort', $sort, \PDO::PARAM_INT);
-		$query->bindValue(':id', $page->id, \PDO::PARAM_INT);
+		$query->bindValue(':parent_id', $page->parent_id, PDO::PARAM_INT);
+		$query->bindValue(':sort', $sort, PDO::PARAM_INT);
+		$query->bindValue(':id', $page->id, PDO::PARAM_INT);
 		$query->execute();
 		$rowCount = $query->rowCount();
 		$query->closeCursor();
@@ -1444,8 +1441,8 @@ class PagesEditor extends Wire {
 		// make sure that $page has the sort value indicated
 		$sql = 'UPDATE pages SET sort=:sort WHERE id=:id';
 		$query = $database->prepare($sql);
-		$query->bindValue(':sort', $sort, \PDO::PARAM_INT);
-		$query->bindValue(':id', $page->id, \PDO::PARAM_INT);
+		$query->bindValue(':sort', $sort, PDO::PARAM_INT);
+		$query->bindValue(':id', $page->id, PDO::PARAM_INT);
 		$query->execute();
 		$sortCnt = $query->rowCount();
 		
@@ -1456,9 +1453,9 @@ class PagesEditor extends Wire {
 			// update order of all siblings 
 			$sql = 'UPDATE pages SET sort=sort+1 WHERE parent_id=:parent_id AND sort>=:sort AND id!=:id';
 			$query = $database->prepare($sql);
-			$query->bindValue(':parent_id', $page->parent_id, \PDO::PARAM_INT);
-			$query->bindValue(':sort', $sort, \PDO::PARAM_INT);
-			$query->bindValue(':id', $page->id, \PDO::PARAM_INT);
+			$query->bindValue(':parent_id', $page->parent_id, PDO::PARAM_INT);
+			$query->bindValue(':sort', $sort, PDO::PARAM_INT);
+			$query->bindValue(':id', $page->id, PDO::PARAM_INT);
 			$query->execute();
 			$sortCnt += $query->rowCount();
 		}
@@ -1522,12 +1519,12 @@ class PagesEditor extends Wire {
 			// pages are manually sorted, so we can find IDs directly from the database
 			$sql = 'SELECT id FROM pages WHERE parent_id=:parent_id ORDER BY sort, created';
 			$query = $database->prepare($sql);
-			$query->bindValue(':parent_id', $parent->id, \PDO::PARAM_INT);
+			$query->bindValue(':parent_id', $parent->id, PDO::PARAM_INT);
 			$query->execute();
 
 			// establish new sort values
 			do {
-				$id = (int) $query->fetch(\PDO::FETCH_COLUMN);
+				$id = (int) $query->fetch(PDO::FETCH_COLUMN);
 				if(!$id) break;
 				$sorts[] = "($id,$sort)";
 			} while(++$sort);
@@ -1677,7 +1674,7 @@ class PagesEditor extends Wire {
 						$halt = $options['haltOnError'];
 					}
 				}
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$errors[] = $error . ' - ' . $e->getMessage();
 				$halt = $options['haltOnError'];
 			}
@@ -1686,7 +1683,7 @@ class PagesEditor extends Wire {
 		if($options['clearMeta'] && !$halt) {
 			try {
 				$page->meta()->removeAll();
-			} catch(\Exception) {
+			} catch(Exception) {
 				$errors[] = "Error clearing meta for page $page";
 				$halt = $options['haltOnError'];
 			}

@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use Iterator;
+use ReturnTypeWillChange;
+use Override;
 /**
  * PageArrayIterator for iteration of Page objects in a lazy-loaded fashion
  * 
@@ -9,7 +12,7 @@
  * Thanks to Avoine and @sforsman for this. 
  *
  */
-class PageArrayIterator extends Wire implements \Iterator {
+class PageArrayIterator extends Wire implements Iterator {
 	
 	/**
 	 * Placeholder objects for pages
@@ -145,8 +148,8 @@ class PageArrayIterator extends Wire implements \Iterator {
 	 * Rewind to beginning
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override]
+	#[ReturnTypeWillChange]
+ #[Override]
 	public function rewind() {
 		$this->pagesPosition = 0;
 		$this->position = 0;
@@ -161,8 +164,8 @@ class PageArrayIterator extends Wire implements \Iterator {
 	 * @return Page
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override]
+	#[ReturnTypeWillChange]
+ #[Override]
 	public function current() {
 		return $this->pages[$this->pagesPosition];
 	}
@@ -173,8 +176,8 @@ class PageArrayIterator extends Wire implements \Iterator {
 	 * @return int
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override]
+	#[ReturnTypeWillChange]
+ #[Override]
 	public function key() {
 		return $this->position;
 	}
@@ -183,8 +186,8 @@ class PageArrayIterator extends Wire implements \Iterator {
 	 * Update current position to next
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override]
+	#[ReturnTypeWillChange]
+ #[Override]
 	public function next() {
 		$this->pagesPosition++;
 		$this->position++;
@@ -196,8 +199,8 @@ class PageArrayIterator extends Wire implements \Iterator {
 	 * @return bool
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override]
+	#[ReturnTypeWillChange]
+ #[Override]
 	public function valid() {
 		if($this->position === 0 || $this->pagesPosition >= $this->pagesCount) {
 			// If we have just been rewound or if we have reached the end of the buffer,

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use PDO;
 /**
  * ProcessWire Pages Names
  *
@@ -20,8 +21,7 @@
  * ~~~~~
  * #pw-body
  * 
- */ 
-
+ */
 class PagesNames extends Wire {
 
 	/**
@@ -748,7 +748,7 @@ class PagesNames extends Wire {
 		$sql = "SELECT id, status, parent_id FROM pages WHERE name=:name AND id!=:id";
 		$query = $this->wire()->database->prepare($sql);
 		$query->bindValue(':name', $name);
-		$query->bindValue(':id', $page->id, \PDO::PARAM_INT);
+		$query->bindValue(':id', $page->id, PDO::PARAM_INT);
 		$query->execute();
 		
 		if(!$query->rowCount()) {
@@ -756,7 +756,7 @@ class PagesNames extends Wire {
 			return false;
 		}
 		
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			
 			$parentID = (int) $row['parent_id']; 
 			$status = (int) $row['status']; 

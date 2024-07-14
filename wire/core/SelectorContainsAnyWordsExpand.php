@@ -1,13 +1,14 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that matches any words with query expansion
  *
  */
 class SelectorContainsAnyWordsExpand extends SelectorContainsAnyWords {
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '~|+='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -16,11 +17,11 @@ class SelectorContainsAnyWordsExpand extends SelectorContainsAnyWords {
 			Selector::compareTypeExpand | 
 			Selector::compareTypeFulltext; 
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Contains any words expand', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('words-any expand fulltext'); }
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) {
 		$hasAny = false;
 		$textTools = $this->wire()->sanitizer->getTextTools();

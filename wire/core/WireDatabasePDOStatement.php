@@ -1,5 +1,10 @@
 <?php namespace ProcessWire;
 
+use PDOStatement;
+use PDO;
+use ReturnTypeWillChange;
+use Override;
+use PDOException;
 /**
  * ProcessWire PDO Statement
  *
@@ -16,8 +21,7 @@
  * https://processwire.com
  *
  */
-
-class WireDatabasePDOStatement extends \PDOStatement {
+class WireDatabasePDOStatement extends PDOStatement {
 
 	/** 
 	 * @var WireDatabasePDO 
@@ -97,9 +101,9 @@ class WireDatabasePDOStatement extends \PDOStatement {
 	 * 
 	 */
 	public function setDebugParam($parameter, $value, $data_type = null) {
-		if($data_type === \PDO::PARAM_INT) {
+		if($data_type === PDO::PARAM_INT) {
 			$value = (int) $value;
-		} else if($data_type === \PDO::PARAM_NULL) {
+		} else if($data_type === PDO::PARAM_NULL) {
 			$value = 'NULL';
 		} else {
 			$value = $this->database->quote($value);
@@ -122,9 +126,9 @@ class WireDatabasePDOStatement extends \PDOStatement {
   * @return bool
   *
   */
- #[\ReturnTypeWillChange]
- #[\Override] 
-	public function bindValue($parameter, mixed $value, $data_type = \PDO::PARAM_STR) {
+ #[ReturnTypeWillChange]
+ #[Override] 
+	public function bindValue($parameter, mixed $value, $data_type = PDO::PARAM_STR) {
 		$result = parent::bindValue($parameter, $value, $data_type);
 		if($this->debugMode && str_starts_with($parameter, ':')) {
 			$this->setDebugParam($parameter, $value, $data_type);
@@ -135,15 +139,14 @@ class WireDatabasePDOStatement extends \PDOStatement {
 	}
 	
 	/**
-	 * Execute prepared statement
-	 *
-	 * @param array|null $input_parameters
-	 * @return bool
-	 * @throws \PDOException
-	 *
-	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+  * Execute prepared statement
+  *
+  * @param array|null $input_parameters
+  * @return bool
+  * @throws PDOException
+  */
+ #[ReturnTypeWillChange]
+ #[Override] 
 	public function execute($input_parameters = NULL) {
 		if($this->debugMode) {
 			return $this->executeDebug($input_parameters);
@@ -153,21 +156,20 @@ class WireDatabasePDOStatement extends \PDOStatement {
 	}
 
 	/**
-	 * Execute prepared statement when in debug mode only
-	 * 
-	 * @param array|null $input_parameters
-	 * @return bool
-	 * @throws \PDOException
-	 * 
-	 */
-	public function executeDebug($input_parameters = NULL) {
+  * Execute prepared statement when in debug mode only
+  *
+  * @param array|null $input_parameters
+  * @return bool
+  * @throws PDOException
+  */
+ public function executeDebug($input_parameters = NULL) {
 	
 		$timer = Debug::startTimer();
 		$exception = null;
 		
 		try {
 			$result = parent::execute($input_parameters);
-		} catch(\PDOException $e) {
+		} catch(PDOException $e) {
 			$exception = $e;
 			$result = false;
 		}

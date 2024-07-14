@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use Override;
+use PDO;
+use Exception;
 /**
  * ProcessWire Templates
  *
@@ -82,7 +85,7 @@ class Templates extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getAll() {
 		if($this->useLazy()) $this->loadAllLazyItems();
 		return $this->getWireArray();
@@ -97,7 +100,7 @@ class Templates extends WireSaveableItems {
 	 * @since 3.0.194
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getWireArray() {
 		if($this->templatesArray === null) {
 			$this->templatesArray = $this->wire(new TemplatesArray());
@@ -116,7 +119,7 @@ class Templates extends WireSaveableItems {
 	 * @since 3.0.146
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeItem(array $a = []) {
 
 		/** @var Template $template */
@@ -154,7 +157,7 @@ class Templates extends WireSaveableItems {
 	 * @since 3.0.194
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function loadAllLazyItems() {
 		if(!$this->useLazy()) return;
 		$this->wire()->fieldgroups->loadAllLazyItems();
@@ -169,7 +172,7 @@ class Templates extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new Template()); 
 	}
@@ -180,7 +183,7 @@ class Templates extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getTable() {
 		return 'templates';
 	}
@@ -191,7 +194,7 @@ class Templates extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getSort() {
 		return $this->getTable() . ".name";
 	}
@@ -254,7 +257,7 @@ class Templates extends WireSaveableItems {
 	 * @return Template|null|string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key === 'path') return $this->wire()->config->paths->templates;
 		return parent::get($key);
@@ -272,7 +275,7 @@ class Templates extends WireSaveableItems {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___save(Saveable $item) {
 
 		// If the template's fieldgroup has changed, then we delete data that's no longer applicable to the new fieldgroup. 
@@ -348,7 +351,7 @@ class Templates extends WireSaveableItems {
 	 * @throws WireException Thrown when you attempt to delete a template in use, or a system template. 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___delete(Saveable $item) {
 
 		$name = $item->name;
@@ -398,7 +401,7 @@ class Templates extends WireSaveableItems {
 	 * @return bool|Template $item Returns the new Template on success, or false on failure
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___clone(Saveable $item, $name = '') {
 
 		$original = $item;
@@ -499,7 +502,7 @@ class Templates extends WireSaveableItems {
 	public function getNumPages(Template $tpl) {
 		$database = $this->wire()->database;
 		$query = $database->prepare("SELECT COUNT(*) AS total FROM pages WHERE templates_id=:template_id"); // QA
-		$query->bindValue(":template_id", $tpl->id, \PDO::PARAM_INT);
+		$query->bindValue(":template_id", $tpl->id, PDO::PARAM_INT);
 		$query->execute();
 		return (int) $query->fetchColumn();	
 	}
@@ -511,7 +514,7 @@ class Templates extends WireSaveableItems {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function encodeData(array $value) {
 		return wireEncodeJSON($value, ['slashUrls', 'compile']); 	
 	}
@@ -641,7 +644,7 @@ class Templates extends WireSaveableItems {
 				$error = '';
 				try {
 					$template->setFieldgroup($fieldgroup);
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$this->trackException($e, false);
 					$error = $e->getMessage();
 				}
@@ -668,7 +671,7 @@ class Templates extends WireSaveableItems {
 					$template->set($key, $value);
 					if($key == 'roles') $template->getRoles(); // forces reload of roles (and resulting error messages)
 					$error = $template->errors('clear');
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$this->trackException($e, false);
 					$error = [$e->getMessage()];
 				}

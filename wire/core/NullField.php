@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire NullField
  *
@@ -9,9 +10,8 @@
  * https://processwire.com
  *
  */
-
 class NullField extends Field implements WireNull {
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key == 'id') return 0;
 		if($key == 'name') return '';

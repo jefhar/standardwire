@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Breadcrumbs
  *
@@ -13,8 +14,6 @@
  *
  *
  */
-
-
 /**
  * class Breadcrumbs
  *
@@ -23,12 +22,12 @@
  */
 class Breadcrumbs extends WireArray {
 
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Breadcrumb;
 	}
 
-	#[\Override]
+	#[Override]
  public function add($item) {
 
 		if($item instanceof Page) {

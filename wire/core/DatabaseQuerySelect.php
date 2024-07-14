@@ -1,4 +1,6 @@
 <?php namespace ProcessWire;
+
+use Override;
 /**
  * ProcessWire DatabaseQuerySelect
  *
@@ -74,7 +76,7 @@ class DatabaseQuerySelect extends DatabaseQuery {
 	 * Return the resulting SQL ready for execution with the database
  	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getQuery() {
 
 		$sql = trim(	

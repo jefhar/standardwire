@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Selector base type and implementation for various Selector types
  *
@@ -308,7 +309,7 @@ abstract class Selector extends WireData {
 	 * @return array|mixed|null|string Property value
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key === 'operator') return $this->operator();
 		if($key === 'str') return $this->__toString();
@@ -411,7 +412,7 @@ abstract class Selector extends WireData {
 	 * @return Selector|WireData
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 		if($key === 'fields' || $key === 'field') return $this->setField($value);
 		if($key === 'values' || $key === 'value') return $this->setValue($value);
@@ -662,7 +663,7 @@ abstract class Selector extends WireData {
 	 * The string value of Selector is always the selector string that it originated from
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		
 		$openingQuote = $this->quote; 
@@ -695,7 +696,7 @@ abstract class Selector extends WireData {
 	 * @return array
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$info = ['field' => $this->field, 'operator' => $this->operator, 'value' => $this->value];
 		if($this->not) $info['not'] = true;

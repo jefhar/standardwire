@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Base class for FileValidator modules
  * 
@@ -207,7 +208,7 @@ abstract class FileValidatorModule extends WireData implements Module {
 	 * @return WireLog|null
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___log($str = '', array $options = []) {
 		if(empty($options['name'])) $options['name'] = 'file-validator';
 		return parent::___log($str, $options);

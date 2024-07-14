@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Permission Page
  *
@@ -18,7 +19,6 @@
  * https://processwire.com
  * 
  */
-
 class Permission extends Page {
 
 	/**
@@ -47,7 +47,7 @@ class Permission extends Page {
 	 * Wired to API
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function wired() {
 		parent::wired();
 		$template = $this->wire()->templates->get('permission');
@@ -129,7 +129,7 @@ class Permission extends Page {
 	 * @return Permissions
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getPagesManager() {
 		return $this->wire()->permissions;
 	}

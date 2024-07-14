@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use Exception;
 /**
  * ProcessWire FileLog
  *
@@ -9,7 +11,6 @@
  * https://processwire.com
  *
  */
-
 class FileLog extends Wire {
 
 	/**
@@ -105,7 +106,7 @@ class FileLog extends Wire {
 	 * Wired to API
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function wired() {
 		parent::wired();
 		$this->path();
@@ -116,7 +117,7 @@ class FileLog extends Wire {
 	 * @return mixed
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		if($name == 'delimiter') return $this->delimeter; // @todo learn how to spell
 		return parent::__get($name);
@@ -477,24 +478,23 @@ class FileLog extends Wire {
 	}
 
 	/**
-	 * Return lines from the end of the log file, with various options
-	 *
-	 * @param int $limit Number of items to return (per pagination), or 0 for no limit.
-	 * @param int $pageNum Current pagination (default=1)
-	 * @param array $options
-	 * 	- text (string): Return only lines containing the given string of text
-	 * 	- reverse (bool): True=find from end of file, false=find from beginning (default=true)
-	 * 	- toFile (string): Send results to the given basename (default=none)
-	 * 	- dateFrom (unix timestamp): Return only lines newer than the given date (default=oldest)
-	 * 	- dateTo (unix timestamp): Return only lines older than the given date  (default=now)
-	 * 		Note: dateFrom and dateTo may be combined to return a range.
-	 * @return int|array of strings (associative), each indexed by string containing slash separated 
-	 * 	numeric values of: "current/total/start/end/total" which is useful with pagination.
-	 * 	If the 'toFile' option is used, then return value is instead an integer qty of lines written.
-	 * @throws \Exception on fatal error
-	 * 
-	 */
-	public function find($limit = 100, $pageNum = 1, array $options = []) {
+  * Return lines from the end of the log file, with various options
+  *
+  * @param int $limit Number of items to return (per pagination), or 0 for no limit.
+  * @param int $pageNum Current pagination (default=1)
+  * @param array $options
+  * 	- text (string): Return only lines containing the given string of text
+  * 	- reverse (bool): True=find from end of file, false=find from beginning (default=true)
+  * 	- toFile (string): Send results to the given basename (default=none)
+  * 	- dateFrom (unix timestamp): Return only lines newer than the given date (default=oldest)
+  * 	- dateTo (unix timestamp): Return only lines older than the given date  (default=now)
+  * 		Note: dateFrom and dateTo may be combined to return a range.
+  * @return int|array of strings (associative), each indexed by string containing slash separated
+  * 	numeric values of: "current/total/start/end/total" which is useful with pagination.
+  * 	If the 'toFile' option is used, then return value is instead an integer qty of lines written.
+  * @throws Exception on fatal error
+  */
+ public function find($limit = 100, $pageNum = 1, array $options = []) {
 		
 		$defaults = ['text' => null, 'dateFrom' => 0, 'dateTo' => 0, 'reverse' => true, 'toFile' => ''];
 		
@@ -511,7 +511,7 @@ class FileLog extends Wire {
 		if($options['toFile']) {
 			$toFile = $this->path() . basename((string) $options['toFile']); 
 			$fp = fopen($toFile, 'w'); 
-			if(!$fp) throw new \Exception("Unable to open file for writing: $toFile"); 
+			if(!$fp) throw new Exception("Unable to open file for writing: $toFile"); 
 		} else {
 			$toFile = '';
 			$fp = null;
@@ -691,7 +691,7 @@ class FileLog extends Wire {
 		return $this->wire()->files->unlink($this->logFilename, true);
 	}
 
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return $this->filename(); 
 	}	

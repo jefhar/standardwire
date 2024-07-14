@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use Override;
+use Exception;
+use Throwable;
 require_once(__DIR__ . '/boot.php');
 
 /**
@@ -324,7 +327,7 @@ class ProcessWire extends Wire {
 		}
 	}
 
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		$str = $this->className() . " ";
 		$str .= self::versionMajor . "." . self::versionMinor . "." . self::versionRevision; 
@@ -367,7 +370,7 @@ class ProcessWire extends Wire {
 		$config->versionName = trim($version . " " . self::versionSuffix);
 		$config->moduleServiceKey .= str_replace('.', '', $version);
 		
-		if($config->useFunctionsAPI && !function_exists(\ProcessWire\pages::class)) {
+		if($config->useFunctionsAPI && !function_exists(pages::class)) {
 			$file = $config->paths->core . 'FunctionsAPI.php';
 			/** @noinspection PhpIncludeInspection */
 			include_once($file);
@@ -528,7 +531,7 @@ class ProcessWire extends Wire {
 			$database = $this->wire('database', WireDatabasePDO::getInstance($config), true);
 			/** @noinspection PhpUnusedLocalVariableInspection */
 			$db = $this->wire('db', new DatabaseMysqli($config), true);
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			// catch and re-throw to prevent DB connect info from ever appearing in debug backtrace
 			$this->trackException($e, true, 'Unable to load WireDatabasePDO');
 			throw new WireDatabaseException($e->getMessage()); 
@@ -544,7 +547,7 @@ class ProcessWire extends Wire {
 			$modules->setSubstitutes($config->substituteModules); 
 			$modules->init();
 			if($this->debug) Debug::saveTimer('boot.load.modules');
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->trackException($e, true, 'Unable to load Modules');
 			if(!$modules) throw new WireException($e->getMessage()); 	
 			$this->error($e->getMessage()); 
@@ -678,21 +681,20 @@ class ProcessWire extends Wire {
 	}
 	
 	/**
-	 * Set internal runtime status to failed, with additional info
-	 * 
-	 * #pw-internal
-	 *
-	 * @param \Throwable $e Exception or Error
-	 * @param string $reason
-	 * @param null $page
-	 * @param string $url
-	 * @since 3.0.142
-	 *
-	 */
-	public function setStatusFailed($e, $reason = '', $page = null, $url = '') {
+  * Set internal runtime status to failed, with additional info
+  *
+  * #pw-internal
+  *
+  * @param Throwable $e Exception or Error
+  * @param string $reason
+  * @param null $page
+  * @param string $url
+  * @since 3.0.142
+  */
+ public function setStatusFailed($e, $reason = '', $page = null, $url = '') {
 		static $lastThrowable = null;
 		if($lastThrowable === $e) return;
-		$isException = $e instanceof \Exception;
+		$isException = $e instanceof Exception;
 		if(!$page instanceof Page) $page = new NullPage();
 		$this->setStatus(ProcessWire::statusFailed, ['throwable' => $e, 'exception' => $isException ? $e : null, 'error' => $isException ? null : $e, 'failPage' => $page, 'reason' => $reason, 'url' => $url]);
 		$lastThrowable = $e;
@@ -838,7 +840,7 @@ class ProcessWire extends Wire {
 	 * @return mixed
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		if($name === 'fuel') return $this->fuel;
 		if($name === 'shutdown') return $this->shutdown;
@@ -887,7 +889,7 @@ class ProcessWire extends Wire {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __call($method, $arguments) {
 		if(method_exists($this, "___$method")) return parent::__call($method, $arguments); 
 		$value = $this->__get($method);
@@ -904,7 +906,7 @@ class ProcessWire extends Wire {
 	 * @return mixed|null|Fuel
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function fuel($name = '') {
 		if(empty($name)) return $this->fuel;
 		return $this->fuel->$name;

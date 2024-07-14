@@ -1,13 +1,14 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that matches if the value exists at the beginning of another value (specific to SQL LIKE)
  *
  */
 class SelectorStartsLike extends SelectorStarts {
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '%^='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() {
 		return
 			Selector::compareTypeFind |
@@ -16,8 +17,8 @@ class SelectorStartsLike extends SelectorStarts {
 			Selector::compareTypeBoundary |
 			Selector::compareTypeLike; 
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Starts like', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('phrase-start like'); }
 }

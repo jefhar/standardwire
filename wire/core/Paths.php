@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire configuration paths and URLs
  * 
@@ -97,7 +98,6 @@
  * The "http" may be optionally prepended to any property accessed from $config->urls (including those you add yourself).
  *
  */
-
 class Paths extends WireData {
 
 	/**
@@ -141,7 +141,7 @@ class Paths extends WireData {
 	 * @return Paths|WireData
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 		if(DIRECTORY_SEPARATOR != '/') $value = self::normalizeSeparators($value); 
 		if($key == 'root') {
@@ -160,7 +160,7 @@ class Paths extends WireData {
 	 * @return mixed|null|string The requested path variable
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		static $_http = null;
 		if($key === 'root') return $this->_root;

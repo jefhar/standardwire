@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Process
  *
@@ -35,7 +36,6 @@
  * @method void executed($methodName) Hook called after a method has been executed in the Process
  *
  */
-
 abstract class Process extends WireData implements Module {
 
 	/**
@@ -181,7 +181,7 @@ abstract class Process extends WireData implements Module {
 	 * @return mixed
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if(($value = $this->wire($key)) !== null) return $value; 
 		return parent::get($key); 

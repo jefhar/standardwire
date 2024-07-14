@@ -1,10 +1,11 @@
 <?php namespace ProcessWire;
 
+use Exception;
 /**
  * Generic ProcessWire exception
  *
  */
-class WireException extends \Exception {
+class WireException extends Exception {
 	/**
 	 * Replace previously set message
 	 * 

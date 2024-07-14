@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Paginated WireArray
  * 
@@ -19,7 +20,6 @@
  * @method string renderPager(array $options = array()) Renders pagination, when MarkupPageArray module installed
  *
  */
-
 class PaginatedArray extends WireArray implements WirePaginatable {
 
 	/**
@@ -60,7 +60,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function setTotal($total) {
 		$this->numTotal = (int) $total;
 		return $this;
@@ -79,7 +79,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return int Total number of items across all paginations. 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getTotal() {
 		$total = $this->numTotal;
 		if(!$total) $total = $this->count();
@@ -95,7 +95,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function setLimit($numLimit) {
 		$this->numLimit = (int) $numLimit; 
 		return $this; 
@@ -111,7 +111,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return int
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getLimit() {
 		return $this->numLimit; 
 	}
@@ -127,7 +127,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function setStart($numStart) {
 		$this->numStart = (int) $numStart; 
 		return $this; 
@@ -141,7 +141,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return int
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getStart() {
 		return $this->numStart; 
 	}
@@ -207,7 +207,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return mixed Value of requested property. 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getProperty($property) {
 		static $properties = [
       // property => method to map to
@@ -310,7 +310,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$limit = $this->getLimit();
 		$count = $this->count();

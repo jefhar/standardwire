@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use Exception;
 /**
  * ProcessWire Field
  *
@@ -275,7 +277,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @return Field|WireData
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 		
 		switch($key) {
@@ -403,7 +405,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @return mixed
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 	
 		if($key === 'type') { 
@@ -484,7 +486,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getTableData() {
 		$a = $this->settings;
 		$a['data'] = $this->data;
@@ -507,7 +509,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getExportData() {
 
 		if($this->type) {
@@ -581,7 +583,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 *    )
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function setImportData(array $data) {
 
 		$changes = [];
@@ -906,7 +908,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function save() {
 		return $this->wire()->fields->save($this); 
 	}
@@ -1154,7 +1156,7 @@ class Field extends WireData implements Saveable, Exportable {
 					}
 				}
 				
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$this->trackException($e, false, true); 
 			}
 
@@ -1256,7 +1258,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * The string value of a Field is always it's name
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return (string) $this->settings['name']; 
 	}
@@ -1268,7 +1270,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @return bool
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __isset($key) {
 		if(parent::__isset($key)) return true; 
 		return isset($this->settings[$key]); 
@@ -1582,7 +1584,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$info = $this->settings;
 		$info['flags'] = $info['flags'] ? "$this->flagsStr ($info[flags])" : "";
@@ -1598,7 +1600,7 @@ class Field extends WireData implements Saveable, Exportable {
 		return $info; 
 	}
 	
-	#[\Override]
+	#[Override]
  public function debugInfoSmall() {
 		return ['id' => $this->id, 'name' => $this->name, 'label' => $this->getLabel(), 'type' => $this->type ? wireClassName($this->type) : ''];
 	}

@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Exception;
+use Override;
 /**
  * WireAction
  *
@@ -104,7 +106,7 @@ abstract class WireAction extends WireData implements Module {
 		try {
 			$result = $this->action($item); 
 
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->trackException($e, true);
 			$result = false; 
 			$this->error($e->getMessage()); 
@@ -172,7 +174,7 @@ abstract class WireAction extends WireData implements Module {
 		return $this->runner; 
 	}
 
-	#[\Override]
+	#[Override]
  public function message($text, $flags = 0) {
 		$runner = $this->getRunner(); 
 		if($runner) $runner->message($text, $flags); 
@@ -180,7 +182,7 @@ abstract class WireAction extends WireData implements Module {
 		return $this; 
 	}
 
-	#[\Override]
+	#[Override]
  public function error($text, $flags = 0) {
 		$runner = $this->getRunner(); 
 		if($runner) $runner->error($text, $flags); 

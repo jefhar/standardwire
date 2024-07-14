@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use ReflectionFunction;
+use Exception;
+use Override;
 /**
  * ProcessWire WireCache
  *
@@ -23,7 +26,6 @@
  * #pw-body
  *
  */
-
 class WireCache extends Wire {
 
 	/**
@@ -378,7 +380,7 @@ class WireCache extends Wire {
 	 */
 	protected function renderCacheValue($name, $expire, $func) {
 
-		$ref = new \ReflectionFunction($func);
+		$ref = new ReflectionFunction($func);
 		$params = $ref->getParameters(); // requested arguments
 		$args = []; // arguments we provide
 
@@ -516,7 +518,7 @@ class WireCache extends Wire {
 			$result = $this->cacher()->save($name, $data, $expire);
 			$this->log($this->_('Saved cache ') . ' - ' . $name);
 			
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->trackException($e, false);
 			$result = false;
 		}
@@ -675,7 +677,7 @@ class WireCache extends Wire {
 			$name = $row['name'];
 			try {
 				$success = $this->cacher()->delete($name);
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$this->trackException($e, true);
 				$this->error($e->getMessage());
 				$success = false;
@@ -701,7 +703,7 @@ class WireCache extends Wire {
 	public function deleteAll() {
 		try {
 			$qty = $this->cacher()->deleteAll();
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->trackException($e, true);
 			$this->error($e->getMessage());
 			$qty = 0;
@@ -721,7 +723,7 @@ class WireCache extends Wire {
 	public function expireAll() {
 		try {
 			$qty = $this->cacher()->expireAll();
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->trackException($e, true);
 			$this->error($e->getMessage());
 			$qty = 0;
@@ -1330,7 +1332,7 @@ class WireCache extends Wire {
 	 * @return WireLog
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___log($str = '', array $options = []) {
 		//parent::___log($str, array('name' => 'cache'));
 		$str = ''; // disable log

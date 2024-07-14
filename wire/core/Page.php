@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use Countable;
+use Override;
+use ReturnTypeWillChange;
+use ArrayObject;
 /**
  * ProcessWire Page
  *
@@ -176,8 +180,7 @@
  * @method Page|NullPage descendant($selector = '', array $options = array()) Find one descendant page, alias of `Page::findOne()`, see that method for details. @since 3.0.116 #pw-group-traversal
  * 
  */
-
-class Page extends WireData implements \Countable, WireMatchable {
+class Page extends WireData implements Countable, WireMatchable {
 
 	/*
 	 * The following constant flags are specific to a Page's 'status' field. A page can have 1 or more flags using bitwise logic. 
@@ -606,7 +609,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * Clone this page instance
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __clone() {
 		$track = $this->trackChanges();
 		$this->setTrackChanges(false); 
@@ -660,7 +663,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 		
 		if(isset(PageProperties::$basePropertiesAlternates[$key])) $key = PageProperties::$basePropertiesAlternates[$key];
@@ -784,7 +787,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function setQuietly($key, $value) {
 		if(isset($this->settings[$key]) && is_int($value)) {
 			// allow integer-only values in $this->settings to be set directly in quiet mode
@@ -895,7 +898,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see __get()
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 
 		// if lazy load pending, load the page now
@@ -1168,7 +1171,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @deprecated Use the get() method with your dotted key instead. 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getDot($key) {
 		if(!str_contains($key, '.')) return $this->get($key);
 		$of = $this->outputFormatting();
@@ -1446,7 +1449,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see get()
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __get($key) {
 		return $this->get($key); 
 	}
@@ -1459,7 +1462,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see set()
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __set($key, $value) {
 		$this->set($key, $value); 
 	}
@@ -1491,7 +1494,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Wire::callUnknown()
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function ___callUnknown($method, $arguments) {
 		if($this->hasField($method)) {
 			if(count($arguments)) {
@@ -2487,33 +2490,32 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Page::hasChildren(), Page::numChildren()
 	 *
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function count() {
 		if($this->outputFormatting) return $this->numChildren(true);
 		return $this->numChildren(false);
 	}
 
 	/**
-	 * Enables iteration of the page's properties and fields with PHP’s foreach()
-	 * 
-	 * This fulfills PHP's IteratorAggregate interface, enabling you to interate all of the page's properties and fields. 
-	 * 
-	 * ~~~~~
-	 * // List all properties and fields from the page
-	 * foreach($page as $name => $value) {
-	 *   echo "<h3>$name</h3>";
-	 *   echo "<p>$value</p>"; 
-	 * }
-	 * ~~~~~
-	 * 
-	 * #pw-advanced
-	 * 
-	 * @return \ArrayObject
-	 *
-	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+  * Enables iteration of the page's properties and fields with PHP’s foreach()
+  *
+  * This fulfills PHP's IteratorAggregate interface, enabling you to interate all of the page's properties and fields.
+  *
+  * ~~~~~
+  * // List all properties and fields from the page
+  * foreach($page as $name => $value) {
+  *   echo "<h3>$name</h3>";
+  *   echo "<p>$value</p>";
+  * }
+  * ~~~~~
+  *
+  * #pw-advanced
+  *
+  * @return ArrayObject
+  */
+ #[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
 		$a = $this->settings; 
 		$template = $this->template();
@@ -2523,7 +2525,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 				$a[$field->name] = $this->get($field->name); 
 			}
 		}
-		return new \ArrayObject($a); 	
+		return new ArrayObject($a); 	
 	}
 
 	/**
@@ -2563,7 +2565,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Wire::setTrackChanges(), Wire::getChanges(), Wire::trackChange()
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isChanged($what = '') {
 		if($this->isNew()) return true; 
 		if(parent::isChanged($what)) return true; 
@@ -2595,7 +2597,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @see Page::isChanged(), Page::getChanges(), Page::trackChanges()
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function resetTrackChanges($trackChanges = true) {
 		parent::resetTrackChanges($trackChanges);
 		foreach($this->data as $value) {
@@ -3199,7 +3201,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @return bool Returns true if this page matches, or false if it doesn't. 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function matches($s) {
 		// This method implements the WireMatchable interface
 		return $this->comparison()->matches($this, $s);
@@ -3745,7 +3747,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function isEqual($key, $value1, $value2) {
 		return $this->comparison()->isEqual($this, $key, $value1, $value2); 
 	}
@@ -4026,7 +4028,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function trackChange($what, $old = null, $new = null) {
 		if($this->isLoaded && $old !== $new) {
 			if($what === 'name' && strlen("$old") && !strlen("$this->namePrevious")) {
@@ -4157,7 +4159,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __isset($key) {
 		if($this->isLoaded) {
 			return $this->get($key) !== null;
@@ -4175,7 +4177,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @param string $key
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __unset($key) {
 		if($key === 'filesManager') {
 			$this->filesManager = null;
@@ -4190,7 +4192,7 @@ class Page extends WireData implements \Countable, WireMatchable {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return "$this->id";
 	}

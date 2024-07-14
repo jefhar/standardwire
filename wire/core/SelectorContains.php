@@ -1,13 +1,14 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that matches one string value (phrase) that happens to be present in another string value
  *
  */
 class SelectorContains extends Selector { 
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '*='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -15,11 +16,11 @@ class SelectorContains extends Selector {
 			Selector::compareTypePhrase | 
 			Selector::compareTypeFulltext;
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Contains phrase', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('phrase fulltext'); }
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) { 
 		$matches = stripos((string) $value1, $value2) !== false && preg_match('/\b' . preg_quote($value2) . '/i', (string) $value1); 
 		return $this->evaluate($matches);

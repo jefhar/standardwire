@@ -1,4 +1,8 @@
 <?php namespace ProcessWire;
+
+use PDO;
+use Exception;
+use PDOException;
 /**
  * ProcessWire Fields Table and Index tools
  *
@@ -11,7 +15,7 @@
  * 
  * #pw-internal
  * 
- */ 
+ */
 class FieldsTableTools extends Wire {
 	
 	/**
@@ -57,7 +61,7 @@ class FieldsTableTools extends Wire {
 
 		$query->execute();
 
-		while($row = $query->fetch(\PDO::FETCH_NUM)) {
+		while($row = $query->fetch(PDO::FETCH_NUM)) {
 			$result[] = ['value' => $row[0], 'count' => (int) $row[1]];
 		}
 
@@ -70,7 +74,7 @@ class FieldsTableTools extends Wire {
 				$query = $database->prepare($sql);
 				$query->bindValue(':val', $item['value']);
 				$query->execute();
-				while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+				while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 					$result[$key]['rows'][] = $row;
 				}
 				$query->closeCursor();
@@ -81,26 +85,25 @@ class FieldsTableTools extends Wire {
 	}
 	
 	/**
-	 * Add or remove a unique index for a field on its 'data' column
-	 *
-	 * #pw-internal
-	 *
-	 * @param Field $field
-	 * @param bool $add Specify false to remove index rather than add (default=true)
-	 * @return bool|int Returns one of the following when adding index:
-	 *  - `true` (bool): When index successfully added.
-	 *  - `false` (bool): Index cannot be added because there are non-unique rows already present (not allowed).
-	 *  - `1` (int): Unique index already present so was not necessary (not needed).
-	 *  - `0` (int): Requested column does not exist in table so cannot be added as index (not allowed).
-	 *  Returns one of the following when removing index:
-	 *  - `true` (bool): When index successfully removed.
-	 *  - `false` (bool): When index failed to remove.
-	 *  - `1` (int): When remove index but there is no unique index to remove (not needed).
-	 *  - `0` (int): When remove index that is not one we have previously added (not allowed).
-	 * @throws \PDOException When given invalid column name or unknown error condition
-	 *
-	 */
-	public function setUniqueIndex(Field $field, $add = true) { 
+  * Add or remove a unique index for a field on its 'data' column
+  *
+  * #pw-internal
+  *
+  * @param Field $field
+  * @param bool $add Specify false to remove index rather than add (default=true)
+  * @return bool|int Returns one of the following when adding index:
+  *  - `true` (bool): When index successfully added.
+  *  - `false` (bool): Index cannot be added because there are non-unique rows already present (not allowed).
+  *  - `1` (int): Unique index already present so was not necessary (not needed).
+  *  - `0` (int): Requested column does not exist in table so cannot be added as index (not allowed).
+  *  Returns one of the following when removing index:
+  *  - `true` (bool): When index successfully removed.
+  *  - `false` (bool): When index failed to remove.
+  *  - `1` (int): When remove index but there is no unique index to remove (not needed).
+  *  - `0` (int): When remove index that is not one we have previously added (not allowed).
+  * @throws PDOException When given invalid column name or unknown error condition
+  */
+ public function setUniqueIndex(Field $field, $add = true) { 
 
 		$database = $this->wire()->database;
 		$col = 'data';
@@ -124,7 +127,7 @@ class FieldsTableTools extends Wire {
 					try {
 						$result = $database->exec($sql) !== false;
 						if($result) $action = 'remove';
-					} catch(\Exception) {
+					} catch(Exception) {
 						$result = false;
 					}
 				} else {
@@ -141,7 +144,7 @@ class FieldsTableTools extends Wire {
 			try {
 				$result = $database->exec($sql) !== false;
 				if($result) $action = 'add';
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$action = 'remove';
 				if($e->getCode() == 23000) {
 					// non unique rows already present
@@ -192,7 +195,7 @@ class FieldsTableTools extends Wire {
 		$query = $database->prepare($sql);
 		$query->execute();
 		$has = false;
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			if($row['Column_name'] === $col && !$row['Non_unique']) {
 				$has = $row['Key_name'];
 				break;

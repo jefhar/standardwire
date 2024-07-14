@@ -1,5 +1,10 @@
 <?php namespace ProcessWire;
 
+use PDO;
+use Exception;
+use PDOException;
+use DirectoryIterator;
+use ReflectionClass;
 /**
  * ProcessWire Modules: Installer
  *
@@ -7,7 +12,6 @@
  * https://processwire.com
  *
  */
-
 class ModulesInstaller extends ModulesClass {
 	
 	/**
@@ -37,7 +41,7 @@ class ModulesInstaller extends ModulesClass {
 		if(!array_key_exists($class, $installableFiles)) return false;
 		if(!wireInstanceOf($class, 'Module')) {
 			$nsClass = $this->modules->getModuleClass($class, true);
-			if(!wireInstanceOf($nsClass, \ProcessWire\Module::class)) return false;
+			if(!wireInstanceOf($nsClass, Module::class)) return false;
 		}
 		if($now) {
 			$requires = $this->getRequiresForInstall($class);
@@ -137,12 +141,12 @@ class ModulesInstaller extends ModulesClass {
 		$sql = "INSERT INTO modules SET class=:class, flags=:flags, data=''";
 		if($config->systemVersion >= 7) $sql .= ", created=NOW()";
 		$query = $database->prepare($sql, "modules.install($class)");
-		$query->bindValue(":class", $class, \PDO::PARAM_STR);
-		$query->bindValue(":flags", $flags, \PDO::PARAM_INT);
+		$query->bindValue(":class", $class, PDO::PARAM_STR);
+		$query->bindValue(":flags", $flags, PDO::PARAM_INT);
 
 		try {
 			if($query->execute()) $moduleID = (int) $database->lastInsertId();
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			if($languages) $languages->unsetDefault();
 			$this->trackException($e, false, true);
 			return null;
@@ -158,21 +162,21 @@ class ModulesInstaller extends ModulesClass {
 				/** @var _Module $module */
 				$module->install();
 
-			} catch(\PDOException $e) {
+			} catch(PDOException $e) {
 				$error = $this->_('Module reported error during install') . " ($class): " . $e->getMessage();
 				$this->error($error);
 				$this->trackException($e, false, $error);
 
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				// remove the module from the modules table if the install failed
 				$moduleID = (int) $moduleID;
 				$error = $this->_('Unable to install module') .  " ($class): " . $e->getMessage();
 				$ee = null;
 				try {
 					$query = $database->prepare('DELETE FROM modules WHERE id=:id LIMIT 1'); // QA
-					$query->bindValue(":id", $moduleID, \PDO::PARAM_INT);
+					$query->bindValue(":id", $moduleID, PDO::PARAM_INT);
 					$query->execute();
-				} catch(\Exception $ee) {
+				} catch(Exception $ee) {
 					$this->trackException($e, false, $error)->trackException($ee, true);
 				}
 				if($languages) $languages->unsetDefault();
@@ -197,7 +201,7 @@ class ModulesInstaller extends ModulesClass {
 				$permissions->save($permission);
 				if($languages) $languages->unsetDefault();
 				$this->message(sprintf($this->_('Added Permission: %s'), $permission->name));
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				if($languages) $languages->unsetDefault();
 				$error = sprintf($this->_('Error adding permission: %s'), $name);
 				$this->trackException($e, false, $error);
@@ -212,7 +216,7 @@ class ModulesInstaller extends ModulesClass {
 				try {
 					$this->modules->install($name, $dependencyOptions);
 					$this->message("$label: $name");
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$error = "$label: $name - " . $e->getMessage();
 					$this->trackException($e, false, $error);
 				}
@@ -382,7 +386,7 @@ class ModulesInstaller extends ModulesClass {
 				$dir = array_shift($dirs);
 				$this->message("Scanning: $dir", Notice::debug);
 
-				foreach(new \DirectoryIterator($dir) as $file) {
+				foreach(new DirectoryIterator($dir) as $file) {
 					if($file->isDot()) continue;
 					if($file->isLink()) {
 						$numLinks++;
@@ -465,7 +469,7 @@ class ModulesInstaller extends ModulesClass {
 				$this->modules->uninstall($name);
 				$this->message("$label: $name");
 
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$error = "$label: $name - " . $e->getMessage();
 				$this->trackException($e, false, $error);
 			}
@@ -503,12 +507,12 @@ class ModulesInstaller extends ModulesClass {
 		}
 		$database = $this->wire()->database;
 		$query = $database->prepare('DELETE FROM modules WHERE class=:class LIMIT 1'); // QA
-		$query->bindValue(":class", $class, \PDO::PARAM_STR);
+		$query->bindValue(":class", $class, PDO::PARAM_STR);
 		$query->execute();
 
 		// add back to the installable list
 		if(class_exists("ReflectionClass")) {
-			$reflector = new \ReflectionClass($this->modules->getModuleClass($module, true));
+			$reflector = new ReflectionClass($this->modules->getModuleClass($module, true));
 			$this->modules->installableFile($class, $reflector->getFileName());
 		}
 
@@ -528,7 +532,7 @@ class ModulesInstaller extends ModulesClass {
 				try {
 					$permissions->delete($permission);
 					$this->message(sprintf($this->_('Deleted Permission: %s'), $name));
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$error = sprintf($this->_('Error deleting permission: %s'), $name);
 					$this->trackException($e, false, $error);
 				}

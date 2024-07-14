@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire NullPage
  * 
@@ -31,7 +32,6 @@
  * @property int $id The id property will always be 0 for a NullPage. 
  *
  */
-
 class NullPage extends Page implements WireNull {
 	/**
 	 * #pw-internal
@@ -39,7 +39,7 @@ class NullPage extends Page implements WireNull {
 	 * @return string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function path() { return ''; }
 
 	/**
@@ -49,7 +49,7 @@ class NullPage extends Page implements WireNull {
 	 * @return string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function url($options = []) { return ''; }
 
 	/**
@@ -60,7 +60,7 @@ class NullPage extends Page implements WireNull {
 	 * @return $this
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) { return parent::setForced($key, $value); }
 
 	/**
@@ -70,7 +70,7 @@ class NullPage extends Page implements WireNull {
 	 * @return null
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function parent($selector = '') { return null; }
 
 	/**
@@ -81,7 +81,7 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function parents($selector = '') { 
 		return $this->wire()->pages->newPageArray(); 
 	}
@@ -92,7 +92,7 @@ class NullPage extends Page implements WireNull {
 	 * @return string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string { return ""; }
 
 	/**
@@ -101,7 +101,7 @@ class NullPage extends Page implements WireNull {
 	 * @return bool
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function isHidden() { return true; }
 
 	/**
@@ -110,7 +110,7 @@ class NullPage extends Page implements WireNull {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isNew() { return false; }
 
 	/**
@@ -119,7 +119,7 @@ class NullPage extends Page implements WireNull {
 	 * @return null
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function filesManager() { return null; }
 
 	/**
@@ -129,7 +129,7 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function ___rootParent() { 
 		return $this->wire()->pages->newNullPage(); 
 	}
@@ -143,7 +143,7 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function siblings($selector = '', $includeCurrent = true) { 
 		return $this->wire()->pages->newPageArray(); 
 	}
@@ -157,7 +157,7 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function children($selector = '', $options = []) { 
 		return $this->wire()->pages->newPageArray(); 
 	}
@@ -170,7 +170,7 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function getAccessParent($type = 'view') { 
 		return $this->wire()->pages->newNullPage(); 
 	}
@@ -183,7 +183,7 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function getAccessRoles($type = 'view') { 
 		return $this->wire()->pages->newPageArray(); 
 	}
@@ -196,7 +196,7 @@ class NullPage extends Page implements WireNull {
 	 * @return bool
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function hasAccessRole($role, $type = 'view') { return false; }
 
 	/**
@@ -206,6 +206,6 @@ class NullPage extends Page implements WireNull {
 	 * @return bool
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function isChanged($what = '') { return false; }
 }

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * PageAction
  *
@@ -12,7 +13,6 @@
  * @method executeMultiple(PageArray $items)
  *
  */
-
 abstract class PageAction extends WireAction implements Module {
 
 	/**
@@ -35,7 +35,7 @@ abstract class PageAction extends WireAction implements Module {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getItemType() {
 		return strlen(__NAMESPACE__) ? __NAMESPACE__ . '\\Page' : 'Page';
 	}
@@ -47,7 +47,7 @@ abstract class PageAction extends WireAction implements Module {
 	 * @return bool True if the item was successfully operated upon, false if not.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function execute($item) {
 		return parent::execute($item);
 	}

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Session Handler 
  *
@@ -11,14 +12,13 @@
  * https://processwire.com
  *
  */
-
 abstract class WireSessionHandler extends WireData implements Module {
 
 	/**
 	 * Initialize the save handler when $modules sets the current instance
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function wired() {
 		if(!$this->sessionExists()) {
 			$this->addHookBefore('Session::init', $this, 'hookSessionInit');

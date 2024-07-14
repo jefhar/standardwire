@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * AdminTheme Framework
  * 
@@ -97,7 +98,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 		$this->set('browserTitle', ''); 
 	}
 	
-	#[\Override]
+	#[Override]
  public function wired() {
 		$this->sanitizer = $this->wire()->sanitizer;
 		$user = $this->wire()->user;
@@ -112,7 +113,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * @return bool|int|mixed|null|string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		$value = match ($key) {
       'isSuperuser' => $this->isSuperuser,
@@ -130,7 +131,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * Note: descending classes should call this after API ready
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function init() {
 		
 		$user = $this->wire()->user;
@@ -178,7 +179,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function _($text) {
 		static $translate = null;
 		static $context = null;
@@ -301,7 +302,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getBodyClass() {
 
 		$page = $this->wire()->page;

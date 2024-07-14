@@ -1,13 +1,14 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Same as SelectorContains but query expansion when used for database searching
  *
  */
 class SelectorContainsExpand extends SelectorContains {
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '*+='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -17,8 +18,8 @@ class SelectorContainsExpand extends SelectorContains {
 			Selector::compareTypeDatabase | 
 			Selector::compareTypeFulltext; 
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Contains phrase expand', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('phrase expand fulltext'); }
 }

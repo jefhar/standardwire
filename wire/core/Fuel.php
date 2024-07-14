@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use IteratorAggregate;
+use ReturnTypeWillChange;
+use Override;
+use ArrayObject;
 /**
  * ProcessWire Fuel
  *
@@ -42,7 +46,7 @@
  * @property WireDateTime $datetime
  *
  */
-class Fuel implements \IteratorAggregate {
+class Fuel implements IteratorAggregate {
 
 	/**
 	 * Fuel items indexed by name
@@ -124,10 +128,10 @@ class Fuel implements \IteratorAggregate {
 		return $this->data[$key] ?? null;
 	}
 
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
-		return new \ArrayObject($this->data); 
+		return new ArrayObject($this->data); 
 	}
 
 	public function getArray() {

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Sanitizer
  *
@@ -99,7 +100,6 @@
  * @method array testAll($value)
  *
  */
-
 class Sanitizer extends Wire {
 
 	/**
@@ -5370,7 +5370,7 @@ class Sanitizer extends Wire {
 	 *
 	 */
 
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return "Sanitizer";
 	}
@@ -5638,7 +5638,7 @@ class Sanitizer extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___callUnknown($method, $arguments) {
 		if($this->methodExists($method) && count($arguments)) {
 			return $this->sanitize($arguments[0], $method); 

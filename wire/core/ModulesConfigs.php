@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use PDO;
+use ReflectionMethod;
+use Override;
 /**
  * ProcessWire Modules: Configs
  *
@@ -7,7 +10,6 @@
  * https://processwire.com
  *
  */
-
 class ModulesConfigs extends ModulesClass {
 	
 	/**
@@ -113,7 +115,7 @@ class ModulesConfigs extends ModulesClass {
 			if(!$configable) return $emptyReturn;
 			$database = $this->wire()->database;
 			$query = $database->prepare("SELECT data FROM modules WHERE id=:id", "modules.getConfig($className)"); // QA
-			$query->bindValue(":id", (int) $id, \PDO::PARAM_INT);
+			$query->bindValue(":id", (int) $id, PDO::PARAM_INT);
 			$query->execute();
 			$data = $query->fetchColumn();
 			$query->closeCursor();
@@ -324,7 +326,7 @@ class ModulesConfigs extends ModulesClass {
 			if(!$configurable) continue;
 
 			// now determine if static or non-static
-			$ref = new \ReflectionMethod(wireClassName($nsClassName, true), $configurable);
+			$ref = new ReflectionMethod(wireClassName($nsClassName, true), $configurable);
 
 			if($ref->isStatic()) {
 				// config method is implemented as a static method
@@ -537,8 +539,8 @@ class ModulesConfigs extends ModulesClass {
 		$json = count($data) ? wireEncodeJSON($data, true) : '';
 		$database = $this->wire()->database;
 		$query = $database->prepare("UPDATE modules SET data=:data WHERE id=:id", "modules.saveConfig($moduleName)"); // QA
-		$query->bindValue(":data", $json, \PDO::PARAM_STR);
-		$query->bindValue(":id", (int) $id, \PDO::PARAM_INT);
+		$query->bindValue(":data", $json, PDO::PARAM_STR);
+		$query->bindValue(":id", (int) $id, PDO::PARAM_INT);
 		$result = $query->execute();
 		// $this->log("Saved module '$moduleName' config data");
 
@@ -709,7 +711,7 @@ class ModulesConfigs extends ModulesClass {
 		return $form;
 	}
 
-	#[\Override]
+	#[Override]
  public function getDebugData() {
 		return ['configData' => $this->configData];
 	}

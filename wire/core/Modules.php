@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use Override;
+use Exception;
+use PDO;
 /**
  * ProcessWire Modules
  *
@@ -51,7 +54,6 @@
  * @property-read bool $refreshing
  *
  */
-
 class Modules extends WireArray {
 	
 	/**
@@ -245,7 +247,7 @@ class Modules extends WireArray {
 	 * #pw-internal
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function wired() {
 		$this->coreModulesDir = '/' . $this->wire()->config->urls->data('modules');
 		parent::wired();
@@ -365,7 +367,7 @@ class Modules extends WireArray {
 	 * @return bool
  	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Module;
 	}
@@ -379,7 +381,7 @@ class Modules extends WireArray {
 	 * @return string
  	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getItemKey($item) {
 		return $this->getModuleClass($item); 
 	}
@@ -390,7 +392,7 @@ class Modules extends WireArray {
 	 * #pw-internal
  	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return null; 
 	}
@@ -401,7 +403,7 @@ class Modules extends WireArray {
 	 * #pw-internal
  	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeNew() {
 		// ensures that find(), etc. operations don't initalize a new Modules() class
 		return $this->wire(new WireArray());
@@ -415,7 +417,7 @@ class Modules extends WireArray {
 	 * @return WireArray
  	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeCopy() {
 		// ensures that find(), etc. operations don't initalize a new Modules() class
 		$copy = $this->makeNew();
@@ -451,40 +453,39 @@ class Modules extends WireArray {
 	 * @see Modules::getModule(), Modules::isInstalled()
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		// If the module is a ModulePlaceholder, then it will be converted to the real module (included, instantiated, initialized).
 		return $this->getModule($key);
 	}
 	
 	/**
-	 * Get the requested Module (with options)
-	 * 
-	 * This is the same as `$modules->get()` except that you can specify additional options to modify default behavior.
-	 * These are the options you can specify in the `$options` array argument:
-	 * 
-	 *  - `noPermissionCheck` (bool): Specify true to disable module permission checks (and resulting exception). (default=false)
-	 *  - `noInstall` (bool): Specify true to prevent a non-installed module from installing from this request. (default=false)
-	 *  - `noInit` (bool): Specify true to prevent the module from being initialized or configured. (default=false). See `configOnly` as alternative.
-	 *  - `noSubstitute` (bool): Specify true to prevent inclusion of a substitute module. (default=false)
-	 *  - `noCache` (bool): Specify true to prevent module instance from being cached for later getModule() calls. (default=false)
-	 *  - `noThrow` (bool): Specify true to prevent exceptions from being thrown on permission or fatal error. (default=false)
-	 *  - `returnError` (bool): Return an error message (string) on error, rather than null. (default=false)
-	 *  - `configOnly` (bool): Populate module config data but do not call its init() method. (default=false) 3.0.169+. Alternative to `noInit`.
-	 *  - `configData` (array): Associative array of additional config data to populate to module. (default=[]) 3.0.169+
-	 * 
-	 * If the module is not installed, but is installable, it will be installed, instantiated, and initialized.
-	 * If you don't want that behavior, call `$modules->isInstalled('ModuleName')` as a condition first, OR specify 
-	 * true for the `noInstall` option in the `$options` argument.
-	 * 
-	 * @param string|int $key Module name or database ID.
-	 * @param array $options Optional settings to change load behavior, see method description for details. 
-	 * @return Module|_Module|null|string Returns ready-to-use module or NULL|string if not found (string if `returnError` option used).
-	 * @throws WirePermissionException|\Exception If module requires a particular permission the user does not have
-	 * @see Modules::get()
-	 *
-	 */
-	public function getModule($key, array $options = []) {
+  * Get the requested Module (with options)
+  *
+  * This is the same as `$modules->get()` except that you can specify additional options to modify default behavior.
+  * These are the options you can specify in the `$options` array argument:
+  *
+  *  - `noPermissionCheck` (bool): Specify true to disable module permission checks (and resulting exception). (default=false)
+  *  - `noInstall` (bool): Specify true to prevent a non-installed module from installing from this request. (default=false)
+  *  - `noInit` (bool): Specify true to prevent the module from being initialized or configured. (default=false). See `configOnly` as alternative.
+  *  - `noSubstitute` (bool): Specify true to prevent inclusion of a substitute module. (default=false)
+  *  - `noCache` (bool): Specify true to prevent module instance from being cached for later getModule() calls. (default=false)
+  *  - `noThrow` (bool): Specify true to prevent exceptions from being thrown on permission or fatal error. (default=false)
+  *  - `returnError` (bool): Return an error message (string) on error, rather than null. (default=false)
+  *  - `configOnly` (bool): Populate module config data but do not call its init() method. (default=false) 3.0.169+. Alternative to `noInit`.
+  *  - `configData` (array): Associative array of additional config data to populate to module. (default=[]) 3.0.169+
+  *
+  * If the module is not installed, but is installable, it will be installed, instantiated, and initialized.
+  * If you don't want that behavior, call `$modules->isInstalled('ModuleName')` as a condition first, OR specify
+  * true for the `noInstall` option in the `$options` argument.
+  *
+  * @param string|int $key Module name or database ID.
+  * @param array $options Optional settings to change load behavior, see method description for details.
+  * @return Module|_Module|null|string Returns ready-to-use module or NULL|string if not found (string if `returnError` option used).
+  * @throws WirePermissionException|Exception If module requires a particular permission the user does not have
+  * @see Modules::get()
+  */
+ public function getModule($key, array $options = []) {
 	
 		$needsInit = false;
 		$noInit = !empty($options['noInit']); // force cancel of Module::init() call?
@@ -542,7 +543,7 @@ class Modules extends WireArray {
 				try {
 					if($module instanceof ModulePlaceholder) $this->includeModule($module);
 					$module = $this->newModule($class);
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					if(empty($options['noThrow'])) throw $e;
 					return empty($options['returnError']) ? null : "Module '$key' - " . $e->getMessage();
 				}
@@ -558,7 +559,7 @@ class Modules extends WireArray {
 				// if so, install it and return it 
 				try {
 					$module = $this->install($key);
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					if(empty($options['noThrow'])) throw $e;
 					if(!empty($options['returnError'])) return "Module '$key' install failed: " . $e->getMessage();
 				}
@@ -581,7 +582,7 @@ class Modules extends WireArray {
 				if($this->includeModule($key)) {
 					$module = $this->newModule($key);
 				}
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				if(empty($options['noThrow'])) throw $e;
 				$error .= ($error ? " - " : "Module '$key' - ") . $e->getMessage();
 				return empty($options['returnError']) ? null : $error;
@@ -629,7 +630,7 @@ class Modules extends WireArray {
 				if(!$this->loader->initModule($module, $initOptions)) {
 					return empty($options['returnError']) ? null : "Module '$module' failed init";
 				}
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				if(empty($options['noThrow'])) throw $e; 
 				return empty($options['returnError']) ? null : "Module '$module' throw Exception on init - " . $e->getMessage();
 			}
@@ -722,7 +723,7 @@ class Modules extends WireArray {
 
 		try {
 			$module = $this->wire(new $className());
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->error(sprintf($this->_('Failed to construct module: %s'), $className) . " - " . $e->getMessage());
 			$module = null;
 		}
@@ -920,7 +921,7 @@ class Modules extends WireArray {
 	 * @return WireArray of found modules, instantiated and ready-to-use
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function find($selector) {
 		// ensures any ModulePlaceholders are loaded in the returned result.
 		$a = parent::find($selector);
@@ -2118,10 +2119,10 @@ class Modules extends WireArray {
 		$database = $this->wire()->database;
 		if(ctype_digit("$class")) {
 			$query = $database->prepare('DELETE FROM modules WHERE id=:id LIMIT 1'); 
-			$query->bindValue(':id', (int) $class, \PDO::PARAM_INT);
+			$query->bindValue(':id', (int) $class, PDO::PARAM_INT);
 		} else {
 			$query = $database->prepare('DELETE FROM modules WHERE class=:class LIMIT 1');
-			$query->bindValue(':class', $class, \PDO::PARAM_STR);
+			$query->bindValue(':class', $class, PDO::PARAM_STR);
 		}
 		$result = $query->execute() ? $query->rowCount() > 0 : false;
 		$query->closeCursor();
@@ -2332,7 +2333,7 @@ class Modules extends WireArray {
 	 * @return Module|null
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __invoke($key) {
 		return $this->get($key);
 	}
@@ -2367,7 +2368,7 @@ class Modules extends WireArray {
 	 * @return Modules|WireArray
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function error($text, $flags = 0) {
 		if(is_string($text)) $this->log($text); 
 		return parent::error($text, $flags); 
@@ -2464,7 +2465,7 @@ class Modules extends WireArray {
 					// increase size of data column for cache storage in 3.0.218
 					$database->exec("ALTER TABLE modules MODIFY `data` MEDIUMTEXT NOT NULL");
 					$this->message("Updated modules.data to mediumtext", Notice::debug);
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$this->error($e->getMessage());
 				}
 			}
@@ -2538,7 +2539,7 @@ class Modules extends WireArray {
 	 * @return mixed
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name)
  {
      return match ($name) {

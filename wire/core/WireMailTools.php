@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Exception;
+use Override;
 /**
  * ProcessWire Mail Tools ($mail API variable)
  *
@@ -34,7 +36,6 @@
  *
  *
  */
-
 class WireMailTools extends Wire {
 
 	/**
@@ -199,7 +200,7 @@ class WireMailTools extends Wire {
 			}
 			$numSent = $mail->send();
 
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			if($this->wire()->config->debug) $mail->error($e->getMessage());
 			$mail->trackException($e, false);
 			$numSent = 0;
@@ -382,7 +383,7 @@ class WireMailTools extends Wire {
 		return $this->new()->subject($subject);
 	}
 	
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		if($name === 'new') return $this->new();
 		return parent::__get($name);

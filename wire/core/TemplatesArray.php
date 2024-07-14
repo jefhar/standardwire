@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Templates
  *
@@ -9,25 +10,24 @@
  * https://processwire.com
  *
  */
-
 class TemplatesArray extends WireArray {
 
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Template;
 	}
 
-	#[\Override]
+	#[Override]
  public function isValidKey($key) {
 		return is_int($key) || ctype_digit($key);
 	}
 
-	#[\Override]
+	#[Override]
  public function getItemKey($item) {
 		return $item->id;
 	}
 
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new Template());
 	}

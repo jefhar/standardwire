@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use Exception;
 /**
  * ProcessWire HTTP tools
  *
@@ -31,7 +33,6 @@
  * 
  *
  */
-
 class WireHttp extends Wire {
 	
 	public const debug = false;
@@ -1233,7 +1234,7 @@ class WireHttp extends Wire {
 	 * @return mixed
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		return array_key_exists($name, $this->data) ? $this->data[$name] : null;
 	}
@@ -1686,17 +1687,16 @@ class WireHttp extends Wire {
 	}
 
 	/**
-	 * Validate a URL for WireHttp use
-	 * 
-	 * #pw-internal
-	 *
-	 * @param string $url URL to validate
-	 * @param bool $throw Whether to throw exception on validation fail (default=false)
-	 * @throws \Exception|WireException
-	 * @return string $url Valid URL or blank string on failure
-	 * 
-	 */
-	public function validateURL($url, $throw = false) {
+  * Validate a URL for WireHttp use
+  *
+  * #pw-internal
+  *
+  * @param string $url URL to validate
+  * @param bool $throw Whether to throw exception on validation fail (default=false)
+  * @throws Exception|WireException
+  * @return string $url Valid URL or blank string on failure
+  */
+ public function validateURL($url, $throw = false) {
 		$options = $this->validateURLOptions;
 		$options['allowSchemes'] = $this->allowSchemes;
 		try {

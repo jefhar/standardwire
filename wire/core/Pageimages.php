@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use DirectoryIterator;
 /**
  * ProcessWire Pageimages
  *
@@ -31,7 +33,6 @@
  * @method string render($markup = '', $options = array())
  *
  */
-
 class Pageimages extends Pagefiles {
 
 	/**
@@ -43,7 +44,7 @@ class Pageimages extends Pagefiles {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Pageimage;
 	}
@@ -55,7 +56,7 @@ class Pageimages extends Pagefiles {
 	 * @return Pageimages|Pagefiles
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function add($item) {
 		if(is_string($item)) $item = $this->wire(new Pageimage($this, $item)); 
 		return parent::add($item); 
@@ -69,7 +70,7 @@ class Pageimages extends Pagefiles {
 	 * @return Pageimage
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new Pageimage($this, '')); 
 	}
@@ -81,7 +82,7 @@ class Pageimages extends Pagefiles {
 	 * @return null|Pagefile|Pageimage Returns Pagefile object if found, null if not
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getFile($name) {
 	
 		$hasFile = parent::getFile($name); 
@@ -144,7 +145,7 @@ class Pageimages extends Pagefiles {
 			$variations[$name] = [];	
 		}
 		
-		foreach(new \DirectoryIterator($this->path()) as $file) {
+		foreach(new DirectoryIterator($this->path()) as $file) {
 			
 			if($file->isDir() || $file->isDot()) continue;
 

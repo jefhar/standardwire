@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use PDO;
 /**
  * Tfa - ProcessWire Two Factor Authentication module base class
  * 
@@ -161,7 +163,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * Called when assigned to ProcessWire instance
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function wired() {
 		// @todo convert to getLabel() switch and make defaults (above) blank
 		$this->setArray(['cancelLabel' =>
@@ -998,7 +1000,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		$table = $field->getTable();
 		$sql = "SELECT `settings` FROM `$table` WHERE pages_id=:user_id";
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':user_id', $user->id, \PDO::PARAM_INT);
+		$query->bindValue(':user_id', $user->id, PDO::PARAM_INT);
 		$query->execute();
 		$data = $query->fetchColumn();
 		$query->closeCursor();
@@ -1045,7 +1047,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 		$json = json_encode($tfaSettings);
 		$sql = "UPDATE `$table` SET `settings`=:json WHERE pages_id=:user_id";
 		$query = $this->wire('database')->prepare($sql);
-		$query->bindValue(':user_id', $user->id, \PDO::PARAM_INT);
+		$query->bindValue(':user_id', $user->id, PDO::PARAM_INT);
 		$query->bindValue(':json', $json);
 		return $query->execute();
 	}

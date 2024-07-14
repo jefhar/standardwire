@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use Override;
+use ReturnTypeWillChange;
+use ArrayObject;
 /**
  * ProcessWire PageArray
  *
@@ -37,7 +40,6 @@
  * @property Page[] $data #pw-internal
  *
  */
-
 class PageArray extends PaginatedArray implements WirePaginatable {
 
 	/**
@@ -83,7 +85,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return bool True if item is valid and may be added, false if not
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Page; 
 	}
@@ -99,7 +101,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return bool True if key is valid and may be used, false if not
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidKey($key) {
 		return ctype_digit("$key");
 	}
@@ -115,7 +117,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return string|int|null Found key, or null if not found.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getItemKey($item) {
 		if(!$item instanceof Page) return null;	
 		if(!$this->duplicateChecking) return parent::getItemKey($item);
@@ -153,7 +155,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function usesNumericKeys() {
 		return true;
 	}
@@ -166,7 +168,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return Page
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire()->pages->newPage();
 	}
@@ -179,7 +181,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return PageArray
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeNew() {
 		$class = static::class;
 		/** @var PageArray $newArray */
@@ -198,7 +200,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return PageArray reference to current instance. 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function import($items) {
 		if($items instanceof Page) $items = [$items]; 
 		if(!self::iterable($items)) return $this; 
@@ -219,7 +221,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @param Page|int $key Page Array index or Page object. 
 	 * @return bool True if the index or Page exists here, false if not. 
 	 */  
-	#[\Override]
+	#[Override]
  public function has($key) {
 		if($key instanceof Page) {
 			return $this->getItemKey($key) !== null;
@@ -250,7 +252,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 *  - If Page `ID`, the Page identified by that ID will be loaded and added to the PageArray. 
 	 * @return $this
 	 */
-	#[\Override]
+	#[Override]
  public function add($item) {
 
 		if($this->isValidItem($item)) {
@@ -279,7 +281,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @param bool $alwaysArray If true, then method will always return a container of items, even if it only contains 1.
 	 * @return Page|PageArray Returns value of item, or new PageArray of items if more than one requested.
 	 */
-	#[\Override]
+	#[Override]
  public function getRandom($num = 1, $alwaysArray = false) {
 		return parent::getRandom($num, $alwaysArray);
 	}
@@ -295,7 +297,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return PageArray|WireArray New PageArray instance
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function findRandom($num) {
 		/** @var PageArray $value */
 		$value = parent::findRandom($num);
@@ -315,7 +317,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return PageArray|WireArray New PageArray instance
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function slice($start, $limit = 0) {
 		/** @var PageArray $value */
 		$value = parent::slice($start, $limit);
@@ -333,7 +335,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return Page|Wire|null Returns Page object or null if not present
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function eq($num) {
 		/** @var Page $value */
 		$value = parent::eq($num);
@@ -348,7 +350,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return Page|bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function first() {
 		return parent::first();
 	}
@@ -361,7 +363,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return Page|bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function last() {
 		return parent::last();
 	}
@@ -414,7 +416,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return PageArray|WireArray reference to current [filtered] PageArray
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function filterData($selectors, $not = false) {
 		if(is_string($selectors) && $selectors[0] === '/') $selectors = "path=$selectors";
 		return parent::filterData($selectors, $not); 
@@ -429,7 +431,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return PageArray|PaginatedArray|WireArray reference to current PageArray instance.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function filter($selector) {
 		return parent::filter($selector);
 	}
@@ -443,7 +445,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return PageArray|PaginatedArray|WireArray reference to current PageArray instance.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function not($selector) {
 		return parent::not($selector);
 	}
@@ -477,7 +479,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @see WireArray::find()
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function find($selector) {
 		/** @var PageArray $value */
 		$value = parent::find($selector);
@@ -494,7 +496,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @see WireArray::findOne()
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function findOne($selector) {
 		/** @var Page|bool $value */
 		$value = parent::findOne($selector);
@@ -576,7 +578,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @param Selectors $selectors
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function filterDataSelectors(Selectors $selectors) { 
 		$disallowed = ['include', 'check_access', 'checkAccess'];
 		foreach($selectors as $selector) {
@@ -599,7 +601,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return mixed
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function getItemPropertyValue(Wire $item, $property) {
 
 		if($item instanceof Page) {
@@ -623,15 +625,14 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	}
 
 	/**
-	 * Allows iteration of the PageArray.
-	 * 
-	 * #pw-internal
-	 *
-	 * @return Page[]|\ArrayObject|PageArrayIterator
-	 *
-	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+  * Allows iteration of the PageArray.
+  *
+  * #pw-internal
+  *
+  * @return Page[]|ArrayObject|PageArrayIterator
+  */
+ #[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
 		if($this->lazyLoad) return new PageArrayIterator($this->data, $this->finderOptions);	
 		return parent::getIterator();
@@ -643,7 +644,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * Pipe charactesr are used for compatibility with Selector OR statements
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		$s = '';
 		foreach($this as $page) $s .= "$page|";
@@ -688,7 +689,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$info = parent::__debugInfo();
 		$info['selectors'] = (string) $this->selectors; 
@@ -731,7 +732,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @param int|string $key 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function trackAdd($item, $key) {
 		parent::trackAdd($item, $key);
 		if(!$item instanceof Page) return;
@@ -746,7 +747,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @param int|string $key
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function trackRemove($item, $key) {
 		parent::trackRemove($item, $key);
 		if(!$item instanceof Page) return;

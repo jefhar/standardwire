@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Fieldgroups Array
  *
@@ -16,7 +17,7 @@ class FieldgroupsArray extends WireArray {
 	 * Per WireArray interface, this class only carries Fieldgroup instances
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Fieldgroup;
 	}
@@ -25,7 +26,7 @@ class FieldgroupsArray extends WireArray {
 	 * Per WireArray interface, items are keyed by their ID
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getItemKey($item) {
 		return $item->id;
 	}
@@ -34,7 +35,7 @@ class FieldgroupsArray extends WireArray {
 	 * Per WireArray interface, keys must be integers
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidKey($key) {
 		return is_int($key);
 	}
@@ -43,7 +44,7 @@ class FieldgroupsArray extends WireArray {
 	 * Per WireArray interface, return a blank Fieldgroup
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new Fieldgroup());
 	}

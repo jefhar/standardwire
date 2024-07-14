@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use PDO;
 /**
  * ProcessWire PagesSortfields
  *
@@ -9,7 +10,6 @@
  * https://processwire.com
  *
  */
-
 class PagesSortfields extends Wire {
 
 	/**
@@ -24,7 +24,7 @@ class PagesSortfields extends Wire {
 		$pageId = $page instanceof Page ? $page->id : (int) $page;
 		$sql = 'SELECT sortfield FROM pages_sortfields WHERE pages_id=:id';
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':id', $pageId, \PDO::PARAM_INT);
+		$query->bindValue(':id', $pageId, PDO::PARAM_INT);
 		$query->execute();
 		if($query->rowCount()) {
 			$sortfield = $query->fetchColumn();
@@ -59,8 +59,8 @@ class PagesSortfields extends Wire {
 				"ON DUPLICATE KEY UPDATE sortfield=VALUES(sortfield)";
 		
 		$query = $database->prepare($sql);
-		$query->bindValue(":page_id", $page_id, \PDO::PARAM_INT);
-		$query->bindValue(":sortfield", $sortfield, \PDO::PARAM_STR);
+		$query->bindValue(":page_id", $page_id, PDO::PARAM_INT);
+		$query->bindValue(":sortfield", $sortfield, PDO::PARAM_STR);
 		$result = $query->execute();
 		
 		return $result;
@@ -76,7 +76,7 @@ class PagesSortfields extends Wire {
 	public function delete(Page $page) {
 		$database = $this->wire('database');
 		$query = $database->prepare("DELETE FROM pages_sortfields WHERE pages_id=:page_id"); // QA
-		$query->bindValue(":page_id", $page->id, \PDO::PARAM_INT); 
+		$query->bindValue(":page_id", $page->id, PDO::PARAM_INT); 
 		$result = $query->execute();
 		return $result;
 	}

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Class MarkupFieldtype
  * 
@@ -25,7 +26,6 @@
  * echo $m->render('property'); 
  * 
  */
-
 class MarkupFieldtype extends WireData implements Module {
 
 	/**
@@ -381,7 +381,7 @@ class MarkupFieldtype extends WireData implements Module {
 	 * @return string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return $this->render();
 	}
@@ -424,7 +424,7 @@ class MarkupFieldtype extends WireData implements Module {
 		return $value;
 	}
 
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key == 'page') return $this->getPage();
 		if($key == 'field') return $this->getField();

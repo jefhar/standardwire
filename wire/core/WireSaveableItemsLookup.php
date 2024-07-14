@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use PDO;
 /**
  * ProcessWire WireSaveableItemsLookup
  *
@@ -9,7 +11,6 @@
  * https://processwire.com
  *
  */
-
 abstract class WireSaveableItemsLookup extends WireSaveableItems {
 
 	/**
@@ -48,7 +49,7 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @return DatabaseQuerySelect
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function getLoadQuery($selectors = null) {
 		$query = parent::getLoadQuery($selectors); 
 		$database = $this->wire()->database;
@@ -71,7 +72,7 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @return WireArray Returns the same type as specified in the getAll() method.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function ___load(WireArray $items, $selectors = null) {
 
 		$useLazy = $this->useLazy();
@@ -83,7 +84,7 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 		
 		$stmt = $database->prepare($sql);
 		$stmt->execute();
-		$rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		
 		// note: non-use of lazyNameIndex/lazyIdIndex is intentional
 	
@@ -111,7 +112,7 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @since 3.0.194
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function initItem(array &$row, WireArray $items = null) {
 		
 		$lookupField = $this->getLookupField();
@@ -162,7 +163,7 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function saveItemKey($key) {
 		if($key == $this->getLookupField()) return false; 
 		return parent::saveItemKey($key); 
@@ -176,7 +177,7 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___save(Saveable $item) {
 
 		if(!$item instanceof HasLookupItems) {
@@ -192,7 +193,7 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 
 		if($item_id) {
 			$query = $database->prepare("DELETE FROM $lookupTable WHERE {$table}_id=:item_id");
-			$query->bindValue(":item_id", $item_id, \PDO::PARAM_INT);
+			$query->bindValue(":item_id", $item_id, PDO::PARAM_INT);
 			$query->execute();
 		}
 			
@@ -205,9 +206,9 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 			$query = $database->prepare($sql);
 			foreach($item->getLookupItems() as $value) {
 				$value_id = (int) $value->id;
-				$query->bindValue(":item_id", $item_id, \PDO::PARAM_INT);
-				$query->bindValue(":value_id", $value_id, \PDO::PARAM_INT);
-				$query->bindValue(":sort", $sort, \PDO::PARAM_INT);
+				$query->bindValue(":item_id", $item_id, PDO::PARAM_INT);
+				$query->bindValue(":value_id", $value_id, PDO::PARAM_INT);
+				$query->bindValue(":sort", $sort, PDO::PARAM_INT);
 				$query->execute();
 				$sort++;
 			}
@@ -224,14 +225,14 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @return bool
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function ___delete(Saveable $item) {
 		$database = $this->wire()->database;
 		$lookupTable = $database->escapeTable($this->getLookupTable()); 
 		$table = $database->escapeTable($this->getTable()); 
 		$item_id = (int) $item->id; 
 		$query = $database->prepare("DELETE FROM $lookupTable WHERE {$table}_id=:item_id"); // QA
-		$query->bindValue(":item_id", $item_id, \PDO::PARAM_INT);
+		$query->bindValue(":item_id", $item_id, PDO::PARAM_INT);
 		$query->execute();
 		return parent::___delete($item); 
 	}
@@ -244,7 +245,7 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$info = parent::__debugInfo();
 		$info['loaded'] = array_unique($info['loaded']);

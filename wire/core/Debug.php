@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ReflectionClass;
+use Countable;
 /**
  * ProcessWire Debug 
  *
@@ -20,7 +22,6 @@
  * ~~~~~
  *
  */
-
 class Debug {
 
 	/**
@@ -426,7 +427,7 @@ class Debug {
 			}
 			
 			if($basename === 'Wire.php' && $class !== 'Wire') {
-				$ref = new \ReflectionClass($trace['class']);
+				$ref = new ReflectionClass($trace['class']);
 				$file = $ref->getFileName();
 			}
 
@@ -603,7 +604,7 @@ class Debug {
 			$className = wireClassName($value);
 			$classInfo = "object:$className";
 			$objectValue = $value;
-			if($objectValue instanceof \Countable) {
+			if($objectValue instanceof Countable) {
 				$classInfo .= '(' . count($objectValue) . ')';
 			}
 			if($value instanceof Wire) {

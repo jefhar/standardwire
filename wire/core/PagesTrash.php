@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Exception;
 /**
  * ProcessWire Pages Trash
  *
@@ -9,7 +10,6 @@
  * https://processwire.com
  *
  */
-
 class PagesTrash extends Wire {
 
 	/**
@@ -380,7 +380,7 @@ class PagesTrash extends Wire {
 				// delete the page
 				try {
 					$numDeleted += $this->pages->delete($item, true);
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$this->error($e->getMessage());
 					$errorCnt++;
 				}
@@ -481,7 +481,7 @@ class PagesTrash extends Wire {
 			try {
 				// perform recursive delete
 				$numDeleted += $this->pages->delete($t, true);
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$this->error($e->getMessage());
 				$numErrors++;
 			}

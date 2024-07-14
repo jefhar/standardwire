@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Pagefile
  *
@@ -52,7 +53,6 @@
  * @method string noCacheURL($http = false)
  * 
  */
-
 class Pagefile extends WireData implements WireArrayItem {
 
 	/**
@@ -153,7 +153,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __clone() {
 		$this->extras = [];
 		$this->set('filesize', 0);
@@ -261,7 +261,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return Pagefile|WireData
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 		
 		if($key === 'basename') {
@@ -632,7 +632,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return mixed Returns null if value does not exist
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 
 		if($key === 'name') $key = 'basename';
@@ -1235,7 +1235,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return (string) $this->basename; 
 	}
@@ -1330,7 +1330,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @param mixed $new
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___changed($what, $old = null, $new = null) {
 		if(in_array($what, ['description', 'tags', 'file', 'filedata']) || array_key_exists($what, $this->fieldValues)) {
 			$this->setUser(true, 'modified');
@@ -1470,7 +1470,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __isset($key) {
 		if(parent::__isset($key)) return true;
 		return $this->get($key) !== null;
@@ -1485,7 +1485,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @since 3.0.205
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function getWireArray() {
 		return $this->pagefiles;
 	}
@@ -1496,7 +1496,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return array
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$filedata = $this->filedata();
 		if(empty($filedata)) $filedata = null;

@@ -1,5 +1,10 @@
 <?php namespace ProcessWire;
 
+use IteratorAggregate;
+use Countable;
+use ReturnTypeWillChange;
+use Override;
+use DirectoryIterator;
 /**
  * ProcessWire PageimageVariations
  * 
@@ -11,8 +16,7 @@
  * @since 3.0.137
  * 
  */
-
-class PageimageVariations extends Wire implements \IteratorAggregate, \Countable {
+class PageimageVariations extends Wire implements IteratorAggregate, Countable {
 
 	/**
 	 * @var Pageimage
@@ -45,8 +49,8 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		parent::__construct();
 	}
 
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
 		return $this->find();
 	}
@@ -60,8 +64,8 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 	 * @return int
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function count($options = []) {
 		if($this->variations) {
 			$count = $this->variations->count();
@@ -330,7 +334,7 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		}
 
 		$variations = null;
-		$dir = new \DirectoryIterator($this->pagefiles->path);
+		$dir = new DirectoryIterator($this->pagefiles->path);
 		$infos = [];
 		$count = 0;
 		

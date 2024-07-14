@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use Countable;
+use IteratorAggregate;
+use Override;
+use ReturnTypeWillChange;
 /**
  * ProcessWire InputfieldWrapper
  *
@@ -70,8 +74,7 @@
  * @property InputfieldWrapper $InputfieldWrapper
  *
  */
-
-class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggregate {
+class InputfieldWrapper extends Inputfield implements Countable, IteratorAggregate {
 
 	/**
 	 * Set to true for debugging optimization of property accesses
@@ -162,7 +165,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * Wired to API
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function wired() {
 		
 		$config = $this->wire()->config;
@@ -209,7 +212,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @throws WireException Only in core development/debugging, otherwise does not throw exceptions.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		$inputfield = $this->getChildByName($key);
 		if($inputfield) return $inputfield;
@@ -230,7 +233,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return mixed|null
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __get($key) {
 		if($key === 'children') return $this->children();
 		if(str_starts_with($key, 'Inputfield') && strlen($key) > 10) {
@@ -530,7 +533,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function remove($key) {
 		$item = $key;
 		if(!$item) return $this;
@@ -698,7 +701,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___render() {
 		
 		$sanitizer = $this->wire()->sanitizer;
@@ -985,7 +988,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function ___renderValue() {
 		if(!count($this->children())) return '';
 		$this->addClass('InputfieldRenderValueMode');
@@ -1145,7 +1148,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return $this
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function ___processInput(WireInputData $input) {
 	
 		if(!$this->children) return $this;
@@ -1268,7 +1271,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return bool
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function isEmpty() {
 		$empty = true; 
 		foreach($this->children() as $child) {
@@ -1321,7 +1324,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return array Array of error strings
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getErrors($clear = false) {
 		$errors = parent::getErrors($clear); 
 		foreach($this->children() as $child) {
@@ -1571,8 +1574,8 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return InputfieldsArray
 	 *
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
 		return $this->children(); 
 	}
@@ -1585,8 +1588,8 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return int
 	 *
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function count() {
 		return count($this->children());
 	}
@@ -1628,7 +1631,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return Inputfield|InputfieldWrapper
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function setTrackChanges($trackChanges = true) {
 		$children = $this->children();
 		if(count($children)) foreach($children as $child) $child->setTrackChanges($trackChanges); 
@@ -1644,7 +1647,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return Inputfield|InputfieldWrapper
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function resetTrackChanges($trackChanges = true) {
 		$children = $this->children();
 		if(count($children)) foreach($children as $child) $child->resetTrackChanges($trackChanges); 
@@ -1659,7 +1662,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return InputfieldWrapper
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___getConfigInputfields() {
 
 		$inputfields = parent::___getConfigInputfields();
@@ -1921,7 +1924,7 @@ class InputfieldWrapper extends Inputfield implements \Countable, \IteratorAggre
 	 * @return array
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$info = parent::__debugInfo();
 		$info['children'] = $this->debugMap();

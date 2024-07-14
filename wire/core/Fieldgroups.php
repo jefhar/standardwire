@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use PDO;
 /**
  * ProcessWire Fieldgroups
  *
@@ -20,7 +22,6 @@
  *
  *
  */
-
 class Fieldgroups extends WireSaveableItemsLookup {
 
 	/**
@@ -46,7 +47,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return DatabaseQuerySelect
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function getLoadQuery($selectors = null) {
 		$query = parent::getLoadQuery($selectors); 
 		$lookupTable = $this->wire()->database->escapeTable($this->getLookupTable()); 
@@ -65,7 +66,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return WireArray Returns the same type as specified in the getAll() method.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function ___load(WireArray $items, $selectors = null) {
 		$items = parent::___load($items, $selectors); 	
 		return $items; 
@@ -77,7 +78,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return FieldgroupsArray
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getAll() {
 		if($this->useLazy()) $this->loadAllLazyItems();
 		return $this->getWireArray();
@@ -87,7 +88,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return WireArray|FieldgroupsArray
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getWireArray() {
 		if($this->fieldgroupsArray === null) {
 			$this->fieldgroupsArray = new FieldgroupsArray();
@@ -103,7 +104,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return Fieldgroup
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new Fieldgroup()); 
 	}
@@ -114,7 +115,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getTable() {
 		return 'fieldgroups';
 	}
@@ -125,7 +126,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getLookupTable() {
 		return 'fieldgroups_fields';
 	}
@@ -224,7 +225,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___save(Saveable $item) {
 
 		$database = $this->wire()->database;
@@ -259,10 +260,10 @@ class Fieldgroups extends WireSaveableItemsLookup {
 			// load context data to populate back after fieldgroup save
 			$sql = 'SELECT fields_id, data FROM fieldgroups_fields WHERE fieldgroups_id=:fieldgroups_id'; 
 			$query = $database->prepare($sql); 
-			$query->bindValue(':fieldgroups_id', (int) $fieldgroup->id, \PDO::PARAM_INT); 
+			$query->bindValue(':fieldgroups_id', (int) $fieldgroup->id, PDO::PARAM_INT); 
 			$query->execute();
 			/** @noinspection PhpAssignmentInConditionInspection */
-			while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+			while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 				$fields_id = (int) $row['fields_id'];
 				$datas[$fields_id] = $row['data'];
 			}
@@ -285,12 +286,12 @@ class Fieldgroups extends WireSaveableItemsLookup {
 				$sql = "UPDATE fieldgroups_fields SET data=:data WHERE fieldgroups_id=:fieldgroups_id AND fields_id=:fields_id";
 				$query = $database->prepare($sql);
 				if($data === null) {
-					$query->bindValue(":data", null, \PDO::PARAM_NULL);
+					$query->bindValue(":data", null, PDO::PARAM_NULL);
 				} else {
-					$query->bindValue(":data", $data, \PDO::PARAM_STR);
+					$query->bindValue(":data", $data, PDO::PARAM_STR);
 				}
-				$query->bindValue(":fieldgroups_id", $fieldgroups_id, \PDO::PARAM_INT);
-				$query->bindValue(":fields_id", $fields_id, \PDO::PARAM_INT); 
+				$query->bindValue(":fieldgroups_id", $fieldgroups_id, PDO::PARAM_INT);
+				$query->bindValue(":fields_id", $fields_id, PDO::PARAM_INT); 
 				$query->execute();
 			}
 		}
@@ -317,7 +318,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___delete(Saveable $item) {
 
 		$templates = [];
@@ -346,7 +347,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	public function deleteField(Field $field) {
 		$database = $this->wire()->database; 
 		$query = $database->prepare("DELETE FROM fieldgroups_fields WHERE fields_id=:fields_id"); // QA
-		$query->bindValue(":fields_id", $field->id, \PDO::PARAM_INT);
+		$query->bindValue(":fields_id", $field->id, PDO::PARAM_INT);
 		$result = $query->execute();
 		return $result;
 	}
@@ -361,7 +362,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return Fieldgroup|false $item Returns the new clone on success, or false on failure
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___clone(Saveable $item, $name = '') {
 		if(!$item instanceof Fieldgroup) return false;
 		
@@ -377,10 +378,10 @@ class Fieldgroups extends WireSaveableItemsLookup {
 			'AND data IS NOT NULL';
 		
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':fieldgroups_id', $item->id, \PDO::PARAM_INT);
+		$query->bindValue(':fieldgroups_id', $item->id, PDO::PARAM_INT);
 		$query->execute();
 		
-		$rows = $query->fetchAll(\PDO::FETCH_ASSOC);
+		$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 		$query->closeCursor();
 		
 		$sql = 
@@ -392,9 +393,9 @@ class Fieldgroups extends WireSaveableItemsLookup {
 		
 		foreach($rows as $row) {
 			$query->bindValue(':data', $row['data']); 
-			$query->bindValue(':fieldgroups_id', (int) $fieldgroup->id, \PDO::PARAM_INT);
-			$query->bindValue(':fields_id', (int) $row['fields_id'], \PDO::PARAM_INT);
-			$query->bindValue(':sort', (int) $row['sort'], \PDO::PARAM_INT);
+			$query->bindValue(':fieldgroups_id', (int) $fieldgroup->id, PDO::PARAM_INT);
+			$query->bindValue(':fields_id', (int) $row['fields_id'], PDO::PARAM_INT);
+			$query->bindValue(':sort', (int) $row['sort'], PDO::PARAM_INT);
 			$query->execute();
 		}
 		

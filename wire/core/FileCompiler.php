@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use DirectoryIterator;
 /**
  * FileCompiler
  * 
@@ -13,7 +15,6 @@
  * @method string compileData($data, $sourceFile)
  * 
  */
-
 class FileCompiler extends Wire {
 
 	/**
@@ -143,7 +144,7 @@ class FileCompiler extends Wire {
 	 * Wired to instance
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function wired() {
 		
 		$config = $this->wire()->config;
@@ -810,7 +811,7 @@ class FileCompiler extends Wire {
 		static $files = null;
 		if(is_null($files)) {
 			$files = [];
-			foreach(new \DirectoryIterator($this->wire()->config->paths->core) as $file) {
+			foreach(new DirectoryIterator($this->wire()->config->paths->core) as $file) {
 				if($file->isDot() || $file->isDir()) continue;
 				$basename = $file->getBasename('.php');
 				if(strtoupper($basename[0]) == $basename[0]) {
@@ -951,7 +952,7 @@ class FileCompiler extends Wire {
 		
 		if(!is_dir($target)) $this->wire()->files->mkdir($target, true);
 		
-		$dir = new \DirectoryIterator($source);
+		$dir = new DirectoryIterator($source);
 		$numCopied = 0;
 		
 		foreach($dir as $file) {
@@ -1014,7 +1015,7 @@ class FileCompiler extends Wire {
 		
 		$numFiles = 0;
 		
-		foreach(new \DirectoryIterator($targetPath) as $file) {
+		foreach(new DirectoryIterator($targetPath) as $file) {
 			if($file->isDot()) continue;
 			if($file->isDir()) {
 				$numFiles += $this->getNumCacheFiles($all, $file->getPathname());
@@ -1094,7 +1095,7 @@ class FileCompiler extends Wire {
 		//$this->log("Running maintenance for $targetURL (source: $sourceURL)");
 	
 		if(!is_dir($targetPath)) return false;
-		$dir = new \DirectoryIterator($targetPath);
+		$dir = new DirectoryIterator($targetPath);
 
 		foreach($dir as $file) {
 

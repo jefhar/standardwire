@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use PDO;
 /**
  * ProcessWire Pages Raw Tools
  *
@@ -7,7 +8,6 @@
  * https://processwire.com
  *
  */
-
 class PagesRaw extends Wire {
 
 	/**
@@ -133,7 +133,7 @@ class PagesRaw extends Wire {
 		$col = $database->escapeCol($col);
 
 		$query = $database->prepare("SELECT `$col` FROM pages WHERE id=:id");
-		$query->bindValue(':id', $pageId, (int) \PDO::PARAM_INT);
+		$query->bindValue(':id', $pageId, (int) PDO::PARAM_INT);
 		$query->execute();
 		$value = $query->rowCount() ? $query->fetchColumn() : null;
 		$query->closeCursor();
@@ -200,7 +200,7 @@ class PagesRaw extends Wire {
 			$query = $database->prepare("SELECT $colStr FROM pages WHERE id IN($ids)");
 			$query->execute();
 			$value = [];
-			while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+			while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 				$id = (int) $row['id'];
 				if($removeIdInReturn) unset($row['id']);
 				foreach($row as $k => $v) {
@@ -220,9 +220,9 @@ class PagesRaw extends Wire {
 				}
 			} else {
 				$query = $database->prepare("SELECT $colStr FROM pages WHERE id=:id");
-				$query->bindValue(':id', $pageId, (int) \PDO::PARAM_INT);
+				$query->bindValue(':id', $pageId, (int) PDO::PARAM_INT);
 				$query->execute();
-				$value = $query->rowCount() ? $query->fetch(\PDO::FETCH_ASSOC) : [];
+				$value = $query->rowCount() ? $query->fetch(PDO::FETCH_ASSOC) : [];
 			}
 		}
 

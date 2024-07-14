@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use DirectoryIterator;
+use Override;
 /**
  * ProcessWire CacheFile
  *
@@ -211,7 +213,7 @@ class CacheFile extends Wire {
 	 */
 	public function remove() {
 
-		$dir = new \DirectoryIterator($this->path); 
+		$dir = new DirectoryIterator($this->path); 
 		foreach($dir as $file) {
 			if($file->isDir() || $file->isDot()) continue; 
 			//if(strpos($file->getFilename(), self::cacheFileExtension)) @unlink($file->getPathname()); 
@@ -242,7 +244,7 @@ class CacheFile extends Wire {
 	 */
 	static public function removeAll($path, $rmdir = false) {
 
-		$dir = new \DirectoryIterator($path); 
+		$dir = new DirectoryIterator($path); 
 		$numRemoved = 0;
 		$files = wire()->files;
 	
@@ -304,7 +306,7 @@ class CacheFile extends Wire {
 	 * CacheFile classes return a string of their cache filename
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return $this->buildFilename();
 	}

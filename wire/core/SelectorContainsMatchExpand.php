@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that uses standard MySQL MATCH/AGAINST behavior with implied DB-score sorting
  *
@@ -7,9 +8,9 @@
  *
  */
 class SelectorContainsMatchExpand extends SelectorContainsMatch {
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '**+='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -19,8 +20,8 @@ class SelectorContainsMatchExpand extends SelectorContainsMatch {
 			Selector::compareTypeDatabase | 
 			Selector::compareTypeFulltext; 
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Contains match expand', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('words-match words-whole expand fulltext'); }
 }

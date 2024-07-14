@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use Exception;
 /**
  * ProcessWire Admin Theme Module
  *
@@ -22,7 +24,6 @@
  * @method array getExtraMarkup()
  *
  */
-
 abstract class AdminTheme extends WireData implements Module {
 
 	/**
@@ -200,7 +201,7 @@ abstract class AdminTheme extends WireData implements Module {
 	 * @return int|mixed|null|string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key === 'version') return $this->version;
 		if($key === 'url') return $this->url();
@@ -455,7 +456,7 @@ abstract class AdminTheme extends WireData implements Module {
 			$field->flags = Field::flagSystem;
 			try {
 				$field->save();
-			} catch(\Exception) {
+			} catch(Exception) {
 				// $this->error("Error creating 'admin_theme' field: " . $e->getMessage());
 			}
 		}

@@ -1,5 +1,10 @@
 <?php namespace ProcessWire;
 
+use IteratorAggregate;
+use ArrayAccess;
+use Override;
+use ReturnTypeWillChange;
+use ArrayObject;
 /**
  * ProcessWire WireData
  *
@@ -27,8 +32,7 @@
  * @method WireArray and($items = null)
  *
  */
-
-class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
+class WireData extends Wire implements IteratorAggregate, ArrayAccess {
 
 	/**
 	 * Array where get/set properties are stored
@@ -329,7 +333,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return mixed|null
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		return $this->get($name); 
 	}
@@ -366,23 +370,22 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	}
 
 	/**
-	 * Enables the object data properties to be iterable as an array
-	 * 
-	 * ~~~~~
-	 * foreach($item as $key => $value) {
-	 *   // ...
-	 * }
-	 * ~~~~~
-	 * 
-	 * #pw-group-retrieval
-	 * 
-	 * @return \ArrayObject
-	 *
-	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+  * Enables the object data properties to be iterable as an array
+  *
+  * ~~~~~
+  * foreach($item as $key => $value) {
+  *   // ...
+  * }
+  * ~~~~~
+  *
+  * #pw-group-retrieval
+  *
+  * @return ArrayObject
+  */
+ #[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
-		return new \ArrayObject($this->data); 
+		return new ArrayObject($this->data); 
 	}
 
 	/**
@@ -486,8 +489,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @param int|string|array|object $value Value of item.
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function offsetSet($offset, $value) {
 		$this->set($offset, $value);
 	}
@@ -501,8 +504,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return int|string|array|object Value of item requested, or false if it doesn't exist.
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function offsetGet($offset) {
 		$value = $this->get($offset);
 		return is_null($value) ? false : $value;
@@ -519,8 +522,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return bool True if item existed and was unset. False if item didn't exist.
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function offsetUnset($offset) {
 		if($this->__isset($offset)) {
 			$this->remove($offset);
@@ -541,8 +544,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return bool True if the item exists, false if not.
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function offsetExists($offset) {
 		return $this->__isset($offset);
 	}
@@ -553,7 +556,7 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$info = parent::__debugInfo();
 		if(count($this->data)) $info['data'] = $this->data; 

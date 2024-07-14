@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use ReturnTypeWillChange;
 /**
  * Provides methods for managing cookies via the $input->cookie API variable
  * 
@@ -75,8 +77,7 @@
  * ProcessWire 3.x, Copyright 2023 by Ryan Cramer
  * https://processwire.com
  *
- */ 
-
+ */
 class WireInputDataCookie extends WireInputData {
 
 	/**
@@ -198,7 +199,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @param array|float|int|null|string $value Cookie value
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __set($key, $value) {
 		
 		if(!$this->init) {
@@ -227,7 +228,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @return string|int|float|array|null $value
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key, $options = []) {
 		return parent::get($key, $options); 
 	}
@@ -268,7 +269,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @since 3.0.141 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value, $options = []) {
 		
 		if(!$this->init) {
@@ -300,7 +301,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @return WireInputDataCookie|WireInputData|$this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function remove($key) {
 		return parent::remove($key);
 	}
@@ -311,7 +312,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @return $this|WireInputData
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function removeAll() {
 		foreach($this as $key => $value) {
 			$this->offsetUnset($key);
@@ -433,8 +434,8 @@ class WireInputDataCookie extends WireInputData {
 	 * @param mixed $key
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function offsetUnset($key) {
 		if(!$this->allowSetCookie($key)) return;
 		parent::offsetUnset($key);

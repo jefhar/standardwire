@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use PDO;
+use Exception;
 /**
  * ProcessWire Pages Path Finder
  * 
@@ -23,7 +25,6 @@
  * LanguageSupport module has been loaded (for multi-language page names)
  *
  */
-
 class PagesPathFinder extends Wire {
 
 	/**
@@ -347,7 +348,7 @@ class PagesPathFinder extends Wire {
 
 		$query->execute();
 		$rowCount = (int) $query->rowCount();
-		$row = $query->fetch(\PDO::FETCH_ASSOC);
+		$row = $query->fetch(PDO::FETCH_ASSOC);
 		$query->closeCursor();
 
 		// multiple matches error (not likely)
@@ -1124,7 +1125,7 @@ class PagesPathFinder extends Wire {
 		$query->bindValue(':name', $name);
 		$query->execute();
 
-		$row = $query->fetch(\PDO::FETCH_ASSOC);
+		$row = $query->fetch(PDO::FETCH_ASSOC);
 		$query->closeCursor();
 
 		if(!$row) {
@@ -1594,12 +1595,12 @@ class PagesPathFinder extends Wire {
 		$page = $this->pages->cacher()->getCache((int) $pageId);
 		if($page) return $page->get($col);
 		$query = $this->wire()->database->prepare("SELECT `$col` FROM pages WHERE id=:id");
-		$query->bindValue(':id', $pageId, \PDO::PARAM_INT);
+		$query->bindValue(':id', $pageId, PDO::PARAM_INT);
 		try {
 			$query->execute();
 			$status = (int) $query->fetchColumn();
 			$query->closeCursor();
-		} catch(\Exception) {
+		} catch(Exception) {
 			$status = -1;
 		}
 		return $status;
@@ -1708,10 +1709,10 @@ class PagesPathFinder extends Wire {
 			$sql = "SELECT $cols FROM pages WHERE id=:id";
 
 			$query = $database->prepare($sql);
-			$query->bindValue(':id', (int) $config->rootPageID, \PDO::PARAM_INT);
+			$query->bindValue(':id', (int) $config->rootPageID, PDO::PARAM_INT);
 			$query->execute();
 
-			$row = $query->fetch(\PDO::FETCH_ASSOC);
+			$row = $query->fetch(PDO::FETCH_ASSOC);
 			$query->closeCursor();
 
 			foreach($row as $name => $value) {

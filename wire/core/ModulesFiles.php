@@ -1,5 +1,10 @@
 <?php namespace ProcessWire;
 
+use DirectoryIterator;
+use Exception;
+use ReflectionClass;
+use PDO;
+use Override;
 /**
  * ProcessWire Modules: Files
  *
@@ -7,7 +12,6 @@
  * https://processwire.com
  *
  */
-
 class ModulesFiles extends ModulesClass {
 	
 	/**
@@ -80,8 +84,8 @@ class ModulesFiles extends ModulesClass {
 		}
 
 		try {
-			$dir = new \DirectoryIterator($path);
-		} catch(\Exception $e) {
+			$dir = new DirectoryIterator($path);
+		} catch(Exception $e) {
 			$this->trackException($e, false, true);
 			$dir = null;
 		}
@@ -247,10 +251,10 @@ class ModulesFiles extends ModulesClass {
 						$className = strlen(__NAMESPACE__) ? "\\" . __NAMESPACE__ . "\\$moduleName" : $moduleName;
 					}
 				}
-				$reflector = new \ReflectionClass($className);
+				$reflector = new ReflectionClass($className);
 				$file = $reflector->getFileName();
 
-			} catch(\Exception) {
+			} catch(Exception) {
 				$file = false;
 			}
 		}
@@ -403,10 +407,10 @@ class ModulesFiles extends ModulesClass {
 
 		$sql = "SELECT id, class FROM modules WHERE flags & :flagsNoFile ORDER BY class";
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':flagsNoFile', Modules::flagsNoFile, \PDO::PARAM_INT);
+		$query->bindValue(':flagsNoFile', Modules::flagsNoFile, PDO::PARAM_INT);
 		$query->execute();
 
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
 			$class = $row['class'];
 
@@ -620,7 +624,7 @@ class ModulesFiles extends ModulesClass {
 		return $value;
 	}
 
-	#[\Override]
+	#[Override]
  public function getDebugData() {
 		return ['moduleFileExts' => $this->moduleFileExts];
 	}

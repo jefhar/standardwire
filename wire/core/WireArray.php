@@ -1,5 +1,12 @@
 <?php namespace ProcessWire;
 
+use IteratorAggregate;
+use ArrayAccess;
+use Countable;
+use Override;
+use ReturnTypeWillChange;
+use ArrayObject;
+use ReflectionFunction;
 /**
  * ProcessWire WireArray
  *
@@ -36,7 +43,7 @@
  * #pw-body
  *
  */
-class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Countable {
+class WireArray extends Wire implements IteratorAggregate, ArrayAccess, Countable {
 
 	/**
 	 * Basic type managed by the WireArray for data storage
@@ -630,7 +637,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return Wire|WireData|Page|mixed|bool Value of item requested, or false if it doesn't exist. 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		$value = parent::__get($name); 
 		if(is_null($value)) $value = $this->getProperty($name);
@@ -1805,27 +1812,26 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	}
 
 	/**
-	 * Allows iteration of the WireArray. 
-	 * 
-	 * - Fulfills PHP's IteratorAggregate interface so that you can traverse the WireArray. 
-	 * - No need to call this method directly, just use PHP's `foreach()` method on the WireArray.
-	 * 
-	 * ~~~~~
-	 * // Traversing a WireArray with foreach:
-	 * foreach($items as $item) {
-	 *   // ... 
-	 * }
-	 * ~~~~~
-	 * 
-	 * #pw-group-traversal
-	 * 
-	 * @return \ArrayObject|Wire[]
-	 *
-	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+  * Allows iteration of the WireArray.
+  *
+  * - Fulfills PHP's IteratorAggregate interface so that you can traverse the WireArray.
+  * - No need to call this method directly, just use PHP's `foreach()` method on the WireArray.
+  *
+  * ~~~~~
+  * // Traversing a WireArray with foreach:
+  * foreach($items as $item) {
+  *   // ...
+  * }
+  * ~~~~~
+  *
+  * #pw-group-traversal
+  *
+  * @return ArrayObject|Wire[]
+  */
+ #[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
-		return new \ArrayObject($this->data); 
+		return new ArrayObject($this->data); 
 	}
 
 	/**
@@ -1844,8 +1850,8 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return int
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function count() {
 		return count($this->data); 
 	}
@@ -1861,8 +1867,8 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @param Wire|mixed $value Value of item. 
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function offsetSet($offset, $value) {
 		if($offset === null) { 
 			// i.e. $wireArray[] = $item;
@@ -1881,8 +1887,8 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return Wire|mixed|bool Value of item requested, or false if it doesn't exist. 
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override]
+	#[ReturnTypeWillChange]
+ #[Override]
 	public function offsetGet($offset) {
 		if($this->offsetExists($offset)) {
 			return $this->data[$offset];
@@ -1902,8 +1908,8 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return bool True if item existed and was unset. False if item didn't exist. 
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function offsetUnset($offset) {
 		if($this->offsetExists($offset)) {
 			$this->remove($offset); 
@@ -1924,8 +1930,8 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return bool True if the item exists, false if not.
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function offsetExists($offset) {
 		return array_key_exists($offset, $this->data);
 	}
@@ -1936,7 +1942,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		$s = '';
 		foreach($this as $value) {
@@ -1988,7 +1994,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return Wire|WireArray
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function resetTrackChanges($trackChanges = true) {
 		$this->itemsAdded = [];
 		$this->itemsRemoved = [];
@@ -2440,7 +2446,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function ___callUnknown($method, $arguments) {
 		
 		if(!isset($arguments[0])) {
@@ -2523,7 +2529,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	public function each($func = null) {
 		$result = null; // return value, if it's detected that one is desired
 		if(is_callable($func)) {
-			$funcInfo = new \ReflectionFunction($func);
+			$funcInfo = new ReflectionFunction($func);
 			$useIndex = $funcInfo->getNumberOfParameters() > 1;
 			foreach($this as $index => $item) {
 				$val = $useIndex ? $func($index, $item) : $func($item);
@@ -2609,7 +2615,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 	
 		$info = ['count' => $this->count(), 'items' => []];

@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Exception;
+use Override;
 /**
  * ProcessWire Modules: Info
  *
@@ -884,7 +886,7 @@ class ModulesInfo extends ModulesClass {
 			$language = $user->language;
 			try {
 				if($language && $language->id && !$language->isDefault()) $user->language = $languages->getDefault(); // save
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$this->trackException($e, false, true);
 			}
 		}
@@ -1197,7 +1199,7 @@ class ModulesInfo extends ModulesClass {
 			}
 			unset($this->modulesLastVersions[$moduleID]);
 			$this->updateModuleVersionsCache();
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->error("Error upgrading module ($moduleName): " . $e->getMessage());
 		}
 	}
@@ -1305,7 +1307,7 @@ class ModulesInfo extends ModulesClass {
 		return $this->moduleNamespaceCache[$namespace] ?? false;
 	}
 
-	#[\Override]
+	#[Override]
  public function __get($name)
  {
      return match ($name) {
@@ -1318,7 +1320,7 @@ class ModulesInfo extends ModulesClass {
      };
  }
 	
-	#[\Override]
+	#[Override]
  public function getDebugData() {
 		return ['moduleInfoCache' => $this->moduleInfoCache, 'moduleInfoCacheVerbose' => $this->moduleInfoCacheVerbose, 'moduleInfoCacheUninstalled' => $this->moduleInfoCacheUninstalled, 'modulesLastVersions' => $this->modulesLastVersions, 'moduleNamespaceCache' => $this->moduleNamespaceCache];
 	}

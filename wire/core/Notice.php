@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Notices
  * 
@@ -220,7 +221,7 @@ abstract class Notice extends WireData {
 	 * @return $this|WireData
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 		if($key === 'text' && is_string($value) && str_starts_with($value, 'icon-') && strpos($value, ' ')) {
 			[$icon, $value] = explode(' ', $value, 2);
@@ -241,7 +242,7 @@ abstract class Notice extends WireData {
 	 * @return mixed
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key === 'flagsArray') return $this->flagNames(parent::get('flags')); 
 		if($key === 'flagsStr') return $this->flagNames(parent::get('flags'), true);
@@ -395,7 +396,7 @@ abstract class Notice extends WireData {
 		return $idStr;
 	}
 	
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		$text = $this->text;
 		if(is_object($text)) {

@@ -1,13 +1,14 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Same as SelectorContains but serves as operator placeholder for SQL LIKE operations
  *
  */
 class SelectorContainsLike extends SelectorContains {
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '%='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -15,10 +16,10 @@ class SelectorContainsLike extends SelectorContains {
 			Selector::compareTypePhrase |
 			Selector::compareTypeLike;
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Contains text like', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('phrase like'); }
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) { return $this->evaluate(stripos((string) $value1, $value2) !== false); }
 }

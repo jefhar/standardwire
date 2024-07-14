@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use Exception;
+use PDO;
+use PDOException;
+use Override;
 /**
  * ProcessWire Fieldtype Base
  *
@@ -1136,7 +1140,7 @@ abstract class Fieldtype extends WireData implements Module {
 		try {
 			$stmt = $query->prepare();
 			$result = $database->execute($stmt);
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$result = false;
 			$this->trackException($e, false, true);
 		}
@@ -1145,7 +1149,7 @@ abstract class Fieldtype extends WireData implements Module {
 		
 		$fieldName = $database->escapeCol($field->name); 
 		$schema = $this->trimDatabaseSchema($schema);
-		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		$stmt->closeCursor();
 		
 		if(!$row) return null;
@@ -1261,19 +1265,18 @@ abstract class Fieldtype extends WireData implements Module {
 	}
 
 	/**
-	 * Save the given field from given page to the database. 
-	 *
-	 * Possible template method: If overridden, it is likely not necessary to call this parent method.
-	 * 
-	 * #pw-group-saving
-	 *
-	 * @param Page $page Page object to save. 
-	 * @param Field $field Field to retrieve from the page. 
-	 * @return bool True on success, false on DB save failure.
-	 * @throws WireException|\PDOException|WireDatabaseException
-	 *
-	 */
-	public function ___savePageField(Page $page, Field $field) {
+  * Save the given field from given page to the database.
+  *
+  * Possible template method: If overridden, it is likely not necessary to call this parent method.
+  *
+  * #pw-group-saving
+  *
+  * @param Page $page Page object to save.
+  * @param Field $field Field to retrieve from the page.
+  * @return bool True on success, false on DB save failure.
+  * @throws WireException|PDOException|WireDatabaseException
+  */
+ public function ___savePageField(Page $page, Field $field) {
 
 		if(!$page->id || !$field->id) {
 			$t = $field->id ? 'pages' : 'fields';
@@ -1343,7 +1346,7 @@ abstract class Fieldtype extends WireData implements Module {
 		$query = $database->prepare($sql);
 		foreach($bindValues as $bindKey => $bindValue) {
 			if(is_int($bindValue)) {
-				$query->bindValue($bindKey, $bindValue, \PDO::PARAM_INT);
+				$query->bindValue($bindKey, $bindValue, PDO::PARAM_INT);
 			} else {
 				$query->bindValue($bindKey, $bindValue);
 			}
@@ -1352,7 +1355,7 @@ abstract class Fieldtype extends WireData implements Module {
 		try {
 			$result = $query->execute();
 			
-		} catch(\PDOException $e) {
+		} catch(PDOException $e) {
 			if($e->getCode() == 23000) {
 				$message = sprintf(
 					$this->_('Value not allowed for field “%s” because it is already in use'), 
@@ -1386,7 +1389,7 @@ abstract class Fieldtype extends WireData implements Module {
 			$table = $database->escapeTable($field->table); 
 			$query = $database->prepare("DROP TABLE `$table`"); // QA
 			$result = $query->execute();
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$result = false; 
 			$this->trackException($e, true, true);
 		}
@@ -1448,7 +1451,7 @@ abstract class Fieldtype extends WireData implements Module {
 		$database = $this->wire()->database;
 		$table = $database->escapeTable($field->table);
 		$query = $database->prepare("DELETE FROM `$table` WHERE pages_id=:page_id");
-		$query->bindValue(":page_id", $page->id, \PDO::PARAM_INT);
+		$query->bindValue(":page_id", $page->id, PDO::PARAM_INT);
 		return $query->execute();
 	}
 	
@@ -1566,7 +1569,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * @return mixed
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key === 'name') return $this->className();
 		if($key === 'shortName') {
@@ -1646,7 +1649,7 @@ abstract class Fieldtype extends WireData implements Module {
 	 * The string value of Fieldtype is always the Fieldtype's name. 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return $this->className();
 	}

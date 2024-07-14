@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ReflectionClass;
+use ReflectionFunction;
 /**
  * Helper class for PHP 5.6+ __debugInfo() methods in Wire classes
  * 
@@ -71,14 +73,14 @@ class WireDebugInfo extends Wire {
 				/** @var Wire $toObject */
 				$toObject = $hook['toObject'];
 				$value .= $toObject->className() . "->";
-				$ref = new \ReflectionClass($hook['toObject']);
+				$ref = new ReflectionClass($hook['toObject']);
 				$filename = $ref->getFileName();
 			}
 			if(!empty($hook['toMethod'])) {
 				if(is_string($hook['toMethod'])) {
 					$value .= "$hook[toMethod]()";
 				} else if(is_callable($hook['toMethod'])) {
-					$ref = new \ReflectionFunction($hook['toMethod']);
+					$ref = new ReflectionFunction($hook['toMethod']);
 					$filename = $ref->getFileName();
 					$value = "anonymous function()";
 				}

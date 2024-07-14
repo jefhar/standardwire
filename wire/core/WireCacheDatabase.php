@@ -1,5 +1,10 @@
 <?php namespace ProcessWire;
 
+use Override;
+use PDO;
+use PDOStatement;
+use PDOException;
+use Exception;
 /**
  * Database cache handler for WireCache
  *
@@ -22,7 +27,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * @return array Returns array of associative arrays, each containing requested properties 
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function find(array $options) {
 
 		$defaults = ['names' => [], 'expires' => [], 'expiresMode' => 'OR', 'get' => ['name', 'expires', 'data']];
@@ -96,7 +101,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 
 		if(!$this->executeQuery($query)) return [];
 		
-		$rows = $query->fetchAll(\PDO::FETCH_ASSOC);
+		$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 		$query->closeCursor();
 
 		return $rows;
@@ -111,7 +116,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * @return bool
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function save($name, $data, $expire) {
 	
 		$sql =
@@ -135,7 +140,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * @return bool
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function delete($name) {
 		$sql = 'DELETE FROM caches WHERE name=:name';
 		$query = $this->wire()->database->prepare($sql, "cache.delete($name)");
@@ -151,7 +156,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * @return int
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function deleteAll() {
 		return $this->_deleteAll();
 	}
@@ -162,7 +167,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * @return int
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function expireAll() {
 		return $this->_deleteAll(true);
 	}
@@ -186,17 +191,16 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	}
 
 	/**
-	 * Execute query
-	 * 
-	 * @param \PDOStatement $query
-	 * @return bool
-	 * 
-	 */
-	protected function executeQuery(\PDOStatement $query) {
+  * Execute query
+  *
+  * @param PDOStatement $query
+  * @return bool
+  */
+ protected function executeQuery(PDOStatement $query) {
 		$install = false;
 		try {
 			$result = $query->execute();
-		} catch(\PDOException $e) {
+		} catch(PDOException $e) {
 			$result = false;
 			$install = $e->getCode() === '42S02'; // table does not exist
 			if(!$install) throw $e;
@@ -225,7 +229,7 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 				) ENGINE=$dbEngine DEFAULT CHARSET=$dbCharset;
 			");
 			$this->message("Re-created 'caches' table");
-		} catch(\Exception) {
+		} catch(Exception) {
 			$this->error("Unable to create 'caches' table");
 		}
 	}

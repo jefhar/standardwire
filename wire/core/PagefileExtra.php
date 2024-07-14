@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Extra extension for Pagefile or Pageimage objects
  *
@@ -34,7 +35,6 @@
  * @method string noCacheURL($http = false)
  * 
  */
-
 class PagefileExtra extends WireData {
 
 	/**
@@ -257,7 +257,7 @@ class PagefileExtra extends WireData {
 	 * @return bool|int|mixed|null|string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		switch($key) {
 			case 'exists':
@@ -320,7 +320,7 @@ class PagefileExtra extends WireData {
 	 * 
 	 */
 	
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return $this->basename();
 	}

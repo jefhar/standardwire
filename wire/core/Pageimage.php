@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use Override;
+use Imagick;
+use Exception;
 /**
  * ProcessWire Pageimage
  *
@@ -80,7 +83,6 @@
  * @method void createdVariation(Pageimage $image, array $data) Called after new image variation created (3.0.180+)
  *
  */
-
 class Pageimage extends Pagefile {
 
 	/**
@@ -170,7 +172,7 @@ class Pageimage extends Pagefile {
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __clone() {
 		$this->imageInfo['width'] = 0; 
 		$this->imageInfo['height'] = 0;
@@ -187,7 +189,7 @@ class Pageimage extends Pagefile {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function url() {
 		$hooks = $this->wire()->hooks;
 		if($hooks->isHooked('Pagefile::url()') || $hooks->isHooked('Pageimage::url()')) { 
@@ -205,7 +207,7 @@ class Pageimage extends Pagefile {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function filename() {
 		$hooks = $this->wire()->hooks;
 		if($hooks->isHooked('Pagefile::filename()') || $hooks->isHooked('Pageimage::filename()')) { 
@@ -360,7 +362,7 @@ class Pageimage extends Pagefile {
 	 * @return Pageimage|WireData
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 		if($key === 'sizeOptions' && is_array($value)) {
 			$this->sizeOptions = $value;
@@ -379,7 +381,7 @@ class Pageimage extends Pagefile {
 	 * @return mixed
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		switch($key) {
 			case 'width':
@@ -550,11 +552,11 @@ class Pageimage extends Pagefile {
 		
 		if((!$width || !$height) && (extension_loaded('imagick') || class_exists('\IMagick'))) {
 			try {
-				$imagick = new \Imagick();
+				$imagick = new Imagick();
 				$imagick->readImage($filename);
 				$width = $imagick->getImageWidth();
 				$height = $imagick->getImageHeight();
-			} catch(\Exception) {
+			} catch(Exception) {
 				// fallback to 100%
 			}
 		}
@@ -953,7 +955,7 @@ class Pageimage extends Pagefile {
 						$createdVariationHookData = ['width' => $width, 'height' => $height, 'options' => $options, 'filenameUnvalidated' => $filenameUnvalidated, 'filenameFinal' => $filenameFinal, 'filenameUnvalidatedWebp' => $filenameUnvalidatedWebp, 'filenameFinalWebp' => $filenameFinalWebp];
 					}
 					
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$this->trackException($e, false); 
 					$this->error = $e->getMessage(); 
 				}
@@ -1508,7 +1510,7 @@ class Pageimage extends Pagefile {
 	 * #pw-internal Public API should use delete method from Pageimages
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function unlink() {
 		parent::unlink();
 		$this->removeVariations();
@@ -1524,7 +1526,7 @@ class Pageimage extends Pagefile {
 	 * @return bool True if successful
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function copyToPath($path) {
 		$files = $this->wire()->files;
 		if(parent::copyToPath($path)) {
@@ -1682,7 +1684,7 @@ class Pageimage extends Pagefile {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function ___install($filename) {
 		parent::___install($filename); 
 		if(!$this->width()) {
@@ -1738,7 +1740,7 @@ class Pageimage extends Pagefile {
 		$options['webpAdd'] = true;
 		try {
 			$original->size($width, $height, $options);
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->error = ($this->error ? "$this->error - " : "") . $e->getMessage();
 		}
 		
@@ -1757,7 +1759,7 @@ class Pageimage extends Pagefile {
 	 * @since 3.0.132
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function extras($name = null, PagefileExtra $value = null) {
 		if($name) return parent::extras($name, $value); 
 		$extras = parent::extras();
@@ -1776,7 +1778,7 @@ class Pageimage extends Pagefile {
 	 * @return string|bool Returns new name (basename) on success, or boolean false if rename failed.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function rename($basename) {
 		
 		$variations = $this->getVariations();
@@ -1813,14 +1815,14 @@ class Pageimage extends Pagefile {
 	 * @since 3.0.154
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function replaceFile($filename, $move = true) {
 		if(!parent::replaceFile($filename, $move)) return false;
 		$this->getImageInfo(true);
 		return true;
 	}
 
-	#[\Override]
+	#[Override]
  public function __isset($key) {
 		if($key === 'original') return $this->original !== null;
 		return parent::__isset($key);
@@ -1832,7 +1834,7 @@ class Pageimage extends Pagefile {
 	 * @return array
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		return $this->debugInfo->getBasicDebugInfo();
 	}

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Notices
  * 
@@ -69,7 +70,7 @@ class Notices extends WireArray {
 	 * @return bool
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Notice; 
 	}
@@ -80,7 +81,7 @@ class Notices extends WireArray {
 	 * @return Notice
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new NoticeMessage('')); 
 	}
@@ -190,7 +191,7 @@ class Notices extends WireArray {
 	 * @return Notices|WireArray
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function add($item) {
 		
 		if(!($item instanceof Notice)) {

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ImageSizer Engine Module (Abstract)
  * 
@@ -1345,7 +1346,7 @@ abstract class ImageSizerEngine extends WireData implements Module, Configurable
 	 * @return mixed|null
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 
 		$keys = ['filename', 'extension', 'imageType', 'image', 'modified', 'supportedImageTypes', 'info', 'iptcRaw', 'validIptcTags', 'cropExtra', 'options'];

@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use DirectoryIterator;
+use Exception;
 /**
  * ProcessWire Pages Export/Import Helpers
  * 
@@ -22,7 +24,6 @@
  * https://processwire.com
  *
  */
-
 class PagesExportImport extends Wire {
 
 	/**
@@ -80,7 +81,7 @@ class PagesExportImport extends Wire {
 		$path = $this->getExportPath();
 		$qty = 0;
 		
-		foreach(new \DirectoryIterator($path) as $file) {
+		foreach(new DirectoryIterator($path) as $file) {
 			
 			if($file->isDot()) continue;
 			if($file->getBasename() == $this->className() . '.txt') continue; // we want this file to stay
@@ -597,7 +598,7 @@ class PagesExportImport extends Wire {
 				// proceed with import of field
 				try {
 					$this->importFieldValue($page, $field, $value, $options);
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$warnings[] = $e->getMessage();
 				}
 			}
@@ -903,7 +904,7 @@ class PagesExportImport extends Wire {
 			$commitException = false;
 			try {
 				$pageValue = $field->type->importValue($page, $field, $importValue, $o);
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$warning = $e->getMessage();
 				$page->warning((str_starts_with($warning, "$field:") ? '' : "$field: ") . $warning);
 				if($options['commit'] && $fieldtypeImportOptions['restoreOnException'] && $page->id) {
@@ -911,7 +912,7 @@ class PagesExportImport extends Wire {
 					try {
 						$pageValue = $field->type->importValue($page, $field, $exportValue, $o);
 						$page->warning("$field: Attempted to restore previous value");
-					} catch(\Exception) {
+					} catch(Exception) {
 						$commitException = true;
 					}
 				}
@@ -1014,7 +1015,7 @@ class PagesExportImport extends Wire {
 						$pagefile = null;
 					}
 					$filesAdded[] = $fileName;
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$page->warning($e->getMessage()); 	
 					$pagefile = null;
 				}
@@ -1096,7 +1097,7 @@ class PagesExportImport extends Wire {
 						if(is_null($http)) $http = $this->wire(new WireHttp());
 						$http->download($url, $targetFile);
 						$variationsAdded[] = $name;
-					} catch(\Exception $e) {
+					} catch(Exception $e) {
 						$page->warning("Error downloading file (image variation): $url - " . $e->getMessage());
 					}
 				}
@@ -1329,7 +1330,7 @@ class PagesExportImport extends Wire {
 			// test to see if exportable
 			try {
 				$importInfo = $fieldtype->getImportValueOptions($field); 
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$exportable = false;
 				$reason = $e->getMessage();
 				$importInfo = false;

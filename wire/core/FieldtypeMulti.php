@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use Override;
+use PDO;
+use Exception;
+use PDOException;
 /**
  * ProcessWire FieldtypeMulti
  *
@@ -57,7 +61,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getDatabaseSchema(Field $field) {
 		$schema = parent::getDatabaseSchema($field); 
 		$schema['sort'] = 'int unsigned NOT NULL'; 
@@ -73,7 +77,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___getSelectorInfo(Field $field, array $data = []) {
 		$info = parent::___getSelectorInfo($field, $data); 
 		$info['subfields']['count'] = ['name' => 'count', 'label' => $this->_('count'), 'operators' => ['=', '!=', '<', '>', '<=', '>='], 'input' => 'number'];
@@ -87,7 +91,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return Fieldtypes|null
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___getCompatibleFieldtypes(Field $field) {
 		$fieldtypes = $this->wire(new Fieldtypes());
 		foreach($this->wire()->fieldtypes as $fieldtype) {
@@ -104,7 +108,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return WireArray
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getBlankValue(Page $page, Field $field) {
 		return $this->wire(new WireArray());
 	}
@@ -120,7 +124,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return WireArray
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function sanitizeValue(Page $page, Field $field, $value) {
 		return $value instanceof WireArray ? $value : $this->wire(new WireArray());
 	}
@@ -134,7 +138,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return WireArray
 	 *
 	 */ 
-	#[\Override]
+	#[Override]
  public function ___wakeupValue(Page $page, Field $field, $value) {
 		
 		$target = $this->getBlankValue($page, $field);
@@ -189,7 +193,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___sleepValue(Page $page, Field $field, $value) {
 		$values = [];
 		if(!$value instanceof WireArray) {
@@ -204,18 +208,17 @@ abstract class FieldtypeMulti extends Fieldtype {
 	}
 	
 	/**
-	 * Per the Fieldtype interface, Save the given Field from the given Page to the database
-	 *
-	 * Because the number of values may have changed, this method plays it safe and deletes all the old values
-	 * and reinserts them as new.
-	 *
-	 * @param Page $page
-	 * @param Field $field
-	 * @return bool
-	 * @throws \PDOException|WireException|WireDatabaseQueryException on failure
-	 *
-	 */
-	#[\Override]
+  * Per the Fieldtype interface, Save the given Field from the given Page to the database
+  *
+  * Because the number of values may have changed, this method plays it safe and deletes all the old values
+  * and reinserts them as new.
+  *
+  * @param Page $page
+  * @param Field $field
+  * @return bool
+  * @throws PDOException|WireException|WireDatabaseQueryException on failure
+  */
+ #[Override]
  public function ___savePageField(Page $page, Field $field) {
 
 		if(!$page->id || !$field->id) return false;
@@ -249,9 +252,9 @@ abstract class FieldtypeMulti extends Fieldtype {
 		try {
 			// since we don't manage IDs of existing values for multi fields, we delete the existing data and insert all of it again
 			$query = $database->prepare("DELETE FROM `$table` WHERE pages_id=:page_id"); // QA
-			$query->bindValue(":page_id", $page_id, \PDO::PARAM_INT);
+			$query->bindValue(":page_id", $page_id, PDO::PARAM_INT);
 			$query->execute();
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			if($useTransaction) $database->rollBack();
 			if($config->allowExceptions) throw $e; // throw original
 			throw new WireDatabaseQueryException($e->getMessage(), $e->getCode(), $e);
@@ -287,7 +290,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 
 		$sql = "INSERT INTO `$table` (`" . implode('`, `', $cols) . "`) VALUES(:" . implode(', :', $cols) . ")";
 		$query = $database->prepare($sql);
-		$query->bindValue(':pages_id', $page_id, \PDO::PARAM_INT);
+		$query->bindValue(':pages_id', $page_id, PDO::PARAM_INT);
 		$sort = 0;
 		$result = true;
 		$exception = false;
@@ -296,7 +299,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 		foreach($values as $value) {
 			
 			if($useSort) {
-				$query->bindValue(':sort', $sort, \PDO::PARAM_INT);
+				$query->bindValue(':sort', $sort, PDO::PARAM_INT);
 			}
 
 			// if the value is not an associative array, then force it to be one
@@ -316,14 +319,14 @@ abstract class FieldtypeMulti extends Fieldtype {
 						$this->trimDatabaseSchema($schema, ['findAutoIncrement' => true])
 					);
 					if($nullers && isset($nullers[$key])) {
-						$query->bindValue(":$key", null, \PDO::PARAM_NULL); 
+						$query->bindValue(":$key", null, PDO::PARAM_NULL); 
 					} else {
 						$query->bindValue(":$key", '');
 					}
 					
 				} else if(isset($intCols[$key])) {
 					// integer column
-					$query->bindValue(":$key", (int) $val, \PDO::PARAM_INT); 
+					$query->bindValue(":$key", (int) $val, PDO::PARAM_INT); 
 					
 				} else {
 					// string column
@@ -333,7 +336,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 			
 			try {
 				$result = $query->execute();
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$exception = $e;
 			}
 			
@@ -343,8 +346,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 		}
 	
 		if($exception) {
-			/** @var \PDOException $exception */
-			if($useTransaction) $database->rollBack();
+			/** @var PDOException $exception */
+   if($useTransaction) $database->rollBack();
 			if($config->allowExceptions) throw $exception; // throw original
 			throw new WireDatabaseQueryException($exception->getMessage(), $exception->getCode(), $exception); 
 		} else {
@@ -376,7 +379,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return array|null
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___loadPageField(Page $page, Field $field) {
 
 		if(!$page->id || !$field->id) return null;
@@ -396,7 +399,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 		try {
 			$stmt = $query->prepare();
 			$result = $database->execute($stmt);
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$result = false;
 			$this->trackException($e, false, true);
 		}
@@ -408,7 +411,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 		$values = [];
 
 		/** @noinspection PhpAssignmentInConditionInspection */
-		while($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$value = [];
 			foreach($schema as $k => $unused) {
 				$key = $fieldName . '__' . $k;
@@ -431,7 +434,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 			$query->set('orderby', []); // clear
 			$stmt = $query->prepare();
 			$stmt->execute();
-			$row = $stmt->fetch(\PDO::FETCH_ASSOC);
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 			$values['_pagination_start'] = (int) $query->data('_start');
 			$values['_pagination_limit'] = (int) $query->data('_limit');
 			$values['_pagination_total'] = (int) $row['_total'];
@@ -454,7 +457,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getLoadQuery(Field $field, DatabaseQuerySelect $query) {
 
 		$database = $this->wire()->database;
@@ -730,7 +733,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 		
 			try {
 				if($query->execute()) $numSaved++;
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$this->trackException($e, false);
 				if($this->wire()->user->isSuperuser()) {
 					$this->error($e->getMessage(), Notice::log);
@@ -768,7 +771,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 					$this->lockedTable = true;
 					$locked = true;
 				}
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$lastException = $e;
 			}
 		} while(!$locked && $numAttempts++ < $maxAttempts);
@@ -790,7 +793,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 			$this->wire()->database->exec("UNLOCK TABLES");
 			$this->lockedTable = false;
 			$result = true;
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->trackException($e, false);
 		}
 		return $result;
@@ -814,7 +817,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 		$column = $database->escapeCol($column);
 		$sql = "SELECT MAX($column) FROM `$table` WHERE pages_id=:pages_id";
 		$query = $database->prepare($sql);
-		$query->bindValue(':pages_id', $page->id, \PDO::PARAM_INT);
+		$query->bindValue(':pages_id', $page->id, PDO::PARAM_INT);
 		$query->execute();
 		$value = $query->fetchColumn();
 		$query->closeCursor();
@@ -870,7 +873,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return DatabaseQuerySelect|NULL
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getLoadQueryAutojoin(Field $field, DatabaseQuerySelect $query) {
 		if($this->get('useOrderByCols')) {
 			// autojoin is not used if sorting or pagination is active
@@ -901,7 +904,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return PageFinderDatabaseQuerySelect|DatabaseQuerySelect $query
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getMatchQuery($query, $table, $subfield, $operator, $value) {
 
 		self::$getMatchQueryCount++;
@@ -979,7 +982,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return InputfieldWrapper
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___getConfigInputfields(Field $field) {
 		
 		$inputfields = parent::___getConfigInputfields($field);
@@ -990,7 +993,7 @@ abstract class FieldtypeMulti extends Fieldtype {
 				$info = $this->getDatabaseSchemaVerbose($field);
 				$primaryKeys = $info['primaryKeys'];
 				$schema = $info['schema'];
-			} catch(\Exception) {
+			} catch(Exception) {
 				$schema = [];
 				$primaryKeys = [];
 			}

@@ -1,5 +1,11 @@
 <?php namespace ProcessWire;
 
+use Countable;
+use Override;
+use PDO;
+use Exception;
+use ReturnTypeWillChange;
+use ArrayObject;
 /**
  * WireData with database storage
  * 
@@ -10,7 +16,7 @@
  * https://processwire.com
  *
  */
-class WireDataDB extends WireData implements \Countable {
+class WireDataDB extends WireData implements Countable {
 
 	/**
 	 * True when all data from the table has been loaded (a call to getArray will trigger this)
@@ -57,7 +63,7 @@ class WireDataDB extends WireData implements \Countable {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		$value = parent::get($key);
 		if($value !== null) return $value;
@@ -73,7 +79,7 @@ class WireDataDB extends WireData implements \Countable {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function getArray() {
 		return $this->load(true);
 	}
@@ -87,7 +93,7 @@ class WireDataDB extends WireData implements \Countable {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 		if(parent::get($key) === $value) return $this; // no change
 		if($value === null) return $this->remove($key);  // remove
@@ -104,7 +110,7 @@ class WireDataDB extends WireData implements \Countable {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function remove($key) {
 		$this->delete("$key");
 		parent::remove($key);
@@ -149,13 +155,13 @@ class WireDataDB extends WireData implements \Countable {
 		$sql = "DELETE FROM `$table` WHERE source_id=:source_id ";
 		if($name !== true) $sql .= "AND name=:name";
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':source_id', $this->sourceID(), \PDO::PARAM_INT);
+		$query->bindValue(':source_id', $this->sourceID(), PDO::PARAM_INT);
 		if($name !== true) $query->bindValue(':name', $name);
 		try {
 			$query->execute();
 			$result = $query->rowCount();
 			$query->closeCursor();
-		} catch(\Exception) {
+		} catch(Exception) {
 			$result = 0;
 		}
 		return $result;
@@ -176,16 +182,16 @@ class WireDataDB extends WireData implements \Countable {
 		$sql = "SELECT name, data FROM `$table` WHERE source_id=:source_id ";
 		if($name !== true) $sql .= "AND name=:name ";
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':source_id', $this->sourceID(), \PDO::PARAM_INT);
+		$query->bindValue(':source_id', $this->sourceID(), PDO::PARAM_INT);
 		if($name !== true) $query->bindValue(':name', $name);
 		try {
 			$query->execute();
-		} catch(\Exception) {
+		} catch(Exception) {
 			return $name === true ? [] : null;
 		}
 		if($query->rowCount()) {
 			$meta = [];
-			while($row = $query->fetch(\PDO::FETCH_NUM)) {
+			while($row = $query->fetch(PDO::FETCH_NUM)) {
 				[$key, $data] = $row;
 				$meta[$key] = json_decode((string) $data, true);
 				parent::set($key, $meta[$key]);
@@ -219,13 +225,13 @@ class WireDataDB extends WireData implements \Countable {
 			"INSERT INTO `$table` (source_id, name, data) VALUES(:source_id, :name, :data) " .
 			"ON DUPLICATE KEY UPDATE source_id=VALUES(source_id), name=VALUES(name), data=VALUES(data)";
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':source_id', $this->sourceID(), \PDO::PARAM_INT);
+		$query->bindValue(':source_id', $this->sourceID(), PDO::PARAM_INT);
 		$query->bindValue(':name', $name);
 		$query->bindValue(':data', $data);
 		try {
 			$query->execute();
 			$result = $query->rowCount();
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			if($recursive) throw $e;
 			// table might not yet exist, try to create and save() again
 			$result = $this->install() ? $this->save($name, $value, true) : false;
@@ -256,17 +262,17 @@ class WireDataDB extends WireData implements \Countable {
 	 * @return int
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function count() {
 		$table = $this->table();
 		$sql = "SELECT COUNT(*) FROM `$table` WHERE source_id=:source_id";
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':source_id', $this->sourceID(), \PDO::PARAM_INT); 
+		$query->bindValue(':source_id', $this->sourceID(), PDO::PARAM_INT); 
 		try {
 			$query->execute();
 			$count = (int) $query->fetchColumn();
-		} catch(\Exception) {
+		} catch(Exception) {
 			$count = 0;
 		}
 		return $count; 
@@ -355,10 +361,10 @@ class WireDataDB extends WireData implements \Countable {
 		return true;
 	}
 
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
-		return new \ArrayObject($this->getArray());
+		return new ArrayObject($this->getArray());
 	}
 
 }

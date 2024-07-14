@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use Override;
+use PDOStatement;
+use Exception;
+use PDOException;
 /**
  * ProcessWire Pages ($pages API variable)
  *
@@ -92,7 +96,6 @@
  * @todo Update saveField to accept array of field names as an option. 
  *
  */
-
 class Pages extends Wire {
 
 	/**
@@ -978,42 +981,41 @@ class Pages extends Wire {
 	}
 	
 	/**
-	 * Clone entire page return it.
-	 * 
-	 * This also clones any file assets assets associated with the page. The clone is recursive
-	 * by default, cloning children (and so on) as well. To clone only the page without children,
-	 * specify false for the `$recursive` argument. 
-	 * 
-	 * Warning: this method can fail when recursive and cloning a page with huge amounts of 
-	 * children (or descendent family), and adequate resources (like memory or time limit) are
-	 * not available.
-	 * 
-	 * ~~~~~
-	 * // Clone the Westin Peachtree skyscraper page
-	 * $building = $pages->get('/skyscrapers/atlanta/westin-peachtree/');
-	 * $copy = $pages->clone($building); 
-	 * 
-	 * // Bonus: Now that the clone exists, lets move and rename it 
-	 * $copy->parent = '/skyscrapers/detroit/';
-	 * $copy->title = 'Renaissance Center';
-	 * $copy->name = 'renaissance-center';
-	 * $copy->save();
-	 * ~~~~~
-	 * 
-	 * #pw-group-creation
-	 *
-	 * @param Page $page Page that you want to clone
-	 * @param Page|null $parent New parent, if different (default=null, which implies same parent)
-	 * @param bool $recursive Clone the children too? (default=true)
-	 * @param array|string $options Options that can be passed to modify default behavior of clone or save:
-	 *  - `forceID` (int): force a specific ID.
-	 *  - `set` (array): Array of properties to set to the clone (you can also do this later).
-	 *  - `recursionLevel` (int): recursion level, for internal use only.
-	 * @return Page|NullPage The newly cloned Page or a NullPage() with id=0 if unsuccessful.
-	 * @throws WireException|\Exception on fatal error
-	 *
-	 */
-	public function ___clone(Page $page, Page $parent = null, $recursive = true, $options = []) {
+  * Clone entire page return it.
+  *
+  * This also clones any file assets assets associated with the page. The clone is recursive
+  * by default, cloning children (and so on) as well. To clone only the page without children,
+  * specify false for the `$recursive` argument.
+  *
+  * Warning: this method can fail when recursive and cloning a page with huge amounts of
+  * children (or descendent family), and adequate resources (like memory or time limit) are
+  * not available.
+  *
+  * ~~~~~
+  * // Clone the Westin Peachtree skyscraper page
+  * $building = $pages->get('/skyscrapers/atlanta/westin-peachtree/');
+  * $copy = $pages->clone($building);
+  *
+  * // Bonus: Now that the clone exists, lets move and rename it
+  * $copy->parent = '/skyscrapers/detroit/';
+  * $copy->title = 'Renaissance Center';
+  * $copy->name = 'renaissance-center';
+  * $copy->save();
+  * ~~~~~
+  *
+  * #pw-group-creation
+  *
+  * @param Page $page Page that you want to clone
+  * @param Page|null $parent New parent, if different (default=null, which implies same parent)
+  * @param bool $recursive Clone the children too? (default=true)
+  * @param array|string $options Options that can be passed to modify default behavior of clone or save:
+  *  - `forceID` (int): force a specific ID.
+  *  - `set` (array): Array of properties to set to the clone (you can also do this later).
+  *  - `recursionLevel` (int): recursion level, for internal use only.
+  * @return Page|NullPage The newly cloned Page or a NullPage() with id=0 if unsuccessful.
+  * @throws WireException|Exception on fatal error
+  */
+ public function ___clone(Page $page, Page $parent = null, $recursive = true, $options = []) {
 		return $this->editor()->_clone($page, $parent, $recursive, $options);
 	}
 
@@ -1424,39 +1426,38 @@ class Pages extends Wire {
 	}
 
 	/**
-	 * Update page modification time to now (or the given modification time)
-	 * 
-	 * This behaves essentially the same as the unix `touch` command, but for ProcessWire pages. 
-	 * 
-	 * ~~~~~
-	 * // Touch the current $page to current date/time
-	 * $pages->touch($page);
-	 * 
-	 * // Touch the current $page and set modification date to 2016/10/24
-	 * $pages->touch($page, "2016-10-24 00:00"); 
-	 * 
-	 * // Touch all "skyscraper" pages in "Atlanta" to current date/time
-	 * $skyscrapers = $pages->find("template=skyscraper, parent=/cities/atlanta/"); 
-	 * $pages->touch($skyscrapers); 
-	 * ~~~~~
-	 * 
-	 * #pw-group-manipulation
-	 * 
-	 * @param Page|PageArray|array $pages May be Page, PageArray or array of page IDs (integers)
-	 * @param null|int|string|array $options Omit (null) to update to now, or unix timestamp or strtotime() recognized time string,
-	 *  or if you do not need this argument, you may optionally substitute the $type argument here,
-	 *  or in 3.0.183+ you can also specify array of options here instead:
-	 *  - `time` (string|int|null): Unix timestamp or strtotime() recognized string to use, omit for use current time (default=null)
-	 *  - `type` (string): One of 'modified', 'created', 'published' (default='modified')
-	 *  - `user` (bool|User): True to also update modified/created user to current user, or specify User object to use (default=false)
-	 * @param string $type Date type to update, one of 'modified', 'created' or 'published' (default='modified') Added 3.0.147
-	 *  Skip this argument if using options array for previous argument or if using the default type 'modified'.
-	 * @throws WireException|\PDOException if given invalid format for $modified argument or failed database query
-	 * @return bool True on success, false on fail
-	 * @since 3.0.0
-	 *
-	 */
-	public function ___touch($pages, $options = null, $type = 'modified') {
+  * Update page modification time to now (or the given modification time)
+  *
+  * This behaves essentially the same as the unix `touch` command, but for ProcessWire pages.
+  *
+  * ~~~~~
+  * // Touch the current $page to current date/time
+  * $pages->touch($page);
+  *
+  * // Touch the current $page and set modification date to 2016/10/24
+  * $pages->touch($page, "2016-10-24 00:00");
+  *
+  * // Touch all "skyscraper" pages in "Atlanta" to current date/time
+  * $skyscrapers = $pages->find("template=skyscraper, parent=/cities/atlanta/");
+  * $pages->touch($skyscrapers);
+  * ~~~~~
+  *
+  * #pw-group-manipulation
+  *
+  * @param Page|PageArray|array $pages May be Page, PageArray or array of page IDs (integers)
+  * @param null|int|string|array $options Omit (null) to update to now, or unix timestamp or strtotime() recognized time string,
+  *  or if you do not need this argument, you may optionally substitute the $type argument here,
+  *  or in 3.0.183+ you can also specify array of options here instead:
+  *  - `time` (string|int|null): Unix timestamp or strtotime() recognized string to use, omit for use current time (default=null)
+  *  - `type` (string): One of 'modified', 'created', 'published' (default='modified')
+  *  - `user` (bool|User): True to also update modified/created user to current user, or specify User object to use (default=false)
+  * @param string $type Date type to update, one of 'modified', 'created' or 'published' (default='modified') Added 3.0.147
+  *  Skip this argument if using options array for previous argument or if using the default type 'modified'.
+  * @throws WireException|PDOException if given invalid format for $modified argument or failed database query
+  * @return bool True on success, false on fail
+  * @since 3.0.0
+  */
+ public function ___touch($pages, $options = null, $type = 'modified') {
 		return $this->editor()->touch($pages, $options, $type);
 	}
 	
@@ -1689,7 +1690,7 @@ class Pages extends Wire {
 	 * @return mixed
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name)
  {
      return match ($name) {
@@ -1938,19 +1939,18 @@ class Pages extends Wire {
 	}
 
 	/**
-	 * Execute a PDO statement, with retry and error handling (deprecated)
-	 * 
-	 * #pw-internal
-	 *
-	 * @param \PDOStatement $query
-	 * @param bool $throw Whether or not to throw exception on query error (default=true)
-	 * @param int $maxTries Max number of times it will attempt to retry query on error
-	 * @return bool
-	 * @throws \PDOException
-	 * @deprecated Use $database->execute() instead
-	 *
-	 */
-	public function executeQuery(\PDOStatement $query, $throw = true, $maxTries = 3) {
+  * Execute a PDO statement, with retry and error handling (deprecated)
+  *
+  * #pw-internal
+  *
+  * @param PDOStatement $query
+  * @param bool $throw Whether or not to throw exception on query error (default=true)
+  * @param int $maxTries Max number of times it will attempt to retry query on error
+  * @return bool
+  * @throws PDOException
+  * @deprecated Use $database->execute() instead
+  */
+ public function executeQuery(PDOStatement $query, $throw = true, $maxTries = 3) {
 		return $this->wire()->database->execute($query, $throw, $maxTries);
 	}
 

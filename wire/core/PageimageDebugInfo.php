@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use stdClass;
 /**
  * Debug info for Pageimage 
  * 
@@ -46,7 +48,7 @@ class PageimageDebugInfo extends WireData {
 	 * @return mixed|null
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		$value = $this->pageimage->get($key);
 		if($value === null) $value = parent::get($key);
@@ -186,9 +188,9 @@ class PageimageDebugInfo extends WireData {
 			return $info;
 		} else if('object' == $returnType) {
 			// return as object
-			$object = new \stdClass();
+			$object = new stdClass();
 			foreach($info as $group => $array) {
-				$object->$group = new \stdClass();
+				$object->$group = new stdClass();
 				if('thumb' == $group) {
 					$object->$group = $array;
 					continue;
@@ -245,7 +247,7 @@ class PageimageDebugInfo extends WireData {
 	private function arrayToObject($array, &$object, $multidim = true) {
 		foreach($array as $key => $value) {
 			if($multidim && is_array($value)) {
-				$object->$key = new \stdClass();
+				$object->$key = new stdClass();
 				$this->arrayToObject($value, $object->$key, false);
 			} else {
 				$object->$key = $value;

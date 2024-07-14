@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector for advanced text searches that interprets specific search commands
  * 
@@ -16,9 +17,9 @@
  *
  */
 class SelectorContainsAdvanced extends SelectorContains {
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '#='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -28,9 +29,9 @@ class SelectorContainsAdvanced extends SelectorContains {
 			Selector::compareTypeCommand | 
 			Selector::compareTypeFulltext; 
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Advanced text search', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() {
 		return 
 			__('Match values with commands: +Word MUST appear, -Word MUST NOT appear, and unprefixed Word may appear.', __FILE__) . ' ' . 
@@ -82,7 +83,7 @@ class SelectorContainsAdvanced extends SelectorContains {
 		return $commands;
 	}
 	
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) {
 		$fail = false;
 		$numMatch = 0;

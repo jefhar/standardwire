@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire WireMail
  * 
@@ -72,7 +73,6 @@
  * 
  *
  */
-
 class WireMail extends WireData implements WireMailInterface {
 
 	/**
@@ -112,7 +112,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return mixed|null
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key === 'headers') $key = 'header';
 		if(array_key_exists($key, $this->mail)) return $this->mail[$key]; 
@@ -128,7 +128,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return $this|WireData
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 		if($key === 'headers' || $key === 'header') {
 			if(is_array($value)) $this->headers($value); 
@@ -140,9 +140,9 @@ class WireMail extends WireData implements WireMailInterface {
 		return $this;
 	}
 	
-	#[\Override]
+	#[Override]
  public function __get($key) { return $this->get($key); }
-	#[\Override]
+	#[Override]
  public function __set($key, $value) { return $this->set($key, $value); }
 
 	/**
@@ -280,7 +280,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @throws WireException if any provided emails were invalid or in blacklist
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function to($email = null, $name = null) {
 
 		if(is_null($email)) { 
@@ -351,7 +351,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @throws WireException if provided email was invalid or in blacklist
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function from($email, $name = null) {
 		if(is_null($name)) {
 			[$email, $name] = $this->extractEmailAndName($email);
@@ -421,7 +421,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return $this 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function subject($subject) {
 		$this->mail['subject'] = $this->sanitizeHeaderValue($subject); 	
 		return $this; 
@@ -439,7 +439,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return $this 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function body($body) {
 		$this->mail['body'] = $body; 
 		return $this; 
@@ -459,7 +459,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return $this 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function bodyHTML($body) {
 		$this->mail['bodyHTML'] = $body; 
 		return $this; 
@@ -478,7 +478,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return $this 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function header($key, $value) {
 		if(is_null($value)) {
 			if(is_array($key)) {
@@ -526,7 +526,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return $this 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function param($value) {
 		if(is_null($value)) {
 			$this->mail['param'] = [];
@@ -598,7 +598,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return int Returns a positive number (indicating number of addresses emailed) or 0 on failure.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___send() {
 
 		// prep header and body

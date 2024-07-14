@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Pagefiles
  *
@@ -50,7 +51,6 @@
  * @method Pagefile|bool clone(Pagefile $item, array $options = array()) Duplicate a file and return it. #pw-group-manipulation
  *
  */
-
 class Pagefiles extends WireArray implements PageFieldValueInterface {
 
 	/**
@@ -150,7 +150,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @param Page $page
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function setPage(Page $page) {
 		$this->page = $page; 
 		// call the filesmanager, just to ensure paths are where they should be
@@ -163,7 +163,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @param Field $field
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function setField(Field $field) {
 		$this->field = $field; 
 	}
@@ -174,7 +174,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Page
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function getPage() {
 		return $this->page; 
 	}
@@ -185,7 +185,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Field|null Returns Field, or null if Field has not yet been assigned. 
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function getField() {
 		return $this->field; 
 	}
@@ -200,7 +200,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Pagefiles|Pageimages|WireArray
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function makeNew() {
 		$class = static::class; 
 		/** @var Pagefiles|Pageimages $newArray */
@@ -221,7 +221,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Pagefiles
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeCopy() {
 		$newArray = $this->makeNew();
 		foreach($this->data as $key => $value) $newArray[$key] = $value; 
@@ -240,7 +240,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __clone() {
 		foreach($this as $key => $pagefile) {
 			/** @var Pagefile $pagefile */
@@ -260,7 +260,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Pagefile;
 	}
@@ -274,7 +274,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getItemKey($item) {
 		return $item->basename; 
 	}
@@ -287,7 +287,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Pagefile
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new Pagefile($this, '')); 
 	}
@@ -303,7 +303,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return mixed
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key == 'page') return $this->getPage(); 
 		if($key == 'field') return $this->getField(); 
@@ -319,7 +319,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return bool|mixed|Page|Wire|WireData
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		if(in_array($name, ['page', 'field', 'url', 'path'])) return $this->get($name); 
 		return parent::__get($name); 
@@ -356,7 +356,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function add($item) {
 
 		if(is_string($item)) {
@@ -451,7 +451,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function remove($key) {
 		$item = $key;
 		if(is_string($item)) $item = $this->get($item); 
@@ -747,7 +747,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return $this
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function trackChange($what, $old = null, $new = null) {
 		if($this->field && $this->page) $this->page->trackChange($this->field->name); 
 		$result = parent::trackChange($what, $old, $new); 
@@ -917,7 +917,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isIdentical(WireArray $items, $strict = true) {
 		if($strict) return $this === $items;
 		return parent::isIdentical($items, $strict);
@@ -932,7 +932,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return $this
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function resetTrackChanges($trackChanges = true) {
 		$this->unlinkQueue = [];
 		if($this->page && $this->page->id && $this->field) {
@@ -960,7 +960,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return bool
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function formatted($set = null) {
 		if(is_bool($set)) $this->formatted = $set;
 		return $this->formatted;
@@ -1010,7 +1010,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return array
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		
 		$info = ['count' => $this->count(), 'page' => $this->page ? $this->page->path() : '?', 'field' => $this->field ? $this->field->name : '?', 'url' => $this->url(), 'path' => $this->path(), 'items' => []];

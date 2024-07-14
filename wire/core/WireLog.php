@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use Override;
+use DirectoryIterator;
+use SplFileInfo;
 /**
  * ProcessWire Log
  *
@@ -16,7 +19,6 @@
  * @todo option to disable logs by name
  *
  */
-
 class WireLog extends Wire {
 
 	protected $logExtension = 'txt';
@@ -50,7 +52,7 @@ class WireLog extends Wire {
 	 * @return Wire|WireLog
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function message($text, $flags = 0) {
 		$flags = $flags === true ? Notice::log : $flags | Notice::logOnly;
 		return parent::message($text, $flags);
@@ -71,7 +73,7 @@ class WireLog extends Wire {
 	 * @return Wire|WireLog
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function error($text, $flags = 0) {
 		$flags = $flags === true ? Notice::log : $flags | Notice::logOnly;
 		return parent::error($text, $flags);
@@ -90,7 +92,7 @@ class WireLog extends Wire {
 	 * @return Wire|WireLog
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function warning($text, $flags = 0) {
 		$flags = $flags === true ? Notice::log : $flags | Notice::logOnly;
 		return parent::warning($text, $flags);
@@ -268,18 +270,17 @@ class WireLog extends Wire {
 	}
 
 	/**
-	 * Get SplFileInfo objects for each log file indexed by log name
-	 * 
-	 * #pw-internal
-	 * 
-	 * @return \SplFileInfo[]
-	 * @throws WireException
-	 * @since 3.0.214
-	 * 
-	 */
-	public function getFiles() {
+  * Get SplFileInfo objects for each log file indexed by log name
+  *
+  * #pw-internal
+  *
+  * @return SplFileInfo[]
+  * @throws WireException
+  * @since 3.0.214
+  */
+ public function getFiles() {
 		
-		$dir = new \DirectoryIterator($this->path());
+		$dir = new DirectoryIterator($this->path());
 		$sanitizer = $this->wire()->sanitizer;
 		$files = [];
 

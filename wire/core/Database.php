@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use mysqli;
+use ReturnTypeWillChange;
+use Override;
 /**
  * ProcessWire MySQLi Database
  *
@@ -13,12 +16,11 @@
  *
  *
  */
-
 /**
  * Database class provides a layer on top of mysqli
  *
  */
-class Database extends \mysqli implements WireDatabase {
+class Database extends mysqli implements WireDatabase {
 
 	/**
 	 * Log of all queries performed in this instance
@@ -95,8 +97,8 @@ class Database extends \mysqli implements WireDatabase {
 	 * @throws WireDatabaseException
 	 *
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override]
+	#[ReturnTypeWillChange]
+ #[Override]
 	public function query($sql, $resultmode = MYSQLI_STORE_RESULT) {
 
 		static $timerTotalQueryTime = 0;
@@ -192,7 +194,7 @@ class Database extends \mysqli implements WireDatabase {
 	 * @return bool 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isOperator($str) {
 		return in_array($str, ['=', '<', '>', '>=', '<=', '<>', '!=', '&', '~', '|', '^', '<<', '>>']);
 	}

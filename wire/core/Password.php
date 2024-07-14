@@ -1,4 +1,6 @@
 <?php namespace ProcessWire;
+
+use Override;
 /**
  * ProcessWire Password Fieldtype
  *
@@ -14,7 +16,6 @@
  * @property-write string $pass
  *
  */
-
 class Password extends Wire {
 
 	/**
@@ -76,7 +77,7 @@ class Password extends Wire {
 	 * @return mixed
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		if($name === 'salt' && empty($this->data['salt'])) $this->data['salt'] = $this->salt();
 		return $this->data[$name] ?? null;
@@ -354,7 +355,7 @@ class Password extends Wire {
 		return $this->random;
 	}
 	
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return (string) $this->data['hash'];
 	}

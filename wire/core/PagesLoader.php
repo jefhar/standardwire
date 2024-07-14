@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use PDO;
+use Exception;
+use PDOException;
 /**
  * ProcessWire Pages Loader
  * 
@@ -9,7 +12,6 @@
  * https://processwire.com
  *
  */
-
 class PagesLoader extends Wire {
 	
 	/**
@@ -1202,7 +1204,7 @@ class PagesLoader extends Wire {
 			$sql = 'SELECT id, templates_id FROM pages';
 			if($idCnt == 1) {
 				$query = $database->prepare("$sql WHERE id=:id");
-				$query->bindValue(':id', (int) reset($ids), \PDO::PARAM_INT); 
+				$query->bindValue(':id', (int) reset($ids), PDO::PARAM_INT); 
 			} else {
 				$ids = array_map(intval(...), $ids);
 				$sql = "$sql WHERE id IN(" . implode(',', $ids) . ")";
@@ -1212,7 +1214,7 @@ class PagesLoader extends Wire {
 			$result = $database->execute($query);
 			if($result) {
 				/** @noinspection PhpAssignmentInConditionInspection */
-				while($row = $query->fetch(\PDO::FETCH_NUM)) {
+				while($row = $query->fetch(PDO::FETCH_NUM)) {
 					[$id, $templates_id] = $row;
 					$id = (int) $id;
 					$templates_id = (int) $templates_id;
@@ -1287,17 +1289,17 @@ class PagesLoader extends Wire {
 			} else {
 				$id = reset($ids);
 				$query->where('pages.id=:id');
-				$query->bindValue(':id', (int) $id, \PDO::PARAM_INT);
+				$query->bindValue(':id', (int) $id, PDO::PARAM_INT);
 			}
 
 			if(!is_null($parent_id)) {
 				$query->where('pages.parent_id=:parent_id');
-				$query->bindValue(':parent_id', (int) $parent_id, \PDO::PARAM_INT);
+				$query->bindValue(':parent_id', (int) $parent_id, PDO::PARAM_INT);
 			}
 			
 			if($template) {
 				$query->where('pages.templates_id=:templates_id');
-				$query->bindValue(':templates_id', (int) $template->id, \PDO::PARAM_INT);
+				$query->bindValue(':templates_id', (int) $template->id, PDO::PARAM_INT);
 			}
 
 			$query->groupby('pages.id');
@@ -1314,7 +1316,7 @@ class PagesLoader extends Wire {
 			try {
 				// while($page = $stmt->fetchObject($_class, array($template))) {
 				/** @noinspection PhpAssignmentInConditionInspection */
-				while($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+				while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					if($_page) {
 						// populate provided Page object
 						$page = $_page;
@@ -1342,7 +1344,7 @@ class PagesLoader extends Wire {
 					}
 					$this->totalPagesLoaded++;
 				}
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$error = $e->getMessage() . " [pageClass=$class, template=$template]";
 				$user = $this->wire()->user;
 				if($user && $user->isSuperuser()) $this->error($error);
@@ -1451,7 +1453,7 @@ class PagesLoader extends Wire {
 		$rowCount = (int) $query->rowCount();
 		$rows = [];
 		
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			$rows[] = $row;
 		}
 		
@@ -1579,9 +1581,9 @@ class PagesLoader extends Wire {
 		$query = $database->prepare("SELECT $cols FROM pages WHERE id=:parent_id");
 
 		do {
-			$query->bindValue(":parent_id", (int) $parentID, \PDO::PARAM_INT);
+			$query->bindValue(":parent_id", (int) $parentID, PDO::PARAM_INT);
 			$database->execute($query);
-			$row = $query->fetch(\PDO::FETCH_NUM);
+			$row = $query->fetch(PDO::FETCH_NUM);
 			if(!$row) {
 				$path = '';
 				break;
@@ -1743,7 +1745,7 @@ class PagesLoader extends Wire {
 			$numRows = $query->rowCount();
 			if($numRows == 1) {
 				// if only 1 page matches then we’ve found what we’re looking for
-				[$pageID, $templatesID, $parentID] = $query->fetch(\PDO::FETCH_NUM);
+				[$pageID, $templatesID, $parentID] = $query->fetch(PDO::FETCH_NUM);
 			} else if($numRows == 0) {
 				// no page can possibly match last segment
 			} else if($numRows > 1) {
@@ -1801,14 +1803,14 @@ class PagesLoader extends Wire {
 			
 			if($rowCount === 1) {
 				// just one page matched
-				$row = $query->fetch(\PDO::FETCH_NUM); 
+				$row = $query->fetch(PDO::FETCH_NUM); 
 				[$pageID, $templatesID, $parentID, ] = $row;
 				
 			} else if($rowCount > 1 && $isRootParent) {
 				// multiple pages matched off root
 				// use either 'default' language match or first matching language
 				$rows = [];
-				while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+				while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 					$rows[] = $row;
 					if($row['name'] !== $lastPart) continue;
 					$rows = [$row]; // force use of only this row (default language)
@@ -1929,7 +1931,7 @@ class PagesLoader extends Wire {
 		$pageId = $page instanceof Page ? $page->id : (int) $page;
 		$sql = 'SELECT COUNT(*) FROM pages WHERE parent_id=:id';
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':id', $pageId, \PDO::PARAM_INT);
+		$query->bindValue(':id', $pageId, PDO::PARAM_INT);
 		$query->execute();
 		$numChildren = (int) $query->fetchColumn(); 
 		$query->closeCursor();
@@ -1950,7 +1952,7 @@ class PagesLoader extends Wire {
 			if(empty($options)) {
 				// optimize away a simple site-wide total count
 				$query = $this->wire()->database->query("SELECT COUNT(*) FROM pages");
-				$count = (int) $query->fetch(\PDO::FETCH_COLUMN);
+				$count = (int) $query->fetch(PDO::FETCH_COLUMN);
 				$query->closeCursor();
 				return (int) $count;
 			} else {
@@ -2012,9 +2014,9 @@ class PagesLoader extends Wire {
 	public function getNativeColumns() {
 		if(empty($this->nativeColumns)) {
 			$query = $this->wire()->database->prepare("SELECT * FROM pages WHERE id=:id");
-			$query->bindValue(':id', $this->wire()->config->rootPageID, \PDO::PARAM_INT);
+			$query->bindValue(':id', $this->wire()->config->rootPageID, PDO::PARAM_INT);
 			$query->execute();
-			$row = $query->fetch(\PDO::FETCH_ASSOC);
+			$row = $query->fetch(PDO::FETCH_ASSOC);
 			foreach(array_keys($row) as $colName) {
 				$this->nativeColumns[$colName] = $colName;
 			}
@@ -2024,22 +2026,21 @@ class PagesLoader extends Wire {
 	}
 
 	/**
-	 * Get value of of a native column in pages table for given page ID
-	 *
-	 * @param int|Page $id Page ID
-	 * @param string $column
-	 * @return int|string|bool Returns int/string value on success or boolean false if no matching row
-	 * @since 3.0.156
-	 * @throws \PDOException|WireException
-	 *
-	 */
-	public function getNativeColumnValue($id, $column) {
+  * Get value of of a native column in pages table for given page ID
+  *
+  * @param int|Page $id Page ID
+  * @param string $column
+  * @return int|string|bool Returns int/string value on success or boolean false if no matching row
+  * @since 3.0.156
+  * @throws PDOException|WireException
+  */
+ public function getNativeColumnValue($id, $column) {
 		$id = (is_object($id) ? (int) "$id" : (int) $id);
 		if($id < 1) return false;
 		$database = $this->wire()->database;
 		if($database->escapeCol($column) !== $column) throw new WireException("Invalid column name: $column");
 		$query = $database->prepare("SELECT `$column` FROM pages WHERE id=:id");
-		$query->bindValue(':id', $id, \PDO::PARAM_INT);
+		$query->bindValue(':id', $id, PDO::PARAM_INT);
 		$query->execute();
 		$value = $query->fetchColumn();
 		$query->closeCursor();

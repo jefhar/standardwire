@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use PDO;
+use Override;
 /**
  * ProcessWire Modules: Flags
  *
@@ -7,7 +9,6 @@
  * https://processwire.com
  *
  */
-
 class ModulesFlags extends ModulesClass {
 	
 	/**
@@ -53,10 +54,10 @@ class ModulesFlags extends ModulesClass {
 		if(isset($this->moduleFlags[$id])) return $this->moduleFlags[$id];
 		if(!$id) return false;
 		$query = $this->wire()->database->prepare('SELECT flags FROM modules WHERE id=:id');
-		$query->bindValue(':id', $id, \PDO::PARAM_INT);
+		$query->bindValue(':id', $id, PDO::PARAM_INT);
 		$query->execute();
 		if(!$query->rowCount()) return false;
-		[$flags] = $query->fetch(\PDO::FETCH_NUM);
+		[$flags] = $query->fetch(PDO::FETCH_NUM);
 		$flags = (int) $flags;
 		$this->moduleFlags[$id] = $flags;
 		return $flags;
@@ -192,7 +193,7 @@ class ModulesFlags extends ModulesClass {
 		}
 	}
 	
-	#[\Override]
+	#[Override]
  public function getDebugData() {
 		return ['moduleFlags' => $this->moduleFlags];
 	}

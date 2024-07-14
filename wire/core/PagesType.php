@@ -1,5 +1,10 @@
 <?php namespace ProcessWire;
 
+use IteratorAggregate;
+use Countable;
+use Exception;
+use ReturnTypeWillChange;
+use Override;
 /**
  * ProcessWire PagesType
  *
@@ -28,8 +33,7 @@
  * 
  *
  */
-
-class PagesType extends Wire implements \IteratorAggregate, \Countable {
+class PagesType extends Wire implements IteratorAggregate, Countable {
 
 	/**
 	 * First template defined for use in this PagesType (legacy)
@@ -496,7 +500,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 		try {
 			$this->save($page); 
 
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->trackException($e, false);
 			$page = $this->wire()->pages->newNullPage();
 		}
@@ -512,8 +516,8 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * #pw-internal
 	 *
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
 		return $this->find("id>0, sort=name", ['caller' => $this->className() . '.getIterator()']); 
 	}
@@ -639,8 +643,8 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * @see Pages::count()
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override]
+	#[ReturnTypeWillChange]
+ #[Override]
 	public function count($selectorString = '', array $options = []) {
 		if(empty($selectorString) && empty($options) && count($this->parents) == 1) {
 			return $this->getParent()->numChildren();

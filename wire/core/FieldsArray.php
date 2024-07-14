@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Fields Array
  * 
@@ -9,7 +10,6 @@
  * https://processwire.com
  *
  */
-
 class FieldsArray extends WireArray {
 
 	/**
@@ -19,7 +19,7 @@ class FieldsArray extends WireArray {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Field;
 	}
@@ -31,7 +31,7 @@ class FieldsArray extends WireArray {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidKey($key) {
 		return is_int($key) || ctype_digit($key);
 	}
@@ -43,7 +43,7 @@ class FieldsArray extends WireArray {
 	 * @return int
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getItemKey($item) {
 		return $item->id;
 	}
@@ -54,7 +54,7 @@ class FieldsArray extends WireArray {
 	 * @return Field
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new Field());
 	}

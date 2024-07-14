@@ -1,5 +1,10 @@
 <?php namespace ProcessWire;
 
+use Override;
+use Exception;
+use PDO;
+use ReflectionClass;
+use ReflectionMethod;
 /**
  * ProcessWire Fields
  *
@@ -30,7 +35,6 @@
  * @method bool applySetupName(Field $field, $setupName = '')
  *
  */
-
 class Fields extends WireSaveableItems {
 
 	/**
@@ -120,7 +124,7 @@ class Fields extends WireSaveableItems {
 	 * @return Field
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new Field());
 	}
@@ -134,7 +138,7 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.146
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeItem(array $a = []) {
 		
 		if(empty($a['type'])) return parent::makeItem($a);
@@ -192,7 +196,7 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.194
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function initItem(array &$row, WireArray $items = null) {
 		/** @var Field $item */
 		$item = parent::initItem($row, $items);
@@ -209,7 +213,7 @@ class Fields extends WireSaveableItems {
 	 * @return FieldsArray|WireArray
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getAll() {
 		if($this->useLazy()) $this->loadAllLazyItems();
 		return $this->getWireArray();
@@ -222,7 +226,7 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.194
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getWireArray() {
 		if($this->fieldsArray === null) {
 			$this->fieldsArray = new FieldsArray();
@@ -238,7 +242,7 @@ class Fields extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getTable() {
 		return "fields";
 	}
@@ -249,7 +253,7 @@ class Fields extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getSort() {
 		return $this->getTable() . ".name";
 	}
@@ -269,7 +273,7 @@ class Fields extends WireSaveableItems {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___save(Saveable $item) {
 
 		if($item->flags & Field::flagFieldgroupContext) throw new WireException("Field $item is not saveable because it is in a specific context"); 
@@ -358,7 +362,7 @@ class Fields extends WireSaveableItems {
 			if($field->type && count($field->type->getDatabaseSchema($field))) {
 				if($field->type->createField($field)) $this->message("Created table '$table'"); 
 			}
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->trackException($e, false, $e->getMessage() . " (checkFieldTable)"); 
 		}
 	}
@@ -385,7 +389,7 @@ class Fields extends WireSaveableItems {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___delete(Saveable $item) {
 
 		if(!$this->getWireArray()->isValidItem($item)) {
@@ -427,7 +431,7 @@ class Fields extends WireSaveableItems {
 	 * @return Field $item Returns the new clone on success, or false on failure
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___clone(Saveable $item, $name = '') {
 	
 		$item = $item->type->cloneField($item); 
@@ -536,10 +540,10 @@ class Fields extends WireSaveableItems {
 		if($namespace) {
 			// get existing data and move everything here into a namespace within that data
 			$query = $database->prepare('SELECT data FROM fieldgroups_fields WHERE fields_id=:field_id AND fieldgroups_id=:fieldgroup_id'); 
-			$query->bindValue(':field_id', $field_id, \PDO::PARAM_INT);
-			$query->bindValue(':fieldgroup_id', $fieldgroup_id, \PDO::PARAM_INT);
+			$query->bindValue(':field_id', $field_id, PDO::PARAM_INT);
+			$query->bindValue(':fieldgroup_id', $fieldgroup_id, PDO::PARAM_INT);
 			$query->execute();
-			[$existingData] = $query->fetch(\PDO::FETCH_NUM);
+			[$existingData] = $query->fetch(PDO::FETCH_NUM);
 			$existingData = strlen((string) $existingData) ? json_decode((string) $existingData, true) : [];
 			if(!is_array($existingData)) $existingData = [];
 			foreach($data as $k => $v) {
@@ -558,12 +562,12 @@ class Fields extends WireSaveableItems {
 
 		$query = $database->prepare('UPDATE fieldgroups_fields SET data=:data WHERE fields_id=:field_id AND fieldgroups_id=:fieldgroup_id');
 		if(empty($data)) {
-			$query->bindValue(':data', null, \PDO::PARAM_NULL); 
+			$query->bindValue(':data', null, PDO::PARAM_NULL); 
 		} else {
-			$query->bindValue(':data', $data, \PDO::PARAM_STR); 
+			$query->bindValue(':data', $data, PDO::PARAM_STR); 
 		}
-		$query->bindValue(':field_id', $field_id, \PDO::PARAM_INT);
-		$query->bindValue(':fieldgroup_id', $fieldgroup_id, \PDO::PARAM_INT); 
+		$query->bindValue(':field_id', $field_id, PDO::PARAM_INT);
+		$query->bindValue(':fieldgroup_id', $fieldgroup_id, PDO::PARAM_INT); 
 		$result = $query->execute();
 
 		return $result; 
@@ -618,12 +622,12 @@ class Fields extends WireSaveableItems {
 		$query = $database->prepare("DESCRIBE `$table1`"); // QA
 		$query->execute();
 		/** @noinspection PhpAssignmentInConditionInspection */
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) $schema1[] = $row['Field'];
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) $schema1[] = $row['Field'];
 
 		$query = $database->prepare("DESCRIBE `$table2`"); // QA
 		$query->execute();
 		/** @noinspection PhpAssignmentInConditionInspection */
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) $schema2[] = $row['Field'];
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) $schema2[] = $row['Field'];
 			
 		foreach($schema1 as $key => $value) {
 			if(!in_array($value, $schema2)) {
@@ -644,7 +648,7 @@ class Fields extends WireSaveableItems {
 				$errorInfo = $query->errorInfo();
 				$error = !empty($errorInfo[2]) ? $errorInfo[2] : 'Unknown Error'; 
 			}
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$exception = $e;
 			$error = $e->getMessage();
 		}
@@ -701,19 +705,19 @@ class Fields extends WireSaveableItems {
 
 		// first we need to determine if the $field->type module has its own
 		// deletePageField method separate from base: Fieldtype/FieldtypeMulti
-		$reflector = new \ReflectionClass($field->type->className(true));
+		$reflector = new ReflectionClass($field->type->className(true));
 		$hasDeletePageField = false;
 
 		foreach($reflector->getMethods() as $method) {
 			$methodName = $method->getName();
 			if(!str_contains($methodName, '___deletePageField')) continue;
 			try {
-				new \ReflectionMethod($reflector->getParentClass()->getName(), $methodName);
+				new ReflectionMethod($reflector->getParentClass()->getName(), $methodName);
 				if(!in_array($method->getDeclaringClass()->getName(), ['Fieldtype', 'FieldtypeMulti', __NAMESPACE__ . "\\Fieldtype", __NAMESPACE__ . "\\FieldtypeMulti"])) {
 					$hasDeletePageField = true;
 				}
 
-			} catch(\Exception) {
+			} catch(Exception) {
 				// not there
 			}
 			break;
@@ -737,7 +741,7 @@ class Fields extends WireSaveableItems {
 					$field->type->deletePageField($page, $field);
 					// $this->message("Deleted '{$field->name}' from '{$page->path}'", Notice::debug);
 
-				} catch(\Exception $e) {
+				} catch(Exception $e) {
 					$this->trackException($e, false, true);
 					$success = false;
 				}
@@ -754,10 +758,10 @@ class Fields extends WireSaveableItems {
 					"INNER JOIN pages ON pages.id=$table.pages_id " .
 					"WHERE pages.templates_id=:templates_id";
 			$query = $database->prepare($sql);
-			$query->bindValue(':templates_id', $template->id, \PDO::PARAM_INT);
+			$query->bindValue(':templates_id', $template->id, PDO::PARAM_INT);
 			try {
 				$query->execute();
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$this->error($e->getMessage(), Notice::log);
 				$this->trackException($e);
 				$success = false;
@@ -855,7 +859,7 @@ class Fields extends WireSaveableItems {
 						"WHERE pages.templates_id=:templateID ";
 			}
 			$query = $database->prepare($sql);
-			$query->bindValue(':templateID', $template->id, \PDO::PARAM_INT);
+			$query->bindValue(':templateID', $template->id, PDO::PARAM_INT);
 
 		} else if($options['page']) {
 			// count by specific page
@@ -877,7 +881,7 @@ class Fields extends WireSaveableItems {
 			}
 
 			$query = $database->prepare($sql);
-			$query->bindValue(':pageID', $pageID, \PDO::PARAM_INT);
+			$query->bindValue(':pageID', $pageID, PDO::PARAM_INT);
 
 		} else {
 			// overall total count
@@ -904,10 +908,10 @@ class Fields extends WireSaveableItems {
 			} else if($useRowCount) {
 				$return = (int) $query->rowCount();
 			} else {
-				[$return] = $query->fetch(\PDO::FETCH_NUM);
+				[$return] = $query->fetch(PDO::FETCH_NUM);
 				$return = (int) $return;
 			}
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->error($e->getMessage() . " (getNumRows)");
 			$this->trackException($e, false);
 		}
@@ -1161,7 +1165,7 @@ class Fields extends WireSaveableItems {
 	 * @return string of JSON
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function encodeData(array $value) {
 		if(isset($value['collapsed']) && $value['collapsed'] === 0) unset($value['collapsed']); 	
 		if(isset($value['columnWidth']) && (empty($value['columnWidth']) || $value['columnWidth'] == 100)) unset($value['columnWidth']); 
@@ -1307,10 +1311,10 @@ class Fields extends WireSaveableItems {
 
 		$sql = "SELECT fieldgroups_id FROM fieldgroups_fields WHERE fields_id=:fields_id";
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':fields_id', $fieldId, \PDO::PARAM_INT);
+		$query->bindValue(':fields_id', $fieldId, PDO::PARAM_INT);
 		$query->execute();
 
-		while($row = $query->fetch(\PDO::FETCH_NUM)) {
+		while($row = $query->fetch(PDO::FETCH_NUM)) {
 			$id = (int) $row[0];
 			$ids[$id] = $id;
 		}
@@ -1355,10 +1359,10 @@ class Fields extends WireSaveableItems {
 			"WHERE fieldgroups_fields.fields_id=:fields_id";
 
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':fields_id', $fieldId, \PDO::PARAM_INT);
+		$query->bindValue(':fields_id', $fieldId, PDO::PARAM_INT);
 		$query->execute();
 
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			$id = (int) $row['templates_id'];
 			$ids[$id] = $id;
 		}

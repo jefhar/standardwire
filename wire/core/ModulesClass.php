@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Modules: Class
  * 
@@ -9,7 +10,6 @@
  * https://processwire.com
  *
  */
-
 abstract class ModulesClass extends Wire {
 
 	/**
@@ -81,7 +81,7 @@ abstract class ModulesClass extends Wire {
 	 * @return Modules|WireArray
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function error($text, $flags = 0) {
 		return $this->modules->error($text, $flags);
 	}

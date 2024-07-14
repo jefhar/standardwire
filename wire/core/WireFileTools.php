@@ -1,5 +1,12 @@
 <?php namespace ProcessWire;
 
+use DirectoryIterator;
+use Exception;
+use RecursiveDirectoryIterator;
+use FilesystemIterator;
+use RecursiveIteratorIterator;
+use ZipArchive;
+use Override;
 /**
  * ProcessWire File Tools ($files API variable)
  * 
@@ -12,7 +19,6 @@
  * @method bool include($filename, array $vars = array(), array $options = array())
  *
  */
-
 class WireFileTools extends Wire {
 
 	/**
@@ -198,7 +204,7 @@ class WireFileTools extends Wire {
 			if($chmodDir) if(!@chmod($path, octdec((string) $chmodDir))) $numFails++;
 
 			// change mode of files in directory, if recursive
-			if($recursive) foreach(new \DirectoryIterator($path) as $file) {
+			if($recursive) foreach(new DirectoryIterator($path) as $file) {
 				if($file->isDot()) continue;
 				$mod = $file->isDir() ? $chmodDir : $chmodFile;
 				if($mod) if(!@chmod($file->getPathname(), octdec((string) $mod))) $numFails++;
@@ -391,13 +397,13 @@ class WireFileTools extends Wire {
 		
 		try {
 			$this->allowPath($oldName, $options['limitPath'], true);
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			return $this->filesError(__FUNCTION__, '$oldName path invalid: ' . $e->getMessage(), $options);
 		}
 		
 		try {
 			$this->allowPath($newName, $options['limitPath'], true);
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			return $this->filesError(__FUNCTION__, 'Rename $newName path invalid: ' . $e->getMessage(), $options);
 		}
 		
@@ -584,11 +590,11 @@ class WireFileTools extends Wire {
 		$path = realpath($path);
 		if(!is_string($path) || $path === '' || !file_exists($path)) return 0;
 		if(is_dir($path)) {
-			$dir = new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS);
-			foreach(new \RecursiveIteratorIterator($dir) as $file) {
+			$dir = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
+			foreach(new RecursiveIteratorIterator($dir) as $file) {
 				try {
 					$size += $file->getSize();
-				} catch(\Exception) {
+				} catch(Exception) {
 					// ok
 				}
 			}
@@ -654,7 +660,7 @@ class WireFileTools extends Wire {
 		if($limitPath !== false) try {
 			// if limitPath can't pass allowPath then neither can $pathname
 			$this->allowPath($limitPath, false, true);
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			return $this->filesError(__FUNCTION__, "Validating limitPath reported: " . $e->getMessage(), $throw, $e); 
 		}
 		
@@ -791,7 +797,7 @@ class WireFileTools extends Wire {
 		$dirs = [];
 		$files = [];
 
-		foreach(new \DirectoryIterator($path) as $file) {
+		foreach(new DirectoryIterator($path) as $file) {
 			
 			if($file->isDot()) continue;
 			
@@ -879,7 +885,7 @@ class WireFileTools extends Wire {
 		$chmodFile = $this->wire()->config->chmodFile;
 		$chmodDir = $this->wire()->config->chmodDir;
 
-		$zip = new \ZipArchive();
+		$zip = new ZipArchive();
 		$res = $zip->open($file);
 		if($res !== true) $this->filesException(__FUNCTION__, "Unable to open ZIP file, error code: $res");
 
@@ -961,7 +967,7 @@ class WireFileTools extends Wire {
 
 		$return = ['files' => [], 'errors' => []];
 		
-		if(!empty($options['zip']) && !empty($options['dir']) && $options['zip'] instanceof \ZipArchive) {
+		if(!empty($options['zip']) && !empty($options['dir']) && $options['zip'] instanceof ZipArchive) {
 			// internal recursive call
 			$recursive = true;
 			$zip = $options['zip']; // ZipArchive instance
@@ -977,8 +983,8 @@ class WireFileTools extends Wire {
 			if(!is_array($files)) $files = [$files];
 			if(!is_array($options['exclude'])) $options['exclude'] = [$options['exclude']];
 			$recursive = false;
-			$zip = new \ZipArchive();
-			if($zip->open($zipfile, \ZipArchive::CREATE) !== true) $this->filesException(__FUNCTION__, "Unable to create ZIP: $zipfile");
+			$zip = new ZipArchive();
+			if($zip->open($zipfile, ZipArchive::CREATE) !== true) $this->filesException(__FUNCTION__, "Unable to create ZIP: $zipfile");
 
 		} else {
 			$this->filesException(__FUNCTION__, "Invalid zipfile argument");
@@ -1000,7 +1006,7 @@ class WireFileTools extends Wire {
 			if(is_dir($file)) {
 				if($options['maxDepth'] > 0 && $depth >= $options['maxDepth']) continue;
 				$_files = [];
-				foreach(new \DirectoryIterator($file) as $f) {
+				foreach(new DirectoryIterator($file) as $f) {
 					if($f->isDot()) continue; 
 					if($options['maxDepth'] > 0 && $f->isDir() && ($depth+1) >= $options['maxDepth']) continue;
 					$_files[] = $f->getPathname();
@@ -1074,7 +1080,7 @@ class WireFileTools extends Wire {
 		$this->wire($http);
 		try {
 			$result = $http->sendFile($filename, $options, $headers);
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$this->filesError(__FUNCTION__, $e->getMessage(), $options, $e);
 			$result = 0;
 		}
@@ -1892,20 +1898,19 @@ class WireFileTools extends Wire {
 	}
 
 	/**
-	 * Report/log/throw an error
-	 * 
-	 * #pw-internal
-	 * 
-	 * @param string $method
-	 * @param string $msg
-	 * @param bool|array $throw Throw exception? May be boolean or array with 'throw' index containing boolean.
-	 * @param \Exception|null $e Previous exception, if applicable
-	 * @return bool Always returns boolean false (so it can be used in error return statements)
-	 * @throws WireFilesException
-	 * @since 3.0.178
-	 * 
-	 */
-	public function filesError($method, $msg, $throw = false, $e = null) {
+  * Report/log/throw an error
+  *
+  * #pw-internal
+  *
+  * @param string $method
+  * @param string $msg
+  * @param bool|array $throw Throw exception? May be boolean or array with 'throw' index containing boolean.
+  * @param Exception|null $e Previous exception, if applicable
+  * @return bool Always returns boolean false (so it can be used in error return statements)
+  * @throws WireFilesException
+  * @since 3.0.178
+  */
+ public function filesError($method, $msg, $throw = false, $e = null) {
 		if(is_array($throw)) $throw = $throw['throw'] ?? false;
 		$msg = "$method: $msg";
 		$this->log($msg, ['name' => 'files-errors']);
@@ -1919,18 +1924,17 @@ class WireFileTools extends Wire {
 	}
 
 	/**
-	 * Throw a files exception
-	 * 
-	 * #pw-internal
-	 * 
-	 * @param string $method
-	 * @param string $msg
-	 * @param \Exception|null $e
-	 * @throws WireFilesException
-	 * @since 3.0.178
-	 * 
-	 */
-	public function filesException($method, $msg, $e = null) {
+  * Throw a files exception
+  *
+  * #pw-internal
+  *
+  * @param string $method
+  * @param string $msg
+  * @param Exception|null $e
+  * @throws WireFilesException
+  * @since 3.0.178
+  */
+ public function filesException($method, $msg, $e = null) {
 		$this->filesError($method, $msg, true, $e);
 	}
 	
@@ -1944,7 +1948,7 @@ class WireFileTools extends Wire {
 	 * @return WireLog
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___log($str = '', array $options = []) {
 		if(empty($options['name'])) $options['name'] = 'files';
 		return parent::___log($str, $options);

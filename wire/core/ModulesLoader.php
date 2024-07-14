@@ -1,13 +1,15 @@
 <?php namespace ProcessWire;
 
+use Exception;
+use PDO;
+use Override;
 /**
  * ProcessWire Modules: Loader
  *
  * ProcessWire 3.x, Copyright 2023 by Ryan Cramer
  * https://processwire.com
  *
- */ 
-
+ */
 class ModulesLoader extends ModulesClass {
 	
 	/**
@@ -122,19 +124,18 @@ class ModulesLoader extends ModulesClass {
 	}
 	
 	/**
-	 * Initialize a single module
-	 *
-	 * @param Module $module
-	 * @param array $options
-	 *  - `clearSettings` (bool): When true, module settings will be cleared when appropriate to save space. (default=true)
-	 *  - `configOnly` (bool): When true, module init() method NOT called, but config data still set (default=false) 3.0.169+
-	 *  - `configData` (array): Extra config data merge with module’s config data (default=[]) 3.0.169+
-	 *  - `throw` (bool): When true, exceptions will be allowed to pass through. (default=false)
-	 * @return bool True on success, false on fail
-	 * @throws \Exception Only if the `throw` option is true.
-	 *
-	 */
-	public function initModule(Module $module, array $options = []) {
+  * Initialize a single module
+  *
+  * @param Module $module
+  * @param array $options
+  *  - `clearSettings` (bool): When true, module settings will be cleared when appropriate to save space. (default=true)
+  *  - `configOnly` (bool): When true, module init() method NOT called, but config data still set (default=false) 3.0.169+
+  *  - `configData` (array): Extra config data merge with module’s config data (default=[]) 3.0.169+
+  *  - `throw` (bool): When true, exceptions will be allowed to pass through. (default=false)
+  * @return bool True on success, false on fail
+  * @throws Exception Only if the `throw` option is true.
+  */
+ public function initModule(Module $module, array $options = []) {
 
 		$result = true;
 		$debugKey = null;
@@ -166,7 +167,7 @@ class ModulesLoader extends ModulesClass {
 
 			try {
 				$module->init();
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				if($throw) throw($e);
 				$this->error(sprintf($this->_('Failed to init module: %s'), $moduleName) . " - " . $e->getMessage());
 				$result = false;
@@ -202,7 +203,7 @@ class ModulesLoader extends ModulesClass {
 			$debugKey = $this->debug ? $this->modules->debugTimerStart("readyModule(" . $module->className() . ")") : null;
 			try {
 				$module->ready();
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				$this->error(sprintf($this->_('Failed to ready module: %s'), $module->className()) . " - " . $e->getMessage());
 				$result = false;
 			}
@@ -324,7 +325,7 @@ class ModulesLoader extends ModulesClass {
 		);
 
 		/** @noinspection PhpAssignmentInConditionInspection */
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
 			$moduleID = (int) $row['id'];
 			$flags = (int) $row['flags'];
@@ -887,7 +888,7 @@ class ModulesLoader extends ModulesClass {
 		return $this->autoloadOrders;
 	}
 
-	#[\Override]
+	#[Override]
  public function getDebugData() {
 		return ['autoloadOrders' => $this->autoloadOrders, 'conditionalAutoloadModules' => $this->conditionalAutoloadModules, 'modulesTableCache' => $this->modulesTableCache, 'createdDates' => $this->createdDates];
 	}

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use PDO;
 /**
  * ProcessWire Pages Raw Finder
  *
@@ -742,7 +743,7 @@ class PagesRawFinder extends Wire {
 		$query = $database->prepare($sql);
 		$query->execute();
 
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			
 			$id = $row['pages_id'];
 			
@@ -1068,7 +1069,7 @@ class PagesRawFinder extends Wire {
 		$query = $this->wire()->database->prepare($sql);
 		$query->execute();
 
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			$id = (int) $row['source_id'];
 			$name = $row['name'];
 			$data = json_decode((string) $row['data'], true);
@@ -1132,7 +1133,7 @@ class PagesRawFinder extends Wire {
 			$query = $database->prepare($sql);
 			$query->execute();
 			
-			while($row = $query->fetch(\PDO::FETCH_NUM)) {
+			while($row = $query->fetch(PDO::FETCH_NUM)) {
 				$fromPageId = (int) $row[0]; // pages_id
 				$toPageId = (int) $row[1]; // data
 				if(!isset($fromPageIds[$toPageId])) $fromPageIds[$toPageId] = [];
@@ -1267,7 +1268,7 @@ class PagesRawFinder extends Wire {
 		$query->execute();
 		$rows = [];
 		
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			$id = (int) $row['id'];
 			$rows[$id] = $row;
 		}

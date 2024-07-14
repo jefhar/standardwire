@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire Fieldgroup
  *
@@ -61,7 +62,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Field; 
 	}
@@ -75,7 +76,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidKey($key) {
 		return is_int($key) || ctype_digit("$key"); 
 	}
@@ -89,7 +90,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @return int
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getItemKey($item) {
 		/** @var Field $item */
 		return $item->id; 
@@ -103,7 +104,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @return Wire|Field
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return $this->wire(new Field());
 	}
@@ -123,7 +124,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function add($item) {
 		$field = $item;
 		if(!is_object($field)) $field = $this->wire()->fields->get($field); 
@@ -157,7 +158,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @return bool True on success, false on failure.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function remove($key) {
 		
 		$field = $key;
@@ -352,7 +353,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @return Field|string|int|null|array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		if($key == 'fields') return $this;
 		if($key == 'fields_id') {
@@ -380,7 +381,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function addLookupItem($item, array &$row) {
 		if($item) $this->add($item); 
 		if(!empty($row['data'])) {
@@ -405,7 +406,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @throws WireException if passed invalid data
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function set($key, $value) {
 
 		if($key == 'data') return $this; // we don't have a data field here
@@ -441,7 +442,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function save() {
 		$this->wire()->fieldgroups->save($this); 
 		return $this;
@@ -451,7 +452,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * Fieldgroups always return their name when dereferenced as a string
 	 *	
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return $this->name; 
 	}
@@ -464,7 +465,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getTableData() {
 		return $this->settings; 
 	}
@@ -475,7 +476,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * #pw-internal
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getExportData() {
 		$fieldgroups = $this->wire()->fieldgroups;
 		return $fieldgroups->getExportData($this); 
@@ -498,7 +499,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @throws WireException if given invalid data
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function setImportData(array $data) {
 		/** @var Fieldgroups $fieldgroups */
 		$fieldgroups = $this->wire('fieldgroups');
@@ -511,7 +512,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * #pw-internal
 	 * 
 	 */ 
-	#[\Override]
+	#[Override]
  public function getLookupItems() {
 		return $this; 
 	}

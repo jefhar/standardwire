@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Traversable;
+use ArrayAccess;
 /**
  * ProcessWire Page Values
  *
@@ -11,7 +13,6 @@
  * @since 3.0.205
  *
  */
-
 class PageValues extends Wire {
 	
 	/**
@@ -107,21 +108,20 @@ class PageValues extends Wire {
 	}
 
 	/**
-	 * Get value that ends with square brackets to get iterable value, filtered value or property value
-	 *
-	 * ~~~~~
-	 * $iterableValue = $page->get('field_name[]');
-	 * ~~~~~
-	 * Note: When requesting an iterable value, this method will return an empty array in cases where
-	 * the Page::get() method would return null.
-	 *
-	 * @param Page $page
-	 * @param string $key
-	 * @param mixed $value Value to use rather than pulling from $page
-	 * @return array|mixed|Page|PageArray|Wire|WireArray|WireData|string|\Traversable
-	 *
-	 */
-	public function getBracketValue(Page $page, $key, mixed $value = null) {
+  * Get value that ends with square brackets to get iterable value, filtered value or property value
+  *
+  * ~~~~~
+  * $iterableValue = $page->get('field_name[]');
+  * ~~~~~
+  * Note: When requesting an iterable value, this method will return an empty array in cases where
+  * the Page::get() method would return null.
+  *
+  * @param Page $page
+  * @param string $key
+  * @param mixed $value Value to use rather than pulling from $page
+  * @return array|mixed|Page|PageArray|Wire|WireArray|WireData|string|Traversable
+  */
+ public function getBracketValue(Page $page, $key, mixed $value = null) {
 
 		if(strpos($key, '.')) return $this->getDotValue($page, $key);
 		if(!str_ends_with($key, ']')) return null;
@@ -174,7 +174,7 @@ class PageValues extends Wire {
 				$value = $value->getWireArray();
 			} else if($value instanceof WireData) {
 				$value = $page->wire(WireArray([$value]));
-			} else if($value instanceof \Traversable) {
+			} else if($value instanceof Traversable) {
 				// WireArray or other
 			} else {
 				$value = [$value];
@@ -195,7 +195,7 @@ class PageValues extends Wire {
 		} else if(is_int($index)) {
 			if($value instanceof WireArray){
 				$value = $value->eq($index);
-			} else if(is_array($value) || $value instanceof \ArrayAccess) {
+			} else if(is_array($value) || $value instanceof ArrayAccess) {
 				$value = $value[$index] ?? null;
 			} else if(WireArray::iterable($value)) {
 				$n = 0;

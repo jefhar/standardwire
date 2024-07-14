@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ReflectionMethod;
+use Override;
 /**
  * ProcessWire HookEvent
  *
@@ -175,7 +177,7 @@ class HookEvent extends WireData {
 		if(isset(self::$argumentNames[$key])) return self::$argumentNames[$key];
 
 		$argumentNames = [];
-		$method = new \ReflectionMethod($o, '___' . $m); 
+		$method = new ReflectionMethod($o, '___' . $m); 
 		$arguments = $method->getParameters();
 
 		foreach($arguments as $a) {
@@ -202,7 +204,7 @@ class HookEvent extends WireData {
 	 * @return HookEvent|WireData $this
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function removeHook($hookId) {
 		if(empty($hookId) || $hookId === $this) {
 			if($this->object && $this->id) {
@@ -221,7 +223,7 @@ class HookEvent extends WireData {
 	 * @return mixed|null
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		$value = parent::get($key);
 		if($value === null && !ctype_digit("$key") && array_key_exists($key, $this->data['arguments'])) {
@@ -235,7 +237,7 @@ class HookEvent extends WireData {
 	 * Return a string representing the HookEvent
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		$s = $this->object->className() . '::' . $this->method . '(';
 		foreach($this->arguments as $a) $s .= is_string($a) ? '"' . $a . '", ' : "$a, ";

@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use Stringable;
+use ReflectionMethod;
+use Exception;
+use Override;
 /**
  * ProcessWire Hooks Manager
  * 
@@ -9,8 +13,7 @@
  * https://processwire.com
  *
  */
-
-class WireHooks implements \Stringable {
+class WireHooks implements Stringable {
 
 	/**
 	 * Debug hooks
@@ -568,9 +571,9 @@ class WireHooks implements \Stringable {
 				else $_toMethod = null;
 			if($_toMethod) {
 				try {
-					$ref = new \ReflectionMethod($toObject, $_toMethod);
+					$ref = new ReflectionMethod($toObject, $_toMethod);
 					$toPublic = $ref->isPublic();
-				} catch(\Exception) {
+				} catch(Exception) {
 					$toPublic = false;
 				}
 			}
@@ -1370,7 +1373,7 @@ class WireHooks implements \Stringable {
 		return wireClassName($this, false);
 	}
 	
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return $this->className();
 	}

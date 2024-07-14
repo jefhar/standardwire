@@ -1,5 +1,10 @@
 <?php namespace ProcessWire;
 
+use IteratorAggregate;
+use Countable;
+use ReturnTypeWillChange;
+use Override;
+use ArrayObject;
 /**
  * ProcessWire FilenameArray
  *
@@ -9,8 +14,7 @@
  * https://processwire.com
  *
  */
-
-class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
+class FilenameArray extends Wire implements IteratorAggregate, Countable {
 
 	/**
 	 * Array of filenames indexed by MD5 hash of filename
@@ -77,15 +81,14 @@ class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
 	}
 
 	/**
-	 * Make iterable 
-	 * 
-	 * @return \ArrayObject
-	 * 
-	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+  * Make iterable
+  *
+  * @return ArrayObject
+  */
+ #[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
-		return new \ArrayObject($this->data); 
+		return new ArrayObject($this->data); 
 	}
 
 	/**
@@ -172,7 +175,7 @@ class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
 	 * @return string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return print_r($this->data, true); 
 	}
@@ -183,8 +186,8 @@ class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
 	 * @return int
 	 * 
 	 */
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function count() {
 		return count($this->data);
 	}

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire UserPage
  *
@@ -27,7 +28,6 @@
  * to be the non-hashed/non-encrypted version. ProcessWire will hash it automatically when the user is saved.
  *
  */
-
 class User extends Page {
 
 	/**
@@ -56,7 +56,7 @@ class User extends Page {
 	 * #pw-internal
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function wired() {
 		parent::wired();
 		// intentionally duplicated from __construct() in case a multi-instance environment
@@ -534,7 +534,7 @@ class User extends Page {
 	 * @return null|mixed
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function get($key) {
 		$value = parent::get($key);
 		if(!$value && $key === 'language') {
@@ -557,7 +557,7 @@ class User extends Page {
 	 * @return string URL for editing this user
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function editUrl($options = []) {
 		return str_replace('/page/edit/', '/access/users/edit/', parent::editUrl($options));
 	}
@@ -572,7 +572,7 @@ class User extends Page {
 	 * @param WirePageEditor $editor
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function ___setEditor(WirePageEditor $editor) {
 		parent::___setEditor($editor); 
 		if(!$editor instanceof ProcessUser) $this->wire()->session->redirect($this->editUrl());
@@ -586,7 +586,7 @@ class User extends Page {
 	 * @return Users
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getPagesManager() {
 		return $this->wire()->users;
 	}
@@ -627,7 +627,7 @@ class User extends Page {
 	 * @param mixed $new
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function ___changed($what, $old = null, $new = null) {
 		if($what === 'roles' && is_bool($this->isSuperuser)) $this->isSuperuser = null;
 		parent::___changed($what, $old, $new); 

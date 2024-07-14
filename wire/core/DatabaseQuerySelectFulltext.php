@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire DatabaseQuerySelectFulltext
  *
@@ -157,7 +158,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @return mixed|string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		if($name === 'tableField') return $this->tableField();
 		return parent::__get($name);

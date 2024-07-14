@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use DirectoryIterator;
+use Override;
 /**
  * ProcessWire Temporary Directory Manager
  *
@@ -7,7 +9,6 @@
  * https://processwire.com
  *
  */
-
 class WireTempDir extends Wire {
 
 	/**
@@ -278,7 +279,7 @@ class WireTempDir extends Wire {
 		$oldestAllowedFileTime = time() - $maxAge;
 		$success = true;
 		
-		foreach(new \DirectoryIterator($path) as $dir) {
+		foreach(new DirectoryIterator($path) as $dir) {
 			
 			if(!$dir->isDir() || $dir->isDot()) continue;
 		
@@ -332,7 +333,7 @@ class WireTempDir extends Wire {
 		$level++;
 		// check if any files in the directory are newer than maxAge
 		$newest = filemtime($path);
-		foreach(new \DirectoryIterator($path) as $file) {
+		foreach(new DirectoryIterator($path) as $file) {
 			if($file->isDot()) continue;
 			$mtime = $file->getMTime();
 			if($mtime > $newest) $newest = $mtime;
@@ -365,7 +366,7 @@ class WireTempDir extends Wire {
 	 * @return string
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return $this->get();
 	}

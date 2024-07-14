@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Exception;
 include_once __DIR__ . '/vendor/autoload.php';
 
 /**
@@ -31,7 +32,7 @@ $rootPath = __DIR__;
 if(DIRECTORY_SEPARATOR != '/') $rootPath = str_replace(DIRECTORY_SEPARATOR, '/', $rootPath);
 $composerAutoloader = $rootPath . '/vendor/autoload.php'; // composer autoloader
 if(file_exists($composerAutoloader)) require_once($composerAutoloader);
-if(!class_exists(\ProcessWire\ProcessWire::class, false)) require_once("$rootPath/wire/core/ProcessWire.php");
+if(!class_exists(ProcessWire::class, false)) require_once("$rootPath/wire/core/ProcessWire.php");
 $config = ProcessWire::buildConfig($rootPath);
 
 if(!$config->dbName) {
@@ -57,7 +58,7 @@ try {
 	echo $process->execute($config->internal);
 	$config->internal ? $process->finished() : extract($wire->wire('all')->getArray());
 	
-} catch(\Exception $e) {
+} catch(Exception $e) {
 	// Formulate error message and send to the error handler
 	if($process) $process->failed($e);
 	$wire ? $wire->trackException($e) : $config->trackException($e);

@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire ImageSizerGD
  *
@@ -54,7 +55,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return array
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  protected function validSourceImageFormats() {
 		return ['JPG', 'JPEG', 'PNG', 'GIF'];
 	}
@@ -65,7 +66,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return array of uppercase file extensions, i.e. ['PNG', 'JPG']
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function validTargetImageFormats() {
 		$formats = $this->validSourceImageFormats();
 		if($this->supported('webp')) $formats[] = 'WEBP';
@@ -79,7 +80,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @since 3.0.138
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getLibraryVersion() {
 		$gd = gd_info();
 		return $gd['GD Version'] ?? '';
@@ -92,7 +93,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function supported($action = 'imageformat') {
 		// first we check parts that are mandatory for all $actions
 		if(!function_exists('gd_info')) return false;
@@ -147,7 +148,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  protected function processResize($srcFilename, $dstFilename, $fullWidth, $fullHeight, $finalWidth, $finalHeight) {
 		
 		$this->modified = false;
@@ -1106,7 +1107,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function processRotate($srcFilename, $dstFilename, $degrees) {
 		return $this->processAction($srcFilename, $dstFilename, 'rotate', $degrees);
 	}
@@ -1120,7 +1121,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function processFlip($srcFilename, $dstFilename, $flipType) {
 		return $this->processAction($srcFilename, $dstFilename, 'flip', $flipType);
 	}
@@ -1132,7 +1133,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function convertToGreyscale($dstFilename = '') {
 		return $this->processAction($this->filename, $dstFilename, 'greyscale', null);
 	}
@@ -1145,7 +1146,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function convertToSepia($dstFilename = '', $sepia = 55) {
 		return $this->processAction($this->filename, $dstFilename, 'sepia', $sepia);
 	}

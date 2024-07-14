@@ -1,13 +1,14 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that matches if the value exists at the end of another value
  *
  */
 class SelectorEnds extends Selector { 
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '$='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() {
 		return
 			Selector::compareTypeFind |
@@ -16,11 +17,11 @@ class SelectorEnds extends Selector {
 			Selector::compareTypeBoundary |
 			Selector::compareTypeFulltext; 
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Ends with', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('phrase-end fulltext'); }
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) { 
 		$value2 = trim($value2); 
 		$value1 = substr((string) $value1, -1 * strlen($value2));

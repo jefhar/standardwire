@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * ProcessWire WireInputData and WireInput
  *
@@ -10,7 +11,6 @@
  * https://processwire.com
  *
  */
-
 /**
  * Manages the group of GET, POST, COOKIE and whitelist vars, each of which is a WireInputData object.
  * 
@@ -877,7 +877,7 @@ class WireInput extends Wire {
 	 * @return string|int|null
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __get($key) {
 
 		if($key == 'pageNum') return $this->pageNum; 
@@ -1766,7 +1766,7 @@ class WireInput extends Wire {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$info = parent::__debugInfo();
 		$info['get'] = $this->getVars ? $this->getVars->getArray() : null;
@@ -1789,7 +1789,7 @@ class WireInput extends Wire {
 	 * @throws WireException
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function ___callUnknown($method, $arguments) {
 		if(str_starts_with($method, 'urlSegment')) {
 			// Allow for method calls: urlSegment1(), urlSegment2('sort-*'), urlSegmentLast(), etc. 

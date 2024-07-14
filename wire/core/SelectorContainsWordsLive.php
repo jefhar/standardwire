@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that matches entire words except for last word, which must start with
  * 
@@ -7,9 +8,9 @@
  *
  */
 class SelectorContainsWordsLive extends Selector {
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '~~='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -18,11 +19,11 @@ class SelectorContainsWordsLive extends Selector {
 			Selector::compareTypePartial |
 			Selector::compareTypeFulltext; 
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Contains all words live', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('words-all words-partial-last fulltext'); }
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) {
 		$hasAll = true;
 		$words = $this->wire()->sanitizer->wordsArray($value2); 

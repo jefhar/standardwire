@@ -1,13 +1,14 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that has any words like any of those given (only 1 needs to match)
  *
  */
 class SelectorContainsAnyWordsLike extends Selector {
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '~|%='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -16,11 +17,11 @@ class SelectorContainsAnyWordsLike extends Selector {
 			Selector::compareTypeWords | 
 			Selector::compareTypeLike;
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Contains any words like', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('words-any words-partial words-partial-any like'); }
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) {
 		$hasAny = false;
 		$words = $this->wire()->sanitizer->wordsArray($value2);

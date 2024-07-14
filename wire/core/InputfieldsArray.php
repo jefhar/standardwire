@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * A WireArray of Inputfield instances, as used by InputfieldWrapper. 
  *
@@ -9,7 +10,6 @@
  * https://processwire.com
  *
  */
-
 class InputfieldsArray extends WireArray {
 
 	/**
@@ -19,7 +19,7 @@ class InputfieldsArray extends WireArray {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isValidItem($item) {
 		return $item instanceof Inputfield;
 	}
@@ -31,7 +31,7 @@ class InputfieldsArray extends WireArray {
 	 * @return WireArray|InputfieldsArray
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function find($selector) {
 		$a = parent::find($selector);
 		foreach($this as $item) {
@@ -42,12 +42,12 @@ class InputfieldsArray extends WireArray {
 		return $a;
 	}
 
-	#[\Override]
+	#[Override]
  public function makeBlankItem() {
 		return null; // Inputfield is abstract, so there is nothing to return here
 	}
 
-	#[\Override]
+	#[Override]
  public function usesNumericKeys() {
 		return true;
 	}

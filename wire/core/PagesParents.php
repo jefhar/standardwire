@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use PDO;
+use Exception;
 /**
  * ProcessWire Pages Parents
  *
@@ -21,7 +23,6 @@
  * @since 3.0.156
  *
  */
- 
 class PagesParents extends Wire {
 	
 	/**
@@ -148,9 +149,9 @@ class PagesParents extends Wire {
 			'WHERE pages.id=:id';
 
 		$query = $database->prepare($sql);
-		$query->bindValue(':id', $id, \PDO::PARAM_INT);
+		$query->bindValue(':id', $id, PDO::PARAM_INT);
 		$query->execute();
-		$row = $query->fetch(\PDO::FETCH_ASSOC);
+		$row = $query->fetch(PDO::FETCH_ASSOC);
 		$query->closeCursor();
 
 		if(empty($row)) return $blankReturn;
@@ -328,13 +329,13 @@ class PagesParents extends Wire {
 		
 		$query = $database->prepare(implode(' ', $sql));
 		foreach($bind as $key => $value) {
-			$query->bindValue($key, $value, \PDO::PARAM_INT);
+			$query->bindValue($key, $value, PDO::PARAM_INT);
 		}
 		$database->execute($query);
 		$values = [];
 
 		/** @noinspection PhpAssignmentInConditionInspection */
-		while($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+		while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			$id = (int) $row['id'];
 			if($column) {
 				// single column
@@ -455,9 +456,9 @@ class PagesParents extends Wire {
 				GROUP BY pages.parent_id 
 			";
 			$query = $this->wire()->database->prepare(trim($sql));
-			$query->bindValue(':id', $minParentID, \PDO::PARAM_INT); 
+			$query->bindValue(':id', $minParentID, PDO::PARAM_INT); 
 			$query->execute();
-			while($row = $query->fetch(\PDO::FETCH_NUM)) {
+			while($row = $query->fetch(PDO::FETCH_NUM)) {
 				[$pages_id, $parents_id] = $row;
 				$parents[(int) $pages_id] = (int) $parents_id;
 			}
@@ -602,12 +603,12 @@ class PagesParents extends Wire {
 		// update the one page that moved
 		$sql = 'UPDATE pages_parents SET parents_id=:new_parent_id WHERE pages_id=:pages_id AND parents_id=:old_parent_id';
 		$query = $database->prepare($sql);
-		$query->bindValue(':new_parent_id', $newParent->id, \PDO::PARAM_INT);
-		$query->bindValue(':pages_id', $page->id, \PDO::PARAM_INT);
-		$query->bindValue(':old_parent_id', $oldParent->id, \PDO::PARAM_INT);
+		$query->bindValue(':new_parent_id', $newParent->id, PDO::PARAM_INT);
+		$query->bindValue(':pages_id', $page->id, PDO::PARAM_INT);
+		$query->bindValue(':old_parent_id', $oldParent->id, PDO::PARAM_INT);
 		try {
 			$query->execute();
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			if($e->getCode() != 23000) throw $e;
 		}
 		$numRows += $query->rowCount();
@@ -615,11 +616,11 @@ class PagesParents extends Wire {
 		// find children and descendents of the page that moved
 		$sql = 'SELECT pages_id FROM pages_parents WHERE parents_id=:pages_id';
 		$query = $database->prepare($sql);
-		$query->bindValue(':pages_id', $page->id, \PDO::PARAM_INT);
+		$query->bindValue(':pages_id', $page->id, PDO::PARAM_INT);
 		$query->execute();
 	
 		$ids = [$page->id => $page->id];
-		while($row = $query->fetch(\PDO::FETCH_NUM)) {
+		while($row = $query->fetch(PDO::FETCH_NUM)) {
 			$id = (int) $row[0];
 			$ids[$id] = $id;
 		}
@@ -664,11 +665,11 @@ class PagesParents extends Wire {
 		
 		foreach($inserts as $insert) {
 			[$id, $parentId] = explode(',', $insert, 2);
-			$query->bindValue(':pages_id', $id, \PDO::PARAM_INT);
-			$query->bindValue(':parents_id', $parentId, \PDO::PARAM_INT); 
+			$query->bindValue(':pages_id', $id, PDO::PARAM_INT);
+			$query->bindValue(':parents_id', $parentId, PDO::PARAM_INT); 
 			try {
 				if($query->execute()) $numRows++;
-			} catch(\Exception $e) {
+			} catch(Exception $e) {
 				if($e->getCode() != 23000) $this->error($e->getMessage());
 			}
 		}
@@ -715,11 +716,11 @@ class PagesParents extends Wire {
 		$query = $database->prepare($sql);
 		
 		foreach($inserts as $insert) {
-			$query->bindValue(':pages_id', $insert['pages_id'], \PDO::PARAM_INT);
-			$query->bindValue(':parents_id', $insert['parents_id'], \PDO::PARAM_INT);
+			$query->bindValue(':pages_id', $insert['pages_id'], PDO::PARAM_INT);
+			$query->bindValue(':parents_id', $insert['parents_id'], PDO::PARAM_INT);
 			try {
 				if($query->execute()) $numRows++;
-			} catch(\Exception) {
+			} catch(Exception) {
 				// ok
 			}
 		}
@@ -791,7 +792,7 @@ class PagesParents extends Wire {
 		$pages_id = (int) "$page";
 		$database = $this->wire()->database;
 		$query = $database->prepare("DELETE FROM pages_parents WHERE pages_id=:id");
-		$query->bindValue(':id', $pages_id, \PDO::PARAM_INT);
+		$query->bindValue(':id', $pages_id, PDO::PARAM_INT);
 		$query->execute();
 		$cnt = $query->rowCount();
 		$query->closeCursor();
@@ -811,8 +812,8 @@ class PagesParents extends Wire {
 		$database = $this->wire()->database;
 		$sql = "DELETE FROM pages_parents WHERE pages_id=:pages_id OR parents_id=:parents_id";
 		$query = $database->prepare($sql);
-		$query->bindValue(':pages_id', $pages_id, \PDO::PARAM_INT);
-		$query->bindValue(':parents_id', $pages_id, \PDO::PARAM_INT);
+		$query->bindValue(':pages_id', $pages_id, PDO::PARAM_INT);
+		$query->bindValue(':parents_id', $pages_id, PDO::PARAM_INT);
 		$query->execute();
 		$cnt = $query->rowCount();
 		$query->closeCursor();

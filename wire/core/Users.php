@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use Override;
+use PDO;
 /**
  * The Users class serves as the $users API variable. 
  * 
@@ -16,7 +18,6 @@
  * @method void deleted($user) Hook called after a User is deleted #pw-hooker
  *
  */
-
 class Users extends PagesType {
 
 	/**
@@ -72,7 +73,7 @@ class Users extends PagesType {
 	 * @return User|NullPage|null
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function get($selectorString) {
 		/** @var User|NullPage|null $user */
 		$user = parent::get($selectorString);
@@ -97,7 +98,7 @@ class Users extends PagesType {
 	 * @param Page $page
 	 *
 	 */
-	#[\Override]
+	#[Override]
  protected function loaded(Page $page) {
 		if($page instanceof User) $this->checkGuestRole($page);
 	}
@@ -171,10 +172,10 @@ class Users extends PagesType {
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getPageClass() {
 		$pageClass = parent::getPageClass();
-		if($pageClass !== 'User' && $pageClass !== \ProcessWire\User::class && $pageClass !== $this->validPageClass) {
+		if($pageClass !== 'User' && $pageClass !== User::class && $pageClass !== $this->validPageClass) {
 			if(wireInstanceOf($pageClass, 'User')) {
 				$this->validPageClass = $pageClass;
 			} else {
@@ -206,10 +207,10 @@ class Users extends PagesType {
 		$table = $field->getTable();
 		$sql = "INSERT INTO `$table` (pages_id, data) VALUES(:pages_id, :data) ON DUPLICATE KEY UPDATE pages_id=VALUES(pages_id), data=VALUES(data)";
 		$query = $this->wire()->database->prepare($sql);
-		$query->bindValue(':data', (int) $moduleId, \PDO::PARAM_INT);
+		$query->bindValue(':data', (int) $moduleId, PDO::PARAM_INT);
 		$qty = 0;
 		foreach($userIds as $userId) {
-			$query->bindValue(':pages_id', $userId, \PDO::PARAM_INT);
+			$query->bindValue(':pages_id', $userId, PDO::PARAM_INT);
 			$query->execute();
 			$qty++;
 		}
@@ -239,7 +240,7 @@ class Users extends PagesType {
 	 * @throws WireException
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___save(Page $page) {
 		return parent::___save($page);
 	}
@@ -253,7 +254,7 @@ class Users extends PagesType {
 	 * @return array Optional extra data to add to pages save query.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function ___saveReady(Page $page) {
 		/** @var User $user */
 		$user = $page;

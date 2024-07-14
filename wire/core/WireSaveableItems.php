@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use IteratorAggregate;
+use PDO;
+use ReturnTypeWillChange;
+use Override;
 /**
  * ProcessWire WireSaveableItems
  *
@@ -25,8 +29,7 @@
  *
  * 
  */
-
-abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
+abstract class WireSaveableItems extends Wire implements IteratorAggregate {
 
 	/**
 	 * Return the WireArray that this DAO stores it's items in
@@ -214,7 +217,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 
 		$query = $database->prepare($sql);
 		$query->execute();
-		$rows = $query->fetchAll(\PDO::FETCH_ASSOC);
+		$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 		$n = 0;
 
 		foreach($rows as $row) {
@@ -305,7 +308,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 		
 		if($id && $item->isChanged('name')) {
 			$query = $database->prepare("SELECT name FROM `$table` WHERE id=:id");
-			$query->bindValue(':id', $id, \PDO::PARAM_INT);
+			$query->bindValue(':id', $id, PDO::PARAM_INT);
 			$query->execute();
 			$oldName = $query->fetchColumn();
 			$query->closeCursor();
@@ -330,7 +333,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 			foreach($binds as $key => $value) {
 				$query->bindValue($key, $value); 
 			}
-			$query->bindValue(":id", $id, \PDO::PARAM_INT);
+			$query->bindValue(":id", $id, PDO::PARAM_INT);
 			$result = $query->execute();
 			
 		} else {
@@ -384,7 +387,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 		$table = $database->escapeTable($this->getTable());
 		
 		$query = $database->prepare("DELETE FROM `$table` WHERE id=:id LIMIT 1"); 
-		$query->bindValue(":id", $id, \PDO::PARAM_INT); 
+		$query->bindValue(":id", $id, PDO::PARAM_INT); 
 		$result = $query->execute();
 		
 		if($result) {
@@ -447,8 +450,8 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 		return $this->getAll()->find($selectors); 
 	}
 
-	#[\ReturnTypeWillChange]
- #[\Override] 
+	#[ReturnTypeWillChange]
+ #[Override] 
 	public function getIterator() {
 		if($this->useLazy()) $this->loadAllLazyItems();
 		return $this->getAll();
@@ -467,7 +470,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 		return $value;
 	}
 
-	#[\Override]
+	#[Override]
  public function __get($name) {
 		$value = $this->get($name);
 		if($value === null) $value = parent::__get($name);
@@ -616,7 +619,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 * @return bool
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function useFuel($useFuel = null) {
 		return false;
 	}
@@ -770,7 +773,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 * @return Wire|WireSaveableItems
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function error($text, $flags = 0) {
 		$this->log($text); 
 		return parent::error($text, $flags); 
@@ -784,7 +787,7 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __debugInfo() {
 		$info = []; // parent::__debugInfo();
 		$info['loaded'] = [];

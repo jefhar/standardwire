@@ -1,33 +1,36 @@
 <?php namespace ProcessWire;
 
+use Stringable;
+use Override;
+use Exception;
 /**
  * ProcessWire Base Class "Wire"
- * 
- * #pw-summary Wire is the base class for most ProcessWire classes and modules. 
- * #pw-body = 
+ *
+ * #pw-summary Wire is the base class for most ProcessWire classes and modules.
+ * #pw-body =
  * Wire derived classes have a `$this->wire()` method that provides access to ProcessWire’s API variables.
- * API variables can also be accessed as local properties in most cases. Wire also provides basic methods 
- * for tracking changes and managing runtime notices specific to the instance. 
- * 
- * Wire derived classes can specify which methods are “hookable” by precending the method name with 
- * 3 underscores like this: `___myMethod()`. Other classes can then hook either before or after that method, 
- * modifying arguments or return values. Several other hook methods are also provided for Wire derived 
- * classes that are hooking into others. 
+ * API variables can also be accessed as local properties in most cases. Wire also provides basic methods
+ * for tracking changes and managing runtime notices specific to the instance.
+ *
+ * Wire derived classes can specify which methods are “hookable” by precending the method name with
+ * 3 underscores like this: `___myMethod()`. Other classes can then hook either before or after that method,
+ * modifying arguments or return values. Several other hook methods are also provided for Wire derived
+ * classes that are hooking into others.
  * #pw-body
  * #pw-order-groups common,identification,hooks,notices,changes,hooker,api-helpers
  * #pw-summary-api-helpers Shortcuts to ProcessWire API variables. Access without any arguments returns the API variable. Some support arguments as shortcuts to methods in the API variable.
  * #pw-summary-changes Methods to support tracking and retrieval of changes made to the object.
- * #pw-summary-hooks Methods for managing hooks for an object instance or class. 
- * 
+ * #pw-summary-hooks Methods for managing hooks for an object instance or class.
+ *
  * ProcessWire 3.x, Copyright 2022 by Ryan Cramer
  * https://processwire.com
- * 
+ *
  * #pw-use-constants
- * 
+ *
  * @property string $className #pw-internal
- * 
+ *
  * API variables accessible as properties (unless $useFuel has been set to false):
- * 
+ *
  * @property AdminTheme|AdminThemeFramework|null $adminTheme #pw-internal
  * @property WireCache $cache #pw-internal
  * @property Config $config #pw-internal
@@ -59,10 +62,10 @@
  * @property User $user #pw-internal
  * @property Users $users #pw-internal
  * @property ProcessWire $wire #pw-internal
- * 
- * The following map API variables to function names and apply only if another function in the class does not 
- * already have the same name, which would override. All defined API variables can be accessed as functions 
- * that return the API variable, whether documented below or not. 
+ *
+ * The following map API variables to function names and apply only if another function in the class does not
+ * already have the same name, which would override. All defined API variables can be accessed as functions
+ * that return the API variable, whether documented below or not.
  *
  * @method WireCache|string|array|PageArray|null cache($name = '', $expire = null, $func = null) Access the $cache API variable as a function.  #pw-group-api-helpers
  * @method Config|mixed config($key = '', $value = null) Access the $config API variable as a function. #pw-group-api-helpers
@@ -85,18 +88,16 @@
  * @method Templates|Template|null templates($name = '') Access the $templates API variable as a function. #pw-group-api-helpers
  * @method User|mixed user($key = '', $value = null) Access the $user API variable as a function. #pw-group-api-helpers
  * @method Users|PageArray|User|mixed users($selector = '') Access the $users API variable as a function. #pw-group-api-helpers
- * 
+ *
  * Other standard hookable methods
- * 
+ *
  * @method changed(string $what, $old = null, $new = null) See Wire::___changed()
  * @method log($str = '', array $options = array()) See Wire::___log()
  * @method callUnknown($method, $arguments) See Wire::___callUnknown()
- * @method Wire trackException(\Exception $e, $severe = true, $text = null)
- * 
- * 
+ * @method Wire trackException(Exception $e, $severe = true, $text = null)
+ *
  */
-
-abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \Stringable {
+abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, Stringable {
 
 	/*******************************************************************************************************
 	 * API VARIABLE/FUEL INJECTION AND ACCESS
@@ -339,7 +340,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function __toString(): string {
 		return $this->className();
 	}
@@ -999,7 +1000,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return bool True if property has changed, false if not. 
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function isChanged($what = '') {
 		if(!$what) return count($this->changes) > 0; 
 		return array_key_exists($what, $this->changes); 
@@ -1037,7 +1038,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return $this
 	 * 
 	 */
-	#[\Override]
+	#[Override]
  public function trackChange($what, $old = null, $new = null) {
 		
 		if($this->trackChanges & self::trackChangesOn) {
@@ -1117,7 +1118,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return $this
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function setTrackChanges($trackChanges = true) {
 		if(is_bool($trackChanges) || !$trackChanges) {
 			// turn change track on or off
@@ -1185,7 +1186,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return array
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getChanges($getValues = false) {
 		if($getValues === 2) {
 			$changes = [];
@@ -1349,24 +1350,23 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	}
 
 	/**
-	 * Hookable method called when an Exception occurs
-	 * 
-	 * - It will log Exception to `exceptions.txt` log if 'exceptions' is in `$config->logs`. 
-	 * - It will re-throw Exception if `$config->allowExceptions` is true. 
-	 * - If additional `$text` is provided, it will be sent to notice method call. 
-	 * 
-	 * #pw-hooker
-	 * 
-	 * @param \Exception|WireException $e Exception object that was thrown.
-	 * @param bool|int $severe Whether or not it should be considered severe (default=true).
-	 * @param string|array|object|true $text Additional details (optional):
-	 * 	- When provided, it will be sent to `$this->error($text)` if $severe is true, or `$this->warning($text)` if $severe is false.
-	 * 	- Specify boolean `true` to just send the `$e->getMessage()` to `$this->error()` or `$this->warning()`. 
-	 * @return $this
-	 * @throws \Exception If `$severe==true` and `$config->allowExceptions==true`
-	 * 
-	 */
-	public function ___trackException(\Exception $e, $severe = true, $text = null) {
+  * Hookable method called when an Exception occurs
+  *
+  * - It will log Exception to `exceptions.txt` log if 'exceptions' is in `$config->logs`.
+  * - It will re-throw Exception if `$config->allowExceptions` is true.
+  * - If additional `$text` is provided, it will be sent to notice method call.
+  *
+  * #pw-hooker
+  *
+  * @param Exception|WireException $e Exception object that was thrown.
+  * @param bool|int $severe Whether or not it should be considered severe (default=true).
+  * @param string|array|object|true $text Additional details (optional):
+  * 	- When provided, it will be sent to `$this->error($text)` if $severe is true, or `$this->warning($text)` if $severe is false.
+  * 	- Specify boolean `true` to just send the `$e->getMessage()` to `$this->error()` or `$this->warning()`.
+  * @return $this
+  * @throws Exception If `$severe==true` and `$config->allowExceptions==true`
+  */
+ public function ___trackException(Exception $e, $severe = true, $text = null) {
 		$config = $this->wire()->config;
 		$log = $this->wire()->log;
 		$msg = $e->getMessage();
@@ -1595,7 +1595,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return string
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function _($text) {
 		return __($text, $this); 
 	}
@@ -1612,7 +1612,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return string Translated text or original text if translation not available.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function _x($text, $context) {
 		return _x($text, $context, $this); 
 	}
@@ -1628,7 +1628,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return string Translated text or original text if translation not available.
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function _n($textSingular, $textPlural, $count) {
 		return _n($textSingular, $textPlural, $count, $this); 
 	}
@@ -1656,7 +1656,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @param ProcessWire $wire
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function setWire(ProcessWire $wire) {
 		$wired = $this->_wire;
 		if($wired === $wire) return;
@@ -1677,7 +1677,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return null|ProcessWire
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function getWire() {
 		return $this->_wire ?: null;
 	}
@@ -1755,7 +1755,7 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 *
 	 *
 	 */
-	#[\Override]
+	#[Override]
  public function wire($name = '', $value = null, $lock = false) {
 
 		if($this->_wire) {

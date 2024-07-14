@@ -1,13 +1,14 @@
 <?php namespace ProcessWire;
 
+use Override;
 /**
  * Selector that matches if the value exists at the beginning of another value
  *
  */
 class SelectorStarts extends Selector { 
-	#[\Override]
+	#[Override]
  public static function getOperator() { return '^='; }
-	#[\Override]
+	#[Override]
  public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
@@ -16,11 +17,11 @@ class SelectorStarts extends Selector {
 			Selector::compareTypeBoundary | 
 			Selector::compareTypeFulltext; 
 	}
-	#[\Override]
+	#[Override]
  public static function getLabel() { return __('Starts with', __FILE__); }
-	#[\Override]
+	#[Override]
  public static function getDescription() { return SelectorContains::buildDescription('phrase-start fulltext'); }
-	#[\Override]
+	#[Override]
  protected function match($value1, $value2) { 
 		return $this->evaluate(stripos(trim((string) $value1), $value2) === 0); 
 	}
