@@ -318,7 +318,7 @@ class WireRandom extends Wire {
 			$bits = 1;
 			while($counter >>= 1) ++$bits;
 			$bytes = (int) max(ceil($bits / 8), 1);
-			$bitmask = pow(2, $bits) - 1;
+			$bitmask = 2 ** $bits - 1;
 			if($bitmask >= PHP_INT_MAX) $bitmask = PHP_INT_MAX;
 			do {
 				$result = hexdec(bin2hex(mcrypt_create_iv($bytes, MCRYPT_DEV_URANDOM))) & $bitmask;
