@@ -19,7 +19,7 @@ use Override;
  */
 class ImageSizerEngineGD extends ImageSizerEngine {
 
-	public static function getModuleInfo() {
+	public static function getModuleInfo(): array {
 		return ['title' => 'GD Image Sizer', 'version' => 1, 'summary' => "Uses PHP’s built-in GD library to resize images.", 'author' => 'Horst Nogajski'];
 	}
 
@@ -56,7 +56,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * 
 	 */
 	#[Override]
- protected function validSourceImageFormats() {
+ protected function validSourceImageFormats(): array {
 		return ['JPG', 'JPEG', 'PNG', 'GIF'];
 	}
 
@@ -67,7 +67,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 *
 	 */
 	#[Override]
- protected function validTargetImageFormats() {
+ protected function validTargetImageFormats(): array {
 		$formats = $this->validSourceImageFormats();
 		if($this->supported('webp')) $formats[] = 'WEBP';
 		return $formats;
@@ -1108,7 +1108,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 *
 	 */
 	#[Override]
- protected function processRotate($srcFilename, $dstFilename, $degrees) {
+ protected function processRotate($srcFilename, $dstFilename, $degrees): bool {
 		return $this->processAction($srcFilename, $dstFilename, 'rotate', $degrees);
 	}
 
@@ -1122,7 +1122,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 *
 	 */
 	#[Override]
- protected function processFlip($srcFilename, $dstFilename, $flipType) {
+ protected function processFlip($srcFilename, $dstFilename, $flipType): bool {
 		return $this->processAction($srcFilename, $dstFilename, 'flip', $flipType);
 	}
 	
@@ -1134,7 +1134,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 *
 	 */
 	#[Override]
- public function convertToGreyscale($dstFilename = '') {
+ public function convertToGreyscale($dstFilename = ''): bool {
 		return $this->processAction($this->filename, $dstFilename, 'greyscale', null);
 	}
 
@@ -1147,7 +1147,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 *
 	 */
 	#[Override]
- public function convertToSepia($dstFilename = '', $sepia = 55) {
+ public function convertToSepia($dstFilename = '', $sepia = 55): bool {
 		return $this->processAction($this->filename, $dstFilename, 'sepia', $sepia);
 	}
 

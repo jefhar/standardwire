@@ -20,7 +20,7 @@ class SelectorContainsWordsPartial extends Selector {
 	#[Override]
  public static function getLabel() { return __('Contains all partial words', __FILE__); }
 	#[Override]
- public static function getDescription() { return SelectorContains::buildDescription('words-all words-partial words-partial-begin fulltext'); }
+ public static function getDescription(): string { return SelectorContains::buildDescription('words-all words-partial words-partial-begin fulltext'); }
 	#[Override]
  protected function match($value1, $value2) {
 		$hasAll = true;

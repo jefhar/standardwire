@@ -889,7 +889,7 @@ class ModulesLoader extends ModulesClass {
 	}
 
 	#[Override]
- public function getDebugData() {
+ public function getDebugData(): array {
 		return ['autoloadOrders' => $this->autoloadOrders, 'conditionalAutoloadModules' => $this->conditionalAutoloadModules, 'modulesTableCache' => $this->modulesTableCache, 'createdDates' => $this->createdDates];
 	}
 

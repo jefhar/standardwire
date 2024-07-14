@@ -642,7 +642,7 @@ function wireIconMarkup($icon, $class = ''): string {
  * @return string 
  * 
  */
-function wireIconMarkupFile($filename, $class = '') {
+function wireIconMarkupFile($filename, $class = ''): string {
 	$icon = 'file-o';
 	$icons = ['pdf' => 'file-pdf-o', 'doc' => 'file-word-o', 'docx' => 'file-word-o', 'xls' => 'file-excel-o', 'xlsx' => 'file-excel-o', 'xlsb' => 'file-excel-o', 'csv' => 'file-excel-o', 'zip' => 'file-archive-o', 'txt' => 'file-text-o', 'rtf' => 'file-text-o', 'mp3' => 'file-sound-o', 'wav' => 'file-sound-o', 'ogg' => 'file-sound-o', 'jpg' => 'file-image-o', 'jpeg' => 'file-image-o', 'png' => 'file-image-o', 'gif' => 'file-image-o', 'svg' => 'file-image-o', 'ppt' => 'file-powerpoint-o', 'pptx' => 'file-powerpoint-o', 'mov' => 'file-video-o', 'mp4' => 'file-video-o', 'wmv' => 'file-video-o', 'js' => 'file-code-o', 'css' => 'file-code-o'];
 	$pos = strrpos($filename, '.'); 
@@ -1109,7 +1109,7 @@ function wireCount(mixed $value): int {
  * @since 3.0.192
  * 
  */
-function wireLength($value, $mb = true) {
+function wireLength($value, $mb = true): int {
 	if($value === null || $value === '' || $value === false) return 0; 
 	if($value === true) return 1;
 	if(is_string($value)) return ($mb && function_exists('mb_strlen') ? mb_strlen($value) : strlen($value));
@@ -1130,7 +1130,7 @@ function wireLength($value, $mb = true) {
  * @since 3.0.192
  *
  */
-function wireLen($value) {
+function wireLen($value): int {
 	return wireLength($value, false);
 }
 

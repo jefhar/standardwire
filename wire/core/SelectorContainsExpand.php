@@ -21,5 +21,5 @@ class SelectorContainsExpand extends SelectorContains {
 	#[Override]
  public static function getLabel() { return __('Contains phrase expand', __FILE__); }
 	#[Override]
- public static function getDescription() { return SelectorContains::buildDescription('phrase expand fulltext'); }
+ public static function getDescription(): string { return SelectorContains::buildDescription('phrase expand fulltext'); }
 }

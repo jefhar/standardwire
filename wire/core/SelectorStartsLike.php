@@ -20,5 +20,5 @@ class SelectorStartsLike extends SelectorStarts {
 	#[Override]
  public static function getLabel() { return __('Starts like', __FILE__); }
 	#[Override]
- public static function getDescription() { return SelectorContains::buildDescription('phrase-start like'); }
+ public static function getDescription(): string { return SelectorContains::buildDescription('phrase-start like'); }
 }

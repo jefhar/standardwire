@@ -194,7 +194,7 @@ class ModulesFlags extends ModulesClass {
 	}
 	
 	#[Override]
- public function getDebugData() {
+ public function getDebugData(): array {
 		return ['moduleFlags' => $this->moduleFlags];
 	}
 }

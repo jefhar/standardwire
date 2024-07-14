@@ -256,7 +256,7 @@ class Session extends Wire implements IteratorAggregate {
 	 * @since 3.0.175
 	 * 
 	 */
-	public function hasLoginCookie() {
+	public function hasLoginCookie(): bool {
 		return $this->hasCookie(true);
 	}
 

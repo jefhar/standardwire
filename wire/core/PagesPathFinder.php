@@ -1168,7 +1168,7 @@ class PagesPathFinder extends Wire {
 	 * @return array of [ pageNum, pageNumPrefix ]
 	 *
 	 */
-	protected function getShortcutPageNum(&$path) {
+	protected function getShortcutPageNum(&$path): array {
 
 		if(!ctype_digit(substr($path, -1))) return [1, ''];
 

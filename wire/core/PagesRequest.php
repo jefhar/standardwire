@@ -1174,7 +1174,7 @@ class PagesRequest extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function getResponseError() {
+	public function getResponseError(): string {
 		return ($this->responseCode >= 400 ? $this->getResponseMessage() : '');
 	}
 

@@ -57,7 +57,7 @@ class WireRandom extends Wire {
 	 * @since 3.0.111
 	 *
 	 */
-	public function alphanumeric($length = 0, array $options = []) {
+	public function alphanumeric($length = 0, array $options = []): string {
 
 		$defaults = ['alpha' => true, 'upper' => true, 'lower' => true, 'numeric' => true, 'strict' => false, 'allow' => '', 'disallow' => [], 'extras' => [], 'require' => [], 'minLength' => 10, 'maxLength' => 40, 'noRepeat' => false, 'noStart' => [], 'noEnd' => [], 'fast' => $this->cryptoSecure()];
 
@@ -259,7 +259,7 @@ class WireRandom extends Wire {
 	 * @since 3.0.111
 	 *
 	 */
-	public function alpha($length = 0, array $options = []) {
+	public function alpha($length = 0, array $options = []): string {
 		if(!isset($options['numeric'])) $options['numeric'] = false;
 		return $this->alphanumeric($length, $options);
 	}
@@ -273,7 +273,7 @@ class WireRandom extends Wire {
 	 * @since 3.0.111
 	 *
 	 */
-	public function numeric($length = 0, array $options = []) {
+	public function numeric($length = 0, array $options = []): string {
 		$options['alpha'] = false;
 		return $this->alphanumeric($length, $options);
 	}

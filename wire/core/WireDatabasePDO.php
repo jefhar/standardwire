@@ -1492,7 +1492,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @return string
 	 *
 	 */
-	public function escape_string($str) {
+	public function escape_string($str): string {
 		return $this->escapeStr($str); 
 	}
 

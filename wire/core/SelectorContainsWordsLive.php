@@ -22,7 +22,7 @@ class SelectorContainsWordsLive extends Selector {
 	#[Override]
  public static function getLabel() { return __('Contains all words live', __FILE__); }
 	#[Override]
- public static function getDescription() { return SelectorContains::buildDescription('words-all words-partial-last fulltext'); }
+ public static function getDescription(): string { return SelectorContains::buildDescription('words-all words-partial-last fulltext'); }
 	#[Override]
  protected function match($value1, $value2) {
 		$hasAll = true;

@@ -931,7 +931,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @return array Value provided to the function with boolean operators added, or verbose array.
 	 *
 	 */
-	protected function getBooleanModeWords($value, array $options = []) {
+	protected function getBooleanModeWords($value, array $options = []): array {
 		
 		$expand = str_contains($this->operator, '+');
 		

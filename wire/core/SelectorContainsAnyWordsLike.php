@@ -20,7 +20,7 @@ class SelectorContainsAnyWordsLike extends Selector {
 	#[Override]
  public static function getLabel() { return __('Contains any words like', __FILE__); }
 	#[Override]
- public static function getDescription() { return SelectorContains::buildDescription('words-any words-partial words-partial-any like'); }
+ public static function getDescription(): string { return SelectorContains::buildDescription('words-any words-partial words-partial-any like'); }
 	#[Override]
  protected function match($value1, $value2) {
 		$hasAny = false;

@@ -20,5 +20,5 @@ class SelectorEndsLike extends SelectorEnds {
 	#[Override]
  public static function getLabel() { return __('Ends like', __FILE__); }
 	#[Override]
- public static function getDescription() { return SelectorContains::buildDescription('phrase-end like'); }
+ public static function getDescription(): string { return SelectorContains::buildDescription('phrase-end like'); }
 }

@@ -224,7 +224,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return array() Index 0 contains email, index 1 contains username or blank if not set
 	 *
 	 */
-	protected function extractEmailAndName($email) {
+	protected function extractEmailAndName($email): array {
 		$name = '';
 		$email = (string) $email;
 		if(str_contains($email, '<') && str_contains($email, '>')) {
@@ -248,7 +248,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return string
 	 *
 	 */
-	protected function bundleEmailAndName($email, $name) {
+	protected function bundleEmailAndName($email, $name): string {
 		$email = $this->sanitizeEmail($email); 
 		if(!strlen($name)) return $email;
 		$name = $this->sanitizeHeaderValue($name); 

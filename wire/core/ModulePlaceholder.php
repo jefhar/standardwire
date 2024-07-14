@@ -31,7 +31,7 @@ class ModulePlaceholder extends WireData implements Module {
 		$this->set('file', ''); 
 	}
 
-	static public function getModuleInfo() {
+	static public function getModuleInfo(): array {
 		return ['title' => 'ModulePlaceholder: call $modules->get(class) to replace this placeholder.', 'version' => 0, 'summary' => ''];
 	}
 

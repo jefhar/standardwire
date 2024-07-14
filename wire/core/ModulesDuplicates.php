@@ -362,7 +362,7 @@ class ModulesDuplicates extends Wire {
 		return $configData;
 	}
 	
-	public function getDebugData() {
+	public function getDebugData(): array {
 		return ['duplicates' => $this->duplicates, 'duplicatesUse' => $this->duplicatesUse];
 	}
 }

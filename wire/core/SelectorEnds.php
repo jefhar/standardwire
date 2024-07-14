@@ -20,7 +20,7 @@ class SelectorEnds extends Selector {
 	#[Override]
  public static function getLabel() { return __('Ends with', __FILE__); }
 	#[Override]
- public static function getDescription() { return SelectorContains::buildDescription('phrase-end fulltext'); }
+ public static function getDescription(): string { return SelectorContains::buildDescription('phrase-end fulltext'); }
 	#[Override]
  protected function match($value1, $value2) { 
 		$value2 = trim($value2); 

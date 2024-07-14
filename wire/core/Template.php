@@ -383,7 +383,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 * @since 3.0.153
 	 *
 	 */
-	protected function roleTypeNames($type) {
+	protected function roleTypeNames($type): array {
 		if($type instanceof Page) $type = $type->name;
 		if($type === 'view' || $type === 'roles' || $type === 'viewRoles' || $type === 'page-view') {
 			return ['view', 'roles', 'page-view'];

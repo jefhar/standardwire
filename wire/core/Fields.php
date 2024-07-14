@@ -102,7 +102,7 @@ class Fields extends WireSaveableItems {
 		}
 	}
 	
-	public function getCacheItemName() {
+	public function getCacheItemName(): array {
 		return ['roles', 'permissions', 'title', 'process']; 
 	}
 

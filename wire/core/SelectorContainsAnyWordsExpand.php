@@ -20,7 +20,7 @@ class SelectorContainsAnyWordsExpand extends SelectorContainsAnyWords {
 	#[Override]
  public static function getLabel() { return __('Contains any words expand', __FILE__); }
 	#[Override]
- public static function getDescription() { return SelectorContains::buildDescription('words-any expand fulltext'); }
+ public static function getDescription(): string { return SelectorContains::buildDescription('words-any expand fulltext'); }
 	#[Override]
  protected function match($value1, $value2) {
 		$hasAny = false;

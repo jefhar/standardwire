@@ -712,7 +712,7 @@ class ModulesConfigs extends ModulesClass {
 	}
 
 	#[Override]
- public function getDebugData() {
+ public function getDebugData(): array {
 		return ['configData' => $this->configData];
 	}
 

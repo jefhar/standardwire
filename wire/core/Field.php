@@ -1601,7 +1601,7 @@ class Field extends WireData implements Saveable, Exportable {
 	}
 	
 	#[Override]
- public function debugInfoSmall() {
+ public function debugInfoSmall(): array {
 		return ['id' => $this->id, 'name' => $this->name, 'label' => $this->getLabel(), 'type' => $this->type ? wireClassName($this->type) : ''];
 	}
 	

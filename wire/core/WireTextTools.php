@@ -381,7 +381,7 @@ class WireTextTools extends Wire {
 	 * @return string
 	 *
 	 */
-	public function collapse($str, array $options = []) {
+	public function collapse($str, array $options = []): string {
 
 		$defaults = ['stripTags' => true, 'keepTags' => [], 'collapseLinesWith' => ' ', 'endBlocksWith' => '', 'convertEntities' => true, 'linksToUrls' => false];
 

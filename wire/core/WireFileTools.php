@@ -467,7 +467,7 @@ class WireFileTools extends Wire {
 	 * @since 3.0.178
 	 * 
 	 */
-	public function renameCopy($oldName, $newName, $options = []) {
+	public function renameCopy($oldName, $newName, $options = []): bool {
 		$options['copy'] = true;
 		return $this->rename($oldName, $newName, $options);
 	}
@@ -1858,7 +1858,7 @@ class WireFileTools extends Wire {
 	 * @return string Adjusted file name
 	 *
 	 */
-	public function unixFileName($file) {
+	public function unixFileName($file): string {
 		return $this->unixDirName($file, false);
 	}
 
@@ -1893,7 +1893,7 @@ class WireFileTools extends Wire {
 	 * @since 3.0.130
 	 * 
 	 */
-	public function currentPath() {
+	public function currentPath(): string {
 		return $this->unixDirName(getcwd());
 	}
 

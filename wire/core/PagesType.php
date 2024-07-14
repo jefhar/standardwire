@@ -661,7 +661,7 @@ class PagesType extends Wire implements IteratorAggregate, Countable {
 	 * @return array
 	 * 
 	 */
-	protected function getJoinFieldNames() {
+	protected function getJoinFieldNames(): array {
 		return [];
 	}
 
@@ -680,7 +680,7 @@ class PagesType extends Wire implements IteratorAggregate, Countable {
 	 * @since 3.0.128
 	 *
 	 */
-	public function ___saveReady(Page $page) { 
+	public function ___saveReady(Page $page): array { 
 		return []; 
 	}
 

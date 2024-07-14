@@ -3640,7 +3640,7 @@ class Sanitizer extends Wire {
 	 * @return string
 	 *
 	 */
-	public function kebabCase($value, array $options = []) {
+	public function kebabCase($value, array $options = []): string {
 		return $this->hyphenCase($value, $options);
 	}
 
@@ -3658,7 +3658,7 @@ class Sanitizer extends Wire {
 	 * @return string
 	 *
 	 */
-	public function snakeCase($value, array $options = []) {
+	public function snakeCase($value, array $options = []): string {
 		$options['hyphen'] = '_';
 		return $this->hyphenCase($value, $options);
 	}
@@ -3679,7 +3679,7 @@ class Sanitizer extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function camelCase($value, array $options = []) {
+	public function camelCase($value, array $options = []): string {
 		
 		$defaults = ['allow' => 'a-zA-Z0-9', 'allowUnderscore' => false, 'startLowercase' => true, 'startNumber' => false];
 		
@@ -5115,7 +5115,7 @@ class Sanitizer extends Wire {
 	 * @see Sanitizer::maxLength()
 	 * 
 	 */
-	public function minLength($value, $minLength = 1, $padChar = '', $padLeft = false) {
+	public function minLength($value, $minLength = 1, $padChar = '', $padLeft = false): string {
 		
 		$value = $this->string($value);
 		$length = $this->multibyteSupport ? mb_strlen($value) : strlen($value);

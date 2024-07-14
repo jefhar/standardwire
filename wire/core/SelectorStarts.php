@@ -20,7 +20,7 @@ class SelectorStarts extends Selector {
 	#[Override]
  public static function getLabel() { return __('Starts with', __FILE__); }
 	#[Override]
- public static function getDescription() { return SelectorContains::buildDescription('phrase-start fulltext'); }
+ public static function getDescription(): string { return SelectorContains::buildDescription('phrase-start fulltext'); }
 	#[Override]
  protected function match($value1, $value2) { 
 		return $this->evaluate(stripos(trim((string) $value1), $value2) === 0); 

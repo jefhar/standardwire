@@ -323,7 +323,7 @@ class WireDataDB extends WireData implements Countable {
 	 * @return array
 	 * 
 	 */
-	protected function schema() {
+	protected function schema(): array {
 		return ["source_id INT UNSIGNED NOT NULL", "name VARCHAR(128) NOT NULL", "data MEDIUMTEXT NOT NULL", "PRIMARY KEY (source_id, name)", "INDEX name (name)", "FULLTEXT KEY data (data)"];
 	}
 

@@ -531,7 +531,7 @@ class Pageimage extends Pagefile {
 	 * @return array of width and height
 	 *
 	 */
-	protected function getImageInfoSVG($filename = '') {
+	protected function getImageInfoSVG($filename = ''): array {
 		$width = 0;
 		$height = 0;
 		if(!$filename) $filename = $this->filename;

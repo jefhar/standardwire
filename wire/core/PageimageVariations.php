@@ -462,7 +462,7 @@ class PageimageVariations extends Wire implements IteratorAggregate, Countable {
 	 *  - `reasons` (array): Reasons why files were skipped or had errors, associative array indexed by file name.
 	 *
 	 */
-	public function rebuild($mode = 0, array $suffix = [], array $options = []) {
+	public function rebuild($mode = 0, array $suffix = [], array $options = []): array {
 		
 		$files = $this->wire()->files;
 

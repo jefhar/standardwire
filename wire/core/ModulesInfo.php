@@ -1321,7 +1321,7 @@ class ModulesInfo extends ModulesClass {
  }
 	
 	#[Override]
- public function getDebugData() {
+ public function getDebugData(): array {
 		return ['moduleInfoCache' => $this->moduleInfoCache, 'moduleInfoCacheVerbose' => $this->moduleInfoCacheVerbose, 'moduleInfoCacheUninstalled' => $this->moduleInfoCacheUninstalled, 'modulesLastVersions' => $this->modulesLastVersions, 'moduleNamespaceCache' => $this->moduleNamespaceCache];
 	}
 }

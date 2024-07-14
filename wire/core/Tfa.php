@@ -967,7 +967,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @return array
 	 * 
 	 */
-	protected function getDefaultUserSettings(User $user) {
+	protected function getDefaultUserSettings(User $user): array {
 		return ['enabled' => false];
 	}
 	

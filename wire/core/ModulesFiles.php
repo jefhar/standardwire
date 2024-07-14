@@ -625,7 +625,7 @@ class ModulesFiles extends ModulesClass {
 	}
 
 	#[Override]
- public function getDebugData() {
+ public function getDebugData(): array {
 		return ['moduleFileExts' => $this->moduleFileExts];
 	}
 

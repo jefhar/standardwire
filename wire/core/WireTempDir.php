@@ -438,7 +438,7 @@ class WireTempDir extends Wire {
 	 * @since 3.0.175
 	 *
 	 */
-	public function maintenance() {
+	public function maintenance(): bool {
 		if(self::$maintenanceCompleted) return true;
 		$classRoot = $this->classRoot ?: $this->classRootPath(false);
 		$result = $this->removeExpiredDirs($classRoot, $this->cleanMaxAge);
@@ -454,7 +454,7 @@ class WireTempDir extends Wire {
 	 * @return string
 	 *
 	 */
-	public function create($name = '', $basePath = '') {
+	public function create($name = '', $basePath = ''): string {
 		return $this->init($name, $basePath);
 	}
 

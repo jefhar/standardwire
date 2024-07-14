@@ -299,7 +299,7 @@ class WireMarkupRegions extends Wire {
 	 * ] 
 	 * 
 	 */
-	protected function parseFindSelector($find) {
+	protected function parseFindSelector($find): array {
 		
 		$findTag = '';
 		$hasClass = '';

@@ -2420,7 +2420,7 @@ class Modules extends WireArray {
 		return $this->debugLog;
 	}
 	
-	public function getDebugData() {
+	public function getDebugData(): array {
 		return ['installableFiles' => $this->installableFiles, 'moduleIDs' => $this->moduleIDs, 'moduleNames' => $this->moduleNames, 'paths' => $this->paths, 'substitutes' => $this->substitutes, 'caches' => $this->caches, 'loader' => $this->loader->getDebugData(), 'configs' => $this->configs->getDebugData(), 'installer' => $this->installer()->getDebugData(), 'files' => $this->files->getDebugData(), 'flags' => $this->flags->getDebugData(), 'info' => $this->info->getDebugData(), 'duplicates' => $this->duplicates()->getDebugData()];
 	}
 

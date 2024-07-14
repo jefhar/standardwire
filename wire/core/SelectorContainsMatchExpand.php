@@ -23,5 +23,5 @@ class SelectorContainsMatchExpand extends SelectorContainsMatch {
 	#[Override]
  public static function getLabel() { return __('Contains match expand', __FILE__); }
 	#[Override]
- public static function getDescription() { return SelectorContains::buildDescription('words-match words-whole expand fulltext'); }
+ public static function getDescription(): string { return SelectorContains::buildDescription('words-match words-whole expand fulltext'); }
 }

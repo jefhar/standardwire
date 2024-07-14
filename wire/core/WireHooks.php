@@ -300,7 +300,7 @@ class WireHooks implements Stringable {
 	 * @see WireHooks::isMethodHooked(), WireHooks::isPropertyHooked(), WireHooks::hasHook()
 	 *
 	 */
-	public function isHooked($method, Wire $instance = null) {
+	public function isHooked($method, Wire $instance = null): bool {
 		if($instance) return $this->hasHook($instance, $method);
 		if(str_contains($method, ':')) {
 			$hooked = isset($this->hookClassMethodCache[$method]); // fromClass::method() or fromClass::property
@@ -399,7 +399,7 @@ class WireHooks implements Stringable {
 	 * @return bool
 	 *
 	 */
-	public function isMethodHooked($class, $method) {
+	public function isMethodHooked($class, $method): bool {
 		return $this->isHookedOrParents($class, $method, 'method');
 	}
 
@@ -413,7 +413,7 @@ class WireHooks implements Stringable {
 	 * @return bool
 	 *
 	 */
-	public function isPropertyHooked($class, $property) {
+	public function isPropertyHooked($class, $property): bool {
 		return $this->isHookedOrParents($class, $property, 'property');
 	}
 	

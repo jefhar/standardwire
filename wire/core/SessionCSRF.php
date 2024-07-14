@@ -97,7 +97,7 @@ class SessionCSRF extends Wire {
 	 * @return array ("name" => "token name", "value" => "token value", "time" => created timestamp)
 	 *
 	 */
-	public function getToken($id = '') {
+	public function getToken($id = ''): array {
 		return ['name' => $this->getTokenName($id), 'value' => $this->getTokenValue($id), 'time' => $this->getTokenTime($id)]; 
 	}
 
@@ -113,7 +113,7 @@ class SessionCSRF extends Wire {
 	 * @return array ("id' => "token ID", "name" => "token name", "value" => "token value", "time" => created timestamp)
 	 *
 	 */
-	public function getSingleUseToken($id = '') {
+	public function getSingleUseToken($id = ''): array {
 		$session = $this->wire()->session;
 		if(!strlen($id)) $id = (string) mt_rand();
 		$name = $this->getTokenName($id);

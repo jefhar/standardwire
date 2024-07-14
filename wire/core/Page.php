@@ -3254,7 +3254,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * @return bool
 	 *
 	 */
-	public function isHidden() {
+	public function isHidden(): bool {
 		return $this->hasStatus(self::statusHidden); 
 	}
 
@@ -3266,7 +3266,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * @return bool
 	 *
 	 */
-	public function isUnpublished() {
+	public function isUnpublished(): bool {
 		return $this->hasStatus(self::statusUnpublished);
 	}
 	
@@ -3278,7 +3278,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * @return bool
 	 *
 	 */
-	public function isLocked() {
+	public function isLocked(): bool {
 		return $this->hasStatus(self::statusLocked);
 	}
 	
@@ -3604,7 +3604,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * @see hasFilesPath(), filesPath(), filesManager()
 	 * 
 	 */
-	public function hasFiles() {
+	public function hasFiles(): bool {
 		return PagefilesManager::hasFiles($this); 
 	}
 

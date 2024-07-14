@@ -150,7 +150,7 @@ class PagesEditor extends Wire {
 	 * @return bool True if saveable, False if not
 	 *
 	 */
-	public function isSaveable(Page $page, &$reason, $fieldName = '', array $options = []) {
+	public function isSaveable(Page $page, &$reason, $fieldName = '', array $options = []): bool {
 
 		$saveable = false;
 		$outputFormattingReason = "Call \$page->of(false); before getting/setting values that will be modified and saved.";

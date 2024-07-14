@@ -925,7 +925,7 @@ class Selectors extends WireArray {
 	 * @throws WireException
 	 * 
 	 */
-	protected function makeSelectorArrayItem($key, $data, $dataType = '') {
+	protected function makeSelectorArrayItem($key, $data, $dataType = ''): array {
 		
 		$sanitizer = $this->wire()->sanitizer;
 		$sanitize = 'selectorValue';
@@ -1360,7 +1360,7 @@ class Selectors extends WireArray {
 	 * @since 3.0.156
 	 *
 	 */
-	static public function getReservedChars() {
+	static public function getReservedChars(): array {
 		return [
       'or' => '|',
       // title|body=foo, summary=bar|baz
