@@ -915,12 +915,12 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	public function findRandomTimed($num, $seed = 'Ymd') {
 
 		if(is_string($seed)) $seed = crc32(date($seed));
-		srand($seed);
+		mt_srand($seed);
 		$keys = $this->getKeys();
 		$items = $this->makeNew();
 		
 		while(count($keys) > 0 && count($items) < $num) {
-			$index = rand(0, count($keys)-1);
+			$index = random_int(0, count($keys)-1);
 			$key = $keys[$index];
 			$items->add($this->get($key));
 			array_splice($keys, $index, 1);
