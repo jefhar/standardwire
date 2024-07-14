@@ -325,7 +325,7 @@ function wireZipFile($zipfile, $files, array $options = []) {
  * @see WireHttp::sendFile(), WireFileTools::send()
  *
  */
-function wireSendFile($filename, array $options = [], array $headers = []) {
+function wireSendFile($filename, array $options = [], array $headers = []): void {
 	/** @var WireFileTools $fileTools */
 	$files = wire('files');
 	$files->send($filename, $options, $headers);

@@ -34,7 +34,7 @@ header("X-Frame-Options: SAMEORIGIN");
  * @param HookEvent $event
  *
  */
-function _hookSessionRedirectModal(HookEvent $event) {
+function _hookSessionRedirectModal(HookEvent $event): void {
 	$url = $event->arguments(0);    
 	if(!str_contains((string) $url, 'modal=1') && !str_contains((string) $url, '://')) {
 		$url .= (!str_contains((string) $url, '?') ? '?' : '&') . 'modal=1';
@@ -48,7 +48,7 @@ function _hookSessionRedirectModal(HookEvent $event) {
  * @param Config $config
  * 
  */
-function _checkForHttpHostError(Config $config) {
+function _checkForHttpHostError(Config $config): void {
 
 	$valid = false;
 	$httpHost = strtolower($config->httpHost); 
@@ -76,7 +76,7 @@ function _checkForHttpHostError(Config $config) {
  * @param Session $session
  *
  */
-function _checkForTwoFactorAuth(Session $session) {
+function _checkForTwoFactorAuth(Session $session): void {
 	$tfaUrl = $session->getFor('_user', 'requireTfa'); // contains URL to configure TFA
 	if(!$tfaUrl || str_starts_with((string) $tfaUrl, (string) $session->wire('page')->url())) return;
 	$sanitizer = $session->wire('sanitizer');
@@ -94,7 +94,7 @@ function _checkForTwoFactorAuth(Session $session) {
  * @param WireInput $input
  * 
  */
-function _checkForMaxInputVars(WireInput $input) {
+function _checkForMaxInputVars(WireInput $input): void {
 	$max = (int) ini_get('max_input_vars');
 	if($max && count($_POST) >= $max) {
 		$input->error(sprintf(__('You have reached PHP’s “max_input_vars” setting of %d — please increase it.'), $max)); 
