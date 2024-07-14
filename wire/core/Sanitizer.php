@@ -3084,7 +3084,7 @@ class Sanitizer extends Wire {
 		$str = str_ireplace(array_keys($entities), array_values($entities), $str);
 		if(str_contains($str, '&#') && $this->multibyteSupport) {
 			// manually convert decimal and hex entities (when possible)
-			$str = preg_replace_callback('/(&#[0-9A-F]+;)/i', fn($matches) => mb_convert_encoding($matches[1], $encoding, "HTML-ENTITIES"), $str);
+			$str = preg_replace_callback('/(&#[0-9A-F]+;)/i', fn($matches): string|array|false => mb_convert_encoding($matches[1], $encoding, "HTML-ENTITIES"), $str);
 		}
 		if(str_contains((string) $str, '&')) {
 			// strip out any entities that remain
