@@ -4,6 +4,7 @@ use Countable;
 use IteratorAggregate;
 use Override;
 use ProcessWire\Interfaces\ConfigurableModule;
+use ProcessWire\Interfaces\InputfieldItemList;
 use ReturnTypeWillChange;
 
 /**

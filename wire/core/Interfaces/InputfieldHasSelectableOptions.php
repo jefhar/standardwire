@@ -1,4 +1,6 @@
-<?php namespace ProcessWire;
+<?php namespace ProcessWire\Interfaces;
+
+use ProcessWire\Language;
 
 /**
  * Inputfield that supports selectable options

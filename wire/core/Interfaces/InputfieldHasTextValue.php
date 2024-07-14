@@ -1,4 +1,4 @@
-<?php namespace ProcessWire;
+<?php namespace ProcessWire\Interfaces;
 
 /**
  * Inputfield that has a text value by default

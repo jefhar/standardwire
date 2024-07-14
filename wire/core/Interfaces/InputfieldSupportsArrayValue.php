@@ -1,4 +1,4 @@
-<?php namespace ProcessWire;
+<?php namespace ProcessWire\Interfaces;
 
 /**
  * Inputfield that doesn’t have an array value by default but can return array value or accept it

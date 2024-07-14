@@ -1,4 +1,4 @@
-<?php namespace ProcessWire;
+<?php namespace ProcessWire\Interfaces;
 
 /**
  * Inputfield that supports a Page selector for selectable options
