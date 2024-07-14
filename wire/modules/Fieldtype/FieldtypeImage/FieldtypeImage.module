@@ -1,6 +1,7 @@
 <?php namespace ProcessWire;
 
 use ProcessWire\Interfaces\FieldtypeHasFiles;
+use ProcessWire\Interfaces\FieldtypeHasPageimages;
 
 /**
  * ProcessWire Image Fieldtype

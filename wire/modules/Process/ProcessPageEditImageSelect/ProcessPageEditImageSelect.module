@@ -1,6 +1,7 @@
 <?php namespace ProcessWire;
 
 use ProcessWire\Interfaces\ConfigurableModule;
+use ProcessWire\Interfaces\FieldtypeHasPageimages;
 
 /**
  * ProcessWire Image Select + Edit Process
