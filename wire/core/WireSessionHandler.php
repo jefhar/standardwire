@@ -18,7 +18,8 @@ abstract class WireSessionHandler extends WireData implements Module {
 	 * Initialize the save handler when $modules sets the current instance
 	 *
 	 */
-	public function wired() {
+	#[\Override]
+ public function wired() {
 		if(!$this->sessionExists()) {
 			$this->addHookBefore('Session::init', $this, 'hookSessionInit');
 			register_shutdown_function(session_write_close(...));

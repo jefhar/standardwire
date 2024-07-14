@@ -82,7 +82,8 @@ class Templates extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	public function getAll() {
+	#[\Override]
+ public function getAll() {
 		if($this->useLazy()) $this->loadAllLazyItems();
 		return $this->getWireArray();
 	}
@@ -96,7 +97,8 @@ class Templates extends WireSaveableItems {
 	 * @since 3.0.194
 	 *
 	 */
-	public function getWireArray() {
+	#[\Override]
+ public function getWireArray() {
 		if($this->templatesArray === null) {
 			$this->templatesArray = $this->wire(new TemplatesArray());
 			$this->load($this->templatesArray); 
@@ -114,7 +116,8 @@ class Templates extends WireSaveableItems {
 	 * @since 3.0.146
 	 *
 	 */
-	public function makeItem(array $a = []) {
+	#[\Override]
+ public function makeItem(array $a = []) {
 
 		/** @var Template $template */
 		$template = $this->wire(new Template());
@@ -151,7 +154,8 @@ class Templates extends WireSaveableItems {
 	 * @since 3.0.194
 	 * 
 	 */
-	public function loadAllLazyItems() {
+	#[\Override]
+ public function loadAllLazyItems() {
 		if(!$this->useLazy()) return;
 		$this->wire()->fieldgroups->loadAllLazyItems();
 		parent::loadAllLazyItems();
@@ -165,7 +169,8 @@ class Templates extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return $this->wire(new Template()); 
 	}
 
@@ -175,7 +180,8 @@ class Templates extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	public function getTable() {
+	#[\Override]
+ public function getTable() {
 		return 'templates';
 	}
 
@@ -185,7 +191,8 @@ class Templates extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	public function getSort() {
+	#[\Override]
+ public function getSort() {
 		return $this->getTable() . ".name";
 	}
 
@@ -247,7 +254,8 @@ class Templates extends WireSaveableItems {
 	 * @return Template|null|string
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		if($key === 'path') return $this->wire()->config->paths->templates;
 		return parent::get($key);
 	}
@@ -264,7 +272,8 @@ class Templates extends WireSaveableItems {
 	 * @throws WireException
 	 *
 	 */
-	public function ___save(Saveable $item) {
+	#[\Override]
+ public function ___save(Saveable $item) {
 
 		// If the template's fieldgroup has changed, then we delete data that's no longer applicable to the new fieldgroup. 
 
@@ -339,7 +348,8 @@ class Templates extends WireSaveableItems {
 	 * @throws WireException Thrown when you attempt to delete a template in use, or a system template. 
 	 *
 	 */
-	public function ___delete(Saveable $item) {
+	#[\Override]
+ public function ___delete(Saveable $item) {
 
 		$name = $item->name;
 		$id = $item->id;
@@ -388,7 +398,8 @@ class Templates extends WireSaveableItems {
 	 * @return bool|Template $item Returns the new Template on success, or false on failure
 	 *
 	 */
-	public function ___clone(Saveable $item, $name = '') {
+	#[\Override]
+ public function ___clone(Saveable $item, $name = '') {
 
 		$original = $item;
 		/** @var Template $item */
@@ -500,7 +511,8 @@ class Templates extends WireSaveableItems {
 	 * @return string
 	 *
 	 */
-	protected function encodeData(array $value) {
+	#[\Override]
+ protected function encodeData(array $value) {
 		return wireEncodeJSON($value, ['slashUrls', 'compile']); 	
 	}
 

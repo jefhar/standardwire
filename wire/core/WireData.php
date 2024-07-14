@@ -329,7 +329,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return mixed|null
 	 *
 	 */
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		return $this->get($name); 
 	}
 
@@ -378,7 +379,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return \ArrayObject
 	 *
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function getIterator() {
 		return new \ArrayObject($this->data); 
 	}
@@ -484,7 +486,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @param int|string|array|object $value Value of item.
 	 * 
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function offsetSet($offset, $value) {
 		$this->set($offset, $value);
 	}
@@ -498,7 +501,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return int|string|array|object Value of item requested, or false if it doesn't exist.
 	 * 
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function offsetGet($offset) {
 		$value = $this->get($offset);
 		return is_null($value) ? false : $value;
@@ -515,7 +519,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return bool True if item existed and was unset. False if item didn't exist.
 	 * 
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function offsetUnset($offset) {
 		if($this->__isset($offset)) {
 			$this->remove($offset);
@@ -536,7 +541,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return bool True if the item exists, false if not.
 	 * 
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function offsetExists($offset) {
 		return $this->__isset($offset);
 	}
@@ -547,7 +553,8 @@ class WireData extends Wire implements \IteratorAggregate, \ArrayAccess {
 	 * @return array
 	 *
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		$info = parent::__debugInfo();
 		if(count($this->data)) $info['data'] = $this->data; 
 		return $info; 

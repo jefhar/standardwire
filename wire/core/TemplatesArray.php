@@ -12,19 +12,23 @@
 
 class TemplatesArray extends WireArray {
 
-	public function isValidItem($item) {
+	#[\Override]
+ public function isValidItem($item) {
 		return $item instanceof Template;
 	}
 
-	public function isValidKey($key) {
+	#[\Override]
+ public function isValidKey($key) {
 		return is_int($key) || ctype_digit($key);
 	}
 
-	public function getItemKey($item) {
+	#[\Override]
+ public function getItemKey($item) {
 		return $item->id;
 	}
 
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return $this->wire(new Template());
 	}
 

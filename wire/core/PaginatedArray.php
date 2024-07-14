@@ -60,7 +60,8 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return $this
 	 *
 	 */
-	public function setTotal($total) {
+	#[\Override]
+ public function setTotal($total) {
 		$this->numTotal = (int) $total;
 		return $this;
 	}
@@ -78,7 +79,8 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return int Total number of items across all paginations. 
 	 *
 	 */
-	public function getTotal() {
+	#[\Override]
+ public function getTotal() {
 		$total = $this->numTotal;
 		if(!$total) $total = $this->count();
 		return $total;
@@ -93,7 +95,8 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return $this
 	 *
 	 */
-	public function setLimit($numLimit) {
+	#[\Override]
+ public function setLimit($numLimit) {
 		$this->numLimit = (int) $numLimit; 
 		return $this; 
 	}
@@ -108,7 +111,8 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return int
 	 *
 	 */
-	public function getLimit() {
+	#[\Override]
+ public function getLimit() {
 		return $this->numLimit; 
 	}
 
@@ -123,7 +127,8 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return $this
 	 *
 	 */
-	public function setStart($numStart) {
+	#[\Override]
+ public function setStart($numStart) {
 		$this->numStart = (int) $numStart; 
 		return $this; 
 	}
@@ -136,7 +141,8 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return int
 	 *
 	 */
-	public function getStart() {
+	#[\Override]
+ public function getStart() {
 		return $this->numStart; 
 	}
 
@@ -201,7 +207,8 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return mixed Value of requested property. 
 	 *
 	 */
-	public function getProperty($property) {
+	#[\Override]
+ public function getProperty($property) {
 		static $properties = [
       // property => method to map to
       'total' => 'getTotal',
@@ -303,7 +310,8 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return array
 	 *
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		$limit = $this->getLimit();
 		$count = $this->count();
 		$total = $this->getTotal();

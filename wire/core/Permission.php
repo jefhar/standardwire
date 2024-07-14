@@ -47,7 +47,8 @@ class Permission extends Page {
 	 * Wired to API
 	 *
 	 */
-	public function wired() {
+	#[\Override]
+ public function wired() {
 		parent::wired();
 		$template = $this->wire()->templates->get('permission');
 		if($template !== $this->template && (!$this->template || $this->template->name === 'permission')) $this->template = $template;
@@ -128,7 +129,8 @@ class Permission extends Page {
 	 * @return Permissions
 	 *
 	 */
-	public function getPagesManager() {
+	#[\Override]
+ public function getPagesManager() {
 		return $this->wire()->permissions;
 	}
 }

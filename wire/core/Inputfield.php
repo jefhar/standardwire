@@ -496,7 +496,8 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return Inputfield|WireData
 	 *
 	 */
-	public function set($key, $value) {
+	#[\Override]
+ public function set($key, $value) {
 
 		if($key === 'parent') { 
 			if($value instanceof InputfieldWrapper) return $this->setParent($value);
@@ -543,7 +544,8 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return mixed|null Value of property or attribute, or NULL if not found. 
 	 *
 	 */ 
-	public function get($key) {	
+	#[\Override]
+ public function get($key) {	
 		if($key === 'label') { 
 			$value = parent::get('label');
 			if(strlen((string) $value)) return $value;
@@ -934,7 +936,8 @@ abstract class Inputfield extends WireData implements Module {
 	 * @since 3.0.110
 	 *
 	 */
-	protected function ___callUnknown($method, $arguments) {
+	#[\Override]
+ protected function ___callUnknown($method, $arguments) {
 		$arg = $arguments[0] ?? null;
 		if(isset($this->attributes[$method])) {
 			// get or set an attribute
@@ -1880,7 +1883,8 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return $this
 	 *
 	 */
-	public function error($text, $flags = 0) {
+	#[\Override]
+ public function error($text, $flags = 0) {
 		// Override Wire's error method and place errors in the context of their inputfield
 		$session = $this->wire()->session;
 		$key = $this->getErrorSessionKey();
@@ -1944,7 +1948,8 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return bool True if it has it, false if it doesn't 
 	 *
 	 */
-	public function has($key) {
+	#[\Override]
+ public function has($key) {
 		$has = parent::has($key); 
 		if(!$has) $has = isset($this->attributes[$key]); 
 		return $has; 
@@ -1993,7 +1998,8 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return Inputfield|WireData $this
 	 *
 	 */
-	public function trackChange($what, $old = null, $new = null) {
+	#[\Override]
+ public function trackChange($what, $old = null, $new = null) {
 		if($what != 'value') return $this;
 		return parent::trackChange($what, $old, $new); 
 	}
@@ -2075,7 +2081,8 @@ abstract class Inputfield extends WireData implements Module {
 	 * @return array
 	 *
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		$info = ['className' => $this->className(), 'attributes' => $this->attributes, 'wrapAttributes' => $this->wrapAttributes];
 		if(is_object($this->parent)) {
 			$info['parent'] = ['className' => $this->parent->className(), 'name' => $this->parent->attr('name'), 'id' => $this->parent->attr('id')];

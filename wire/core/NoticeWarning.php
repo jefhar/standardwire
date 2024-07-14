@@ -5,7 +5,8 @@
  *
  */
 class NoticeWarning extends Notice {
-	public function getName() {
+	#[\Override]
+ public function getName() {
 		return 'warnings';
 	}
 }

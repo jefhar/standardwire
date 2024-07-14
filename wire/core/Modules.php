@@ -245,7 +245,8 @@ class Modules extends WireArray {
 	 * #pw-internal
 	 * 
 	 */
-	public function wired() {
+	#[\Override]
+ public function wired() {
 		$this->coreModulesDir = '/' . $this->wire()->config->urls->data('modules');
 		parent::wired();
 		$this->info = new ModulesInfo($this);
@@ -364,7 +365,8 @@ class Modules extends WireArray {
 	 * @return bool
  	 *
 	 */
-	public function isValidItem($item) {
+	#[\Override]
+ public function isValidItem($item) {
 		return $item instanceof Module;
 	}
 
@@ -377,7 +379,8 @@ class Modules extends WireArray {
 	 * @return string
  	 *
 	 */
-	public function getItemKey($item) {
+	#[\Override]
+ public function getItemKey($item) {
 		return $this->getModuleClass($item); 
 	}
 
@@ -387,7 +390,8 @@ class Modules extends WireArray {
 	 * #pw-internal
  	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return null; 
 	}
 
@@ -397,7 +401,8 @@ class Modules extends WireArray {
 	 * #pw-internal
  	 *
 	 */
-	public function makeNew() {
+	#[\Override]
+ public function makeNew() {
 		// ensures that find(), etc. operations don't initalize a new Modules() class
 		return $this->wire(new WireArray());
 	}
@@ -410,7 +415,8 @@ class Modules extends WireArray {
 	 * @return WireArray
  	 *
 	 */
-	public function makeCopy() {
+	#[\Override]
+ public function makeCopy() {
 		// ensures that find(), etc. operations don't initalize a new Modules() class
 		$copy = $this->makeNew();
 		foreach($this->data as $key => $value) $copy[$key] = $value; 
@@ -445,7 +451,8 @@ class Modules extends WireArray {
 	 * @see Modules::getModule(), Modules::isInstalled()
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		// If the module is a ModulePlaceholder, then it will be converted to the real module (included, instantiated, initialized).
 		return $this->getModule($key);
 	}
@@ -913,7 +920,8 @@ class Modules extends WireArray {
 	 * @return WireArray of found modules, instantiated and ready-to-use
 	 *
 	 */
-	public function find($selector) {
+	#[\Override]
+ public function find($selector) {
 		// ensures any ModulePlaceholders are loaded in the returned result.
 		$a = parent::find($selector);
 		if($a) {
@@ -2324,7 +2332,8 @@ class Modules extends WireArray {
 	 * @return Module|null
 	 *
 	 */
-	public function __invoke($key) {
+	#[\Override]
+ public function __invoke($key) {
 		return $this->get($key);
 	}
 
@@ -2358,7 +2367,8 @@ class Modules extends WireArray {
 	 * @return Modules|WireArray
 	 * 
 	 */
-	public function error($text, $flags = 0) {
+	#[\Override]
+ public function error($text, $flags = 0) {
 		if(is_string($text)) $this->log($text); 
 		return parent::error($text, $flags); 
 	}
@@ -2528,7 +2538,8 @@ class Modules extends WireArray {
 	 * @return mixed
 	 * 
 	 */
-	public function __get($name)
+	#[\Override]
+ public function __get($name)
  {
      return match ($name) {
          'loader' => $this->loader,

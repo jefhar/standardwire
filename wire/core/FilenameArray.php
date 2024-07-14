@@ -82,7 +82,8 @@ class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
 	 * @return \ArrayObject
 	 * 
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function getIterator() {
 		return new \ArrayObject($this->data); 
 	}
@@ -171,7 +172,8 @@ class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
 	 * @return string
 	 * 
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return print_r($this->data, true); 
 	}
 
@@ -181,7 +183,8 @@ class FilenameArray extends Wire implements \IteratorAggregate, \Countable {
 	 * @return int
 	 * 
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function count() {
 		return count($this->data);
 	}

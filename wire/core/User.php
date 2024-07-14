@@ -56,7 +56,8 @@ class User extends Page {
 	 * #pw-internal
 	 * 
 	 */
-	public function wired() {
+	#[\Override]
+ public function wired() {
 		parent::wired();
 		// intentionally duplicated from __construct() in case a multi-instance environment
 		// and we got the wrong instance in __construct()
@@ -533,7 +534,8 @@ class User extends Page {
 	 * @return null|mixed
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		$value = parent::get($key);
 		if(!$value && $key === 'language') {
 			$languages = $this->wire()->languages;
@@ -555,7 +557,8 @@ class User extends Page {
 	 * @return string URL for editing this user
 	 *
 	 */
-	public function editUrl($options = []) {
+	#[\Override]
+ public function editUrl($options = []) {
 		return str_replace('/page/edit/', '/access/users/edit/', parent::editUrl($options));
 	}
 
@@ -569,7 +572,8 @@ class User extends Page {
 	 * @param WirePageEditor $editor
 	 * 
 	 */
-	public function ___setEditor(WirePageEditor $editor) {
+	#[\Override]
+ public function ___setEditor(WirePageEditor $editor) {
 		parent::___setEditor($editor); 
 		if(!$editor instanceof ProcessUser) $this->wire()->session->redirect($this->editUrl());
 	}
@@ -582,7 +586,8 @@ class User extends Page {
 	 * @return Users
 	 *
 	 */
-	public function getPagesManager() {
+	#[\Override]
+ public function getPagesManager() {
 		return $this->wire()->users;
 	}
 
@@ -622,7 +627,8 @@ class User extends Page {
 	 * @param mixed $new
 	 * 
 	 */
-	public function ___changed($what, $old = null, $new = null) {
+	#[\Override]
+ public function ___changed($what, $old = null, $new = null) {
 		if($what === 'roles' && is_bool($this->isSuperuser)) $this->isSuperuser = null;
 		parent::___changed($what, $old, $new); 
 	}

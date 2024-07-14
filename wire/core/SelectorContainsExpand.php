@@ -5,8 +5,10 @@
  *
  */
 class SelectorContainsExpand extends SelectorContains {
-	public static function getOperator() { return '*+='; }
-	public static function getCompareType() { 
+	#[\Override]
+ public static function getOperator() { return '*+='; }
+	#[\Override]
+ public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
 			Selector::compareTypePartial |
@@ -15,6 +17,8 @@ class SelectorContainsExpand extends SelectorContains {
 			Selector::compareTypeDatabase | 
 			Selector::compareTypeFulltext; 
 	}
-	public static function getLabel() { return __('Contains phrase expand', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('phrase expand fulltext'); }
+	#[\Override]
+ public static function getLabel() { return __('Contains phrase expand', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('phrase expand fulltext'); }
 }

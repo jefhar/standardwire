@@ -887,7 +887,8 @@ class ModulesLoader extends ModulesClass {
 		return $this->autoloadOrders;
 	}
 
-	public function getDebugData() {
+	#[\Override]
+ public function getDebugData() {
 		return ['autoloadOrders' => $this->autoloadOrders, 'conditionalAutoloadModules' => $this->conditionalAutoloadModules, 'modulesTableCache' => $this->modulesTableCache, 'createdDates' => $this->createdDates];
 	}
 

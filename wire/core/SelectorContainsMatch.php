@@ -7,8 +7,10 @@
  *
  */
 class SelectorContainsMatch extends SelectorContainsAnyWords {
-	public static function getOperator() { return '**='; }
-	public static function getCompareType() { 
+	#[\Override]
+ public static function getOperator() { return '**='; }
+	#[\Override]
+ public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
 			Selector::compareTypeAny | 
@@ -16,6 +18,8 @@ class SelectorContainsMatch extends SelectorContainsAnyWords {
 			Selector::compareTypeDatabase | 
 			Selector::compareTypeFulltext; 
 	}
-	public static function getLabel() { return __('Contains match', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('words-match words-whole fulltext'); }
+	#[\Override]
+ public static function getLabel() { return __('Contains match', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('words-match words-whole fulltext'); }
 }

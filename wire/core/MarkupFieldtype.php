@@ -381,7 +381,8 @@ class MarkupFieldtype extends WireData implements Module {
 	 * @return string
 	 * 
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return $this->render();
 	}
 	
@@ -423,7 +424,8 @@ class MarkupFieldtype extends WireData implements Module {
 		return $value;
 	}
 
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		if($key == 'page') return $this->getPage();
 		if($key == 'field') return $this->getField();
 		if($key == 'value') return $this->getValue();

@@ -50,7 +50,8 @@ class WireLog extends Wire {
 	 * @return Wire|WireLog
 	 *
 	 */
-	public function message($text, $flags = 0) {
+	#[\Override]
+ public function message($text, $flags = 0) {
 		$flags = $flags === true ? Notice::log : $flags | Notice::logOnly;
 		return parent::message($text, $flags);
 	}
@@ -70,7 +71,8 @@ class WireLog extends Wire {
 	 * @return Wire|WireLog
 	 *
 	 */
-	public function error($text, $flags = 0) {
+	#[\Override]
+ public function error($text, $flags = 0) {
 		$flags = $flags === true ? Notice::log : $flags | Notice::logOnly;
 		return parent::error($text, $flags);
 	}
@@ -88,7 +90,8 @@ class WireLog extends Wire {
 	 * @return Wire|WireLog
 	 *
 	 */
-	public function warning($text, $flags = 0) {
+	#[\Override]
+ public function warning($text, $flags = 0) {
 		$flags = $flags === true ? Notice::log : $flags | Notice::logOnly;
 		return parent::warning($text, $flags);
 	}

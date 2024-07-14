@@ -153,7 +153,8 @@ class Selectors extends WireArray {
 	 * @return WireArray This instance.
 	 *
 	 */
-	public function import($items) {
+	#[\Override]
+ public function import($items) {
 		if(is_string($items)) {
 			$this->extractString($items); 	
 			return $this;
@@ -171,7 +172,8 @@ class Selectors extends WireArray {
 	 * @return bool
 	 *
 	 */
-	public function isValidItem($item) {
+	#[\Override]
+ public function isValidItem($item) {
 		return $item instanceof Selector; 
 	}
 
@@ -183,7 +185,8 @@ class Selectors extends WireArray {
 	 * @return Selector
 	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return $this->wire(new SelectorEqual('',''));
 	}
 
@@ -1195,7 +1198,8 @@ class Selectors extends WireArray {
 	 * @return string
 	 * 
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		$str = '';
 		foreach($this as $selector) {
 			$str .= $selector->str . ", ";
@@ -1209,7 +1213,8 @@ class Selectors extends WireArray {
 	 * @return array
 	 * 
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		$info = parent::__debugInfo();
 		$info['string'] = $this->__toString();
 		return $info;
@@ -1222,7 +1227,8 @@ class Selectors extends WireArray {
 	 * @return array|mixed|null|string
 	 * 
 	 */
-	public function debugInfoItem($item) {
+	#[\Override]
+ public function debugInfoItem($item) {
 		if($item instanceof Selector) return $item->__debugInfo();
 		return parent::debugInfoItem($item);
 	}

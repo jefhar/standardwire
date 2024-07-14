@@ -1305,7 +1305,8 @@ class ModulesInfo extends ModulesClass {
 		return $this->moduleNamespaceCache[$namespace] ?? false;
 	}
 
-	public function __get($name)
+	#[\Override]
+ public function __get($name)
  {
      return match ($name) {
          'moduleInfoCache' => $this->moduleInfoCache,
@@ -1317,7 +1318,8 @@ class ModulesInfo extends ModulesClass {
      };
  }
 	
-	public function getDebugData() {
+	#[\Override]
+ public function getDebugData() {
 		return ['moduleInfoCache' => $this->moduleInfoCache, 'moduleInfoCacheVerbose' => $this->moduleInfoCacheVerbose, 'moduleInfoCacheUninstalled' => $this->moduleInfoCacheUninstalled, 'modulesLastVersions' => $this->modulesLastVersions, 'moduleNamespaceCache' => $this->moduleNamespaceCache];
 	}
 }

@@ -5,8 +5,10 @@
  *
  */
 class SelectorContainsWordsExpand extends SelectorContainsWords {
-	public static function getOperator() { return '~+='; }
-	public static function getCompareType() { 
+	#[\Override]
+ public static function getOperator() { return '~+='; }
+	#[\Override]
+ public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
 			Selector::compareTypeAll |
@@ -14,6 +16,8 @@ class SelectorContainsWordsExpand extends SelectorContainsWords {
 			Selector::compareTypeExpand | 
 			Selector::compareTypeFulltext; 
 	}
-	public static function getLabel() { return __('Contains all words expand', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('words-all words-whole expand fulltext'); }
+	#[\Override]
+ public static function getLabel() { return __('Contains all words expand', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('words-all words-whole expand fulltext'); }
 }

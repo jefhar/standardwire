@@ -220,7 +220,8 @@ abstract class Notice extends WireData {
 	 * @return $this|WireData
 	 * 
 	 */
-	public function set($key, $value) {
+	#[\Override]
+ public function set($key, $value) {
 		if($key === 'text' && is_string($value) && str_starts_with($value, 'icon-') && strpos($value, ' ')) {
 			[$icon, $value] = explode(' ', $value, 2);
 			[, $icon] = explode('-', $icon, 2);
@@ -240,7 +241,8 @@ abstract class Notice extends WireData {
 	 * @return mixed
 	 * 
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		if($key === 'flagsArray') return $this->flagNames(parent::get('flags')); 
 		if($key === 'flagsStr') return $this->flagNames(parent::get('flags'), true);
 		if($key === 'idStr') return $this->getIdStr();
@@ -393,7 +395,8 @@ abstract class Notice extends WireData {
 		return $idStr;
 	}
 	
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		$text = $this->text;
 		if(is_object($text)) {
 			$value = method_exists($text, '__toString') ? (string) $text : '';

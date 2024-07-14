@@ -69,7 +69,8 @@ class Notices extends WireArray {
 	 * @return bool
 	 * 
 	 */
-	public function isValidItem($item) {
+	#[\Override]
+ public function isValidItem($item) {
 		return $item instanceof Notice; 
 	}
 
@@ -79,7 +80,8 @@ class Notices extends WireArray {
 	 * @return Notice
 	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return $this->wire(new NoticeMessage('')); 
 	}
 
@@ -188,7 +190,8 @@ class Notices extends WireArray {
 	 * @return Notices|WireArray
 	 * 
 	 */
-	public function add($item) {
+	#[\Override]
+ public function add($item) {
 		
 		if(!($item instanceof Notice)) {
 			$item = new NoticeError("You attempted to add a non-Notice object to \$notices: $item", Notice::debug); 

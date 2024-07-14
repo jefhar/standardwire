@@ -257,7 +257,8 @@ class PagefileExtra extends WireData {
 	 * @return bool|int|mixed|null|string
 	 * 
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		switch($key) {
 			case 'exists':
 				$value = $this->exists();
@@ -319,7 +320,8 @@ class PagefileExtra extends WireData {
 	 * 
 	 */
 	
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return $this->basename();
 	}
 }

@@ -365,7 +365,8 @@ class WireTempDir extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return $this->get();
 	}
 

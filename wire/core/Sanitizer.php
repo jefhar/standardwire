@@ -5370,7 +5370,8 @@ class Sanitizer extends Wire {
 	 *
 	 */
 
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return "Sanitizer";
 	}
 	
@@ -5637,7 +5638,8 @@ class Sanitizer extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	public function ___callUnknown($method, $arguments) {
+	#[\Override]
+ public function ___callUnknown($method, $arguments) {
 		if($this->methodExists($method) && count($arguments)) {
 			return $this->sanitize($arguments[0], $method); 
 		} else {

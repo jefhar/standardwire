@@ -709,7 +709,8 @@ class ModulesConfigs extends ModulesClass {
 		return $form;
 	}
 
-	public function getDebugData() {
+	#[\Override]
+ public function getDebugData() {
 		return ['configData' => $this->configData];
 	}
 

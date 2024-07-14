@@ -16,7 +16,8 @@ class FieldgroupsArray extends WireArray {
 	 * Per WireArray interface, this class only carries Fieldgroup instances
 	 *
 	 */
-	public function isValidItem($item) {
+	#[\Override]
+ public function isValidItem($item) {
 		return $item instanceof Fieldgroup;
 	}
 
@@ -24,7 +25,8 @@ class FieldgroupsArray extends WireArray {
 	 * Per WireArray interface, items are keyed by their ID
 	 *
 	 */
-	public function getItemKey($item) {
+	#[\Override]
+ public function getItemKey($item) {
 		return $item->id;
 	}
 
@@ -32,7 +34,8 @@ class FieldgroupsArray extends WireArray {
 	 * Per WireArray interface, keys must be integers
 	 *
 	 */
-	public function isValidKey($key) {
+	#[\Override]
+ public function isValidKey($key) {
 		return is_int($key);
 	}
 
@@ -40,7 +43,8 @@ class FieldgroupsArray extends WireArray {
 	 * Per WireArray interface, return a blank Fieldgroup
 	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return $this->wire(new Fieldgroup());
 	}
 

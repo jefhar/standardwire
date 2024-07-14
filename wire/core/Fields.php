@@ -120,7 +120,8 @@ class Fields extends WireSaveableItems {
 	 * @return Field
 	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return $this->wire(new Field());
 	}
 
@@ -133,7 +134,8 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.146
 	 *
 	 */
-	public function makeItem(array $a = []) {
+	#[\Override]
+ public function makeItem(array $a = []) {
 		
 		if(empty($a['type'])) return parent::makeItem($a);
 		if($this->fieldtypes === null) $this->fieldtypes = $this->wire()->fieldtypes;
@@ -190,7 +192,8 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.194
 	 *
 	 */
-	protected function initItem(array &$row, WireArray $items = null) {
+	#[\Override]
+ protected function initItem(array &$row, WireArray $items = null) {
 		/** @var Field $item */
 		$item = parent::initItem($row, $items);
 		$fieldtype = $item ? $item->type : null;
@@ -206,7 +209,8 @@ class Fields extends WireSaveableItems {
 	 * @return FieldsArray|WireArray
 	 *
 	 */
-	public function getAll() {
+	#[\Override]
+ public function getAll() {
 		if($this->useLazy()) $this->loadAllLazyItems();
 		return $this->getWireArray();
 	}
@@ -218,7 +222,8 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.194
 	 *
 	 */
-	public function getWireArray() {
+	#[\Override]
+ public function getWireArray() {
 		if($this->fieldsArray === null) {
 			$this->fieldsArray = new FieldsArray();
 			$this->wire($this->fieldsArray);
@@ -233,7 +238,8 @@ class Fields extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	public function getTable() {
+	#[\Override]
+ public function getTable() {
 		return "fields";
 	}
 
@@ -243,7 +249,8 @@ class Fields extends WireSaveableItems {
 	 * #pw-internal
 	 *
 	 */
-	public function getSort() {
+	#[\Override]
+ public function getSort() {
 		return $this->getTable() . ".name";
 	}
 
@@ -262,7 +269,8 @@ class Fields extends WireSaveableItems {
 	 * @throws WireException
 	 *
 	 */
-	public function ___save(Saveable $item) {
+	#[\Override]
+ public function ___save(Saveable $item) {
 
 		if($item->flags & Field::flagFieldgroupContext) throw new WireException("Field $item is not saveable because it is in a specific context"); 
 		if(!strlen($item->name)) throw new WireException("Field name is required"); 
@@ -377,7 +385,8 @@ class Fields extends WireSaveableItems {
 	 * @throws WireException
 	 *
 	 */
-	public function ___delete(Saveable $item) {
+	#[\Override]
+ public function ___delete(Saveable $item) {
 
 		if(!$this->getWireArray()->isValidItem($item)) {
 			throw new WireException("Fields::delete(item) only accepts items of type Field");
@@ -418,7 +427,8 @@ class Fields extends WireSaveableItems {
 	 * @return Field $item Returns the new clone on success, or false on failure
 	 *
 	 */
-	public function ___clone(Saveable $item, $name = '') {
+	#[\Override]
+ public function ___clone(Saveable $item, $name = '') {
 	
 		$item = $item->type->cloneField($item); 
 	
@@ -1151,7 +1161,8 @@ class Fields extends WireSaveableItems {
 	 * @return string of JSON
 	 *
 	 */
-	protected function encodeData(array $value) {
+	#[\Override]
+ protected function encodeData(array $value) {
 		if(isset($value['collapsed']) && $value['collapsed'] === 0) unset($value['collapsed']); 	
 		if(isset($value['columnWidth']) && (empty($value['columnWidth']) || $value['columnWidth'] == 100)) unset($value['columnWidth']); 
 		return wireEncodeJSON($value, 0); 	

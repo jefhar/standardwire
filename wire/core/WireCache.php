@@ -1330,7 +1330,8 @@ class WireCache extends Wire {
 	 * @return WireLog
 	 *
 	 */
-	public function ___log($str = '', array $options = []) {
+	#[\Override]
+ public function ___log($str = '', array $options = []) {
 		//parent::___log($str, array('name' => 'cache'));
 		$str = ''; // disable log
 		return parent::___log($str, $options);

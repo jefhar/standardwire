@@ -5,8 +5,10 @@
  *
  */
 class SelectorEnds extends Selector { 
-	public static function getOperator() { return '$='; }
-	public static function getCompareType() {
+	#[\Override]
+ public static function getOperator() { return '$='; }
+	#[\Override]
+ public static function getCompareType() {
 		return
 			Selector::compareTypeFind |
 			Selector::compareTypeAll |
@@ -14,9 +16,12 @@ class SelectorEnds extends Selector {
 			Selector::compareTypeBoundary |
 			Selector::compareTypeFulltext; 
 	}
-	public static function getLabel() { return __('Ends with', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('phrase-end fulltext'); }
-	protected function match($value1, $value2) { 
+	#[\Override]
+ public static function getLabel() { return __('Ends with', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('phrase-end fulltext'); }
+	#[\Override]
+ protected function match($value1, $value2) { 
 		$value2 = trim($value2); 
 		$value1 = substr((string) $value1, -1 * strlen($value2));
 		return $this->evaluate(strcasecmp($value1, $value2) == 0);

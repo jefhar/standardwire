@@ -465,7 +465,8 @@ class PagefilesManager extends Wire {
 	 * @return mixed
 	 *
 	 */
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		if($name === 'path') return $this->path();
 		if($name === 'url') return $this->url();
 		if($name === 'page') return $this->page; 

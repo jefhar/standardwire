@@ -370,7 +370,8 @@ class PageFinder extends Wire {
 	// protected $extraJoins = array();
 	// protected $nativeWheres = array(); // where statements for native fields, to be reused in subselects where appropriate.
 	
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		if($name === 'includeMode') return $this->includeMode;
 		if($name === 'checkAccess') return $this->checkAccess; 
 		return parent::__get($name);

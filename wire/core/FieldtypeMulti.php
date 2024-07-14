@@ -57,7 +57,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return array
 	 *
 	 */
-	public function getDatabaseSchema(Field $field) {
+	#[\Override]
+ public function getDatabaseSchema(Field $field) {
 		$schema = parent::getDatabaseSchema($field); 
 		$schema['sort'] = 'int unsigned NOT NULL'; 
 		$schema['keys']['primary'] = 'PRIMARY KEY (pages_id, sort)'; 
@@ -72,7 +73,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return array
 	 *
 	 */
-	public function ___getSelectorInfo(Field $field, array $data = []) {
+	#[\Override]
+ public function ___getSelectorInfo(Field $field, array $data = []) {
 		$info = parent::___getSelectorInfo($field, $data); 
 		$info['subfields']['count'] = ['name' => 'count', 'label' => $this->_('count'), 'operators' => ['=', '!=', '<', '>', '<=', '>='], 'input' => 'number'];
 		return $info; 
@@ -85,7 +87,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return Fieldtypes|null
 	 *
 	 */
-	public function ___getCompatibleFieldtypes(Field $field) {
+	#[\Override]
+ public function ___getCompatibleFieldtypes(Field $field) {
 		$fieldtypes = $this->wire(new Fieldtypes());
 		foreach($this->wire()->fieldtypes as $fieldtype) {
 			if($fieldtype instanceof FieldtypeMulti) $fieldtypes->add($fieldtype); 
@@ -101,7 +104,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return WireArray
 	 *
 	 */
-	public function getBlankValue(Page $page, Field $field) {
+	#[\Override]
+ public function getBlankValue(Page $page, Field $field) {
 		return $this->wire(new WireArray());
 	}
 
@@ -116,7 +120,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return WireArray
 	 *
 	 */
-	public function sanitizeValue(Page $page, Field $field, $value) {
+	#[\Override]
+ public function sanitizeValue(Page $page, Field $field, $value) {
 		return $value instanceof WireArray ? $value : $this->wire(new WireArray());
 	}
 
@@ -129,7 +134,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return WireArray
 	 *
 	 */ 
-	public function ___wakeupValue(Page $page, Field $field, $value) {
+	#[\Override]
+ public function ___wakeupValue(Page $page, Field $field, $value) {
 		
 		$target = $this->getBlankValue($page, $field);
 		$targetIsObject = is_object($target); 
@@ -183,7 +189,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return array
 	 *
 	 */
-	public function ___sleepValue(Page $page, Field $field, $value) {
+	#[\Override]
+ public function ___sleepValue(Page $page, Field $field, $value) {
 		$values = [];
 		if(!$value instanceof WireArray) {
 			if(is_array($value)) return $value; 
@@ -208,7 +215,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @throws \PDOException|WireException|WireDatabaseQueryException on failure
 	 *
 	 */
-	public function ___savePageField(Page $page, Field $field) {
+	#[\Override]
+ public function ___savePageField(Page $page, Field $field) {
 
 		if(!$page->id || !$field->id) return false;
 
@@ -368,7 +376,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return array|null
 	 *
 	 */
-	public function ___loadPageField(Page $page, Field $field) {
+	#[\Override]
+ public function ___loadPageField(Page $page, Field $field) {
 
 		if(!$page->id || !$field->id) return null;
 
@@ -445,7 +454,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @throws WireException
 	 *
 	 */
-	public function getLoadQuery(Field $field, DatabaseQuerySelect $query) {
+	#[\Override]
+ public function getLoadQuery(Field $field, DatabaseQuerySelect $query) {
 
 		$database = $this->wire()->database;
 		$sanitizer = $this->wire()->sanitizer;
@@ -860,7 +870,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return DatabaseQuerySelect|NULL
 	 *
 	 */
-	public function getLoadQueryAutojoin(Field $field, DatabaseQuerySelect $query) {
+	#[\Override]
+ public function getLoadQueryAutojoin(Field $field, DatabaseQuerySelect $query) {
 		if($this->get('useOrderByCols')) {
 			// autojoin is not used if sorting or pagination is active
 			$orderByCols = $field->get('orderByCols');
@@ -890,7 +901,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return PageFinderDatabaseQuerySelect|DatabaseQuerySelect $query
 	 *
 	 */
-	public function getMatchQuery($query, $table, $subfield, $operator, $value) {
+	#[\Override]
+ public function getMatchQuery($query, $table, $subfield, $operator, $value) {
 
 		self::$getMatchQueryCount++;
 		$n = self::$getMatchQueryCount;
@@ -967,7 +979,8 @@ abstract class FieldtypeMulti extends Fieldtype {
 	 * @return InputfieldWrapper
 	 *
 	 */
-	public function ___getConfigInputfields(Field $field) {
+	#[\Override]
+ public function ___getConfigInputfields(Field $field) {
 		
 		$inputfields = parent::___getConfigInputfields($field);
 		

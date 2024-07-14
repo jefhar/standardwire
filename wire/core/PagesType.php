@@ -512,7 +512,8 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * #pw-internal
 	 *
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function getIterator() {
 		return $this->find("id>0, sort=name", ['caller' => $this->className() . '.getIterator()']); 
 	}
@@ -639,6 +640,7 @@ class PagesType extends Wire implements \IteratorAggregate, \Countable {
 	 * 
 	 */
 	#[\ReturnTypeWillChange]
+ #[\Override]
 	public function count($selectorString = '', array $options = []) {
 		if(empty($selectorString) && empty($options) && count($this->parents) == 1) {
 			return $this->getParent()->numChildren();

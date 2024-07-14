@@ -36,7 +36,8 @@ class Role extends Page {
 	 * Wired to API
 	 * 
 	 */
-	public function wired() {
+	#[\Override]
+ public function wired() {
 		parent::wired();
 		if(!$this->template) $this->template = $this->getPredefinedTemplate();
 		if(!$this->_parent) $this->setParent($this->getPredefinedParent());
@@ -245,7 +246,8 @@ class Role extends Page {
 	 * @return Roles
 	 *
 	 */
-	public function getPagesManager() {
+	#[\Override]
+ public function getPagesManager() {
 		return $this->wire()->roles;
 	}
 

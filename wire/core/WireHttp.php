@@ -1233,7 +1233,8 @@ class WireHttp extends Wire {
 	 * @return mixed
 	 *
 	 */
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		return array_key_exists($name, $this->data) ? $this->data[$name] : null;
 	}
 

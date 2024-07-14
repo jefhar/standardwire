@@ -74,7 +74,8 @@ class DatabaseQuerySelect extends DatabaseQuery {
 	 * Return the resulting SQL ready for execution with the database
  	 *
 	 */
-	public function getQuery() {
+	#[\Override]
+ public function getQuery() {
 
 		$sql = trim(	
 			$this->getQueryMethod('select') . 

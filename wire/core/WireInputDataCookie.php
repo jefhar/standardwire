@@ -198,7 +198,8 @@ class WireInputDataCookie extends WireInputData {
 	 * @param array|float|int|null|string $value Cookie value
 	 * 
 	 */
-	public function __set($key, $value) {
+	#[\Override]
+ public function __set($key, $value) {
 		
 		if(!$this->init) {
 			// initial set of existing cookies that are present from constructor
@@ -226,7 +227,8 @@ class WireInputDataCookie extends WireInputData {
 	 * @return string|int|float|array|null $value
 	 *
 	 */
-	public function get($key, $options = []) {
+	#[\Override]
+ public function get($key, $options = []) {
 		return parent::get($key, $options); 
 	}
 	
@@ -266,7 +268,8 @@ class WireInputDataCookie extends WireInputData {
 	 * @since 3.0.141 
 	 *
 	 */
-	public function set($key, $value, $options = []) {
+	#[\Override]
+ public function set($key, $value, $options = []) {
 		
 		if(!$this->init) {
 			parent::__set($key, $value);
@@ -297,7 +300,8 @@ class WireInputDataCookie extends WireInputData {
 	 * @return WireInputDataCookie|WireInputData|$this
 	 *
 	 */
-	public function remove($key) {
+	#[\Override]
+ public function remove($key) {
 		return parent::remove($key);
 	}
 
@@ -307,7 +311,8 @@ class WireInputDataCookie extends WireInputData {
 	 * @return $this|WireInputData
 	 *
 	 */
-	public function removeAll() {
+	#[\Override]
+ public function removeAll() {
 		foreach($this as $key => $value) {
 			$this->offsetUnset($key);
 		}
@@ -428,7 +433,8 @@ class WireInputDataCookie extends WireInputData {
 	 * @param mixed $key
 	 * 
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function offsetUnset($key) {
 		if(!$this->allowSetCookie($key)) return;
 		parent::offsetUnset($key);

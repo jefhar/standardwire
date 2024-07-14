@@ -389,7 +389,8 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * @return mixed|null
 	 *
 	 */
-	public function __get($key) {
+	#[\Override]
+ public function __get($key) {
 		
 		if(strpos($key, '|')) {
 			$value = null;
@@ -417,7 +418,8 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 		return $value;
 	}
 
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function getIterator() {
 		if($this->lazy) {
 			$data = $this->getArray();
@@ -427,28 +429,33 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 		}
 	}
 
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function offsetExists($key) {
 		return isset($this->data[$key]);
 	}
 
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function offsetGet($key) {
 		return $this->__get($key);
 	}
 
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function offsetSet($key, $value) {
 		$this->__set($key, $value);
 	}
 
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function offsetUnset($key) {
 		unset($this->data[$key]);
 		if($this->lazy && isset($this->unlazyKeys[$key])) unset($this->unlazyKeys[$key]); 
 	}
 
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function count() {
 		return count($this->data);
 	}
@@ -514,7 +521,8 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 	 * @throws WireException
 	 *
 	 */
-	public function ___callUnknown($method, $arguments) {
+	#[\Override]
+ public function ___callUnknown($method, $arguments) {
 		$sanitizer = $this->wire()->sanitizer;
 		if(!$sanitizer->methodExists($method)) {
 			try {
@@ -540,7 +548,8 @@ class WireInputData extends Wire implements \ArrayAccess, \IteratorAggregate, \C
 		}
 	}
 	
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		return $this->data;
 	}
 }

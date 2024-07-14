@@ -174,7 +174,8 @@ class WireUpload extends Wire {
 	 * Wired to API
 	 *
 	 */
-	public function wired() {
+	#[\Override]
+ public function wired() {
 		parent::wired();
 		$this->init();
 	}
@@ -830,7 +831,8 @@ class WireUpload extends Wire {
 	 * @return Wire|WireUpload
 	 * 
 	 */
-	public function error($text, $flags = 0) {
+	#[\Override]
+ public function error($text, $flags = 0) {
 		$this->errors[] = $text; 
 		return parent::error($text, $flags); 
 	}

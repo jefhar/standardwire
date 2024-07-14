@@ -170,7 +170,8 @@ class Pageimage extends Pagefile {
 	 * #pw-internal
 	 *
 	 */
-	public function __clone() {
+	#[\Override]
+ public function __clone() {
 		$this->imageInfo['width'] = 0; 
 		$this->imageInfo['height'] = 0;
 		$this->pageimageDebugInfo = null;
@@ -186,7 +187,8 @@ class Pageimage extends Pagefile {
 	 * @return string
 	 *
 	 */
-	public function url() {
+	#[\Override]
+ public function url() {
 		$hooks = $this->wire()->hooks;
 		if($hooks->isHooked('Pagefile::url()') || $hooks->isHooked('Pageimage::url()')) { 
 			return $this->__call('url', []); 
@@ -203,7 +205,8 @@ class Pageimage extends Pagefile {
 	 * @return string
 	 *
 	 */
-	public function filename() {
+	#[\Override]
+ public function filename() {
 		$hooks = $this->wire()->hooks;
 		if($hooks->isHooked('Pagefile::filename()') || $hooks->isHooked('Pageimage::filename()')) { 
 			return $this->__call('filename', []); 
@@ -357,7 +360,8 @@ class Pageimage extends Pagefile {
 	 * @return Pageimage|WireData
 	 * 
 	 */
-	public function set($key, $value) {
+	#[\Override]
+ public function set($key, $value) {
 		if($key === 'sizeOptions' && is_array($value)) {
 			$this->sizeOptions = $value;
 			return $this;
@@ -375,7 +379,8 @@ class Pageimage extends Pagefile {
 	 * @return mixed
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		switch($key) {
 			case 'width':
 			case 'height':
@@ -1503,7 +1508,8 @@ class Pageimage extends Pagefile {
 	 * #pw-internal Public API should use delete method from Pageimages
 	 *
 	 */
-	public function unlink() {
+	#[\Override]
+ public function unlink() {
 		parent::unlink();
 		$this->removeVariations();
 		return $this; 
@@ -1518,7 +1524,8 @@ class Pageimage extends Pagefile {
 	 * @return bool True if successful
 	 *
 	 */
-	public function copyToPath($path) {
+	#[\Override]
+ public function copyToPath($path) {
 		$files = $this->wire()->files;
 		if(parent::copyToPath($path)) {
 			foreach($this->getVariations() as $variation) {
@@ -1675,7 +1682,8 @@ class Pageimage extends Pagefile {
 	 * @throws WireException
 	 *
 	 */
-	protected function ___install($filename) {
+	#[\Override]
+ protected function ___install($filename) {
 		parent::___install($filename); 
 		if(!$this->width()) {
 			parent::unlink();
@@ -1749,7 +1757,8 @@ class Pageimage extends Pagefile {
 	 * @since 3.0.132
 	 *
 	 */
-	public function extras($name = null, PagefileExtra $value = null) {
+	#[\Override]
+ public function extras($name = null, PagefileExtra $value = null) {
 		if($name) return parent::extras($name, $value); 
 		$extras = parent::extras();
 		$extras['webp'] = $this->webp();
@@ -1767,7 +1776,8 @@ class Pageimage extends Pagefile {
 	 * @return string|bool Returns new name (basename) on success, or boolean false if rename failed.
 	 *
 	 */
-	public function rename($basename) {
+	#[\Override]
+ public function rename($basename) {
 		
 		$variations = $this->getVariations();
 		$oldBasename = $this->basename;
@@ -1803,13 +1813,15 @@ class Pageimage extends Pagefile {
 	 * @since 3.0.154
 	 *
 	 */
-	public function replaceFile($filename, $move = true) {
+	#[\Override]
+ public function replaceFile($filename, $move = true) {
 		if(!parent::replaceFile($filename, $move)) return false;
 		$this->getImageInfo(true);
 		return true;
 	}
 
-	public function __isset($key) {
+	#[\Override]
+ public function __isset($key) {
 		if($key === 'original') return $this->original !== null;
 		return parent::__isset($key);
 	}
@@ -1820,7 +1832,8 @@ class Pageimage extends Pagefile {
 	 * @return array
 	 * 
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		return $this->debugInfo->getBasicDebugInfo();
 	}
 

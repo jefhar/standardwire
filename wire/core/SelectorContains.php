@@ -5,17 +5,22 @@
  *
  */
 class SelectorContains extends Selector { 
-	public static function getOperator() { return '*='; }
-	public static function getCompareType() { 
+	#[\Override]
+ public static function getOperator() { return '*='; }
+	#[\Override]
+ public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
 			Selector::compareTypePartial |
 			Selector::compareTypePhrase | 
 			Selector::compareTypeFulltext;
 	}
-	public static function getLabel() { return __('Contains phrase', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('phrase fulltext'); }
-	protected function match($value1, $value2) { 
+	#[\Override]
+ public static function getLabel() { return __('Contains phrase', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('phrase fulltext'); }
+	#[\Override]
+ protected function match($value1, $value2) { 
 		$matches = stripos((string) $value1, $value2) !== false && preg_match('/\b' . preg_quote($value2) . '/i', (string) $value1); 
 		return $this->evaluate($matches);
 	}

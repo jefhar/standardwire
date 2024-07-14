@@ -877,7 +877,8 @@ class WireInput extends Wire {
 	 * @return string|int|null
 	 *
 	 */
-	public function __get($key) {
+	#[\Override]
+ public function __get($key) {
 
 		if($key == 'pageNum') return $this->pageNum; 
 		if($key == 'urlSegments') return $this->urlSegments; 
@@ -1765,7 +1766,8 @@ class WireInput extends Wire {
 	 * @return array
 	 *
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		$info = parent::__debugInfo();
 		$info['get'] = $this->getVars ? $this->getVars->getArray() : null;
 		$info['post'] = $this->postVars ? $this->postVars->getArray() : null;
@@ -1787,7 +1789,8 @@ class WireInput extends Wire {
 	 * @throws WireException
 	 * 
 	 */
-	public function ___callUnknown($method, $arguments) {
+	#[\Override]
+ public function ___callUnknown($method, $arguments) {
 		if(str_starts_with($method, 'urlSegment')) {
 			// Allow for method calls: urlSegment1(), urlSegment2('sort-*'), urlSegmentLast(), etc. 
 			[, $num] = explode('urlSegment', $method, 2);

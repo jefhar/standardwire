@@ -5,8 +5,10 @@
  *
  */
 class SelectorContainsAnyWordsExpand extends SelectorContainsAnyWords {
-	public static function getOperator() { return '~|+='; }
-	public static function getCompareType() { 
+	#[\Override]
+ public static function getOperator() { return '~|+='; }
+	#[\Override]
+ public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
 			Selector::compareTypeAny |
@@ -14,9 +16,12 @@ class SelectorContainsAnyWordsExpand extends SelectorContainsAnyWords {
 			Selector::compareTypeExpand | 
 			Selector::compareTypeFulltext; 
 	}
-	public static function getLabel() { return __('Contains any words expand', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('words-any expand fulltext'); }
-	protected function match($value1, $value2) {
+	#[\Override]
+ public static function getLabel() { return __('Contains any words expand', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('words-any expand fulltext'); }
+	#[\Override]
+ protected function match($value1, $value2) {
 		$hasAny = false;
 		$textTools = $this->wire()->sanitizer->getTextTools();
 		$words = $this->wire()->sanitizer->wordsArray($value2);

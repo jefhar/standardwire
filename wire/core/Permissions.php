@@ -117,7 +117,8 @@ class Permissions extends PagesType {
 	 * @throws WireException
 	 *
 	 */
-	public function ___save(Page $page) {
+	#[\Override]
+ public function ___save(Page $page) {
 		return parent::___save($page);
 	}
 
@@ -132,7 +133,8 @@ class Permissions extends PagesType {
 	 * @throws WireException
 	 *
 	 */
-	public function ___delete(Page $page, $recursive = false) {
+	#[\Override]
+ public function ___delete(Page $page, $recursive = false) {
 		return parent::___delete($page, $recursive);
 	}
 
@@ -145,7 +147,8 @@ class Permissions extends PagesType {
 	 * @return Permission|NullPage Returns a Permission page on success, or a NullPage on error
 	 *
 	 */
-	public function ___add($name) {
+	#[\Override]
+ public function ___add($name) {
 		/** @var Permission|NullPage $value */
 		$value = parent::___add($name);
 		return $value;
@@ -299,6 +302,7 @@ class Permissions extends PagesType {
 	 *
 	 */
 	#[\ReturnTypeWillChange]
+ #[\Override]
 	public function getIterator() {
 		return parent::getIterator();
 	}
@@ -315,7 +319,8 @@ class Permissions extends PagesType {
 	 * 
 	 */
 
-	public function ___saved(Page $page, array $changes = [], $values = []) {
+	#[\Override]
+ public function ___saved(Page $page, array $changes = [], $values = []) {
 		$this->wire()->cache->delete(self::cacheName);
 		parent::___saved($page, $changes, $values);
 	}
@@ -329,7 +334,8 @@ class Permissions extends PagesType {
 	 * @throws WireException
 	 * 
 	 */
-	public function ___deleted(Page $page) {
+	#[\Override]
+ public function ___deleted(Page $page) {
 		$this->wire()->cache->delete(self::cacheName);
 		parent::___deleted($page);
 	}

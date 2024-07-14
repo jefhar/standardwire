@@ -813,7 +813,8 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @return SessionCSRF|mixed|null
 	 *
 	 */
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		return $this->get($name); 
 	}
 
@@ -842,7 +843,8 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @return \ArrayObject
 	 *
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function getIterator() {
 		$data = $this->sessionInit ? $_SESSION[$this->sessionKey] : $this->data;
 		return new \ArrayObject($data); 
@@ -1505,7 +1507,8 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @return $this
 	 *
 	 */
-	public function message($text, $flags = 0) {
+	#[\Override]
+ public function message($text, $flags = 0) {
 		$this->queueNoticeText($text, 'messages', $flags); 
 		return $this;
 	}
@@ -1520,7 +1523,8 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @return $this
 	 * 
 	 */
-	public function error($text, $flags = 0) {
+	#[\Override]
+ public function error($text, $flags = 0) {
 		$this->queueNoticeText($text, 'errors', $flags); 
 		return $this; 
 	}
@@ -1535,7 +1539,8 @@ class Session extends Wire implements \IteratorAggregate {
 	 * @return $this
 	 *
 	 */
-	public function warning($text, $flags = 0) {
+	#[\Override]
+ public function warning($text, $flags = 0) {
 		$this->queueNoticeText($text, 'warnings', $flags);
 		return $this;
 	}

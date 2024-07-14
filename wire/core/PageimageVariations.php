@@ -45,7 +45,8 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 		parent::__construct();
 	}
 
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function getIterator() {
 		return $this->find();
 	}
@@ -59,7 +60,8 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 	 * @return int
 	 * 
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function count($options = []) {
 		if($this->variations) {
 			$count = $this->variations->count();

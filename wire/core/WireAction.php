@@ -172,14 +172,16 @@ abstract class WireAction extends WireData implements Module {
 		return $this->runner; 
 	}
 
-	public function message($text, $flags = 0) {
+	#[\Override]
+ public function message($text, $flags = 0) {
 		$runner = $this->getRunner(); 
 		if($runner) $runner->message($text, $flags); 
 			else parent::message($text, $flags); 
 		return $this; 
 	}
 
-	public function error($text, $flags = 0) {
+	#[\Override]
+ public function error($text, $flags = 0) {
 		$runner = $this->getRunner(); 
 		if($runner) $runner->error($text, $flags); 
 			else parent::error($text, $flags); 

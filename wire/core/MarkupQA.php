@@ -950,7 +950,8 @@ class MarkupQA extends Wire {
 	 * @return $this
 	 * 
 	 */
-	public function error($text, $flags = 0) {
+	#[\Override]
+ public function error($text, $flags = 0) {
 		$logText = "$text (field={$this->field->name}, id={$this->page->id}, path={$this->page->path})";
 		$this->wire()->log->save(self::errorLogName, $logText);
 		/*

@@ -1566,7 +1566,8 @@ abstract class Fieldtype extends WireData implements Module {
 	 * @return mixed
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		if($key === 'name') return $this->className();
 		if($key === 'shortName') {
 			return str_replace('Fieldtype', '', $this->className());
@@ -1645,7 +1646,8 @@ abstract class Fieldtype extends WireData implements Module {
 	 * The string value of Fieldtype is always the Fieldtype's name. 
 	 *
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return $this->className();
 	}
 

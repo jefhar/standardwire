@@ -359,7 +359,8 @@ class Template extends WireData implements Saveable, Exportable {
 	 * @return mixed
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 
 		if($key === 'filename') return $this->filename();
 		if($key === 'fields') $key = 'fieldgroup';
@@ -720,7 +721,8 @@ class Template extends WireData implements Saveable, Exportable {
 	 * @throws WireException
 	 *
 	 */
-	public function set($key, $value) {
+	#[\Override]
+ public function set($key, $value) {
 
 		if($key == 'cacheTime') $key = 'cache_time'; // alias
 		
@@ -1056,7 +1058,8 @@ class Template extends WireData implements Saveable, Exportable {
 	 * @return Template|bool Returns Template if successful, or false if not
 	 *
 	 */
-	public function save() {
+	#[\Override]
+ public function save() {
 
 		$result = $this->wire()->templates->save($this); 	
 
@@ -1171,7 +1174,8 @@ class Template extends WireData implements Saveable, Exportable {
 	 * #pw-internal
 	 *
 	 */
-	public function getArray() {
+	#[\Override]
+ public function getArray() {
 		$a = parent::getArray();
 
 		if($this->useRoles) { 
@@ -1192,7 +1196,8 @@ class Template extends WireData implements Saveable, Exportable {
 	 * #pw-internal
 	 *
 	 */
-	public function getTableData() {
+	#[\Override]
+ public function getTableData() {
 
 		$tableData = $this->settings; 
 		$data = $this->getArray();
@@ -1211,7 +1216,8 @@ class Template extends WireData implements Saveable, Exportable {
 	 * #pw-internal
 	 * 
 	 */
-	public function getExportData() {
+	#[\Override]
+ public function getExportData() {
 		return $this->wire()->templates->getExportData($this); 	
 	}
 
@@ -1230,7 +1236,8 @@ class Template extends WireData implements Saveable, Exportable {
 	 * #pw-internal
 	 * 
 	 */
-	public function setImportData(array $data) {
+	#[\Override]
+ public function setImportData(array $data) {
 		return $this->wire()->templates->setImportData($this, $data); 
 	}
 	
@@ -1238,7 +1245,8 @@ class Template extends WireData implements Saveable, Exportable {
 	 * The string value of a Template is always it's name
 	 *
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return $this->name; 
 	}
 
@@ -1656,11 +1664,13 @@ class Template extends WireData implements Saveable, Exportable {
 	 * @return bool
 	 *
 	 */
-	public function __isset($key) {
+	#[\Override]
+ public function __isset($key) {
 		return isset($this->settings[$key]) || isset($this->data[$key]);
 	}
 	
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		return array_merge(['settings' => $this->settings], parent::__debugInfo());
 	}
 

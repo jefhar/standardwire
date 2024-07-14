@@ -450,7 +450,8 @@ class ImageSizer extends Wire {
 		return $this->engine;
 	}
 	
-	public function __get($name) { return $this->getEngine()->__get($name); }
+	#[\Override]
+ public function __get($name) { return $this->getEngine()->__get($name); }
 
 	/**
 	 * ImageInformation from Image Inspector in short form or full RawInfoData

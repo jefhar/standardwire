@@ -1334,7 +1334,8 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @return bool True if valid, false if not
 	 *
 	 */
-	public function isOperator($str, $operatorType = self::operatorTypeAny, $get = false) {
+	#[\Override]
+ public function isOperator($str, $operatorType = self::operatorTypeAny, $get = false) {
 		
 		$len = strlen($str);
 		
@@ -1551,7 +1552,8 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @return mixed|null|\PDO
 	 * 
 	 */
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		if($name === 'pdo') return $this->pdo();
 		if($name === 'pdoReader') return $this->pdoReader();
 		if($name === 'pdoWriter') return $this->pdoWriter();

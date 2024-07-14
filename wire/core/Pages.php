@@ -1689,7 +1689,8 @@ class Pages extends Wire {
 	 * @return mixed
 	 *
 	 */
-	public function __get($name)
+	#[\Override]
+ public function __get($name)
  {
      return match ($name) {
          'autojoin' => $this->loader->getAutojoin(),

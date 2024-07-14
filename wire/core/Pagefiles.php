@@ -150,7 +150,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @param Page $page
 	 * 
 	 */
-	public function setPage(Page $page) {
+	#[\Override]
+ public function setPage(Page $page) {
 		$this->page = $page; 
 		// call the filesmanager, just to ensure paths are where they should be
 		$page->filesManager(); 
@@ -162,7 +163,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @param Field $field
 	 * 
 	 */
-	public function setField(Field $field) {
+	#[\Override]
+ public function setField(Field $field) {
 		$this->field = $field; 
 	}
 
@@ -172,7 +174,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Page
 	 * 
 	 */
-	public function getPage() {
+	#[\Override]
+ public function getPage() {
 		return $this->page; 
 	}
 
@@ -182,7 +185,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Field|null Returns Field, or null if Field has not yet been assigned. 
 	 * 
 	 */
-	public function getField() {
+	#[\Override]
+ public function getField() {
 		return $this->field; 
 	}
 
@@ -196,7 +200,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Pagefiles|Pageimages|WireArray
 	 * 
 	 */
-	public function makeNew() {
+	#[\Override]
+ public function makeNew() {
 		$class = static::class; 
 		/** @var Pagefiles|Pageimages $newArray */
 		$newArray = $this->wire(new $class($this->page)); 
@@ -216,7 +221,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Pagefiles
 	 *
 	 */
-	public function makeCopy() {
+	#[\Override]
+ public function makeCopy() {
 		$newArray = $this->makeNew();
 		foreach($this->data as $key => $value) $newArray[$key] = $value; 
 		foreach($this->extraData as $key => $value) $newArray->data($key, $value); 
@@ -234,7 +240,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * #pw-internal
 	 *
 	 */
-	public function __clone() {
+	#[\Override]
+ public function __clone() {
 		foreach($this as $key => $pagefile) {
 			/** @var Pagefile $pagefile */
 			$pagefile = clone $pagefile;
@@ -253,7 +260,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return bool
 	 *
 	 */
-	public function isValidItem($item) {
+	#[\Override]
+ public function isValidItem($item) {
 		return $item instanceof Pagefile;
 	}
 
@@ -266,7 +274,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return string
 	 *
 	 */
-	public function getItemKey($item) {
+	#[\Override]
+ public function getItemKey($item) {
 		return $item->basename; 
 	}
 
@@ -278,7 +287,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return Pagefile
 	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return $this->wire(new Pagefile($this, '')); 
 	}
 
@@ -293,7 +303,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return mixed
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		if($key == 'page') return $this->getPage(); 
 		if($key == 'field') return $this->getField(); 
 		if($key == 'url') return $this->url();
@@ -308,7 +319,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return bool|mixed|Page|Wire|WireData
 	 * 
 	 */
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		if(in_array($name, ['page', 'field', 'url', 'path'])) return $this->get($name); 
 		return parent::__get($name); 
 	}
@@ -344,7 +356,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return $this
 	 *
 	 */
-	public function add($item) {
+	#[\Override]
+ public function add($item) {
 
 		if(is_string($item)) {
 			/** @var Pagefile $item */
@@ -438,7 +451,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @throws WireException
 	 *
 	 */
-	public function remove($key) {
+	#[\Override]
+ public function remove($key) {
 		$item = $key;
 		if(is_string($item)) $item = $this->get($item); 
 		if(!$this->isValidItem($item)) throw new WireException("Invalid type to {$this->className}::remove(item)"); 
@@ -733,7 +747,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return $this
 	 * 
 	 */
-	public function trackChange($what, $old = null, $new = null) {
+	#[\Override]
+ public function trackChange($what, $old = null, $new = null) {
 		if($this->field && $this->page) $this->page->trackChange($this->field->name); 
 		$result = parent::trackChange($what, $old, $new); 
 		return $result;
@@ -902,7 +917,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return bool
 	 *
 	 */
-	public function isIdentical(WireArray $items, $strict = true) {
+	#[\Override]
+ public function isIdentical(WireArray $items, $strict = true) {
 		if($strict) return $this === $items;
 		return parent::isIdentical($items, $strict);
 	}
@@ -916,7 +932,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return $this
 	 * 
 	 */
-	public function resetTrackChanges($trackChanges = true) {
+	#[\Override]
+ public function resetTrackChanges($trackChanges = true) {
 		$this->unlinkQueue = [];
 		if($this->page && $this->page->id && $this->field) {
 			$this->page->untrackChange($this->field->name);	
@@ -943,7 +960,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return bool
 	 * 
 	 */
-	public function formatted($set = null) {
+	#[\Override]
+ public function formatted($set = null) {
 		if(is_bool($set)) $this->formatted = $set;
 		return $this->formatted;
 	}
@@ -992,7 +1010,8 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return array
 	 * 
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		
 		$info = ['count' => $this->count(), 'page' => $this->page ? $this->page->path() : '?', 'field' => $this->field ? $this->field->name : '?', 'url' => $this->url(), 'path' => $this->path(), 'items' => []];
 		

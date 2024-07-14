@@ -16,8 +16,10 @@
  *
  */
 class SelectorContainsAdvanced extends SelectorContains {
-	public static function getOperator() { return '#='; }
-	public static function getCompareType() { 
+	#[\Override]
+ public static function getOperator() { return '#='; }
+	#[\Override]
+ public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
 			Selector::compareTypeAny | 
@@ -26,8 +28,10 @@ class SelectorContainsAdvanced extends SelectorContains {
 			Selector::compareTypeCommand | 
 			Selector::compareTypeFulltext; 
 	}
-	public static function getLabel() { return __('Advanced text search', __FILE__); }
-	public static function getDescription() {
+	#[\Override]
+ public static function getLabel() { return __('Advanced text search', __FILE__); }
+	#[\Override]
+ public static function getDescription() {
 		return 
 			__('Match values with commands: +Word MUST appear, -Word MUST NOT appear, and unprefixed Word may appear.', __FILE__) . ' ' . 
 			__('Add asterisk for partial match: Bar* or +Bar* matches bar, barn, barge; while -Bar* prevents matching them.') . ' ' . 
@@ -78,7 +82,8 @@ class SelectorContainsAdvanced extends SelectorContains {
 		return $commands;
 	}
 	
-	protected function match($value1, $value2) {
+	#[\Override]
+ protected function match($value1, $value2) {
 		$fail = false;
 		$numMatch = 0;
 		$numOptional = 0; 

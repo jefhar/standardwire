@@ -76,7 +76,8 @@ class Password extends Wire {
 	 * @return mixed
 	 *
 	 */
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		if($name === 'salt' && empty($this->data['salt'])) $this->data['salt'] = $this->salt();
 		return $this->data[$name] ?? null;
 	}
@@ -353,7 +354,8 @@ class Password extends Wire {
 		return $this->random;
 	}
 	
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return (string) $this->data['hash'];
 	}
 

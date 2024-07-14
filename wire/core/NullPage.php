@@ -39,7 +39,8 @@ class NullPage extends Page implements WireNull {
 	 * @return string
 	 * 
 	 */
-	public function path() { return ''; }
+	#[\Override]
+ public function path() { return ''; }
 
 	/**
 	 * #pw-internal
@@ -48,7 +49,8 @@ class NullPage extends Page implements WireNull {
 	 * @return string
 	 * 
 	 */
-	public function url($options = []) { return ''; }
+	#[\Override]
+ public function url($options = []) { return ''; }
 
 	/**
 	 * #pw-internal
@@ -58,7 +60,8 @@ class NullPage extends Page implements WireNull {
 	 * @return $this
 	 * 
 	 */
-	public function set($key, $value) { return parent::setForced($key, $value); }
+	#[\Override]
+ public function set($key, $value) { return parent::setForced($key, $value); }
 
 	/**
 	 * #pw-internal
@@ -67,7 +70,8 @@ class NullPage extends Page implements WireNull {
 	 * @return null
 	 * 
 	 */
-	public function parent($selector = '') { return null; }
+	#[\Override]
+ public function parent($selector = '') { return null; }
 
 	/**
 	 * #pw-internal
@@ -77,7 +81,8 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	public function parents($selector = '') { 
+	#[\Override]
+ public function parents($selector = '') { 
 		return $this->wire()->pages->newPageArray(); 
 	}
 
@@ -87,7 +92,8 @@ class NullPage extends Page implements WireNull {
 	 * @return string
 	 * 
 	 */
-	public function __toString(): string { return ""; }
+	#[\Override]
+ public function __toString(): string { return ""; }
 
 	/**
 	 * #pw-internal
@@ -95,7 +101,8 @@ class NullPage extends Page implements WireNull {
 	 * @return bool
 	 * 
 	 */
-	public function isHidden() { return true; }
+	#[\Override]
+ public function isHidden() { return true; }
 
 	/**
 	 * #pw-internal
@@ -103,7 +110,8 @@ class NullPage extends Page implements WireNull {
 	 * @return bool
 	 *
 	 */
-	public function isNew() { return false; }
+	#[\Override]
+ public function isNew() { return false; }
 
 	/**
 	 * #pw-internal
@@ -111,7 +119,8 @@ class NullPage extends Page implements WireNull {
 	 * @return null
 	 * 
 	 */
-	public function filesManager() { return null; }
+	#[\Override]
+ public function filesManager() { return null; }
 
 	/**
 	 * #pw-internal
@@ -120,7 +129,8 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	public function ___rootParent() { 
+	#[\Override]
+ public function ___rootParent() { 
 		return $this->wire()->pages->newNullPage(); 
 	}
 
@@ -133,7 +143,8 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	public function siblings($selector = '', $includeCurrent = true) { 
+	#[\Override]
+ public function siblings($selector = '', $includeCurrent = true) { 
 		return $this->wire()->pages->newPageArray(); 
 	}
 
@@ -146,7 +157,8 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	public function children($selector = '', $options = []) { 
+	#[\Override]
+ public function children($selector = '', $options = []) { 
 		return $this->wire()->pages->newPageArray(); 
 	}
 
@@ -158,7 +170,8 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	public function getAccessParent($type = 'view') { 
+	#[\Override]
+ public function getAccessParent($type = 'view') { 
 		return $this->wire()->pages->newNullPage(); 
 	}
 
@@ -170,7 +183,8 @@ class NullPage extends Page implements WireNull {
 	 * @throws WireException
 	 * 
 	 */
-	public function getAccessRoles($type = 'view') { 
+	#[\Override]
+ public function getAccessRoles($type = 'view') { 
 		return $this->wire()->pages->newPageArray(); 
 	}
 
@@ -182,7 +196,8 @@ class NullPage extends Page implements WireNull {
 	 * @return bool
 	 * 
 	 */
-	public function hasAccessRole($role, $type = 'view') { return false; }
+	#[\Override]
+ public function hasAccessRole($role, $type = 'view') { return false; }
 
 	/**
 	 * #pw-internal
@@ -191,5 +206,6 @@ class NullPage extends Page implements WireNull {
 	 * @return bool
 	 * 
 	 */
-	public function isChanged($what = '') { return false; }
+	#[\Override]
+ public function isChanged($what = '') { return false; }
 }

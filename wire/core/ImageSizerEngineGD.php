@@ -54,7 +54,8 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return array
 	 * 
 	 */
-	protected function validSourceImageFormats() {
+	#[\Override]
+ protected function validSourceImageFormats() {
 		return ['JPG', 'JPEG', 'PNG', 'GIF'];
 	}
 
@@ -64,7 +65,8 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return array of uppercase file extensions, i.e. ['PNG', 'JPG']
 	 *
 	 */
-	protected function validTargetImageFormats() {
+	#[\Override]
+ protected function validTargetImageFormats() {
 		$formats = $this->validSourceImageFormats();
 		if($this->supported('webp')) $formats[] = 'WEBP';
 		return $formats;
@@ -77,7 +79,8 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @since 3.0.138
 	 *
 	 */
-	public function getLibraryVersion() {
+	#[\Override]
+ public function getLibraryVersion() {
 		$gd = gd_info();
 		return $gd['GD Version'] ?? '';
 	}
@@ -89,7 +92,8 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 *
 	 */
-	public function supported($action = 'imageformat') {
+	#[\Override]
+ public function supported($action = 'imageformat') {
 		// first we check parts that are mandatory for all $actions
 		if(!function_exists('gd_info')) return false;
 		// and if it passes the mandatory requirements, we check particularly aspects here
@@ -143,7 +147,8 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @throws WireException
 	 * 
 	 */
-	protected function processResize($srcFilename, $dstFilename, $fullWidth, $fullHeight, $finalWidth, $finalHeight) {
+	#[\Override]
+ protected function processResize($srcFilename, $dstFilename, $fullWidth, $fullHeight, $finalWidth, $finalHeight) {
 		
 		$this->modified = false;
 		$isModified = false;
@@ -1101,7 +1106,8 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 *
 	 */
-	protected function processRotate($srcFilename, $dstFilename, $degrees) {
+	#[\Override]
+ protected function processRotate($srcFilename, $dstFilename, $degrees) {
 		return $this->processAction($srcFilename, $dstFilename, 'rotate', $degrees);
 	}
 
@@ -1114,7 +1120,8 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 *
 	 */
-	protected function processFlip($srcFilename, $dstFilename, $flipType) {
+	#[\Override]
+ protected function processFlip($srcFilename, $dstFilename, $flipType) {
 		return $this->processAction($srcFilename, $dstFilename, 'flip', $flipType);
 	}
 	
@@ -1125,7 +1132,8 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 *
 	 */
-	public function convertToGreyscale($dstFilename = '') {
+	#[\Override]
+ public function convertToGreyscale($dstFilename = '') {
 		return $this->processAction($this->filename, $dstFilename, 'greyscale', null);
 	}
 
@@ -1137,7 +1145,8 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 *
 	 */
-	public function convertToSepia($dstFilename = '', $sepia = 55) {
+	#[\Override]
+ public function convertToSepia($dstFilename = '', $sepia = 55) {
 		return $this->processAction($this->filename, $dstFilename, 'sepia', $sepia);
 	}
 

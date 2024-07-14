@@ -493,7 +493,8 @@ class TemplateFile extends WireData {
 	 * @return array
 	 *
 	 */
-	public function getArray() {
+	#[\Override]
+ public function getArray() {
 		return array_merge($this->wire()->fuel->getArray(), parent::getArray()); 
 	}
 
@@ -504,7 +505,8 @@ class TemplateFile extends WireData {
 	 * @return mixed Returns the value of the requested property, or NULL if it doesn't exist
 	 *	
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		if($key === 'filename') return $this->filename; 
 		if($key === 'appendFilename' || $key === 'appendFilenames') return $this->appendFilename; 
 		if($key === 'prependFilename' || $key === 'prependFilenames') return $this->prependFilename;
@@ -523,7 +525,8 @@ class TemplateFile extends WireData {
 	 * @return $this|WireData
 	 * 
 	 */
-	public function set($key, $value) {
+	#[\Override]
+ public function set($key, $value) {
 		if($key === 'halt') {
 			$this->halt($value);
 			return $this;
@@ -592,7 +595,8 @@ class TemplateFile extends WireData {
 	 * @return string
 	 *	
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		if(!$this->filename) return $this->className();
 		return $this->filename; 
 	}

@@ -48,7 +48,8 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @return DatabaseQuerySelect
 	 *
 	 */
-	protected function getLoadQuery($selectors = null) {
+	#[\Override]
+ protected function getLoadQuery($selectors = null) {
 		$query = parent::getLoadQuery($selectors); 
 		$database = $this->wire()->database;
 		$table = $database->escapeTable($this->getTable());
@@ -70,7 +71,8 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @return WireArray Returns the same type as specified in the getAll() method.
 	 *
 	 */
-	protected function ___load(WireArray $items, $selectors = null) {
+	#[\Override]
+ protected function ___load(WireArray $items, $selectors = null) {
 
 		$useLazy = $this->useLazy();
 		$database = $this->wire()->database;
@@ -109,7 +111,8 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @since 3.0.194
 	 *
 	 */
-	protected function initItem(array &$row, WireArray $items = null) {
+	#[\Override]
+ protected function initItem(array &$row, WireArray $items = null) {
 		
 		$lookupField = $this->getLookupField();
 		$lookupValue = $row[$lookupField];
@@ -159,7 +162,8 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @return bool
 	 *
 	 */
-	protected function saveItemKey($key) {
+	#[\Override]
+ protected function saveItemKey($key) {
 		if($key == $this->getLookupField()) return false; 
 		return parent::saveItemKey($key); 
 	}
@@ -172,7 +176,8 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @throws WireException
 	 *
 	 */
-	public function ___save(Saveable $item) {
+	#[\Override]
+ public function ___save(Saveable $item) {
 
 		if(!$item instanceof HasLookupItems) {
 			$class = $this->className();
@@ -219,7 +224,8 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @return bool
 	 * 
 	 */
-	public function ___delete(Saveable $item) {
+	#[\Override]
+ public function ___delete(Saveable $item) {
 		$database = $this->wire()->database;
 		$lookupTable = $database->escapeTable($this->getLookupTable()); 
 		$table = $database->escapeTable($this->getTable()); 
@@ -238,7 +244,8 @@ abstract class WireSaveableItemsLookup extends WireSaveableItems {
 	 * @return array
 	 *
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		$info = parent::__debugInfo();
 		$info['loaded'] = array_unique($info['loaded']);
 		$info['notLoaded'] = array_unique($info['notLoaded']);

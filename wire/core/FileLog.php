@@ -105,7 +105,8 @@ class FileLog extends Wire {
 	 * Wired to API
 	 * 
 	 */
-	public function wired() {
+	#[\Override]
+ public function wired() {
 		parent::wired();
 		$this->path();
 	}
@@ -115,7 +116,8 @@ class FileLog extends Wire {
 	 * @return mixed
 	 * 
 	 */
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		if($name == 'delimiter') return $this->delimeter; // @todo learn how to spell
 		return parent::__get($name);
 	}
@@ -689,7 +691,8 @@ class FileLog extends Wire {
 		return $this->wire()->files->unlink($this->logFilename, true);
 	}
 
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return $this->filename(); 
 	}	
 

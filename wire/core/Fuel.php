@@ -124,7 +124,8 @@ class Fuel implements \IteratorAggregate {
 		return $this->data[$key] ?? null;
 	}
 
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function getIterator() {
 		return new \ArrayObject($this->data); 
 	}

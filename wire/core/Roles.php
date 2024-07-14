@@ -49,7 +49,8 @@ class Roles extends PagesType {
 	 * @return Role|NullPage|null
 	 *
 	 */
-	public function get($selectorString) {
+	#[\Override]
+ public function get($selectorString) {
 		if($selectorString === 'guest') return $this->getGuestRole();
 		return parent::get($selectorString);
 	}
@@ -64,7 +65,8 @@ class Roles extends PagesType {
 	 * @throws WireException
 	 *
 	 */
-	public function ___save(Page $page) {
+	#[\Override]
+ public function ___save(Page $page) {
 		return parent::___save($page);
 	}
 
@@ -79,7 +81,8 @@ class Roles extends PagesType {
 	 * @throws WireException
 	 *
 	 */
-	public function ___delete(Page $page, $recursive = false) {
+	#[\Override]
+ public function ___delete(Page $page, $recursive = false) {
 		return parent::___delete($page, $recursive);
 	}
 
@@ -92,7 +95,8 @@ class Roles extends PagesType {
 	 * @return Role|NullPage Returns a Role page on success, or a NullPage on error
 	 *
 	 */
-	public function ___add($name) {
+	#[\Override]
+ public function ___add($name) {
 		/** @var Role|NullPage $role */
 		$role = parent::___add($name);
 		return $role;
@@ -106,7 +110,8 @@ class Roles extends PagesType {
 	 * @param Page $page
 	 *
 	 */
-	protected function loaded(Page $page) {
+	#[\Override]
+ protected function loaded(Page $page) {
 		$hasPageView = false;
 		foreach($page->permissions as $permission) {
 			if($permission->name === 'page-view') $hasPageView = true;
@@ -126,7 +131,8 @@ class Roles extends PagesType {
 	 * @param Page $page
 	 *
 	 */
-	public function ___deleted(Page $page) { 
+	#[\Override]
+ public function ___deleted(Page $page) { 
 		foreach($this->wire()->templates as $template) {
 			/** @var Template $template */
 			if(!$template->useRoles) continue;

@@ -157,7 +157,8 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @return mixed|string
 	 *
 	 */
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		if($name === 'tableField') return $this->tableField();
 		return parent::__get($name);
 	}

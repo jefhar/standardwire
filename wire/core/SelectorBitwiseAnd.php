@@ -5,11 +5,16 @@
  *
  */
 class SelectorBitwiseAnd extends Selector { 
-	public static function getOperator() { return '&'; }
-	public static function getCompareType() { return Selector::compareTypeBitwise; }
-	public static function getLabel() { return __('Bitwise AND', __FILE__); }
-	public static function getDescription() {
+	#[\Override]
+ public static function getOperator() { return '&'; }
+	#[\Override]
+ public static function getCompareType() { return Selector::compareTypeBitwise; }
+	#[\Override]
+ public static function getLabel() { return __('Bitwise AND', __FILE__); }
+	#[\Override]
+ public static function getDescription() {
 		return __('Given integer value matches bitwise AND with compared integer value.', __FILE__);
 	}
-	protected function match($value1, $value2) { return $this->evaluate(((int) $value1) & ((int) $value2)); }
+	#[\Override]
+ protected function match($value1, $value2) { return $this->evaluate(((int) $value1) & ((int) $value2)); }
 }

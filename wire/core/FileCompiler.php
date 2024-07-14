@@ -143,7 +143,8 @@ class FileCompiler extends Wire {
 	 * Wired to instance
 	 * 
 	 */
-	public function wired() {
+	#[\Override]
+ public function wired() {
 		
 		$config = $this->wire()->config;
 		$globalOptions = $config->fileCompilerOptions;

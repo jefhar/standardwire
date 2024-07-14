@@ -47,7 +47,8 @@ class ModulePlaceholder extends WireData implements Module {
 		$this->ns = (string) $ns;
 	}
 
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		if($key == 'className' || $key == 'class' || $key == 'name') return $this->class;
 		return parent::get($key); 
 	}
@@ -60,7 +61,8 @@ class ModulePlaceholder extends WireData implements Module {
 		return false; 
 	}
 
-	public function className($options = null) {
+	#[\Override]
+ public function className($options = null) {
 		if($options === true || !empty($options['namespace'])) {
 			return trim("$this->ns", '\\') . '\\' . $this->class;
 		}

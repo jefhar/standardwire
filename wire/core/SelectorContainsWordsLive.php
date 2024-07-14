@@ -7,8 +7,10 @@
  *
  */
 class SelectorContainsWordsLive extends Selector {
-	public static function getOperator() { return '~~='; }
-	public static function getCompareType() { 
+	#[\Override]
+ public static function getOperator() { return '~~='; }
+	#[\Override]
+ public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
 			Selector::compareTypeAll | 
@@ -16,9 +18,12 @@ class SelectorContainsWordsLive extends Selector {
 			Selector::compareTypePartial |
 			Selector::compareTypeFulltext; 
 	}
-	public static function getLabel() { return __('Contains all words live', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('words-all words-partial-last fulltext'); }
-	protected function match($value1, $value2) {
+	#[\Override]
+ public static function getLabel() { return __('Contains all words live', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('words-all words-partial-last fulltext'); }
+	#[\Override]
+ protected function match($value1, $value2) {
 		$hasAll = true;
 		$words = $this->wire()->sanitizer->wordsArray($value2); 
 		$lastWord = array_pop($words);

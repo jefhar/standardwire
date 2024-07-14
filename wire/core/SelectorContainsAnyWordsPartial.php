@@ -5,8 +5,10 @@
  *
  */
 class SelectorContainsAnyWordsPartial extends Selector {
-	public static function getOperator() { return '~|*='; }
-	public static function getCompareType() { 
+	#[\Override]
+ public static function getOperator() { return '~|*='; }
+	#[\Override]
+ public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
 			Selector::compareTypeAny |
@@ -14,9 +16,12 @@ class SelectorContainsAnyWordsPartial extends Selector {
 			Selector::compareTypeWords |
 			Selector::compareTypeFulltext; 
 	}
-	public static function getLabel() { return __('Contains any partial words', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('words-any words-partial words-partial-begin fulltext'); }
-	protected function match($value1, $value2) {
+	#[\Override]
+ public static function getLabel() { return __('Contains any partial words', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('words-any words-partial words-partial-begin fulltext'); }
+	#[\Override]
+ protected function match($value1, $value2) {
 		$hasAny = false;
 		$words = $this->wire()->sanitizer->wordsArray($value2);
 		foreach($words as $word) {

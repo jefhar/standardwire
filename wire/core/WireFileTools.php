@@ -1944,7 +1944,8 @@ class WireFileTools extends Wire {
 	 * @return WireLog
 	 *
 	 */
-	public function ___log($str = '', array $options = []) {
+	#[\Override]
+ public function ___log($str = '', array $options = []) {
 		if(empty($options['name'])) $options['name'] = 'files';
 		return parent::___log($str, $options);
 	}

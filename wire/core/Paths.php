@@ -141,7 +141,8 @@ class Paths extends WireData {
 	 * @return Paths|WireData
 	 *
 	 */
-	public function set($key, $value) {
+	#[\Override]
+ public function set($key, $value) {
 		if(DIRECTORY_SEPARATOR != '/') $value = self::normalizeSeparators($value); 
 		if($key == 'root') {
 			$this->_root = $value;
@@ -159,7 +160,8 @@ class Paths extends WireData {
 	 * @return mixed|null|string The requested path variable
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		static $_http = null;
 		if($key === 'root') return $this->_root;
 		$http = '';

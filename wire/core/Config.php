@@ -237,7 +237,8 @@ class Config extends WireData {
 	 * @return string|array|int|bool|object|callable|null
 	 * 
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		$value = parent::get($key);
 		if($value === null) {
 			// runtime properties
@@ -665,7 +666,8 @@ class Config extends WireData {
 	 * @throws WireException
 	 *
 	 */
-	protected function ___callUnknown($method, $arguments) {
+	#[\Override]
+ protected function ___callUnknown($method, $arguments) {
 		//$this->message("callUnknown($method)");
 		$value = parent::get($method);
 		if($value === null) return parent::___callUnknown($method, $arguments);
@@ -944,7 +946,8 @@ class Config extends WireData {
 	 * @param ProcessWire $wire
 	 *
 	 */
-	public function setWire(ProcessWire $wire) {
+	#[\Override]
+ public function setWire(ProcessWire $wire) {
 		parent::setWire($wire);
 		foreach(['paths', 'urls', 'styles', 'scripts'] as $key) {
 			$value = $this->get($key);

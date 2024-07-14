@@ -153,7 +153,8 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * #pw-internal
 	 *
 	 */
-	public function __clone() {
+	#[\Override]
+ public function __clone() {
 		$this->extras = [];
 		$this->set('filesize', 0);
 		$this->set('created_users_id', 0);
@@ -260,7 +261,8 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return Pagefile|WireData
 	 *
 	 */
-	public function set($key, $value) {
+	#[\Override]
+ public function set($key, $value) {
 		
 		if($key === 'basename') {
 			$value = $this->pagefiles->cleanBasename($value, false);
@@ -630,7 +632,8 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return mixed Returns null if value does not exist
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 
 		if($key === 'name') $key = 'basename';
 		if($key === 'pathname') $key = 'filename';
@@ -1232,7 +1235,8 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return string
 	 *
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return (string) $this->basename; 
 	}
 
@@ -1326,7 +1330,8 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @param mixed $new
 	 *
 	 */
-	public function ___changed($what, $old = null, $new = null) {
+	#[\Override]
+ public function ___changed($what, $old = null, $new = null) {
 		if(in_array($what, ['description', 'tags', 'file', 'filedata']) || array_key_exists($what, $this->fieldValues)) {
 			$this->setUser(true, 'modified');
 			$this->set('modified', time()); 
@@ -1465,7 +1470,8 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return bool
 	 *
 	 */
-	public function __isset($key) {
+	#[\Override]
+ public function __isset($key) {
 		if(parent::__isset($key)) return true;
 		return $this->get($key) !== null;
 	}
@@ -1479,7 +1485,8 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @since 3.0.205
 	 * 
 	 */
-	public function getWireArray() {
+	#[\Override]
+ public function getWireArray() {
 		return $this->pagefiles;
 	}
 
@@ -1489,7 +1496,8 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return array
 	 * 
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		$filedata = $this->filedata();
 		if(empty($filedata)) $filedata = null;
 		$info = ['url' => $this->url(), 'filename' => $this->filename(), 'filesize' => $this->filesize(), 'description' => $this->description, 'tags' => $this->tags, 'created' => $this->createdStr, 'modified' => $this->modifiedStr, 'created_users_id' => $this->created_users_id, 'modified_users_id' => $this->modified_users_id, 'filemtime' => $this->mtimeStr, 'filedata' => $filedata];

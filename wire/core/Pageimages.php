@@ -43,7 +43,8 @@ class Pageimages extends Pagefiles {
 	 * @return bool
 	 *
 	 */
-	public function isValidItem($item) {
+	#[\Override]
+ public function isValidItem($item) {
 		return $item instanceof Pageimage;
 	}
 
@@ -54,7 +55,8 @@ class Pageimages extends Pagefiles {
 	 * @return Pageimages|Pagefiles
 	 *
 	 */
-	public function add($item) {
+	#[\Override]
+ public function add($item) {
 		if(is_string($item)) $item = $this->wire(new Pageimage($this, $item)); 
 		return parent::add($item); 
 	}
@@ -67,7 +69,8 @@ class Pageimages extends Pagefiles {
 	 * @return Pageimage
 	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return $this->wire(new Pageimage($this, '')); 
 	}
 
@@ -78,7 +81,8 @@ class Pageimages extends Pagefiles {
 	 * @return null|Pagefile|Pageimage Returns Pagefile object if found, null if not
 	 *
 	 */
-	public function getFile($name) {
+	#[\Override]
+ public function getFile($name) {
 	
 		$hasFile = parent::getFile($name); 
 		if($hasFile) return $hasFile; 

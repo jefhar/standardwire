@@ -5,8 +5,10 @@
  *
  */
 class SelectorEndsLike extends SelectorEnds {
-	public static function getOperator() { return '%$='; }
-	public static function getCompareType() {
+	#[\Override]
+ public static function getOperator() { return '%$='; }
+	#[\Override]
+ public static function getCompareType() {
 		return
 			Selector::compareTypeFind |
 			Selector::compareTypeAll |
@@ -14,6 +16,8 @@ class SelectorEndsLike extends SelectorEnds {
 			Selector::compareTypeBoundary |
 			Selector::compareTypeLike; 
 	}
-	public static function getLabel() { return __('Ends like', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('phrase-end like'); }
+	#[\Override]
+ public static function getLabel() { return __('Ends like', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('phrase-end like'); }
 }

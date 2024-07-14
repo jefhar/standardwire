@@ -35,7 +35,8 @@ abstract class PageAction extends WireAction implements Module {
 	 * @return string
 	 *
 	 */
-	public function getItemType() {
+	#[\Override]
+ public function getItemType() {
 		return strlen(__NAMESPACE__) ? __NAMESPACE__ . '\\Page' : 'Page';
 	}
 
@@ -46,7 +47,8 @@ abstract class PageAction extends WireAction implements Module {
 	 * @return bool True if the item was successfully operated upon, false if not.
 	 *
 	 */
-	public function execute($item) {
+	#[\Override]
+ public function execute($item) {
 		return parent::execute($item);
 	}
 

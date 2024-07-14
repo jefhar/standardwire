@@ -46,7 +46,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return DatabaseQuerySelect
 	 *
 	 */
-	protected function getLoadQuery($selectors = null) {
+	#[\Override]
+ protected function getLoadQuery($selectors = null) {
 		$query = parent::getLoadQuery($selectors); 
 		$lookupTable = $this->wire()->database->escapeTable($this->getLookupTable()); 
 		$query->select("$lookupTable.data"); // QA
@@ -64,7 +65,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return WireArray Returns the same type as specified in the getAll() method.
 	 *
 	 */
-	protected function ___load(WireArray $items, $selectors = null) {
+	#[\Override]
+ protected function ___load(WireArray $items, $selectors = null) {
 		$items = parent::___load($items, $selectors); 	
 		return $items; 
 	}
@@ -75,7 +77,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return FieldgroupsArray
 	 *
 	 */
-	public function getAll() {
+	#[\Override]
+ public function getAll() {
 		if($this->useLazy()) $this->loadAllLazyItems();
 		return $this->getWireArray();
 	}
@@ -84,7 +87,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return WireArray|FieldgroupsArray
 	 *
 	 */
-	public function getWireArray() {
+	#[\Override]
+ public function getWireArray() {
 		if($this->fieldgroupsArray === null) {
 			$this->fieldgroupsArray = new FieldgroupsArray();
 			$this->wire($this->fieldgroupsArray);
@@ -99,7 +103,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return Fieldgroup
 	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return $this->wire(new Fieldgroup()); 
 	}
 
@@ -109,7 +114,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return string
 	 *
 	 */
-	public function getTable() {
+	#[\Override]
+ public function getTable() {
 		return 'fieldgroups';
 	}
 
@@ -119,7 +125,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return string
 	 *
 	 */
-	public function getLookupTable() {
+	#[\Override]
+ public function getLookupTable() {
 		return 'fieldgroups_fields';
 	}
 
@@ -217,7 +224,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @throws WireException
 	 *
 	 */
-	public function ___save(Saveable $item) {
+	#[\Override]
+ public function ___save(Saveable $item) {
 
 		$database = $this->wire()->database;
 
@@ -309,7 +317,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @throws WireException
 	 *
 	 */
-	public function ___delete(Saveable $item) {
+	#[\Override]
+ public function ___delete(Saveable $item) {
 
 		$templates = [];
 		foreach($this->wire()->templates as $template) {
@@ -352,7 +361,8 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return Fieldgroup|false $item Returns the new clone on success, or false on failure
 	 *
 	 */
-	public function ___clone(Saveable $item, $name = '') {
+	#[\Override]
+ public function ___clone(Saveable $item, $name = '') {
 		if(!$item instanceof Fieldgroup) return false;
 		
 		$database = $this->wire()->database;

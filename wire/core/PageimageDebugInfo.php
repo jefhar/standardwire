@@ -46,7 +46,8 @@ class PageimageDebugInfo extends WireData {
 	 * @return mixed|null
 	 * 
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		$value = $this->pageimage->get($key);
 		if($value === null) $value = parent::get($key);
 		return $value;

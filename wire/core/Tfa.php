@@ -161,7 +161,8 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * Called when assigned to ProcessWire instance
 	 * 
 	 */
-	public function wired() {
+	#[\Override]
+ public function wired() {
 		// @todo convert to getLabel() switch and make defaults (above) blank
 		$this->setArray(['cancelLabel' =>
 				$this->_('Cancel'), 'configureLabel' =>

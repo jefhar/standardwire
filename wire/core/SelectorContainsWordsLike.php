@@ -5,8 +5,10 @@
  *
  */
 class SelectorContainsWordsLike extends Selector {
-	public static function getOperator() { return '~%='; }
-	public static function getCompareType() { 
+	#[\Override]
+ public static function getOperator() { return '~%='; }
+	#[\Override]
+ public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
 			Selector::compareTypeAll |
@@ -14,9 +16,12 @@ class SelectorContainsWordsLike extends Selector {
 			Selector::compareTypeWords |
 			Selector::compareTypeLike;
 	}
-	public static function getLabel() { return __('Contains all words like', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('words-all words-partial words-partial-any like'); }
-	protected function match($value1, $value2) {
+	#[\Override]
+ public static function getLabel() { return __('Contains all words like', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('words-all words-partial words-partial-any like'); }
+	#[\Override]
+ protected function match($value1, $value2) {
 		$hasAll = true;
 		$words = $this->wire()->sanitizer->wordsArray($value2);
 		foreach($words as $word) {

@@ -23,11 +23,13 @@
  */
 class Breadcrumbs extends WireArray {
 
-	public function isValidItem($item) {
+	#[\Override]
+ public function isValidItem($item) {
 		return $item instanceof Breadcrumb;
 	}
 
-	public function add($item) {
+	#[\Override]
+ public function add($item) {
 
 		if($item instanceof Page) {
 			$page = $item; 

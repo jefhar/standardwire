@@ -5,8 +5,10 @@
  *
  */
 class SelectorStarts extends Selector { 
-	public static function getOperator() { return '^='; }
-	public static function getCompareType() { 
+	#[\Override]
+ public static function getOperator() { return '^='; }
+	#[\Override]
+ public static function getCompareType() { 
 		return 
 			Selector::compareTypeFind |
 			Selector::compareTypeAll |
@@ -14,9 +16,12 @@ class SelectorStarts extends Selector {
 			Selector::compareTypeBoundary | 
 			Selector::compareTypeFulltext; 
 	}
-	public static function getLabel() { return __('Starts with', __FILE__); }
-	public static function getDescription() { return SelectorContains::buildDescription('phrase-start fulltext'); }
-	protected function match($value1, $value2) { 
+	#[\Override]
+ public static function getLabel() { return __('Starts with', __FILE__); }
+	#[\Override]
+ public static function getDescription() { return SelectorContains::buildDescription('phrase-start fulltext'); }
+	#[\Override]
+ protected function match($value1, $value2) { 
 		return $this->evaluate(stripos(trim((string) $value1), $value2) === 0); 
 	}
 }

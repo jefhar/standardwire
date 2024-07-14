@@ -122,7 +122,8 @@ class WireDatabasePDOStatement extends \PDOStatement {
   * @return bool
   *
   */
- #[\ReturnTypeWillChange] 
+ #[\ReturnTypeWillChange]
+ #[\Override] 
 	public function bindValue($parameter, mixed $value, $data_type = \PDO::PARAM_STR) {
 		$result = parent::bindValue($parameter, $value, $data_type);
 		if($this->debugMode && str_starts_with($parameter, ':')) {
@@ -141,7 +142,8 @@ class WireDatabasePDOStatement extends \PDOStatement {
 	 * @throws \PDOException
 	 *
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function execute($input_parameters = NULL) {
 		if($this->debugMode) {
 			return $this->executeDebug($input_parameters);

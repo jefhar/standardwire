@@ -19,7 +19,8 @@ class FieldsArray extends WireArray {
 	 * @return bool
 	 *
 	 */
-	public function isValidItem($item) {
+	#[\Override]
+ public function isValidItem($item) {
 		return $item instanceof Field;
 	}
 
@@ -30,7 +31,8 @@ class FieldsArray extends WireArray {
 	 * @return bool
 	 *
 	 */
-	public function isValidKey($key) {
+	#[\Override]
+ public function isValidKey($key) {
 		return is_int($key) || ctype_digit($key);
 	}
 
@@ -41,7 +43,8 @@ class FieldsArray extends WireArray {
 	 * @return int
 	 *
 	 */
-	public function getItemKey($item) {
+	#[\Override]
+ public function getItemKey($item) {
 		return $item->id;
 	}
 
@@ -51,7 +54,8 @@ class FieldsArray extends WireArray {
 	 * @return Field
 	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return $this->wire(new Field());
 	}
 }

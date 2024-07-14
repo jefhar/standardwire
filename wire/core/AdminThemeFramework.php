@@ -97,7 +97,8 @@ abstract class AdminThemeFramework extends AdminTheme {
 		$this->set('browserTitle', ''); 
 	}
 	
-	public function wired() {
+	#[\Override]
+ public function wired() {
 		$this->sanitizer = $this->wire()->sanitizer;
 		$user = $this->wire()->user;
 		$this->isLoggedIn = $user && $user->isLoggedin();
@@ -111,7 +112,8 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * @return bool|int|mixed|null|string
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		$value = match ($key) {
       'isSuperuser' => $this->isSuperuser,
       'isEditor' => $this->isEditor,
@@ -128,7 +130,8 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * Note: descending classes should call this after API ready
 	 *
 	 */
-	public function init() {
+	#[\Override]
+ public function init() {
 		
 		$user = $this->wire()->user;
 		$input = $this->wire()->input;
@@ -175,7 +178,8 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * @return string
 	 *
 	 */
-	public function _($text) {
+	#[\Override]
+ public function _($text) {
 		static $translate = null;
 		static $context = null;
 		if($translate === null) $translate = $this->wire()->languages !== null;
@@ -297,7 +301,8 @@ abstract class AdminThemeFramework extends AdminTheme {
 	 * @return string
 	 *
 	 */
-	public function getBodyClass() {
+	#[\Override]
+ public function getBodyClass() {
 
 		$page = $this->wire()->page;
 		$process = $this->wire()->process;

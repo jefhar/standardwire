@@ -432,7 +432,8 @@ abstract class DatabaseQuery extends WireData {
 	 * @return $this
 	 *
 	 */
-	public function __call($method, $arguments) {
+	#[\Override]
+ public function __call($method, $arguments) {
 		$args = &$arguments;
 		
 		// if(!$this->has($method)) return parent::__call($method, $args);
@@ -536,7 +537,8 @@ abstract class DatabaseQuery extends WireData {
 	 * @param mixed $value
 	 * 
 	 */
-	public function __set($key, $value) {
+	#[\Override]
+ public function __set($key, $value) {
 		if(is_array($this->$key)) $this->__call($key, [$value]); 
 	}
 
@@ -545,7 +547,8 @@ abstract class DatabaseQuery extends WireData {
 	 * @return array|mixed|null
 	 * 
 	 */
-	public function __get($key) {
+	#[\Override]
+ public function __get($key) {
 		
 		if($key === 'query' || $key === 'sql') {
 			return $this->getQuery();

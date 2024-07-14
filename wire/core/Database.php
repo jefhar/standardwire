@@ -96,6 +96,7 @@ class Database extends \mysqli implements WireDatabase {
 	 *
 	 */
 	#[\ReturnTypeWillChange]
+ #[\Override]
 	public function query($sql, $resultmode = MYSQLI_STORE_RESULT) {
 
 		static $timerTotalQueryTime = 0;
@@ -191,7 +192,8 @@ class Database extends \mysqli implements WireDatabase {
 	 * @return bool 
 	 *
 	 */
-	public function isOperator($str) {
+	#[\Override]
+ public function isOperator($str) {
 		return in_array($str, ['=', '<', '>', '>=', '<=', '<>', '!=', '&', '~', '|', '^', '<<', '>>']);
 	}
 

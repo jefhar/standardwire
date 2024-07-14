@@ -181,7 +181,8 @@ abstract class Process extends WireData implements Module {
 	 * @return mixed
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		if(($value = $this->wire($key)) !== null) return $value; 
 		return parent::get($key); 
 	}

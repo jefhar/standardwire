@@ -81,7 +81,8 @@ abstract class ModulesClass extends Wire {
 	 * @return Modules|WireArray
 	 *
 	 */
-	public function error($text, $flags = 0) {
+	#[\Override]
+ public function error($text, $flags = 0) {
 		return $this->modules->error($text, $flags);
 	}
 

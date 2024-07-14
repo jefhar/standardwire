@@ -339,7 +339,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return string
 	 *
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return $this->className();
 	}
 
@@ -998,7 +999,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return bool True if property has changed, false if not. 
 	 *
 	 */
-	public function isChanged($what = '') {
+	#[\Override]
+ public function isChanged($what = '') {
 		if(!$what) return count($this->changes) > 0; 
 		return array_key_exists($what, $this->changes); 
 	}
@@ -1035,7 +1037,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return $this
 	 * 
 	 */
-	public function trackChange($what, $old = null, $new = null) {
+	#[\Override]
+ public function trackChange($what, $old = null, $new = null) {
 		
 		if($this->trackChanges & self::trackChangesOn) {
 			
@@ -1114,7 +1117,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return $this
 	 *
 	 */
-	public function setTrackChanges($trackChanges = true) {
+	#[\Override]
+ public function setTrackChanges($trackChanges = true) {
 		if(is_bool($trackChanges) || !$trackChanges) {
 			// turn change track on or off
 			if($trackChanges) {
@@ -1181,7 +1185,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return array
 	 *
 	 */
-	public function getChanges($getValues = false) {
+	#[\Override]
+ public function getChanges($getValues = false) {
 		if($getValues === 2) {
 			$changes = [];
 			foreach($this->changes as $name => $value) {
@@ -1590,7 +1595,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return string
 	 *
 	 */
-	public function _($text) {
+	#[\Override]
+ public function _($text) {
 		return __($text, $this); 
 	}
 
@@ -1606,7 +1612,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return string Translated text or original text if translation not available.
 	 *
 	 */
-	public function _x($text, $context) {
+	#[\Override]
+ public function _x($text, $context) {
 		return _x($text, $context, $this); 
 	}
 
@@ -1621,7 +1628,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return string Translated text or original text if translation not available.
 	 *
 	 */
-	public function _n($textSingular, $textPlural, $count) {
+	#[\Override]
+ public function _n($textSingular, $textPlural, $count) {
 		return _n($textSingular, $textPlural, $count, $this); 
 	}
 	
@@ -1648,7 +1656,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @param ProcessWire $wire
 	 *
 	 */
-	public function setWire(ProcessWire $wire) {
+	#[\Override]
+ public function setWire(ProcessWire $wire) {
 		$wired = $this->_wire;
 		if($wired === $wire) return;
 		$this->_wire = $wire;
@@ -1668,7 +1677,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 * @return null|ProcessWire
 	 *
 	 */
-	public function getWire() {
+	#[\Override]
+ public function getWire() {
 		return $this->_wire ?: null;
 	}
 
@@ -1745,7 +1755,8 @@ abstract class Wire implements WireTranslatable, WireFuelable, WireTrackable, \S
 	 *
 	 *
 	 */
-	public function wire($name = '', $value = null, $lock = false) {
+	#[\Override]
+ public function wire($name = '', $value = null, $lock = false) {
 
 		if($this->_wire) {
 			// this instance is wired

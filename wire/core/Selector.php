@@ -308,7 +308,8 @@ abstract class Selector extends WireData {
 	 * @return array|mixed|null|string Property value
 	 * 
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		if($key === 'operator') return $this->operator();
 		if($key === 'str') return $this->__toString();
 		if($key === 'values') return $this->values();
@@ -410,7 +411,8 @@ abstract class Selector extends WireData {
 	 * @return Selector|WireData
 	 * 
 	 */
-	public function set($key, $value) {
+	#[\Override]
+ public function set($key, $value) {
 		if($key === 'fields' || $key === 'field') return $this->setField($value);
 		if($key === 'values' || $key === 'value') return $this->setValue($value);
 		if($key === 'operator') {
@@ -660,7 +662,8 @@ abstract class Selector extends WireData {
 	 * The string value of Selector is always the selector string that it originated from
 	 *
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		
 		$openingQuote = $this->quote; 
 		$closingQuote = $openingQuote; 
@@ -692,7 +695,8 @@ abstract class Selector extends WireData {
 	 * @return array
 	 * 
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		$info = ['field' => $this->field, 'operator' => $this->operator, 'value' => $this->value];
 		if($this->not) $info['not'] = true;
 		if($this->forceMatch) $info['forceMatch'] = true;

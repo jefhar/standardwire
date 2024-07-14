@@ -202,7 +202,8 @@ class HookEvent extends WireData {
 	 * @return HookEvent|WireData $this
 	 * 
 	 */
-	public function removeHook($hookId) {
+	#[\Override]
+ public function removeHook($hookId) {
 		if(empty($hookId) || $hookId === $this) {
 			if($this->object && $this->id) {
 				$this->object->removeHook($this->id);
@@ -220,7 +221,8 @@ class HookEvent extends WireData {
 	 * @return mixed|null
 	 * 
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		$value = parent::get($key);
 		if($value === null && !ctype_digit("$key") && array_key_exists($key, $this->data['arguments'])) {
 			// allow named arguments to be accessed from get()
@@ -233,7 +235,8 @@ class HookEvent extends WireData {
 	 * Return a string representing the HookEvent
 	 *
 	 */
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		$s = $this->object->className() . '::' . $this->method . '(';
 		foreach($this->arguments as $a) $s .= is_string($a) ? '"' . $a . '", ' : "$a, ";
 		$s = rtrim($s, ", ") . ")";

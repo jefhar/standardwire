@@ -125,7 +125,8 @@ class Fieldtypes extends WireArray {
 	 * @return bool
 	 *
 	 */
-	public function isValidItem($item) {
+	#[\Override]
+ public function isValidItem($item) {
 		if($item instanceof Fieldtype) return true;
 		if($item instanceof ModulePlaceholder && str_starts_with($item->className(), 'Fieldtype')) return true;
 		return false;
@@ -138,7 +139,8 @@ class Fieldtypes extends WireArray {
 	 * @return bool
 	 *
 	 */
-	public function isValidKey($key) {
+	#[\Override]
+ public function isValidKey($key) {
 		return is_string($key); 
 	}
 
@@ -149,7 +151,8 @@ class Fieldtypes extends WireArray {
 	 * @return string
 	 *
 	 */
-	public function getItemKey($item) {
+	#[\Override]
+ public function getItemKey($item) {
 		return $item->className();
 	}
 
@@ -159,7 +162,8 @@ class Fieldtypes extends WireArray {
 	 * @return bool
 	 *
 	 */
-	protected function usesNumericKeys() {
+	#[\Override]
+ protected function usesNumericKeys() {
 		return false;
 	}
 
@@ -171,7 +175,8 @@ class Fieldtypes extends WireArray {
 	 * @return null
 	 *
 	 */
-	public function makeBlankItem() {
+	#[\Override]
+ public function makeBlankItem() {
 		return null; 
 	}
 
@@ -184,7 +189,8 @@ class Fieldtypes extends WireArray {
 	 * @return Fieldtype|null 
 	 *
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 
 		if(stripos($key, 'Fieldtype') !== 0) $key = 'Fieldtype' . ucfirst($key); 
 
@@ -210,24 +216,41 @@ class Fieldtypes extends WireArray {
 	 * 
 	 */
 
-	public function getArray() { $this->preload(); return parent::getArray(); }
-	public function getAll() { $this->preload(); return parent::getAll(); }
-	public function getValues() { $this->preload(); return parent::getValues(); }
-	public function getRandom($num = 1, $alwaysArray = false) { $this->preload(); return parent::getRandom($num, $alwaysArray);  }
-	public function slice($start, $limit = 0) { $this->preload(); return parent::slice($start, $limit);  }
-	public function shift() { $this->preload(); return parent::shift(); }
-	public function pop() { $this->preload(); return parent::pop(); }
-	public function eq($num) { $this->preload(); return parent::eq($num); }
-	public function first() { $this->preload(); return parent::first(); }
-	public function last() { $this->preload(); return parent::last(); }
-	public function sort($properties, $flags = null) { $this->preload(); return parent::sort($properties, $flags); }
-	protected function filterData($selectors, $not = false) { $this->preload(); return parent::filterData($selectors, $not); }
-	public function makeCopy() { $this->preload(); return parent::makeCopy(); }
-	public function makeNew() { $this->preload(); return parent::makeNew(); }
-	#[\ReturnTypeWillChange] 
+	#[\Override]
+ public function getArray() { $this->preload(); return parent::getArray(); }
+	#[\Override]
+ public function getAll() { $this->preload(); return parent::getAll(); }
+	#[\Override]
+ public function getValues() { $this->preload(); return parent::getValues(); }
+	#[\Override]
+ public function getRandom($num = 1, $alwaysArray = false) { $this->preload(); return parent::getRandom($num, $alwaysArray);  }
+	#[\Override]
+ public function slice($start, $limit = 0) { $this->preload(); return parent::slice($start, $limit);  }
+	#[\Override]
+ public function shift() { $this->preload(); return parent::shift(); }
+	#[\Override]
+ public function pop() { $this->preload(); return parent::pop(); }
+	#[\Override]
+ public function eq($num) { $this->preload(); return parent::eq($num); }
+	#[\Override]
+ public function first() { $this->preload(); return parent::first(); }
+	#[\Override]
+ public function last() { $this->preload(); return parent::last(); }
+	#[\Override]
+ public function sort($properties, $flags = null) { $this->preload(); return parent::sort($properties, $flags); }
+	#[\Override]
+ protected function filterData($selectors, $not = false) { $this->preload(); return parent::filterData($selectors, $not); }
+	#[\Override]
+ public function makeCopy() { $this->preload(); return parent::makeCopy(); }
+	#[\Override]
+ public function makeNew() { $this->preload(); return parent::makeNew(); }
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function getIterator() { $this->preload(); return parent::getIterator(); }
-	public function getNext($item, $strict = true) { $this->preload(); return parent::getNext($item, $strict); }
-	public function getPrev($item, $strict = true) { $this->preload(); return parent::getPrev($item, $strict); }
+	#[\Override]
+ public function getNext($item, $strict = true) { $this->preload(); return parent::getNext($item, $strict); }
+	#[\Override]
+ public function getPrev($item, $strict = true) { $this->preload(); return parent::getPrev($item, $strict); }
 }
 
 

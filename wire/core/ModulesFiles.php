@@ -620,7 +620,8 @@ class ModulesFiles extends ModulesClass {
 		return $value;
 	}
 
-	public function getDebugData() {
+	#[\Override]
+ public function getDebugData() {
 		return ['moduleFileExts' => $this->moduleFileExts];
 	}
 

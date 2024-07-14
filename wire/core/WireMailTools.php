@@ -382,7 +382,8 @@ class WireMailTools extends Wire {
 		return $this->new()->subject($subject);
 	}
 	
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		if($name === 'new') return $this->new();
 		return parent::__get($name);
 	}

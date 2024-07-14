@@ -22,7 +22,8 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * @return array Returns array of associative arrays, each containing requested properties 
 	 * 
 	 */
-	public function find(array $options) {
+	#[\Override]
+ public function find(array $options) {
 
 		$defaults = ['names' => [], 'expires' => [], 'expiresMode' => 'OR', 'get' => ['name', 'expires', 'data']];
 		
@@ -110,7 +111,8 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * @return bool
 	 * 
 	 */
-	public function save($name, $data, $expire) {
+	#[\Override]
+ public function save($name, $data, $expire) {
 	
 		$sql =
 			'INSERT INTO caches (`name`, `data`, `expires`) VALUES(:name, :data, :expires) ' .
@@ -133,7 +135,8 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * @return bool
 	 * 
 	 */
-	public function delete($name) {
+	#[\Override]
+ public function delete($name) {
 		$sql = 'DELETE FROM caches WHERE name=:name';
 		$query = $this->wire()->database->prepare($sql, "cache.delete($name)");
 		$query->bindValue(':name', $name);
@@ -148,7 +151,8 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * @return int
 	 * 
 	 */
-	public function deleteAll() {
+	#[\Override]
+ public function deleteAll() {
 		return $this->_deleteAll();
 	}
 
@@ -158,7 +162,8 @@ class WireCacheDatabase extends Wire implements WireCacheInterface {
 	 * @return int
 	 * 
 	 */
-	public function expireAll() {
+	#[\Override]
+ public function expireAll() {
 		return $this->_deleteAll(true);
 	}
 

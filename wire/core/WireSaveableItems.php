@@ -447,7 +447,8 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 		return $this->getAll()->find($selectors); 
 	}
 
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function getIterator() {
 		if($this->useLazy()) $this->loadAllLazyItems();
 		return $this->getAll();
@@ -466,7 +467,8 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 		return $value;
 	}
 
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		$value = $this->get($name);
 		if($value === null) $value = parent::__get($name);
 		return $value; 
@@ -614,7 +616,8 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 * @return bool
 	 *
 	 */
-	public function useFuel($useFuel = null) {
+	#[\Override]
+ public function useFuel($useFuel = null) {
 		return false;
 	}
 	
@@ -767,7 +770,8 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 * @return Wire|WireSaveableItems
 	 *
 	 */
-	public function error($text, $flags = 0) {
+	#[\Override]
+ public function error($text, $flags = 0) {
 		$this->log($text); 
 		return parent::error($text, $flags); 
 	}
@@ -780,7 +784,8 @@ abstract class WireSaveableItems extends Wire implements \IteratorAggregate {
 	 * @return array
 	 *
 	 */
-	public function __debugInfo() {
+	#[\Override]
+ public function __debugInfo() {
 		$info = []; // parent::__debugInfo();
 		$info['loaded'] = [];
 		$info['notLoaded'] = [];

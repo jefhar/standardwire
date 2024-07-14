@@ -324,7 +324,8 @@ class ProcessWire extends Wire {
 		}
 	}
 
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		$str = $this->className() . " ";
 		$str .= self::versionMajor . "." . self::versionMinor . "." . self::versionRevision; 
 		if(self::versionSuffix) $str .= " " . self::versionSuffix;
@@ -837,7 +838,8 @@ class ProcessWire extends Wire {
 	 * @return mixed
 	 * 
 	 */
-	public function __get($name) {
+	#[\Override]
+ public function __get($name) {
 		if($name === 'fuel') return $this->fuel;
 		if($name === 'shutdown') return $this->shutdown;
 		if($name === 'instanceID') return $this->instanceID;
@@ -885,7 +887,8 @@ class ProcessWire extends Wire {
 	 * @throws WireException
 	 * 
 	 */
-	public function __call($method, $arguments) {
+	#[\Override]
+ public function __call($method, $arguments) {
 		if(method_exists($this, "___$method")) return parent::__call($method, $arguments); 
 		$value = $this->__get($method);
 		if(is_object($value)) return call_user_func_array([$value, '__invoke'], $arguments); 
@@ -901,7 +904,8 @@ class ProcessWire extends Wire {
 	 * @return mixed|null|Fuel
 	 * 
 	 */
-	public function fuel($name = '') {
+	#[\Override]
+ public function fuel($name = '') {
 		if(empty($name)) return $this->fuel;
 		return $this->fuel->$name;
 	}

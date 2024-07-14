@@ -1370,7 +1370,8 @@ class WireHooks implements \Stringable {
 		return wireClassName($this, false);
 	}
 	
-	public function __toString(): string {
+	#[\Override]
+ public function __toString(): string {
 		return $this->className();
 	}
 

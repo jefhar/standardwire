@@ -200,7 +200,8 @@ abstract class AdminTheme extends WireData implements Module {
 	 * @return int|mixed|null|string
 	 * 
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		if($key === 'version') return $this->version;
 		if($key === 'url') return $this->url();
 		if($key === 'path') return $this->path();

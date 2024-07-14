@@ -72,7 +72,8 @@ class Users extends PagesType {
 	 * @return User|NullPage|null
 	 * 
 	 */
-	public function get($selectorString) {
+	#[\Override]
+ public function get($selectorString) {
 		/** @var User|NullPage|null $user */
 		$user = parent::get($selectorString);
 		return $user; 
@@ -96,7 +97,8 @@ class Users extends PagesType {
 	 * @param Page $page
 	 *
 	 */
-	protected function loaded(Page $page) {
+	#[\Override]
+ protected function loaded(Page $page) {
 		if($page instanceof User) $this->checkGuestRole($page);
 	}
 
@@ -169,7 +171,8 @@ class Users extends PagesType {
 	 * @return string
 	 *
 	 */
-	public function getPageClass() {
+	#[\Override]
+ public function getPageClass() {
 		$pageClass = parent::getPageClass();
 		if($pageClass !== 'User' && $pageClass !== \ProcessWire\User::class && $pageClass !== $this->validPageClass) {
 			if(wireInstanceOf($pageClass, 'User')) {
@@ -236,7 +239,8 @@ class Users extends PagesType {
 	 * @throws WireException
 	 *
 	 */
-	public function ___save(Page $page) {
+	#[\Override]
+ public function ___save(Page $page) {
 		return parent::___save($page);
 	}
 
@@ -249,7 +253,8 @@ class Users extends PagesType {
 	 * @return array Optional extra data to add to pages save query.
 	 *
 	 */
-	public function ___saveReady(Page $page) {
+	#[\Override]
+ public function ___saveReady(Page $page) {
 		/** @var User $user */
 		$user = $page;
 		// add guest role if user doesn't already have it

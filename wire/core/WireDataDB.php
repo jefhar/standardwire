@@ -57,7 +57,8 @@ class WireDataDB extends WireData implements \Countable {
 	 * @throws WireException
 	 * 
 	 */
-	public function get($key) {
+	#[\Override]
+ public function get($key) {
 		$value = parent::get($key);
 		if($value !== null) return $value;
 		$value = $this->load($key);
@@ -72,7 +73,8 @@ class WireDataDB extends WireData implements \Countable {
 	 * @throws WireException
 	 * 
 	 */
-	public function getArray() {
+	#[\Override]
+ public function getArray() {
 		return $this->load(true);
 	}
 
@@ -85,7 +87,8 @@ class WireDataDB extends WireData implements \Countable {
 	 * @throws WireException
 	 * 
 	 */
-	public function set($key, $value) {
+	#[\Override]
+ public function set($key, $value) {
 		if(parent::get($key) === $value) return $this; // no change
 		if($value === null) return $this->remove($key);  // remove
 		$this->save($key, $value); // set
@@ -101,7 +104,8 @@ class WireDataDB extends WireData implements \Countable {
 	 * @throws WireException
 	 * 
 	 */
-	public function remove($key) {
+	#[\Override]
+ public function remove($key) {
 		$this->delete("$key");
 		parent::remove($key);
 		return $this;
@@ -252,7 +256,8 @@ class WireDataDB extends WireData implements \Countable {
 	 * @return int
 	 * 
 	 */
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function count() {
 		$table = $this->table();
 		$sql = "SELECT COUNT(*) FROM `$table` WHERE source_id=:source_id";
@@ -350,7 +355,8 @@ class WireDataDB extends WireData implements \Countable {
 		return true;
 	}
 
-	#[\ReturnTypeWillChange] 
+	#[\ReturnTypeWillChange]
+ #[\Override] 
 	public function getIterator() {
 		return new \ArrayObject($this->getArray());
 	}

@@ -207,7 +207,8 @@ abstract class FileValidatorModule extends WireData implements Module {
 	 * @return WireLog|null
 	 *
 	 */
-	public function ___log($str = '', array $options = []) {
+	#[\Override]
+ public function ___log($str = '', array $options = []) {
 		if(empty($options['name'])) $options['name'] = 'file-validator';
 		return parent::___log($str, $options);
 	}
