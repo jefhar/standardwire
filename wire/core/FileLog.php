@@ -345,7 +345,7 @@ class FileLog extends Wire {
 	 * @return array
 	 *
 	 */
-	protected function getChunkArray($chunkNum = 1, $chunkSize = 0, $reverse = true) {
+	protected function getChunkArray($chunkNum = 1, $chunkSize = 0, $reverse = true): array {
 		if($chunkSize < 1) $chunkSize = $this->chunkSize;
 		$lines = explode("\n", $this->getChunk($chunkNum, $chunkSize, $reverse));
 		foreach($lines as $key => $line) {

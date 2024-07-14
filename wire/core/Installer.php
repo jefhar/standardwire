@@ -148,7 +148,7 @@ class Installer {
 	 * @return array
 	 * 
 	 */
-	protected function findProfiles() {
+	protected function findProfiles(): array {
 		$profiles = []; 
 		$dirTests = ['install', 'templates', 'assets'];
 		$fileTests = ['config.php', 'templates/admin.php', 'install/install.sql'];
@@ -1859,7 +1859,7 @@ class Installer {
 	 * @return array
 	 * 
 	 */
-	protected function timezones() {
+	protected function timezones(): array {
 		$timezones = timezone_identifiers_list();
 		if(!is_array($timezones)) return ['UTC'];
 		$extras = ['US Eastern|America/New_York', 'US Central|America/Chicago', 'US Mountain|America/Denver', 'US Mountain (no DST)|America/Phoenix', 'US Pacific|America/Los_Angeles', 'US Alaska|America/Anchorage', 'US Hawaii|America/Adak', 'US Hawaii (no DST)|Pacific/Honolulu'];

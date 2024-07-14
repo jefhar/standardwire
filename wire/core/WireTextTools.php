@@ -797,7 +797,7 @@ class WireTextTools extends Wire {
 	 * @see WireTextTools::getWordStem()
 	 * 
 	 */
-	public function getWordAlternates($word, array $options = []) {
+	public function getWordAlternates($word, array $options = []): array {
 		
 		if(!$this->hasHook('wordAlternates()')) return [];
 		
@@ -880,7 +880,7 @@ class WireTextTools extends Wire {
 	 * @since 3.0.162
 	 *
 	 */
-	protected function ___wordAlternates($word, array $options) {
+	protected function ___wordAlternates($word, array $options): array {
 		if($word && $options) {} // ignore
 		$alternates = [];
 		return $alternates;
@@ -1298,7 +1298,7 @@ class WireTextTools extends Wire {
 	 * @since 3.0.162
 	 * 
 	 */
-	public function findReplaceEscapeChars(&$str, array $escapeChars, array $options = []) {
+	public function findReplaceEscapeChars(&$str, array $escapeChars, array $options = []): array {
 
 		$defaults = [
       'escapePrefix' => '\\',

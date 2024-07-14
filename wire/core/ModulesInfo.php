@@ -342,7 +342,7 @@ class ModulesInfo extends ModulesClass {
 	 * @return array
 	 *
 	 */
-	public function getModuleInfoSystem($moduleName, array $options = []) {
+	public function getModuleInfoSystem($moduleName, array $options = []): array {
 
 		$info = [];
 		
@@ -774,7 +774,7 @@ class ModulesInfo extends ModulesClass {
 	 * @return array of array($moduleClass, $operator, $version)
 	 *
 	 */
-	protected function extractModuleOperatorVersion($require) {
+	protected function extractModuleOperatorVersion($require): array {
 
 		if(ctype_alnum($require)) {
 			// no version is specified

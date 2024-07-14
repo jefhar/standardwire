@@ -310,7 +310,7 @@ class PageTraversal {
 	 * @return array
 	 * 
 	 */
-	protected function _nextFinderOptions(Page $page, $selector, $options) {
+	protected function _nextFinderOptions(Page $page, $selector, $options): array {
 
 		$fo = ['findOne' => $options['all'] ? false : true, 'startAfterID' => $options['prev'] ? 0 : $page->id, 'stopBeforeID' => $options['prev'] ? $page->id : 0, 'returnVerbose' => $options['all'] ? false : true, 'alwaysAllowIDs' => []];
 
@@ -731,7 +731,7 @@ class PageTraversal {
 	 * @return array
 	 *
 	 */
-	public function urls(Page $page, $options = []) {
+	public function urls(Page $page, $options = []): array {
 
 		$defaults = ['http' => false, 'past' => true, 'languages' => true, 'language' => null];
 

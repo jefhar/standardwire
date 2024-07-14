@@ -462,7 +462,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @throws WireException if given invalid data
 	 *
 	 */
-	public function ___setImportData(Fieldgroup $fieldgroup, array $data) {
+	public function ___setImportData(Fieldgroup $fieldgroup, array $data): array {
 
 		$return = ['fields' => ['old' => '', 'new' => '', 'error' => []], 'contexts' => ['old' => '', 'new' => '', 'error' => []]];
 

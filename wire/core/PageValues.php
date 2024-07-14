@@ -245,7 +245,7 @@ class PageValues extends Wire {
 	 * @return array
 	 *
 	 */
-	public function getMultiple(Page $page, $keys, $assoc = false) {
+	public function getMultiple(Page $page, $keys, $assoc = false): array {
 		if(!is_array($keys)) {
 			$keys = (string) $keys;
 			if(str_contains($keys, ',')) {

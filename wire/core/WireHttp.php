@@ -470,7 +470,7 @@ class WireHttp extends Wire {
 	 * @return array
 	 *
 	 */
-	protected function sendOptions($url, array $options) {
+	protected function sendOptions($url, array $options): array {
 
 		$defaults = [
       'use' => ['curl', 'fopen', 'socket'],
@@ -1611,7 +1611,7 @@ class WireHttp extends Wire {
 	 * @since 3.0.131
 	 * 
 	 */
-	public function sendHeaders(array $options = []) {
+	public function sendHeaders(array $options = []): array {
 		
 		$defaults = ['reset' => false, 'headers' => [], 'httpCode' => 0, 'httpVersion' => '', 'replacements' => []];
 		
@@ -1807,7 +1807,7 @@ class WireHttp extends Wire {
 	 * @return array
 	 *
 	 */
-	public function getSuccessCodes() {
+	public function getSuccessCodes(): array {
 		$codes = [];
 		foreach($this->httpCodes as $code => $text) {
 			if($code < 400) $codes[$code] = $text;
@@ -1823,7 +1823,7 @@ class WireHttp extends Wire {
 	 * @return array
 	 * 
 	 */
-	public function getErrorCodes() {
+	public function getErrorCodes(): array {
 		$errorCodes = [];
 		foreach($this->httpCodes as $code => $text) {
 			if($code >= 400) $errorCodes[$code] = $text;

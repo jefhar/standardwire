@@ -786,7 +786,7 @@ class Modules extends WireArray {
 	 * @return array Returns array of module class names, module info arrays, or Module objects. In all cases, array indexes are class names.
 	 * 
 	 */
-	public function findByPrefix($prefix, $load = false) {
+	public function findByPrefix($prefix, $load = false): array {
 		$results = [];
 		foreach($this as $moduleName => $value) {
 			if(stripos($moduleName, $prefix) !== 0) continue;
@@ -823,7 +823,7 @@ class Modules extends WireArray {
 	 * @return array Array of modules, module names or module info arrays, indexed by module name.
 	 * 
 	 */
-	public function findByInfo($selector, $load = false) {
+	public function findByInfo($selector, $load = false): array {
 		
 		$selectors = null;
 		$keys = null;

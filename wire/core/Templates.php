@@ -618,7 +618,7 @@ class Templates extends WireSaveableItems {
 	 * @return array Returns array with list of changes (see example in method description)
 	 *
 	 */
-	public function ___setImportData(Template $template, array $data) {
+	public function ___setImportData(Template $template, array $data): array {
 
 		$fieldgroups = $this->wire()->fieldgroups;
 
@@ -902,7 +902,7 @@ class Templates extends WireSaveableItems {
 	 * @since 3.0.176 + hookable in 3.0.179
 	 * 
 	 */
-	public function ___getTags($getTemplateNames = false) {
+	public function ___getTags($getTemplateNames = false): array {
 		$tags = [];
 		foreach($this as $template) {
 			/** @var Template $template */

@@ -558,7 +558,7 @@ class ModulesInstaller extends ModulesClass {
 	 * @return array
 	 *
 	 */
-	public function getUninstalls($class) {
+	public function getUninstalls($class): array {
 
 		$uninstalls = [];
 		$class = $this->modules->getModuleClass($class);
@@ -593,7 +593,7 @@ class ModulesInstaller extends ModulesClass {
 	 * @return array()
 	 *
 	 */
-	public function getRequiredBy($class, $uninstalled = false, $installs = false) {
+	public function getRequiredBy($class, $uninstalled = false, $installs = false): array {
 
 		$class = $this->modules->getModuleClass($class);
 		$info = $this->modules->info->getModuleInfo($class);
@@ -781,7 +781,7 @@ class ModulesInstaller extends ModulesClass {
 	 * @return array If no errors, array will be blank. If errors, array will be of strings (error messages)
 	 *
 	 */
-	public function getDependencyErrors($moduleName) {
+	public function getDependencyErrors($moduleName): array {
 
 		$moduleName = $this->modules->getModuleClass($moduleName);
 		$info = $this->modules->getModuleInfo($moduleName);

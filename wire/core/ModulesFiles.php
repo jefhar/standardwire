@@ -57,7 +57,7 @@ class ModulesFiles extends ModulesClass {
 	 * @return array Array of module files
 	 *
 	 */
-	public function findModuleFiles($path, $readCache = false, $level = 0) {
+	public function findModuleFiles($path, $readCache = false, $level = 0): array {
 
 		static $startPath;
 		static $prependFiles = [];
@@ -400,7 +400,7 @@ class ModulesFiles extends ModulesClass {
 	 * @since 3.0.170
 	 *
 	 */
-	public function findMissingModules() {
+	public function findMissingModules(): array {
 
 		$missing = [];
 		$unflags = [];
@@ -501,7 +501,7 @@ class ModulesFiles extends ModulesClass {
 	 * @since 3.0.181
 	 *
 	 */
-	public function getModuleLanguageFiles($module) {
+	public function getModuleLanguageFiles($module): array {
 
 		$module = $this->modules->getModuleClass($module);
 		if(empty($module)) return [];
@@ -579,7 +579,7 @@ class ModulesFiles extends ModulesClass {
 	 * 	'implements' => array
 	 *
 	 */
-	public function getFileClassInfo($file) {
+	public function getFileClassInfo($file): array {
 
 		$value = ['class' => '', 'className' => '', 'extends' => '', 'namespace' => '', 'implements' => []];
 

@@ -1295,7 +1295,7 @@ class InputfieldWrapper extends Inputfield implements Countable, IteratorAggrega
 	 * @return array of Inputfield instances indexed by name attributes
 	 *
 	 */
-	public function getEmpty($required = true) {
+	public function getEmpty($required = true): array {
 		$a = [];
 		static $n = 0;
 		foreach($this->children() as $child) {
@@ -1347,7 +1347,7 @@ class InputfieldWrapper extends Inputfield implements Countable, IteratorAggrega
 	 * @since 3.0.205
 	 * 
 	 */
-	public function getErrorInputfields() {
+	public function getErrorInputfields(): array {
 		$a = [];
 		if(count(parent::getErrors())) {
 			$name = $this->attr('name');
@@ -1869,7 +1869,7 @@ class InputfieldWrapper extends Inputfield implements Countable, IteratorAggrega
 	 * @return array Returns array of field names that were populated
 	 * 
 	 */
-	public function populateValues($data) {
+	public function populateValues($data): array {
 		$populated = [];
 		foreach($this->getAll() as $inputfield) {
 			/** @var Inputfield $inputfield */
@@ -1903,7 +1903,7 @@ class InputfieldWrapper extends Inputfield implements Countable, IteratorAggrega
 	 * @return array
 	 * 
 	 */
-	public function debugMap() {
+	public function debugMap(): array {
 		$a = [];
 		foreach($this as $in) {
 			/** @var Inputfield $in */

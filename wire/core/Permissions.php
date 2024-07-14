@@ -169,7 +169,7 @@ class Permissions extends PagesType {
 	 * @return array
 	 *
 	 */
-	public function ___getOptionalPermissions($omitInstalled = true) {
+	public function ___getOptionalPermissions($omitInstalled = true): array {
 
 		$a = ['page-hide' => $this->_('Hide/unhide pages'), 'page-publish' => $this->_('Publish/unpublish pages or edit already published pages'), 'page-edit-created' => $this->_('Edit only pages user has created'), 'page-edit-trash-created' => $this->_('User can trash pages they created (without page-delete permission).'), 'page-edit-images' => $this->_('Use the image editor to manipulate (crop, resize, etc.) images'), 'page-rename' => $this->_('Change the name of published pages they are allowed to edit'), 'user-admin-all' => $this->_('Administer users in any role (except superuser)'), 'user-view-all' => $this->_('User can view users in any role (including superuser)'), 'user-view-self' => $this->_('User can view themself (when not already by other permission)')];
 

@@ -130,7 +130,7 @@ class Pageimages extends Pagefiles {
 	 * @see Pageimage::isVariation()
 	 * 
 	 */
-	public function getAllVariations() {
+	public function getAllVariations(): array {
 		
 		$variations = [];
 		$extensions = [];

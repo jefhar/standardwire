@@ -919,7 +919,7 @@ function wireMethodExists($className, $method, $hookable = false) {
  * @return array
  *
  */
-function wireClassImplements($className, $autoload = true) {
+function wireClassImplements($className, $autoload = true): array {
 	if(is_object($className)) {
 		$implements = @class_implements($className, $autoload);
 	} else {
@@ -953,7 +953,7 @@ function wireClassImplements($className, $autoload = true) {
  * @return array
  *
  */
-function wireClassParents($className, $autoload = true) {
+function wireClassParents($className, $autoload = true): array {
 	if(is_object($className)) {
 		$parents = class_parents($className, $autoload);
 	} else {

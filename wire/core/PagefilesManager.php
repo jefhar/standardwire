@@ -141,7 +141,7 @@ class PagefilesManager extends Wire {
 	 * @return array Array of file basenames
 	 *
 	 */
-	public function getFiles() {
+	public function getFiles(): array {
 		$files = [];
 		foreach(new DirectoryIterator($this->path()) as $file) {
 			if($file->isDot() || $file->isDir()) continue; 

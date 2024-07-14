@@ -977,7 +977,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @return array Returns array of table names
 	 *
 	 */
-	public function getTables($allowCache = true) {
+	public function getTables($allowCache = true): array {
 		if($allowCache && count($this->tablesCache)) return $this->tablesCache;
 		$tables = [];
 		$query = $this->query("SHOW TABLES");

@@ -550,7 +550,7 @@ class WireShutdown extends Wire {
 	 * @return array
 	 *
 	 */
-	protected function getReasonsWhy() {
+	protected function getReasonsWhy(): array {
 
 		$config = $this->config;
 		$user = $this->wire()->user;

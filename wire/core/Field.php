@@ -584,7 +584,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 *
 	 */
 	#[Override]
- public function setImportData(array $data) {
+ public function setImportData(array $data): array {
 
 		$changes = [];
 		$data['errors'] = [];
@@ -797,7 +797,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @since 3.0.182
 	 * 
 	 */
-	public function getContexts() {
+	public function getContexts(): array {
 		$contexts = [];
 		foreach($this->wire()->fieldgroups as $fieldgroup) {
 			/** @var Fieldgroup $fieldgroup */

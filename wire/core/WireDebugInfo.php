@@ -49,7 +49,7 @@ class WireDebugInfo extends Wire {
 	 * @return array
 	 * 
 	 */
-	public function getHooksInfo(Wire $obj) {
+	public function getHooksInfo(Wire $obj): array {
 		$hooks = [];
 		foreach($obj->getHooks() as $hook) {
 			[$class, $priority] = explode(':', (string) $hook['id']);
@@ -105,7 +105,7 @@ class WireDebugInfo extends Wire {
 	 * @return array
 	 * 
 	 */
-	public function Page(Page $page, $small = false) {
+	public function Page(Page $page, $small = false): array {
 		
 		if($small) {
 			// minimal debug info

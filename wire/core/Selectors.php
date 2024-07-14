@@ -360,7 +360,7 @@ class Selectors extends WireArray {
 	 * @return array
 	 *
 	 */
-	protected function extractOperators(&$str) {
+	protected function extractOperators(&$str): array {
 		
 		$n = 0;
 		$not = false;
@@ -731,7 +731,7 @@ class Selectors extends WireArray {
 	 * @return array Returned array has both keys and values as field names (same)
 	 * 
 	 */
-	public function getAllFields($subfields = true) {
+	public function getAllFields($subfields = true): array {
 		$fields = [];
 		foreach($this as $selector) {
 			$field = $selector->field;
@@ -753,7 +753,7 @@ class Selectors extends WireArray {
 	 * @return array Returned array has both keys and values as field values (same)
 	 * 
 	 */
-	public function getAllValues() {
+	public function getAllValues(): array {
 		$values = [];
 		foreach($this as $selector) {
 			$value = $selector->value;
@@ -1754,7 +1754,7 @@ class Selectors extends WireArray {
 	 * @return array
 	 *
 	 */
-	static public function keyValueStringToArray($s) {
+	static public function keyValueStringToArray($s): array {
 
 		if(str_contains($s, '~~COMMA')) $s = str_replace('~~COMMA', '', $s);
 		if(str_contains($s, '~~EQUAL')) $s = str_replace('~~EQUAL', '', $s);

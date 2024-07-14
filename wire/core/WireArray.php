@@ -1386,7 +1386,7 @@ class WireArray extends Wire implements IteratorAggregate, ArrayAccess, Countabl
 	 * @param int $numNeeded *Internal* amount of rows that need to be sorted (optimization used by filterData)
 	 * @return array Sorted array (at least $numNeeded items, if $numNeeded is given)
 	 */
-	protected function stableSort(&$data, $properties, $numNeeded = null) {
+	protected function stableSort(&$data, $properties, $numNeeded = null): array {
 
 		$property = trim((string) array_shift($properties));
 		$nullable = [];
@@ -2237,7 +2237,7 @@ class WireArray extends Wire implements IteratorAggregate, ArrayAccess, Countabl
 	 * @see WireArray::each(), WireArray::implode()
 	 *
 	 */
-	public function explode($property = '', array $options = []) {
+	public function explode($property = '', array $options = []): array {
 		$defaults = [
       'getMethod' => 'get',
       // method used to get value from each item
@@ -2578,7 +2578,7 @@ class WireArray extends Wire implements IteratorAggregate, ArrayAccess, Countabl
 	 * @return array Array of WireArray objects
 	 * 
 	 */
-	public function slices($qty) {
+	public function slices($qty): array {
 		$slices = [];
 		if($qty < 1) return $slices;
 		$total = $this->count();

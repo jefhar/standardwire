@@ -1388,7 +1388,7 @@ class PagesRawFinder extends Wire {
 	 * @since 3.0.193
 	 * 
 	 */
-	protected function flattenValues(array $values, $prefix = '', $delimiter = '.') {
+	protected function flattenValues(array $values, $prefix = '', $delimiter = '.'): array {
 		
 		$flat = [];
 		

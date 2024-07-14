@@ -224,7 +224,7 @@ class WireMarkupRegions extends Wire {
 	 * @return array
 	 *
 	 */
-	protected function findMulti($selector, $markup, array $options = []) {
+	protected function findMulti($selector, $markup, array $options = []): array {
 		
 		$regions = [];
 		$o = $options;
@@ -573,7 +573,7 @@ class WireMarkupRegions extends Wire {
 	 * @return array
 	 * 
 	 */
-	public function getTagInfo($tag) {
+	public function getTagInfo($tag): array {
 		
 		$attrs = [];
 		$attrStr = '';

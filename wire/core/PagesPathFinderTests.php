@@ -29,7 +29,7 @@ class PagesPathFinderTests extends Wire {
 	 * @return array
 	 *
 	 */
-	public function testPath($path, $expectResponse = 0) {
+	public function testPath($path, $expectResponse = 0): array {
 		$tests = [];
 		$testResults = [];
 		$results = [];
@@ -61,7 +61,7 @@ class PagesPathFinderTests extends Wire {
 	 * @return array
 	 *
 	 */
-	public function testPage(Page $item) {
+	public function testPage(Page $item): array {
 		$languages = $this->languages();
 		$testResults = [];
 		$defaultPath = $item->path();
@@ -88,7 +88,7 @@ class PagesPathFinderTests extends Wire {
 	 * @return array
 	 *
 	 */
-	public function testPages($selector) {
+	public function testPages($selector): array {
 		if($selector instanceof PageArray) {
 			$items = $selector;
 		} else {

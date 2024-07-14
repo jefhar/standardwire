@@ -568,7 +568,7 @@ class PagesPathFinder extends Wire {
 	 * @return array
 	 *
 	 */
-	protected function getBlankResult(array $result = []) {
+	protected function getBlankResult(array $result = []): array {
 
 		$blankResult = [
       'request' => '',

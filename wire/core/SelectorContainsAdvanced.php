@@ -46,7 +46,7 @@ class SelectorContainsAdvanced extends SelectorContains {
 	 * @return array
 	 * 
 	 */
-	public function valueToCommands($value) {
+	public function valueToCommands($value): array {
 		$commands = [];
 		$hasQuotes = strrpos($value, '"') || strrpos($value, '”') || strrpos($value, ')') || strrpos($value, '}');
 		$substr = function_exists('\\mb_substr') ? '\\mb_substr' : '\\substr';

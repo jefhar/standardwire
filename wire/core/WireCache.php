@@ -965,7 +965,7 @@ class WireCache extends Wire {
 	 * @since 2.5.28
 	 *
 	 */
-	protected function pageArrayToArray(PageArray $items) {
+	protected function pageArrayToArray(PageArray $items): array {
 
 		$templates = [];
 		$ids = [];
@@ -1005,7 +1005,7 @@ class WireCache extends Wire {
 	 * @return array of arrays of cache info
 	 *
 	 */
-	public function getInfo($verbose = true, $names = [], $exclude = [], array $cols = []) {
+	public function getInfo($verbose = true, $names = [], $exclude = [], array $cols = []): array {
 
 		if(is_string($names)) $names = empty($names) ? [] : [$names];
 		if(is_string($exclude)) $exclude = empty($exclude) ? [] : [$exclude];

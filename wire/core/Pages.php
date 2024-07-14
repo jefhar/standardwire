@@ -2281,7 +2281,7 @@ class Pages extends Wire {
 	 * @see Pages::savePageOrFieldReady(), Pages::saveFieldReady()
 	 *
 	 */
-	public function ___saveReady(Page $page) {
+	public function ___saveReady(Page $page): array {
 		$data = [];
 		foreach($this->types as $manager) {
 			if(!$manager->hasValidTemplate($page)) continue;

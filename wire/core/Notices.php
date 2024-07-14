@@ -375,7 +375,7 @@ class Notices extends WireArray {
 	 * @return array
 	 * 
 	 */
-	public function sanitizeArray(array $a) {
+	public function sanitizeArray(array $a): array {
 		$sanitizer = $this->wire()->sanitizer; 
 		$b = [];
 		foreach($a as $key => $value) {

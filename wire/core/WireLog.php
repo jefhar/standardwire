@@ -221,7 +221,7 @@ class WireLog extends Wire {
 	 * @return array Indexed by log name
 	 * 
 	 */
-	public function getLogs($sortNewest = false) {
+	public function getLogs($sortNewest = false): array {
 		
 		$logs = [];
 		
@@ -278,7 +278,7 @@ class WireLog extends Wire {
   * @throws WireException
   * @since 3.0.214
   */
- public function getFiles() {
+ public function getFiles(): array {
 		
 		$dir = new DirectoryIterator($this->path());
 		$sanitizer = $this->wire()->sanitizer;
@@ -488,7 +488,7 @@ class WireLog extends Wire {
 	 * @since 3.0.214
 	 * 
 	 */
-	public function deleteAll($throw = false) {
+	public function deleteAll($throw = false): array {
 		
 		$deleted = [];
 		$failed = [];
@@ -536,7 +536,7 @@ class WireLog extends Wire {
 	 * @since 3.0.214
 	 * 
 	 */
-	public function pruneAll($days) {
+	public function pruneAll($days): array {
 		$result = [];
 		foreach($this->getFiles() as $name => $filename) {
 			$result[$name] = $this->prune($name, $days);

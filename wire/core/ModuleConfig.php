@@ -121,7 +121,7 @@ class ModuleConfig extends WireData {
 	 * @return array
 	 *
 	 */
-	private function identifyDefaults($a) {
+	private function identifyDefaults($a): array {
 		$defaults = [];
 		foreach($a as $name => $info) {
 			if(isset($info['name'])) $name = $info['name'];

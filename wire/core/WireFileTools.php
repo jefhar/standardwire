@@ -763,7 +763,7 @@ class WireFileTools extends Wire {
 	 * @since 3.0.96
 	 * 
 	 */
-	public function find($path, array $options = []) {
+	public function find($path, array $options = []): array {
 
 		$defaults = ['recursive' => 10, 'extensions' => [], 'excludeExtensions' => [], 'excludeDirNames' => [], 'excludeHidden' => false, 'allowDirs' => false, 'returnRelative' => false];
 
@@ -873,7 +873,7 @@ class WireFileTools extends Wire {
 	 * @see WireFileTools::zip()
 	 *
 	 */
-	public function unzip($file, $dst) {
+	public function unzip($file, $dst): array {
 
 		$dst = rtrim($dst, '/' . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
@@ -950,7 +950,7 @@ class WireFileTools extends Wire {
 	 * @see WireFileTools::unzip()
 	 *
 	 */
-	public function zip($zipfile, $files, array $options = []) {
+	public function zip($zipfile, $files, array $options = []): array {
 		
 		static $depth = 0;
 
@@ -1340,7 +1340,7 @@ class WireFileTools extends Wire {
 	 * @since 3.0.197
 	 *
 	 */
-	public function getAllCSV($filename, array $options = []) {
+	public function getAllCSV($filename, array $options = []): array {
 		$rows = [];
 		while(false !== ($row = $this->getCSV($filename, $options))) {
 			$rows[] = $row;

@@ -832,7 +832,7 @@ class PagesParents extends Wire {
 	 * @return array
 	 * 
 	 */
-	public function pageTests(Page $page) {
+	public function pageTests(Page $page): array {
 		
 		$id = (int) "$page";
 		$path = $page->path;

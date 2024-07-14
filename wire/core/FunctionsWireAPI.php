@@ -580,7 +580,7 @@ function wireSetting($name = '', $value = null) {
  * @return array
  * 
  */
-function _wireFunctionsAPI() {
+function _wireFunctionsAPI(): array {
 	$names = ['cache' => 'wireCache', 'config' => 'wireConfig', 'database' => 'wireDatabase', 'datetime' => 'wireDatetime', 'fields' => 'wireFields', 'files' => 'wireFiles', 'input' => 'wireInput', 'inputGet' => 'wireInputGet', 'inputPost' => 'wireInputPost', 'inputCookie' => 'wireInputCookie', 'languages' => 'wireLanguages', 'modules' => 'wireModules', 'page' => 'wirePage', 'pages' => 'wirePages', 'paths' => 'wirePaths', 'permissions' => 'wirePermissions', 'profiler' => 'wireProfiler', 'region' => 'wireRegion', 'roles' => 'wireRoles', 'sanitizer' => 'wireSanitizer', 'setting' => 'wireSetting', 'session' => 'wireSession', 'templates' => 'wireTemplates', 'urls' => 'wireUrls', 'user' => 'wireUser', 'users' => 'wireUsers'];
 	return $names;
 }

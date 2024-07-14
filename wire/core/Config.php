@@ -996,7 +996,7 @@ class Config extends WireData {
   * @return array Array of URLs updated with version strings where needed
   * @since 3.0.227
   */
- public function versionUrls($urls, $useVersion = null) {
+ public function versionUrls($urls, $useVersion = null): array {
 
 		$a = [];
 		$rootUrl = $this->urls->root;

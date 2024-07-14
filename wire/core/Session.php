@@ -1299,7 +1299,7 @@ class Session extends Wire implements IteratorAggregate {
 	 * @since 3.0.141
 	 * 
 	 */
-	public function getCookieNames() {
+	public function getCookieNames(): array {
 		$name = $this->config->sessionName;
 		$nameSecure = $this->config->sessionNameSecure;
 		if(empty($nameSecure)) $nameSecure = $this->config->sessionName . 's';

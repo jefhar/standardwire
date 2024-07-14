@@ -311,7 +311,7 @@ class PagesType extends Wire implements IteratorAggregate, Countable {
 	 * @return array
 	 * 
 	 */
-	protected function getLoadOptions(array $loadOptions = []) {
+	protected function getLoadOptions(array $loadOptions = []): array {
 		$_loadOptions = [
       'pageClass' => $this->getPageClass(),
       //'getNumChildren' => false,

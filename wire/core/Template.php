@@ -1506,7 +1506,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 * @since 3.0.176
 	 * 
 	 */
-	public function getTags() {
+	public function getTags(): array {
 		$tags = [];
 		foreach(explode(' ', $this->tags) as $tag) {
 			if(!strlen($tag)) continue;

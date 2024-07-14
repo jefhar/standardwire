@@ -146,7 +146,7 @@ class PagesTrash extends Wire {
 	 * @return array
 	 *
 	 */
-	public function getRestoreInfo(Page $page, $populateToPage = false) {
+	public function getRestoreInfo(Page $page, $populateToPage = false): array {
 
 		$info = ['restorable' => false, 'notes' => [], 'parent' => $this->pages->newNullPage(), 'parent_id' => 0, 'sort' => 0, 'name' => '', 'namePrevious' => ''];
 		

@@ -4332,7 +4332,7 @@ class Sanitizer extends Wire {
 	 * @throws WireException if an unknown $sanitizer method is given
 	 *
 	 */
-	public function ___array($value, $sanitizer = null, array $options = []) {
+	public function ___array($value, $sanitizer = null, array $options = []): array {
 		
 		static $depth = 0;
 		
@@ -4477,7 +4477,7 @@ class Sanitizer extends Wire {
 	 * @return array Array of integers
 	 *
 	 */
-	public function intArray($value, $options = []) {
+	public function intArray($value, $options = []): array {
 		if(is_bool($options)) {
 			$options = ['strict' => $options];
 		} else if(!is_array($options)) {
@@ -4626,7 +4626,7 @@ class Sanitizer extends Wire {
 	 * @since 3.0.160
 	 * 
 	 */
-	public function flatArray($value, $options = []) {
+	public function flatArray($value, $options = []): array {
 		
 		static $depth = 0;
 		
@@ -4740,7 +4740,7 @@ class Sanitizer extends Wire {
 	 * @since 3.0.160
 	 *
 	 */
-	public function wordsArray($value, array $options = []) {
+	public function wordsArray($value, array $options = []): array {
 
 		$defaults = ['minWordLength' => 1, 'maxWordLength' => 80, 'maxWords' => 0, 'keepHyphen' => false, 'keepUnderscore' => false, 'keepApostrophe' => true, 'keepNumbers' => true, 'keepNumberFormat' => true, 'keepChars' => [], 'stripTags' => true];
 
@@ -4862,7 +4862,7 @@ class Sanitizer extends Wire {
 	 * @return array
 	 * 
 	 */
-	protected function wordsArrayNumberReplacements(&$value, $prefix = 'REP') {
+	protected function wordsArrayNumberReplacements(&$value, $prefix = 'REP'): array {
 		
 		// keep floating point, negative, or thousands-separator numbers together
 		$replacements = [];
@@ -4938,7 +4938,7 @@ class Sanitizer extends Wire {
 	 * @return array
 	 *
 	 */
-	public function options(array $values, array $allowedValues = []) {
+	public function options(array $values, array $allowedValues = []): array {
 		$a = [];
 		foreach($values as $value) {
 			$key = array_search($value, $allowedValues);
@@ -5164,7 +5164,7 @@ class Sanitizer extends Wire {
   * @return array
   *
   */
- public function ___testAll(mixed $value) {
+ public function ___testAll(mixed $value): array {
 		$results = [];
 		$fails = [];
 		foreach($this->sanitizers as $method => $types) {

@@ -876,7 +876,7 @@ class WireHooks implements Stringable {
 	 *	[replace] => Set by the hook at runtime if it wants to prevent execution of the original hooked method.
 	 *
 	 */
-	public function runHooks(Wire $object, $method, $arguments, $type = 'method') {
+	public function runHooks(Wire $object, $method, $arguments, $type = 'method'): array {
 
 		$hookTimer = self::___debug ? $this->hookTimer($object, $method, $arguments) : null;
 		$realMethod = "___$method";

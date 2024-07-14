@@ -1023,7 +1023,7 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.106
 	 * 
 	 */
-	public function findByTag($tag, $getFieldNames = false) {
+	public function findByTag($tag, $getFieldNames = false): array {
 		$tags = $this->getTags(true);
 		$items = [];
 		if(!isset($tags[$tag])) return $items;
@@ -1046,7 +1046,7 @@ class Fields extends WireSaveableItems {
 	 * @since 3.0.194
 	 * 
 	 */
-	public function findByType($type, array $options = []) {
+	public function findByType($type, array $options = []): array {
 		
 		$defaults = [
       'inherit' => true,

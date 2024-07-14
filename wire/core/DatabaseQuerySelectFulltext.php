@@ -1081,7 +1081,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @since 3.0.162
 	 * 
 	 */
-	protected function getBooleanModeAlternateWords($word, &$booleanValue, $minWordLength, array $options) {
+	protected function getBooleanModeAlternateWords($word, &$booleanValue, $minWordLength, array $options): array {
 
 		$required = str_starts_with($booleanValue, '+') ? '+' : '';
 		$alternateWords = $this->getWordAlternates($word);

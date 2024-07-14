@@ -147,7 +147,7 @@ class ImageInspector extends WireData {
 	 * @todo there is already a checkOrientation method in ImageSizerEngine - do we need both?
 	 *
 	 */
-	protected function checkOrientation($filename) {
+	protected function checkOrientation($filename): array {
 		// first value is rotation-degree and second value is flip-mode: 0=NONE | 1=HORIZONTAL | 2=VERTICAL
 		$corrections = [
       '1' => [0, 0],

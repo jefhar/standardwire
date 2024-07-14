@@ -361,7 +361,7 @@ class RememberTfa extends Wire {
 	 * @return array
 	 *
 	 */
-	public function ___getFingerprintArray() {
+	public function ___getFingerprintArray(): array {
 		
 		$config = $this->wire()->config;
 		$agent = $_SERVER['HTTP_USER_AGENT'] ?? 'noagent';

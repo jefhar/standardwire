@@ -248,7 +248,7 @@ class WireInputData extends Wire implements ArrayAccess, IteratorAggregate, Coun
 	 * @since 3.0.163
 	 * 
 	 */
-	public function find($pattern, array $options = []) {
+	public function find($pattern, array $options = []): array {
 		
 		$defaults = [
       'type' => 'name',
@@ -346,7 +346,7 @@ class WireInputData extends Wire implements ArrayAccess, IteratorAggregate, Coun
 	 * @return array
 	 * 
 	 */
-	protected function cleanArray(array $a) {
+	protected function cleanArray(array $a): array {
 		static $depth = 1;
 
 		$maxDepth = (int) $this->wire()->config->wireInputArrayDepth;

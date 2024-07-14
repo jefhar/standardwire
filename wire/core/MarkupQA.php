@@ -475,7 +475,7 @@ class MarkupQA extends Wire {
 	 * @return array Returns array of replacements that were made (3.0.184+)
 	 * 
 	 */
-	public function wakeupLinks(&$value) {
+	public function wakeupLinks(&$value): array {
 
 		// if there's no data-pwid attribute present, then there's nothing to do here
 		if(!str_contains((string) $value, 'data-pwid=')) return [];

@@ -225,7 +225,7 @@ class PagesExportImport extends Wire {
 	 * @return array
 	 *
 	 */
-	public function pagesToArray(PageArray $items, array $options = []) {
+	public function pagesToArray(PageArray $items, array $options = []): array {
 	
 		/** @var Config $config */
 		$config = $this->wire('config');
@@ -319,7 +319,7 @@ class PagesExportImport extends Wire {
 	 * @return array
 	 *
 	 */
-	protected function pageToArray(Page $page, array $options) {
+	protected function pageToArray(Page $page, array $options): array {
 		
 		$defaults = ['exportTarget' => ''];
 		$options = array_merge($defaults, $options); 
@@ -1178,7 +1178,7 @@ class PagesExportImport extends Wire {
 	 * @return array
 	 *
 	 */
-	public function getImportInfo(array &$a) {
+	public function getImportInfo(array &$a): array {
 
 		$missingTemplateFields = [];
 		$missingFieldsTypes = [];

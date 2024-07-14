@@ -169,7 +169,7 @@ class PagesNames extends Wire {
 	 * @return array 
 	 * 
 	 */
-	public function nameAndNumber($name, $delimiter = '') {
+	public function nameAndNumber($name, $delimiter = ''): array {
 		if(empty($delimiter)) $delimiter = $this->delimiter;
 		$fail = [$name, 0];
 		if(!str_contains($name, $delimiter)) return $fail;

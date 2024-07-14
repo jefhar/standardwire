@@ -469,7 +469,7 @@ class WireDatabaseBackup {
 	 * @return array Returns associative array of information on success, empty array on failure
 	 *
 	 */
-	public function getFileInfo($filename) {
+	public function getFileInfo($filename): array {
 		
 		// all possible info (null values become integers when populated)
 		$info = [
@@ -1184,7 +1184,7 @@ class WireDatabaseBackup {
   * @return array of statements, indexed by table name. If $multi is true, it will be array of arrays.
   * @throws Exception if unable to open specified file
   */
- protected function findStatements($filename, $regex, $multi = true) {
+ protected function findStatements($filename, $regex, $multi = true): array {
 		$filename = $this->sanitizeFilename($filename); 
 		$fp = fopen($filename, 'r');
 		if(!$fp) throw new Exception("Unable to open: $filename"); 

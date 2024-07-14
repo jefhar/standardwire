@@ -256,7 +256,7 @@ class ModulesLoader extends ModulesClass {
 	 * @return array of skipped module names
 	 *
 	 */
-	public function triggerConditionalAutoload() {
+	public function triggerConditionalAutoload(): array {
 
 		// conditional autoload modules that are skipped (className => 1)
 		$skipped = [];

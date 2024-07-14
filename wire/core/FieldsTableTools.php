@@ -32,7 +32,7 @@ class FieldsTableTools extends Wire {
 	 *  if the `verbose` option is true, returned value also adds a `rows` index (array) containing contents of entire matching DB rows.
 	 *
 	 */
-	public function findDuplicateRows(Field $field, array $options = []) {
+	public function findDuplicateRows(Field $field, array $options = []): array {
 
 		$defaults = ['column' => 'data', 'value' => false, 'verbose' => false];
 

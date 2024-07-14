@@ -249,7 +249,7 @@ class Punycode {
 	 *
 	 * @return array Multi-dimension array with basic, non-basic and aggregated code points
 	 */
-	protected function listCodePoints($input) {
+	protected function listCodePoints($input): array {
 		$codePoints = ['all' => [], 'basic' => [], 'nonBasic' => []];
 		$length = mb_strlen($input, $this->encoding);
 		for($i = 0; $i < $length; $i++) {
