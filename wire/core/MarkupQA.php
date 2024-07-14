@@ -173,7 +173,7 @@ class MarkupQA extends Wire {
 	 * @return bool
 	 *
 	 */
-	public function verbose($set = null) {
+	public function verbose($set = null): bool {
 		if(is_bool($set)) $this->settings['verbose'] = $set;
 		return $this->settings['verbose'] && $this->page && $this->field ? true : false;
 	}

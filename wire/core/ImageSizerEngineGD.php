@@ -431,7 +431,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool
 	 * 
 	 */
-	protected function ___imSaveReady($im, $filename) {
+	protected function ___imSaveReady($im, $filename): bool {
 		if($this->webpOnly || $this->webpAdd) {
 			$this->webpResult = $this->imSaveWebP($im, $filename, $this->webpQuality);
 		}
@@ -449,7 +449,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return boolean true | false
 	 * 
 	 */
-	protected function imSaveWebP($im, $filename, $quality = 90) {
+	protected function imSaveWebP($im, $filename, $quality = 90): bool {
 		if(!function_exists('imagewebp')) return false;
 		$path_parts = pathinfo($filename);
 		$webpFilename = $path_parts['dirname'] . '/' . $path_parts['filename'] . '.webp';

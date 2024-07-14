@@ -1373,7 +1373,7 @@ class WireTextTools extends Wire {
 	 * @see https://www.php.net/manual/en/function.substr.php
 	 * 
 	 */
-	public function substr($str, $start, $length = null) {
+	public function substr($str, $start, $length = null): string {
 		return $this->mb ? mb_substr($str, $start, $length) : substr($str, $start, $length);
 	}
 
@@ -1465,7 +1465,7 @@ class WireTextTools extends Wire {
 	 * @see https://www.php.net/manual/en/function.strtolower.php
 	 * 
 	 */
-	public function strtolower($str) {
+	public function strtolower($str): string {
 		return $this->mb ? mb_strtolower($str) : strtolower($str);
 	}
 
@@ -1479,7 +1479,7 @@ class WireTextTools extends Wire {
 	 * @see https://www.php.net/manual/en/function.strtoupper.php
 	 *
 	 */
-	public function strtoupper($str) {
+	public function strtoupper($str): string {
 		return $this->mb ? mb_strtoupper($str) : strtoupper($str);
 	}
 

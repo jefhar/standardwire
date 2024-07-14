@@ -1255,7 +1255,7 @@ class WireDatabaseBackup {
   * @return bool Query result
   * @throws Exception if haltOnError, otherwise it populates $this->errors
   */
- protected function executeQuery($query, $options = []) {
+ protected function executeQuery($query, $options = []): bool {
 		$defaults = ['haltOnError' => false];
 		if(is_bool($options)) {
 			$defaults['haltOnError'] = $options;

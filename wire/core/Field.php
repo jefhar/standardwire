@@ -389,7 +389,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @return bool
 	 * 
 	 */
-	public function hasFlag($flag) {
+	public function hasFlag($flag): bool {
 		$flag = (int) $flag;
 		return ($this->settings['flags'] & $flag) ? true : false;
 	}

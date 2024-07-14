@@ -150,7 +150,7 @@ class FileLog extends Wire {
 	 * @return bool Success state: true if log written, false if not. 
 	 * 
 	 */
-	public function save($str, array $options = []) {
+	public function save($str, array $options = []): bool {
 		
 		$defaults = ['mergeDups' => 0, 'allowDups' => true, 'maxTries' => 20, 'maxTriesDelay' => 2000];
 

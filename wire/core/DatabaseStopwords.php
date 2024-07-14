@@ -35,7 +35,7 @@ class DatabaseStopwords {
 	 * @return bool
 	 *
 	 */
-	static public function has($word) {
+	static public function has($word): bool {
 		return in_array(strtolower($word), self::$stopwords); 
 	}
 

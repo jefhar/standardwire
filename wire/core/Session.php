@@ -1155,7 +1155,7 @@ class Session extends Wire implements IteratorAggregate {
 	 * @return bool
 	 * 
 	 */
-	public function ___allowLoginAttempt($name) {
+	public function ___allowLoginAttempt($name): bool {
 		return strlen($name) > 0;
 	}
 
@@ -1237,7 +1237,7 @@ class Session extends Wire implements IteratorAggregate {
 	 * @since 3.0.178
 	 * 
 	 */
-	protected function setCookie($name, $value, $expires = 0, $path = '/', $domain = null, $secure = false, $httponly = false, $samesite = 'Lax') {
+	protected function setCookie($name, $value, $expires = 0, $path = '/', $domain = null, $secure = false, $httponly = false, $samesite = 'Lax'): bool {
 		
 		if(empty($path)) $path = '/';
 	

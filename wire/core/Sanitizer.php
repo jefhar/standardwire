@@ -3987,7 +3987,7 @@ class Sanitizer extends Wire {
 	 * @return string Value you supplied if it matches, or blank string if it doesn't
 	 * 
 	 */
-	public function match($value, $regex) {
+	public function match($value, $regex): string {
 		if(!is_string($value)) $value = $this->string($value);
 		return preg_match($regex, $value) ? $value : '';
 	}

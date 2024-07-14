@@ -1179,7 +1179,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * #pw-internal
 	 *
 	 */
-	public function formatted() {
+	public function formatted(): bool {
 		return parent::get('formatted') ? true : false;
 	}
 

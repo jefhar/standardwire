@@ -879,7 +879,7 @@ function wireClassNamespace($className, $withClass = false, $strict = false) {
  * @return bool
  * 
  */
-function wireClassExists($className, $autoload = true) {
+function wireClassExists($className, $autoload = true): bool {
 	if(!is_object($className)) $className = wireClassName($className, true);
 	return class_exists($className, $autoload);
 }
@@ -1068,7 +1068,7 @@ function wireInstanceOf($instance, $className, $autoload = true) {
  * @return bool
  *
  */
-function wireIsCallable($var, $syntaxOnly = false, &$callableName = '') {
+function wireIsCallable($var, $syntaxOnly = false, &$callableName = ''): bool {
 	if(is_string($var)) $var = wireClassName($var, true);
 	return is_callable($var, $syntaxOnly, $callableName);
 }

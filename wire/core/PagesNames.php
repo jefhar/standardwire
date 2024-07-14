@@ -137,7 +137,7 @@ class PagesNames extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function hasAdjustedName(Page $page, $set = null) {
+	public function hasAdjustedName(Page $page, $set = null): bool {
 		if(is_bool($set)) $page->setQuietly('_hasAdjustedName', $set);
 		return $page->get('_hasAdjustedName') ? true : false;
 	}

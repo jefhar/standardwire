@@ -116,7 +116,7 @@ class CacheFile extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function exists() {
+	public function exists(): bool {
 		if(!$this->secondaryID) return is_dir($this->path); 
 		$filename = $this->buildFilename(); 	
 		return is_file($filename); 

@@ -274,7 +274,7 @@ class WireMailTools extends Wire {
 	 * @return bool True on success, false on fail.
 	 * 
 	 */
-	public function mail($to, $subject, $message, $headers = []) {
+	public function mail($to, $subject, $message, $headers = []): bool {
 		$from = '';
 		
 		if(is_string($headers)) {

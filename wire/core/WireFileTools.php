@@ -1875,7 +1875,7 @@ class WireFileTools extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function fileInPath($file, $path) {
+	public function fileInPath($file, $path): bool {
 		$file = $this->unixDirName($file); // use of unixDirName rather than unixFileName intentional
 		$path = $this->unixDirName($path);
 		if($file === $path || strlen($file) <= strlen($path)) return false;

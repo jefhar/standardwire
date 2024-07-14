@@ -101,7 +101,7 @@ class PagefileExtra extends WireData {
 	 * @return bool
 	 * 
 	 */
-	public function exists($clear = false) {
+	public function exists($clear = false): bool {
 		if($clear) clearstatcache();
 		return is_readable($this->filename());
 	}

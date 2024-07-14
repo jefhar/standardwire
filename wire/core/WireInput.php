@@ -1489,7 +1489,7 @@ class WireInput extends Wire {
 	 * @return string Return value is either "https" or "http"
 	 *
 	 */
-	public function scheme() {
+	public function scheme(): string {
 		return $this->wire()->config->https ? 'https' : 'http'; 
 	}
 

@@ -168,7 +168,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @since 3.0.120
 	 * 
 	 */
-	public function hasNextPagination() {
+	public function hasNextPagination(): bool {
 		return $this->getStart() + $this->count() < $this->getTotal();
 	}
 
@@ -181,7 +181,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @since 3.0.120
 	 * 
 	 */
-	public function hasPrevPagination() {
+	public function hasPrevPagination(): bool {
 		return $this->getStart() > 0;
 	}
 

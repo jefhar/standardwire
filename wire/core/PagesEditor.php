@@ -910,7 +910,7 @@ class PagesEditor extends Wire {
 	 * @see PagesEditor::setStatus(), PagesEditor::removeStatus()
 	 * 
 	 */
-	public function addStatus(Page $page, $status) {
+	public function addStatus(Page $page, $status): bool {
 		if(!$page->hasStatus($status)) $page->addStatus($status);
 		return $this->savePageStatus($page, $status) > 0;
 	}
@@ -928,7 +928,7 @@ class PagesEditor extends Wire {
 	 * @see PagesEditor::setStatus(), PagesEditor::addStatus(), PagesEditor::saveStatus()
 	 * 
 	 */
-	public function removeStatus(Page $page, $status) {
+	public function removeStatus(Page $page, $status): bool {
 		if($page->hasStatus($status)) $page->removeStatus($status);
 		return $this->savePageStatus($page, $status, false, true) > 0; 
 	}
@@ -943,7 +943,7 @@ class PagesEditor extends Wire {
 	 * @since 3.0.146
 	 * 
 	 */
-	public function saveStatus(Page $page) {
+	public function saveStatus(Page $page): bool {
 		return $this->savePageStatus($page, $page->status) > 0;
 	}
 

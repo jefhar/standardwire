@@ -1061,7 +1061,7 @@ class WireHttp extends Wire {
 	 * @return bool True if successful false if not
 	 *
 	 */
-	protected function downloadSocket($fromURL, $fp, array $options) {
+	protected function downloadSocket($fromURL, $fp, array $options): bool {
 		$this->resetResponse();
 		$this->resetRequest();
 	

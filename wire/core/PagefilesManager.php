@@ -486,7 +486,7 @@ class PagefilesManager extends Wire {
 	 * @return bool True if a path exists for the page, false if not. 
 	 *
 	 */
-	static public function hasPath(Page $page) {
+	static public function hasPath(Page $page): bool {
 		return is_dir(self::_path($page)); 
 	}
 

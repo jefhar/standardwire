@@ -727,7 +727,7 @@ class Config extends WireData {
 	 * @since 3.0.101
 	 * 
 	 */
-	public function phpVersion($minVersion) {
+	public function phpVersion($minVersion): bool {
 		return version_compare(PHP_VERSION, $minVersion) >= 0;
 	}
 
@@ -767,7 +767,7 @@ class Config extends WireData {
 	 * @since 3.0.129
 	 * 
 	 */
-	public function installedAfter($date) {
+	public function installedAfter($date): bool {
 		if(!ctype_digit("$date")) $date = strtotime($date);
 		return $this->installed > $date; 
 	}
@@ -783,7 +783,7 @@ class Config extends WireData {
 	 * @since 3.0.129
 	 *
 	 */
-	public function installedBefore($date) {
+	public function installedBefore($date): bool {
 		if(!ctype_digit("$date")) $date = strtotime($date);
 		return $this->installed < $date; 
 	}

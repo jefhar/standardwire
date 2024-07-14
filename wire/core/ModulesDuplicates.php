@@ -71,7 +71,7 @@ class ModulesDuplicates extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function hasDuplicate($className, $pathname = '') {
+	public function hasDuplicate($className, $pathname = ''): bool {
 		if(!isset($this->duplicates[$className])) return false;
 		if($pathname) {
 			$rootPath = $this->wire()->config->paths->root;

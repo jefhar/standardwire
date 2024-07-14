@@ -845,7 +845,7 @@ class WireCache extends Wire {
 	 * @return bool
 	 *
 	 */
-	protected function maintenanceGeneral() {
+	protected function maintenanceGeneral(): bool {
 
 		$rows = $this->cacher()->find(['get' => ['name'], 'expiresMode' => 'AND', 'expires' => ['<= ' . date(self::dateFormat, time()), '> ' . self::expireNever]]);
 
@@ -867,7 +867,7 @@ class WireCache extends Wire {
 	 * @return bool
 	 *
 	 */
-	protected function maintenancePage(Page $page) {
+	protected function maintenancePage(Page $page): bool {
 
 		$qty = 0;
 
@@ -915,7 +915,7 @@ class WireCache extends Wire {
 	 * @return bool Returns true if any caches were deleted, false if not
 	 *
 	 */
-	protected function maintenanceTemplate(Template $template) {
+	protected function maintenanceTemplate(Template $template): bool {
 
 		$rows = $this->cacher()->find(['get' => ['name'], 'expiresMode' => 'OR', 'expires' => ['= ' . self::expireSave, '= ' . date(self::dateFormat, $template->id)]]);
 

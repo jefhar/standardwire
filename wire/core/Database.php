@@ -195,7 +195,7 @@ class Database extends mysqli implements WireDatabase {
 	 *
 	 */
 	#[Override]
- public function isOperator($str) {
+ public function isOperator($str): bool {
 		return in_array($str, ['=', '<', '>', '>=', '<=', '<>', '!=', '&', '~', '|', '^', '<<', '>>']);
 	}
 

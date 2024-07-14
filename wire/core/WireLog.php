@@ -303,7 +303,7 @@ class WireLog extends Wire {
 	 * @since 3.0.176
 	 * 
 	 */
-	public function exists($name) {
+	public function exists($name): bool {
 		$filename = $this->getFilename($name);
 		return is_file($filename);
 	}

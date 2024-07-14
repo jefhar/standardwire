@@ -1299,7 +1299,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
   * @throws PDOException
   * @since 3.0.185
   */
- public function renameColumn($table, $oldName, $newName) {
+ public function renameColumn($table, $oldName, $newName): bool {
 		$columns = [$oldName => $newName];
 		return $this->renameColumns($table, $columns) > 0;
 	}
@@ -1629,7 +1629,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @since 3.0.185
 	 * 
 	 */
-	public function getServerType() {
+	public function getServerType(): string {
 		$serverType = '';
 		$serverTypes = ['MariaDB', 'Percona', 'OurDelta', 'Drizzle', 'MySQL'];
 		foreach(['version', 'version_comment'] as $name) {

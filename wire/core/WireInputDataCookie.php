@@ -450,7 +450,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @return bool
 	 * 
 	 */
-	protected function allowSetCookie($name) {
+	protected function allowSetCookie($name): bool {
 		if(empty($this->skipCookies)) $this->skipCookies = $this->wire()->session->getCookieNames();
 		return in_array($name, $this->skipCookies) ? false : true;
 	}

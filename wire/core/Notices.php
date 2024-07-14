@@ -342,7 +342,7 @@ class Notices extends WireArray {
 	 * @return bool
 	 * 
 	 */
-	public function hasErrors() {
+	public function hasErrors(): bool {
 		$numErrors = 0;
 		foreach($this as $notice) {
 			if($notice instanceof NoticeError) $numErrors++;
@@ -356,7 +356,7 @@ class Notices extends WireArray {
 	 * @return bool
 	 * 
 	 */
-	public function hasWarnings() {
+	public function hasWarnings(): bool {
 		$numWarnings = 0;
 		foreach($this as $notice) {
 			if($notice instanceof NoticeWarning) $numWarnings++;
