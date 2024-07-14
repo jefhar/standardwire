@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\FieldtypeLanguageInterface;
+
 require_once(dirname(__FILE__) . '/FieldtypeLanguageInterface.php'); 
 
 /**

@@ -1,6 +1,7 @@
 <?php namespace ProcessWire;
 
 use ProcessWire\Interfaces\ConfigurableModule;
+use ProcessWire\Interfaces\FieldtypeLanguageInterface;
 
 /**
  * Main multi-language support module
