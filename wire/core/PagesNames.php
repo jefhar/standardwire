@@ -589,7 +589,7 @@ class PagesNames extends Wire {
 	 * @return int Returns quantity of pages using name, or 0 if name not in use.
 	 *
 	 */
-	public function pageNameExists($name, array $options = []) {
+	public function pageNameExists($name, array $options = []): int {
 
 		$defaults = ['page' => null, 'parent' => null, 'language' => null, 'multilang' => false];
 

@@ -885,7 +885,7 @@ class WireRandom extends Wire {
 	 * @return int
 	 *
 	 */
-	protected function _strlen($s) {
+	protected function _strlen($s): int {
 		return function_exists('mb_strlen') ? mb_strlen($s, '8bit') : strlen($s);
 	}
 }

@@ -599,7 +599,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 *
 	 */
 	#[Override]
- public function ___send() {
+ public function ___send(): int {
 
 		// prep header and body
 		$this->multipartBoundary(true);

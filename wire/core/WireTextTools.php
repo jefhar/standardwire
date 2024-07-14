@@ -744,7 +744,7 @@ class WireTextTools extends Wire {
 	 * @return int
 	 * 
 	 */
-	public function getVisibleLength($str) {
+	public function getVisibleLength($str): int {
 		if(strpos($str, '>')) {
 			$str = strip_tags($str);
 		}
@@ -1451,7 +1451,7 @@ class WireTextTools extends Wire {
 	 * @see https://www.php.net/manual/en/function.strlen.php
 	 * 
 	 */
-	public function strlen($str) {
+	public function strlen($str): int {
 		return $this->mb ? mb_strlen($str) : strlen($str);
 	}
 
@@ -1494,7 +1494,7 @@ class WireTextTools extends Wire {
 	 * @see https://www.php.net/manual/en/function.substr-count.php
 	 * 
 	 */
-	public function substrCount($haystack, $needle) {
+	public function substrCount($haystack, $needle): int {
 		return $this->mb ? mb_substr_count($haystack, $needle) : substr_count($haystack, $needle); 
 	}
 

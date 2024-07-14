@@ -454,7 +454,7 @@ class ModulesFiles extends ModulesClass {
 	 * @return int Returns number of files that were added
 	 *
 	 */
-	public function loadModuleFileAssets($module) {
+	public function loadModuleFileAssets($module): int {
 
 		$class = $this->modules->getModuleClass($module);
 		static $classes = [];

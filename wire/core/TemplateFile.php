@@ -575,7 +575,7 @@ class TemplateFile extends WireData {
 	 * @return int Number of output buffers cleaned
 	 * 
 	 */
-	public static function clearAll() {
+	public static function clearAll(): int {
 		$n = 0;
 		if(self::$obStartLevel !== null) {
 			while(ob_get_level() > self::$obStartLevel) {

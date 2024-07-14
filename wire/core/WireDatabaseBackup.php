@@ -1156,7 +1156,7 @@ class WireDatabaseBackup {
   * @throws Exception
   * @since 3.0.130
   */
- public function dropAllTables() {
+ public function dropAllTables(): int {
 		
 		$database = $this->getDatabase();
 		$tables = $this->getAllTables(false, false);

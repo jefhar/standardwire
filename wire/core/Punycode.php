@@ -271,7 +271,7 @@ class Punycode {
 	 *
 	 * @return integer
 	 */
-	protected function charToCodePoint($char) {
+	protected function charToCodePoint($char): int {
 		$code = ord($char[0]);
 		if($code < 128) {
 			return $code;

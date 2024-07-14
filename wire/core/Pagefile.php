@@ -1191,7 +1191,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @since 3.0.154
 	 * 
 	 */
-	public function filemtime($reset = false) {
+	public function filemtime($reset = false): int {
 		if($reset) {} // @todo
 		return (int) @filemtime($this->filename());
 	}
@@ -1203,7 +1203,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return int
 	 *
 	 */
-	public function filesize($reset = false) {
+	public function filesize($reset = false): int {
 		if($reset) {} // @todo
 		$filesize = (int) @filesize($this->filename());
 		return $filesize;

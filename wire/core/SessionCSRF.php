@@ -82,7 +82,7 @@ class SessionCSRF extends Wire {
 	 * @return int
 	 *
 	 */
-	public function getTokenTime($id = '') {
+	public function getTokenTime($id = ''): int {
 		$name = $this->getTokenName($id);
 		$time = (int) substr($name, strrpos($name, 'X')+1); 
 		return $time; 

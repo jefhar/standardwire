@@ -124,7 +124,7 @@ class WireNumberTools extends Wire {
 	 * @since 3.0.214
 	 * 
 	 */
-	public function strToBytes($value, $unit = null) {
+	public function strToBytes($value, $unit = null): int {
 		
 		if(is_int($value) && $unit === null) return $value;
 	

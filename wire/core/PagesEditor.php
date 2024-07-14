@@ -1508,7 +1508,7 @@ class PagesEditor extends Wire {
 	 * @return int
 	 * 
 	 */
-	public function sortRebuild(Page $parent) {
+	public function sortRebuild(Page $parent): int {
 		
 		if(!$parent->id || !$parent->numChildren) return 0;
 		$database = $this->wire()->database;

@@ -129,7 +129,7 @@ class PWGIFLZW {
 		}
 		return $Code;
 	}
-	function GetCode(&$data, $bInit) {
+	function GetCode(&$data, $bInit): int {
 		if($bInit) {
 			$this->CurBit   = 0;
 			$this->LastBit  = 0;

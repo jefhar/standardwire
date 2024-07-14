@@ -196,7 +196,7 @@ class Users extends PagesType {
 	 * @since 3.0.176
 	 * 
 	 */
-	public function setAdminThemeByRole($adminTheme, Role $role) {
+	public function setAdminThemeByRole($adminTheme, Role $role): int {
 		if(!str_starts_with("$adminTheme", 'AdminTheme')) throw new WireException('Invalid admin theme');
 		$moduleId = $this->wire()->modules->getModuleID($adminTheme); 
 		if(!$moduleId) throw new WireException('Unknown admin theme');

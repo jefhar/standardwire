@@ -1256,7 +1256,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
   * @since 3.0.185
   * @throws PDOException
   */
- public function renameColumns($table, array $columns) {
+ public function renameColumns($table, array $columns): int {
 		
 		$qty = 0;
 		
@@ -1728,7 +1728,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @return int
 	 * 
 	 */
-	public function getMaxIndexLength() {
+	public function getMaxIndexLength(): int {
 		$max = 250; 
 		if($this->charset === 'utf8mb4') {
 			if($this->engine === 'innodb') {

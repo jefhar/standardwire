@@ -134,7 +134,7 @@ class NotificationArray extends WireArray {
 	 * @return string
 	 * 
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		$out = '';
 		foreach($this as $item) $out .= "\n$item"; 
 		return trim($out); 

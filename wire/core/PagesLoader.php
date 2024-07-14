@@ -1927,7 +1927,7 @@ class PagesLoader extends Wire {
 	 * @since 3.0.172
 	 * 
 	 */
-	public function getNumChildren($page) {
+	public function getNumChildren($page): int {
 		$pageId = $page instanceof Page ? $page->id : (int) $page;
 		$sql = 'SELECT COUNT(*) FROM pages WHERE parent_id=:id';
 		$query = $this->wire()->database->prepare($sql);

@@ -680,7 +680,7 @@ class WireHttp extends Wire {
 
 		// called by CURL for each header and populates the $responseHeaders var
 		$responseHeaders = [];
-		curl_setopt($curl, CURLOPT_HEADERFUNCTION, function($curl, $header) use(&$responseHeaders) {
+		curl_setopt($curl, CURLOPT_HEADERFUNCTION, function($curl, $header) use(&$responseHeaders): int {
 			if($curl) { /* ignore */ }
 			$length = strlen($header);
 			$header = explode(':', $header, 2);
@@ -1435,7 +1435,7 @@ class WireHttp extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	public function ___sendFile($filename, array $options = [], array $headers = []) {
+	public function ___sendFile($filename, array $options = [], array $headers = []): int {
 
 		$defaultOptions = [
       // boolean: halt program execution after file send
@@ -1950,7 +1950,7 @@ class WireHttp extends Wire {
 	 * @return float
 	 *
 	 */
-	public function getTimeout() {
+	public function getTimeout(): float {
 		return $this->timeout === null ? self::defaultTimeout : (float) $this->timeout; 
 	}
 

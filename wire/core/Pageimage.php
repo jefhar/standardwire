@@ -1321,7 +1321,7 @@ class Pageimage extends Pagefile {
 	 * @since 3.0.154
 	 * 
 	 */
-	public function ratio($precision = 2) {
+	public function ratio($precision = 2): float {
 		$width = $this->width();
 		$height = $this->height();
 		if($width === $height) return 1.0;

@@ -140,7 +140,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return int
 	 *
 	 */
-	public function getNumTemplates(Fieldgroup $fieldgroup) {
+	public function getNumTemplates(Fieldgroup $fieldgroup): int {
 		$templates = $this->wire()->templates;
 		$num = 0;
 		
@@ -409,7 +409,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 * @return int Number of field contexts saved
 	 * 
 	 */
-	public function ___saveContext(Fieldgroup $fieldgroup) {
+	public function ___saveContext(Fieldgroup $fieldgroup): int {
 		$contexts = $fieldgroup->getFieldContextArray();
 		$numSaved = 0;
 		foreach($contexts as $fieldID => $context) {

@@ -237,7 +237,7 @@ class CommentArray extends PaginatedArray implements WirePaginatable {
 	 * @return bool
 	 *
 	 */
-	public function isIdentical(WireArray $items, $strict = true) {
+	public function isIdentical(WireArray $items, $strict = true): bool {
 		$isIdentical = parent::isIdentical($items, $strict);
 		if($isIdentical && $strict && $items instanceof CommentArray) {
 			if(((string) $this->getPage()) != ((string) $items->getPage())) return false;

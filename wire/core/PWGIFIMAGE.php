@@ -113,7 +113,7 @@ class PWGIFIMAGE {
 		}
 		return true;
 	}
-	private function w2i($str) {
+	private function w2i($str): int {
 		return ord(substr((string) $str, 0, 1)) + (ord(substr((string) $str, 1, 1)) << 8);
 	}
 	function deInterlace() {

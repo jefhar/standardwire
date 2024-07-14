@@ -112,7 +112,7 @@ class PagefileExtra extends WireData {
 	 * @return int
 	 * 
 	 */
-	public function filesize() {
+	public function filesize(): int {
 		return (int) @filesize($this->filename());
 	}
 

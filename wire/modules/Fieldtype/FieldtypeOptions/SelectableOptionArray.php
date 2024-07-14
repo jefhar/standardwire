@@ -117,7 +117,7 @@ class SelectableOptionArray extends WireArray {
 	 * @return string
 	 * 
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->implode('|', 'id'); 
 	}
 
@@ -199,7 +199,7 @@ class SelectableOptionArray extends WireArray {
 	 * @return bool
 	 *
 	 */
-	public function isIdentical(WireArray $items, $strict = true) {
+	public function isIdentical(WireArray $items, $strict = true): bool {
 		$isIdentical = parent::isIdentical($items, false); // force non-strict
 		/** @var SelectableOptionArray $items */
 		if($isIdentical && $strict) {

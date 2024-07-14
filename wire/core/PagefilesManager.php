@@ -728,7 +728,7 @@ class PagefilesManager extends Wire {
 	 * @return int
 	 *
 	 */ 
-	static public function dirToPageID($dir) {
+	static public function dirToPageID($dir): int {
 
 		$parts = explode('/', $dir); 
 		$pageID = '';

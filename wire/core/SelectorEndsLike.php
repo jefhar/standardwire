@@ -9,7 +9,7 @@ class SelectorEndsLike extends SelectorEnds {
 	#[Override]
  public static function getOperator() { return '%$='; }
 	#[Override]
- public static function getCompareType() {
+ public static function getCompareType(): int {
 		return
 			Selector::compareTypeFind |
 			Selector::compareTypeAll |

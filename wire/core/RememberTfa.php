@@ -233,7 +233,7 @@ class RememberTfa extends Wire {
 	 * @return int
 	 * 
 	 */
-	public function disable($names) {
+	public function disable($names): int {
 		if(!is_array($names)) $names = [$names]; 
 		$qty = 0;
 		foreach($names as $name) {

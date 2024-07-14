@@ -288,7 +288,7 @@ class WireDataDB extends WireData implements Countable {
 	 * @return int Number of rows copied
 	 * 
 	 */
-	public function copyTo($newSourceID) {
+	public function copyTo($newSourceID): int {
 		if(!$this->count()) return 0;
 		$sourceID = $this->sourceID;
 		if($newSourceID == $sourceID) return 0;

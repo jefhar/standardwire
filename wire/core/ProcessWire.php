@@ -980,7 +980,7 @@ class ProcessWire extends Wire {
 	 * @return int
 	 * 
 	 */
-	protected static function addInstance(ProcessWire $wire) {
+	protected static function addInstance(ProcessWire $wire): int {
 		$id = 0;
 		while(isset(self::$instances[$id])) $id++;
 		self::$instances[$id] = $wire;
@@ -1007,7 +1007,7 @@ class ProcessWire extends Wire {
 	 * @return int
 	 * 
 	 */
-	public static function getNumInstances() {
+	public static function getNumInstances(): int {
 		return count(self::$instances);
 	}
 

@@ -499,7 +499,7 @@ class Templates extends WireSaveableItems {
 	 * @return int Total number of pages in use by given Template
 	 *
 	 */
-	public function getNumPages(Template $tpl) {
+	public function getNumPages(Template $tpl): int {
 		$database = $this->wire()->database;
 		$query = $database->prepare("SELECT COUNT(*) AS total FROM pages WHERE templates_id=:template_id"); // QA
 		$query->bindValue(":template_id", $tpl->id, PDO::PARAM_INT);

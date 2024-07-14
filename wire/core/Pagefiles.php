@@ -875,7 +875,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return int Number of files removed
 	 * 
 	 */
-	public function deleteAllTemp() {
+	public function deleteAllTemp(): int {
 		$removed = [];
 		foreach($this as $pagefile) {
 			/** @var Pagefile $pagefile */
@@ -918,7 +918,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 *
 	 */
 	#[Override]
- public function isIdentical(WireArray $items, $strict = true) {
+	public function isIdentical(WireArray $items, $strict = true): bool {
 		if($strict) return $this === $items;
 		return parent::isIdentical($items, $strict);
 	}

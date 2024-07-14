@@ -74,7 +74,7 @@ class PagesExportImport extends Wire {
 	 * @return int Number of files/dirs removed
 	 * 
 	 */
-	public function cleanupFiles($maxAge = 3600) {
+	public function cleanupFiles($maxAge = 3600): int {
 
 		/** @var WireFileTools $files */
 		$files = $this->wire('files');

@@ -4999,7 +4999,7 @@ class Sanitizer extends Wire {
 	 * @since 3.0.125
 	 *
 	 */
-	public function bit($value) {
+	public function bit($value): int {
 		return $this->bool($value) ? 1 : 0;
 	}
 

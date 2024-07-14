@@ -1382,7 +1382,7 @@ class PagesPathFinder extends Wire {
 	 * @return int
 	 *
 	 */
-	protected function strlen($str) {
+	protected function strlen($str): int {
 		return function_exists('mb_strlen') ? mb_strlen($str) : strlen($str);
 	}
 

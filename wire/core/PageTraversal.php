@@ -188,7 +188,7 @@ class PageTraversal {
 	 * @return int Number of parents
 	 * 
 	 */
-	public function numParents(Page $page, $selector = '') {
+	public function numParents(Page $page, $selector = ''): int {
 		$num = 0;
 		$parent = $page->parent();
 		while($parent && $parent->id) {

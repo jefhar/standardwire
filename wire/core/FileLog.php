@@ -440,7 +440,7 @@ class FileLog extends Wire {
 	 * @return int
 	 * 
 	 */
-	public function getTotalLines() {
+	public function getTotalLines(): int {
 
 		if(!is_readable($this->logFilename)) return 0;
 		

@@ -151,7 +151,7 @@ class PagesLoaderCache extends Wire {
 	 * @return int Number of pages uncached
 	 *
 	 */
-	public function uncacheAll(Page $page = null, array $options = []) {
+	public function uncacheAll(Page $page = null, array $options = []): int {
 
 		if($page) {} // to ignore unused parameter inspection
 		$user = $this->wire()->user;
@@ -192,7 +192,7 @@ class PagesLoaderCache extends Wire {
 	 * @since 3.0.198
 	 * 
 	 */
-	public function uncacheGroup($groupName, array $options = []) {
+	public function uncacheGroup($groupName, array $options = []): int {
 		$qty = 0;
 		if(!isset($this->cacheGroups[$groupName])) return 0;
 		foreach($this->cacheGroups[$groupName] as $pageId) {

@@ -244,7 +244,7 @@ class Notices extends WireArray {
 	 * @return int Number of Notices loaded
 	 * 
 	 */
-	protected function loadStoredNotices() {
+	protected function loadStoredNotices(): int {
 		
 		$session = $this->wire()->session;
 		$items = $session->getFor($this, 'items');
@@ -411,7 +411,7 @@ class Notices extends WireArray {
 	 * @return int Number of notices moved
 	 * 
 	 */
-	public function move(Wire $from, Wire $to, array $options = []) {
+	public function move(Wire $from, Wire $to, array $options = []): int {
 		$n = 0;
 		$types = $options['types'] ?? ['errors', 'warnings', 'messages']; 
 		foreach($types as $type) {

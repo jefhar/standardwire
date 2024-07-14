@@ -693,7 +693,7 @@ class PagesParents extends Wire {
 	 * @since 3.0.212
 	 * 
 	 */
-	protected function addParent(Page $page) {
+	protected function addParent(Page $page): int {
 		
 		// if page has no children it does not need pages_parents entries
 		if(!$page->numChildren) return 0;

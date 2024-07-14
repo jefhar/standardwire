@@ -1296,7 +1296,7 @@ class Modules extends WireArray {
 	 * @return int
 	 *
 	 */
-	public function getModuleID($class) {
+	public function getModuleID($class): int {
 		
 		$id = 0;
 		

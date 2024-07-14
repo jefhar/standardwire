@@ -1277,7 +1277,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @return int
 	 * 
 	 */
-	protected function strlen($value) {
+	protected function strlen($value): int {
 		if(function_exists('mb_strlen')) {
 			return mb_strlen($value);
 		} else {

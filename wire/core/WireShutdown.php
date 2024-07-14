@@ -348,7 +348,7 @@ class WireShutdown extends Wire {
 	 * @return int
 	 * 
 	 */
-	protected function sendFatalHeader() {
+	protected function sendFatalHeader(): int {
 		include_once(__DIR__ . '/WireHttp.php');
 		$http = new WireHttp();
 		$codes = $http->getHttpCodes();

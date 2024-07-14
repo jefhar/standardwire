@@ -876,7 +876,7 @@ class MarkupQA extends Wire {
 	 * @return int Returns 0 on no change, negative count on broken, positive count on fixed
 	 *
 	 */
-	protected function checkImgExists(Pageimage $pagefile, $img, $src, &$value) {
+	protected function checkImgExists(Pageimage $pagefile, $img, $src, &$value): int {
 		
 
 		$basename = basename((string) $src);

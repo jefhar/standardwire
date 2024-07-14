@@ -377,7 +377,7 @@ class FieldsTableTools extends Wire {
 	 * @throws WireException
 	 * 
 	 */
-	public function valueExists(Field $field, $value, $col = 'data') {
+	public function valueExists(Field $field, $value, $col = 'data'): int {
 		$database = $this->wire()->database;
 		$table = $database->escapeTable($field->getTable());
 		if($col !== 'data') $col = $database->escapeCol($this->wire()->sanitizer->fieldName($col)); 
