@@ -1,8 +1,10 @@
 <?php namespace ProcessWire;
 
-use PDO;
-use ReflectionMethod;
 use Override;
+use PDO;
+use ProcessWire\Interfaces\_Module;
+use ReflectionMethod;
+
 /**
  * ProcessWire Modules: Configs
  *

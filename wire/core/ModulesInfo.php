@@ -2,6 +2,8 @@
 
 use Exception;
 use Override;
+use ProcessWire\Interfaces\_Module;
+
 /**
  * ProcessWire Modules: Info
  *

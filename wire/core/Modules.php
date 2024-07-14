@@ -1,8 +1,10 @@
 <?php namespace ProcessWire;
 
-use Override;
 use Exception;
+use Override;
 use PDO;
+use ProcessWire\Interfaces\_Module;
+
 /**
  * ProcessWire Modules
  *

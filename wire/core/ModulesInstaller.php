@@ -1,10 +1,12 @@
 <?php namespace ProcessWire;
 
-use PDO;
-use Exception;
-use PDOException;
 use DirectoryIterator;
+use Exception;
+use PDO;
+use PDOException;
+use ProcessWire\Interfaces\_Module;
 use ReflectionClass;
+
 /**
  * ProcessWire Modules: Installer
  *
