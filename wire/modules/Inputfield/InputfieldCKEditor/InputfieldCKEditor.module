@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\ConfigModule;
+
 /**
  * ProcessWire Inputfield for CKEditor
  *

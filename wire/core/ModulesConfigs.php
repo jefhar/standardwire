@@ -3,6 +3,7 @@
 use Override;
 use PDO;
 use ProcessWire\Interfaces\_Module;
+use ProcessWire\Interfaces\ConfigModule;
 use ReflectionMethod;
 
 /**
