@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasArrayValue;
+use ProcessWire\Interfaces\InputfieldHasSortableValue;
+
 /**
  * ProcessWire Page Auto Completion select widget
  *

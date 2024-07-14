@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasArrayValue;
+use ProcessWire\Interfaces\InputfieldHasSortableValue;
+
 /**
  * AsmSelect is a sortable multiple-select Inputfield
  * 

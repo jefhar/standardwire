@@ -1,6 +1,8 @@
 <?php namespace ProcessWire;
 
 use Override;
+use ProcessWire\Interfaces\LanguagesValueInterface;
+
 /**
  * ProcessWire Selector base type and implementation for various Selector types
  *

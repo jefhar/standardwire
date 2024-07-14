@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasArrayValue;
+use ProcessWire\Interfaces\InputfieldHasSelectableOptions;
+
 /**
  * Base for selection form inputs, which by default behaves as a regular <select>
  *

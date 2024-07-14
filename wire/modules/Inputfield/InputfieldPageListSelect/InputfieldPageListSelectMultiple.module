@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasArrayValue;
+use ProcessWire\Interfaces\InputfieldHasSortableValue;
+use ProcessWire\Interfaces\InputfieldPageListSelection;
+
 /**
  * ProcessWire Page List Select Multiple Inputfield module
  *

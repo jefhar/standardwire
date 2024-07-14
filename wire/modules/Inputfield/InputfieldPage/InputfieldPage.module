@@ -1,6 +1,12 @@
 <?php namespace ProcessWire;
 
 use ProcessWire\Interfaces\ConfigurableModule;
+use ProcessWire\Interfaces\InputfieldHasArrayValue;
+use ProcessWire\Interfaces\InputfieldHasSelectableOptions;
+use ProcessWire\Interfaces\InputfieldHasSortableValue;
+use ProcessWire\Interfaces\InputfieldPageListSelection;
+use ProcessWire\Interfaces\InputfieldSupportsArrayValue;
+use ProcessWire\Interfaces\InputfieldSupportsPageSelector;
 
 /**
  * An Inputfield for handling relational Page inputs

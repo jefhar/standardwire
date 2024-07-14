@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldPageListSelection;
+
 /**
  * A Page List Selector for selecting a single page
  * 

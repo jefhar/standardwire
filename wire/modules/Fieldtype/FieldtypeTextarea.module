@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\LanguagesValueInterface;
+
 /**
  * ProcessWire Textarea Fieldtype
  *
@@ -497,4 +499,3 @@ class FieldtypeTextarea extends FieldtypeText {
 	}
 
 }
-

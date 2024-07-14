@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasArrayValue;
+
 /**
  * InputfieldForm: An Inputfield for containing form elements
  *

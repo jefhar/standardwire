@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasSortableValue;
+use ProcessWire\Interfaces\InputfieldItemList;
+
 /**
  * Class InputfieldImage
  *

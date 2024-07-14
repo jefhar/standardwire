@@ -2,6 +2,7 @@
 
 use ProcessWire\Interfaces\ConfigurableModule;
 use ProcessWire\Interfaces\FieldtypeLanguageInterface;
+use ProcessWire\Interfaces\LanguagesValueInterface;
 
 /**
  * Main multi-language support module

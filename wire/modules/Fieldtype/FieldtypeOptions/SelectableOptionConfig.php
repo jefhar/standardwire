@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasArrayValue;
+
 /**
  * Inputfields and processing for Select Options Fieldtype
  *
@@ -244,4 +246,3 @@ class SelectableOptionConfig extends Wire {
 		return $f;
 	}
 }
-

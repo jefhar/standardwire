@@ -1,4 +1,7 @@
-<?php namespace ProcessWire;
+<?php namespace ProcessWire\Interfaces;
+
+use ProcessWire\Inputfield;
+use ProcessWire\Language;
 
 /**
  * Interface LanguagesValueInterface

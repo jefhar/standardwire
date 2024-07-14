@@ -1,5 +1,11 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasSelectableOptions;
+use ProcessWire\Interfaces\InputfieldHasSortableValue;
+use ProcessWire\Interfaces\InputfieldHasTextValue;
+use ProcessWire\Interfaces\InputfieldSupportsArrayValue;
+use ProcessWire\Interfaces\InputfieldSupportsPageSelector;
+
 /**
  * An Inputfield for handling predefined or user input tags
  * 

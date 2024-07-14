@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasArrayValue;
+
 if(!defined("PROCESSWIRE")) die();
 
 class AdminThemeUikitConfigHelper extends Wire {

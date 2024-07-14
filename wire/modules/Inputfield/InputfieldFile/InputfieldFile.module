@@ -1,5 +1,9 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasSortableValue;
+use ProcessWire\Interfaces\InputfieldItemList;
+use ProcessWire\Interfaces\LanguagesValueInterface;
+
 /**
  * An Inputfield for handling file uploads
  * 

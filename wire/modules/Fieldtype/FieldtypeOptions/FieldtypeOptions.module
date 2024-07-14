@@ -1,5 +1,8 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldHasSelectableOptions;
+use ProcessWire\Interfaces\InputfieldHasSortableValue;
+
 /**
  * ProcessWire Select Options Fieldtype
  *
