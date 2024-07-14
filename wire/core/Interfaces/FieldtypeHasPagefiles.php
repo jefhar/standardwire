@@ -1,4 +1,9 @@
-<?php namespace ProcessWire;
+<?php namespace ProcessWire\Interfaces;
+
+use ProcessWire\Field;
+use ProcessWire\Page;
+use ProcessWire\Pagefile;
+use ProcessWire\Pagefiles;
 
 /**
  * Indicates Fieldtype manages Pagefile/Pageimage objects

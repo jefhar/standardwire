@@ -2,6 +2,7 @@
 
 use ProcessWire\Interfaces\ConfigurableModule;
 use ProcessWire\Interfaces\FieldtypeHasFiles;
+use ProcessWire\Interfaces\FieldtypeHasPagefiles;
 
 /**
  * ProcessWire File Fieldtype
