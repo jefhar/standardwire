@@ -1,4 +1,4 @@
-<?php namespace ProcessWire;
+<?php namespace ProcessWire\Interfaces;
 
 /**
  * For classes that may have their data exported to an array 

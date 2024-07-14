@@ -1,7 +1,9 @@
 <?php namespace ProcessWire;
 
-use Override;
 use Exception;
+use Override;
+use ProcessWire\Interfaces\Exportable;
+
 /**
  * ProcessWire Field
  *

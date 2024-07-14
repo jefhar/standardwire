@@ -1,6 +1,8 @@
 <?php namespace ProcessWire;
 
 use Override;
+use ProcessWire\Interfaces\Exportable;
+
 /**
  * ProcessWire Template
  *
@@ -1675,5 +1677,3 @@ class Template extends WireData implements Saveable, Exportable {
 	}
 
 }
-
-
