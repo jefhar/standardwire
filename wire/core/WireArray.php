@@ -292,8 +292,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 			$this->data[$key] = $item; 
 		} else {
 			$this->data[] = $item;
-			end($this->data);
-			$key = key($this->data);
+			$key = array_key_last($this->data);
 		}
 
 		$this->trackChange("add", null, $item); 
@@ -993,9 +992,8 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 			// $this->data = array_merge($a, $this->data); 
 		} else { 
 			// new item
-			array_unshift($this->data, $item); 
-			reset($this->data);
-			$key = key($this->data);
+			array_unshift($this->data, $item);
+			$key = array_key_first($this->data);
 		}
 		$this->trackChange('prepend', null, $item); 
 		$this->trackAdd($item, $key); 
@@ -1054,8 +1052,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 *
 	 */
 	public function shift() {
-		reset($this->data);
-		$key = key($this->data);
+		$key = array_key_first($this->data);
 		$item = array_shift($this->data); 
 		if(is_null($item)) return null;
 		$this->trackChange('shift', $item, null);
@@ -1090,8 +1087,7 @@ class WireArray extends Wire implements \IteratorAggregate, \ArrayAccess, \Count
 	 *
 	 */
 	public function pop() {
-		end($this->data);
-		$key = key($this->data);
+		$key = array_key_last($this->data);
 		$item = array_pop($this->data); 
 		if(is_null($item)) return null;
 		$this->trackChange('pop', $item, null);

@@ -212,7 +212,7 @@ class ModulesFiles extends ModulesClass {
 			// see if it's a predefined core type that can be determined from the type
 			// this should only come into play if module has moved or had a load error
 			foreach($this->coreTypes as $typeName) {
-				if(strpos($moduleName, $typeName) !== 0) continue;
+				if(strpos($moduleName, (string) $typeName) !== 0) continue;
 				$checkFiles = ["$typeName/$moduleName/$moduleName.module", "$typeName/$moduleName/$moduleName.module.php", "$typeName/$moduleName.module", "$typeName/$moduleName.module.php"];
 				$path1 = $config->paths->modules;
 				foreach($checkFiles as $checkFile) {
@@ -537,7 +537,7 @@ class ModulesFiles extends ModulesClass {
 	public function setConfigPaths($moduleName, $path) {
 		$config = $this->wire()->config;
 		$rootPath = $config->paths->root;
-		if(strpos($path, $rootPath) === 0) {
+		if(strpos($path, (string) $rootPath) === 0) {
 			// if root path included, strip it out
 			$path = substr($path, strlen($config->paths->root));
 		}

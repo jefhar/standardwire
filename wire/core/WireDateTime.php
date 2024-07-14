@@ -614,7 +614,7 @@ class WireDateTime extends Wire {
 		foreach(self::$dateConversion as $dateFormat => $formats) {
 			$strftimeFormat = $formats[0];
 			if(empty($strftimeFormat)) continue;
-			if(strpos($format, $strftimeFormat) !== false) $replacements[$strftimeFormat] = $dateFormat;
+			if(strpos($format, (string) $strftimeFormat) !== false) $replacements[$strftimeFormat] = $dateFormat;
 		}
 		
 		return strtr($format, $replacements);
@@ -990,7 +990,7 @@ class WireDateTime extends Wire {
 		
 		foreach($ltrKeys as $ltr => $key) {
 			$a = self::$dateConversion[$ltr];
-			if(strpos($f, $ltr) !== false || strpos($f, $a[0]) !== false || strpos($f, $a[1]) !== false) {
+			if(strpos($f, $ltr) !== false || strpos($f, (string) $a[0]) !== false || strpos($f, (string) $a[1]) !== false) {
 				$keys[] = $key;
 			}
 		}

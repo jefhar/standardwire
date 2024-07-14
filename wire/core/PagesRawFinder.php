@@ -1287,8 +1287,7 @@ class PagesRawFinder extends Wire {
 		foreach(array_keys($values) as $key) {
 			$value = $values[$key];
 			if(!is_array($value)) continue;
-			reset($value);
-			if(is_int(key($value))) continue;
+			if(is_int(array_key_first($value))) continue;
 			$this->objects($value);
 			$values[$key] = (object) $value;
 		}

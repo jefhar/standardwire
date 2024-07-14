@@ -75,7 +75,7 @@ class ModulesDuplicates extends Wire {
 		if(!isset($this->duplicates[$className])) return false;
 		if($pathname) {
 			$rootPath = $this->wire()->config->paths->root;
-			if(strpos($pathname, $rootPath) === 0) $pathname = str_replace($rootPath, '/', $pathname);
+			if(strpos($pathname, (string) $rootPath) === 0) $pathname = str_replace($rootPath, '/', $pathname);
 			return in_array($pathname, $this->duplicates[$className]);
 		}
 		return true; 
@@ -92,7 +92,7 @@ class ModulesDuplicates extends Wire {
 	public function addDuplicate($className, $pathname, $current = false) {
 		if(!isset($this->duplicates[$className])) $this->duplicates[$className] = [];
 		$rootPath = $this->wire()->config->paths->root;
-		if(strpos($pathname, $rootPath) === 0) $pathname = str_replace($rootPath, '/', $pathname);
+		if(strpos($pathname, (string) $rootPath) === 0) $pathname = str_replace($rootPath, '/', $pathname);
 		if(!in_array($pathname, $this->duplicates[$className])) {
 			$this->duplicates[$className][] = $pathname;
 		}
@@ -283,8 +283,8 @@ class ModulesDuplicates extends Wire {
 		$modules = $this->wire()->modules;
 		$rootPath = $config->paths->root;
 		// ensure paths start from root of PW install
-		if(strpos($pathname, $rootPath) === 0) $pathname = str_replace($rootPath, '/', $pathname);
-		if(strpos($pathname2, $rootPath) === 0) $pathname2 = str_replace($rootPath, '/', $pathname2);
+		if(strpos($pathname, (string) $rootPath) === 0) $pathname = str_replace($rootPath, '/', $pathname);
+		if(strpos($pathname2, (string) $rootPath) === 0) $pathname2 = str_replace($rootPath, '/', $pathname2);
 		// there are two copies of the module on the file system (likely one in /site/modules/ and another in /wire/modules/)
 		if(!isset($this->duplicates[$basename])) {
 			$this->duplicates[$basename] = [$pathname, $pathname2]; // array(str_replace($rootPath, '/', $this->getModuleFile($basename)));

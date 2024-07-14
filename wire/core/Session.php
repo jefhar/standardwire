@@ -1243,7 +1243,7 @@ class Session extends Wire implements \IteratorAggregate {
 		if($samesite === 'None') $secure = true;
 
 		if(PHP_VERSION_ID < 70300) {
-			return setcookie($name, $value, $expires, "$path; SameSite=$samesite", $domain, $secure, $httponly);
+			return setcookie($name, $value, ['expires' => $expires, 'path' => "$path; SameSite=$samesite", 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly]);
 		}
 
 		// PHP 7.3+ supports $options array
@@ -1579,8 +1579,7 @@ class Session extends Wire implements \IteratorAggregate {
 
 			$cnt = count($history); 
 			if($cnt) {
-				end($history);
-				$lastKey = key($history);
+				$lastKey = array_key_last($history);
 				$nextKey = $lastKey+1;
 				if($cnt >= $historyCnt) { 
 					if($historyCnt > 1) {

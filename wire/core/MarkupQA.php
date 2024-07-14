@@ -391,7 +391,7 @@ class MarkupQA extends Wire {
 			// check if this path is in the ignored paths list
 			$ignored = false;
 			foreach($this->ignorePaths() as $ignorePath) {
-				if(strpos($path, $ignorePath) !== 0) continue;
+				if(strpos($path, (string) $ignorePath) !== 0) continue;
 				if($debug) $this->message("MarkupQA sleepLinks skipped $path because it matches ignored path $ignorePath"); 
 				$counts['ignored']++;
 				$ignored = true;
@@ -543,7 +543,7 @@ class MarkupQA extends Wire {
 			if($livePath) {
 				$ignore = false;
 				foreach($this->ignorePaths() as $ignorePath) {
-					if(strpos($livePath, $ignorePath) !== 0) continue;
+					if(strpos($livePath, (string) $ignorePath) !== 0) continue;
 					if($debug) $this->message("MarkupQA wakeupLinks path $livePath matches ignored path $ignorePath");
 					$ignore = true;
 					break;
@@ -558,7 +558,7 @@ class MarkupQA extends Wire {
 					// linked page is in trash, we won't update it but we'll produce a warning
 					$this->linkWarning("$path => $livePath (" . $this->_('it is in the trash') . ')');
 					continue;
-				} else if(strpos($livePath, $adminPath) === 0) {
+				} else if(strpos($livePath, (string) $adminPath) === 0) {
 					// do not update paths that point in admin
 					$this->linkWarning("$path => $livePath (" . $this->_('points to the admin') . ')');
 					continue;

@@ -154,7 +154,7 @@ class Punycode {
 		$input = strtolower($input);
 		$parts = explode('.', $input);
 		foreach($parts as &$part) {
-			if(strpos($part, static::PREFIX) !== 0) {
+			if(strpos($part, (string) static::PREFIX) !== 0) {
 				continue;
 			}
 			$part = substr($part, strlen(static::PREFIX));
@@ -175,7 +175,7 @@ class Punycode {
 		$i = 0;
 		$bias = static::INITIAL_BIAS;
 		$output = '';
-		$pos = strrpos($input, static::DELIMITER);
+		$pos = strrpos($input, (string) static::DELIMITER);
 		if($pos !== false) {
 			$output = substr($input, 0, $pos++);
 		} else {

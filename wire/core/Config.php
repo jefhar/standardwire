@@ -342,7 +342,7 @@ class Config extends WireData {
 			$dir = Paths::normalizeSeparators($dir);
 
 			// if given path is inclusive of root path, make path relative to site root
-			if(strpos($dir, $rootPath) === 0) $dir = substr($dir, strlen($rootPath));
+			if(strpos($dir, (string) $rootPath) === 0) $dir = substr($dir, strlen($rootPath));
 
 			// ensure trailing slash
 			if(substr($dir, -1) !== '/') $dir .= '/';
@@ -358,7 +358,7 @@ class Config extends WireData {
 			// given a custom URL
 			$rootUrl = $this->urls->get('root');
 			// if URL begins at PW installation root, remove the root part of the URL
-			if(strpos($url, $rootUrl) === 0) $url = substr($url, strlen($rootUrl)); 
+			if(strpos($url, (string) $rootUrl) === 0) $url = substr($url, strlen($rootUrl)); 
 			// ensure trailing slash
 			if(substr($url, -1) !== '/' && strpos($url, '?') === false && strpos($url, '#') === false) $url .= '/';
 		}
@@ -852,7 +852,7 @@ class Config extends WireData {
 		if(is_array($match)) {
 			$found = false;
 			foreach($match as $m) {
-				if(strpos($url, $m) !== false) $found = true;
+				if(strpos($url, (string) $m) !== false) $found = true;
 				if($found) break;
 			}
 			if(count($match) && !$found) $url = '';

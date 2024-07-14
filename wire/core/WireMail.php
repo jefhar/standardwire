@@ -790,7 +790,7 @@ class WireMail extends WireData implements WireMailInterface {
 		if(!is_string($str)) $str = (string) $str;
 		foreach($find as $findStr) {
 			if(is_array($findStr)) continue;
-			while(stripos($str, $findStr) !== false) {
+			while(stripos($str, (string) $findStr) !== false) {
 				$str = str_ireplace($findStr, $replace, $str);
 			}
 		}

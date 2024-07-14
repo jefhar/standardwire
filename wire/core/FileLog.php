@@ -590,7 +590,7 @@ class FileLog extends Wire {
 		if($line[10] != " ") return false; 
 		
 		if(!empty($options['text'])) {
-			if(stripos($line, $options['text']) === false) return false;
+			if(stripos($line, (string) $options['text']) === false) return false;
 		}
 		
 		if(!empty($options['dateFrom']) && !empty($options['dateTo'])) {

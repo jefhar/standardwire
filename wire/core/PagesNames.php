@@ -519,7 +519,7 @@ class PagesNames extends Wire {
 	
 		// find word delimiter closest to end of string
 		foreach($this->delimiters as $c) {
-			$p = strrpos($namePrefix, $c);
+			$p = strrpos($namePrefix, (string) $c);
 			if((int) $p > $pos) $pos = $p;
 		}
 		

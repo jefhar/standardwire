@@ -307,7 +307,7 @@ class FileCompiler extends Wire {
 		
 		if($this->globalOptions['siteOnly']) {
 			// only files in /site/ are allowed for compilation
-			if(strpos($filename, $this->wire()->config->paths->site) !== 0) {
+			if(strpos($filename, (string) $this->wire()->config->paths->site) !== 0) {
 				// sourcePath is somewhere outside of the PW /site/, and not allowed
 				return false;
 			}
@@ -334,7 +334,7 @@ class FileCompiler extends Wire {
 		
 		$allow = true;
 		foreach($this->exclusions as $pathname) {
-			if(strpos($filename, $pathname) === 0) {
+			if(strpos($filename, (string) $pathname) === 0) {
 				$allow = false;
 				break;
 			}
@@ -681,7 +681,7 @@ class FileCompiler extends Wire {
 		
 		// replace absolute root path references with runtime generated versions
 		$rootPath = $this->wire()->config->paths->root; 
-		if(strpos($data, $rootPath)) {
+		if(strpos($data, (string) $rootPath)) {
 			$ns = __NAMESPACE__ ? "\\ProcessWire" : "";
 			$data = preg_replace('%([\'"])' . preg_quote($rootPath) . '([^\'"\s\r\n]*[\'"])%',
 				$ns . '\\wire("config")->paths->root . $1$2',
@@ -840,7 +840,7 @@ class FileCompiler extends Wire {
 				$ns = '';
 			}
 			if($ns) {}
-			if(stripos($rawDequotedPHP, $class) === false) continue; // quick exit if class name not referenced in data
+			if(stripos($rawDequotedPHP, (string) $class) === false) continue; // quick exit if class name not referenced in data
 			
 			$patterns = [
        // 1=open 2=close

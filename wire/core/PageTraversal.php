@@ -621,9 +621,8 @@ class PageTraversal {
 		}
 
 		if(is_array($options['urlSegments']) && count($options['urlSegments'])) {
-			$str = '';
-			reset($options['urlSegments']); 
-			if(is_string(key($options['urlSegments']))) {
+			$str = ''; 
+			if(is_string(array_key_first($options['urlSegments']))) {
 				// associative array converts to key/value style URL segments
 				foreach($options['urlSegments'] as $key => $value) {
 					$str .= "$key/$value/";

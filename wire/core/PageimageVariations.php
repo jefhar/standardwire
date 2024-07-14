@@ -369,8 +369,8 @@ class PageimageVariations extends Wire implements \IteratorAggregate, \Countable
 					case 'height': $allow = $info['height'] == $value; break;
 					case 'height>=': $allow = $info['height'] >= $value; break;
 					case 'height<=': $allow = $info['height'] <= $value; break;
-					case 'name': $allow = stripos($file->getBasename(), $value) !== false; break;
-					case 'noName': $allow = stripos($file->getBasename(), $value) === false; break;
+					case 'name': $allow = stripos($file->getBasename(), (string) $value) !== false; break;
+					case 'noName': $allow = stripos($file->getBasename(), (string) $value) === false; break;
 					case 'regexName': $allow = preg_match($value, $file->getBasename()); break;
 					case 'suffix': $allow = in_array($value, $info['suffix']); break;
 					case 'noSuffix': $allow = !in_array($value, $info['suffix']); break;

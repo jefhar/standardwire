@@ -378,7 +378,7 @@ class Sanitizer extends Wire {
 		// remove leading or trailing dashes, underscores, dots
 		if($beautify) {
 			if($replacementChar !== null && strlen($replacementChar)) {
-				if(strpos($extras, $replacementChar) === false) $extras .= $replacementChar;
+				if(strpos($extras, (string) $replacementChar) === false) $extras .= $replacementChar;
 			}
 			$value = trim($value, $extras);
 		}
@@ -434,7 +434,7 @@ class Sanitizer extends Wire {
 			
 			$hasExtras = false;
 			foreach($allowedExtras as $c) {
-				$hasExtras = strpos($value, $c) !== false;
+				$hasExtras = strpos($value, (string) $c) !== false;
 				if($hasExtras) break;
 			}
 			
@@ -1667,7 +1667,7 @@ class Sanitizer extends Wire {
 		}
 		
 		foreach($alwaysReplace as $find => $replace) {
-			if(strpos($value, $find) === false) continue;
+			if(strpos($value, (string) $find) === false) continue;
 			$value = str_replace($find, $replace, $value);
 		}
 
@@ -2628,7 +2628,7 @@ class Sanitizer extends Wire {
 		if(!$needsQuotes) {
 			// see if any always-quote character triggers are present
 			foreach($quotelist as $char) {
-				if(strpos($value, $char) === false) continue;
+				if(strpos($value, (string) $char) === false) continue;
 				$needsQuotes = true;
 				break;
 			}
@@ -4369,7 +4369,7 @@ class Sanitizer extends Wire {
 					$hasDelimiter = null;
 					$delimiters = is_null($options['delimiter']) ? $options['delimiters'] : [$options['delimiter']];
 					foreach($delimiters as $delimiter) {
-						if(strpos($value, $delimiter)) {
+						if(strpos($value, (string) $delimiter)) {
 							$hasDelimiter = $delimiter;
 							break;
 						}
@@ -4784,7 +4784,7 @@ class Sanitizer extends Wire {
 		if(count($options['keepChars'])) {
 			$n = 0;
 			foreach($options['keepChars'] as $c) {
-				if(strpos($value, $c) === false) continue;
+				if(strpos($value, (string) $c) === false) continue;
 				do {
 					$token = "$n{$replacementPrefix}CHR$n";
 				} while(strpos($value, $token) !== false && ++$n); 

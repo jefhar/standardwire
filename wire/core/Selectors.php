@@ -471,7 +471,7 @@ class Selectors extends WireArray {
 		// determine if there are any embedded quotes in the value
 		$hasEmbeddedQuotes = false; 
 		foreach($this->quotes as $open => $close) {
-			if(strpos($value, $open)) $hasEmbeddedQuotes = true; 
+			if(strpos($value, (string) $open)) $hasEmbeddedQuotes = true; 
 		}
 		
 		// if value contains quotes anywhere inside of it, abort optimization
@@ -1470,7 +1470,7 @@ class Selectors extends WireArray {
 
 			if($operator == '&') continue; // this operator is too common in other contexts
 
-			$pos = strpos($str, $operator);
+			$pos = strpos($str, (string) $operator);
 			if(!$pos) continue; // if pos is 0 or false, move onto the next
 
 			// possible match: confirm that field name precedes an operator
@@ -1645,7 +1645,7 @@ class Selectors extends WireArray {
 		} else if(is_string($selectors)) {
 			if(is_array($fieldName)) {
 				foreach($fieldName as $key => $name) {
-					if(strpos($selectors, $name) === false) unset($fieldName[$key]);
+					if(strpos($selectors, (string) $name) === false) unset($fieldName[$key]);
 				}
 				$count = count($fieldName);
 				$fail = $count === 0;

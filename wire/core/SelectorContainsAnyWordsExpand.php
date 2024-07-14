@@ -21,13 +21,13 @@ class SelectorContainsAnyWordsExpand extends SelectorContainsAnyWords {
 		$textTools = $this->wire()->sanitizer->getTextTools();
 		$words = $this->wire()->sanitizer->wordsArray($value2);
 		foreach($words as $word) {
-			if(stripos($value1, $word) !== false && preg_match('/\b' . preg_quote($word) . '\b/i', $value1)) {
+			if(stripos($value1, (string) $word) !== false && preg_match('/\b' . preg_quote($word) . '\b/i', $value1)) {
 				$hasAny = true;
 				break;
 			}
 			$alternates = $textTools->getWordAlternates($word); 
 			foreach($alternates as $alternate) {
-				if(stripos($value1, $alternate) && preg_match('/\b' . preg_quote($alternate) . '\b/i', $value1)) {
+				if(stripos($value1, (string) $alternate) && preg_match('/\b' . preg_quote($alternate) . '\b/i', $value1)) {
 					$hasAny = true;
 					break;
 				}

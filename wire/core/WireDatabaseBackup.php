@@ -823,7 +823,7 @@ class WireDatabaseBackup {
 						$value = 'NULL';
 					} else {
 						if($hasReplace) foreach($options['findReplace'] as $find => $replace) {
-							if(strpos($value, $find)) $value = str_replace($find, $replace, $value);
+							if(strpos($value, (string) $find)) $value = str_replace($find, $replace, $value);
 						}
 						$value = $database->quote($value);
 					}
@@ -1014,7 +1014,7 @@ class WireDatabaseBackup {
 		
 			$replacements = $command === 'CREATE' ? $options['findReplaceCreateTable'] : $options['findReplace'];
 			if(count($replacements)) foreach($replacements as $find => $replace) {
-				if(strpos($line, $find) === false) continue;
+				if(strpos($line, (string) $find) === false) continue;
 				$line = str_replace($find, $replace, $line);
 			}
 
@@ -1233,7 +1233,7 @@ class WireDatabaseBackup {
 		if(!empty($options['findReplaceCreateTable'])) {
 			foreach($options['findReplaceCreateTable'] as $find => $replace) {
 				foreach($statements as $key => $line) {
-					if(strpos($line, $find) === false) continue;
+					if(strpos($line, (string) $find) === false) continue;
 					$line = str_replace($find, $replace, $line);
 					$statements[$key] = $line;
 				}

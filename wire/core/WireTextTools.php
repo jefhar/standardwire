@@ -904,12 +904,12 @@ class WireTextTools extends Wire {
 		
 		$options = array_merge($defaults, $options);
 		$tags = [];
-		$pos1 = strpos($str, $options['tagOpen']);
+		$pos1 = strpos($str, (string) $options['tagOpen']);
 		
 		if($pos1 === false) return $options['has'] ? false : $tags;
 		
 		if(strlen($options['tagClose'])) {
-			$pos2 = strpos($str, $options['tagClose']);
+			$pos2 = strpos($str, (string) $options['tagClose']);
 			if($pos2 === false) return $options['has'] ? false : $tags;
 		}
 
@@ -1024,7 +1024,7 @@ class WireTextTools extends Wire {
 			if($options['entityEncode']) $fieldValue = htmlentities($fieldValue, ENT_QUOTES, 'UTF-8', false);
 			if($options['entityDecode']) $fieldValue = html_entity_decode($fieldValue, ENT_QUOTES, 'UTF-8');
 			
-			if($options['recursive'] && strpos($fieldValue, $options['tagOpen']) !== false) {
+			if($options['recursive'] && strpos($fieldValue, (string) $options['tagOpen']) !== false) {
 				$fieldValue = $this->populatePlaceholders($fieldValue, $vars, $optionsNoRecursive);
 			}
 		
@@ -1091,7 +1091,7 @@ class WireTextTools extends Wire {
 		$replacements = [];
 		$parts = [];
 		
-		if(strpos($str, $options['tagOpen']) === false || !strpos($str, $options['tagClose'])) return $str;
+		if(strpos($str, (string) $options['tagOpen']) === false || !strpos($str, (string) $options['tagClose'])) return $str;
 		
 		if(!is_array($data) && !$data instanceof WireData && !$data instanceof WireInputData) {
 			throw new WireException('$data argument must be associative array, WireData or WireInputData');
@@ -1312,7 +1312,7 @@ class WireTextTools extends Wire {
 
 		$options = array_merge($defaults, $options);
 		$escapePrefix = $options['escapePrefix'];
-		if(strpos($str, $escapePrefix) === false) return [];
+		if(strpos($str, (string) $escapePrefix) === false) return [];
 		$escapes = [];
 		$glueSuffix = $options['glueSuffix'];
 		$parts = explode($escapePrefix, $str);

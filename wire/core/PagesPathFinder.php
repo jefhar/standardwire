@@ -804,7 +804,7 @@ class PagesPathFinder extends Wire {
 		if(!ctype_digit(substr($lastSegment, -1))) return;
 
 		foreach($this->pageNumUrlPrefixes() as $languageName => $pageNumUrlPrefix) {
-			if(strpos($lastSegment, $pageNumUrlPrefix) !== 0) continue;
+			if(strpos($lastSegment, (string) $pageNumUrlPrefix) !== 0) continue;
 			if(!preg_match('!^' . $pageNumUrlPrefix . '(\d+)$!i', $lastSegment, $matches)) continue;
 			$segment = $matches[0];
 			$pageNum = (int) $matches[1];
@@ -1177,7 +1177,7 @@ class PagesPathFinder extends Wire {
 		$pageNum = 1;
 
 		foreach($this->pageNumUrlPrefixes() as $prefix) {
-			if(strpos($lastPart, $prefix) !== 0) continue;
+			if(strpos($lastPart, (string) $prefix) !== 0) continue;
 			if(!preg_match('/^' . $prefix . '(\d+)$/', $lastPart, $matches)) continue;
 			$pageNumPrefix = $prefix;
 			$pageNum = (int) $matches[1];

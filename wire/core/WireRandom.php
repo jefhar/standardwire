@@ -112,7 +112,7 @@ class WireRandom extends Wire {
 		}
 
 		foreach($options['require'] as $c) {
-			if(strpos($allowed, $c) === false) $allowed = '';
+			if(strpos($allowed, (string) $c) === false) $allowed = '';
 		}
 
 		if(!strlen($allowed)) {
@@ -130,7 +130,7 @@ class WireRandom extends Wire {
 			if(count($options['require'])) {
 				$n = 0;
 				foreach($options['require'] as $c) {
-					if(strpos($value, $c) === false) $n++;
+					if(strpos($value, (string) $c) === false) $n++;
 				}
 				if($n) continue;
 			}
@@ -238,7 +238,7 @@ class WireRandom extends Wire {
 			$lastChar = '';
 			for($n = 0; $n < strlen($baseStr); $n++) {
 				$c = $baseStr[$n];
-				if(strpos($allowed, $c) === false) continue;
+				if(strpos($allowed, (string) $c) === false) continue;
 				if($options['noRepeat'] && $c === $lastChar) continue;
 				$value .= $c;
 				$lastChar = $c;
@@ -655,7 +655,7 @@ class WireRandom extends Wire {
 		foreach($disallow as $char) {
 			$n = 0;
 			do {
-				$pos = strpos($value, $char);
+				$pos = strpos($value, (string) $char);
 				if($pos === false) break;
 				if(ctype_digit($char)) {
 					// find a different digit

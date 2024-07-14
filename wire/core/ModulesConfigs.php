@@ -231,7 +231,7 @@ class ModulesConfigs extends ModulesClass {
 				if($info['configurable'] === true) return $info['configurable'];
 				if($info['configurable'] === 1 || $info['configurable'] === "1") return true;
 				if(is_int($info['configurable']) || ctype_digit("$info[configurable]")) return (int) $info['configurable'];
-				if(strpos($info['configurable'], $className) === 0) {
+				if(strpos($info['configurable'], (string) $className) === 0) {
 					if(empty($info['file'])) {
 						$info['file'] = $this->modules->files->getModuleFile($className);
 					}

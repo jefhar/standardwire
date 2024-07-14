@@ -429,7 +429,7 @@ class WireShutdown extends Wire {
 		
 		if(strpos($out, $message) !== false) {
 			// encoded message present in output
-		} else if(strpos($out, $this->error['message']) !== false) {
+		} else if(strpos($out, (string) $this->error['message']) !== false) {
 			// non-encoded message present in output
 			$message = $this->error['message']; 
 		} else {

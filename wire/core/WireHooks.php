@@ -550,7 +550,7 @@ class WireHooks {
 		
 		if(strpos($method, '___') === 0) {
 			$method = substr($method, 3);
-		} else if(strpos($this->pathHookStarts, $method[0]) !== false) {
+		} else if(strpos($this->pathHookStarts, (string) $method[0]) !== false) {
 			return $this->addPathHook($object, $method, $toObject, $toMethod, $options);
 		}
 		
@@ -1092,7 +1092,7 @@ class WireHooks {
 		
 		// first pre-filter the requestPath against any words matchPath (filters)
 		foreach($pathHook['filters'] as $key => $filter) {
-			$pos = strpos($requestPath, $filter); 
+			$pos = strpos($requestPath, (string) $filter); 
 			if($pos === false || ($key === 0 && $pos !== 0)) $filterFail = true;
 			if($filterFail) break;
 		}
@@ -1107,7 +1107,7 @@ class WireHooks {
 		$regexDelim = ''; // populated only for user-specified regex
 		$pageNumArgument = 0; // populate in $arguments when {pageNum} present in match pattern
 	
-		if(strpos('!@#%', $matchPath[0]) !== false) {
+		if(strpos('!@#%', (string) $matchPath[0]) !== false) {
 			// already in delimited regex format
 			$regexDelim = $matchPath[0];
 		} else {
@@ -1327,7 +1327,7 @@ class WireHooks {
 		foreach($this->pathHooks as $id => $pathHook) {
 			$fail = false;
 			foreach($pathHook['filters'] as $filter) {
-				$fail = strpos($requestPath, $filter) === false;
+				$fail = strpos($requestPath, (string) $filter) === false;
 				if($fail) break;
 			}
 			if(!$fail) {

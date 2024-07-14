@@ -77,7 +77,7 @@ function _checkForHttpHostError(Config $config) {
  */
 function _checkForTwoFactorAuth(Session $session) {
 	$tfaUrl = $session->getFor('_user', 'requireTfa'); // contains URL to configure TFA
-	if(!$tfaUrl || strpos($tfaUrl, $session->wire('page')->url()) === 0) return;
+	if(!$tfaUrl || strpos($tfaUrl, (string) $session->wire('page')->url()) === 0) return;
 	$sanitizer = $session->wire('sanitizer');
 	$session->wire('user')->warning(
 		'<strong>' . $sanitizer->entities1(__('Action required')) . '</strong> ' .

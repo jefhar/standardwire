@@ -556,11 +556,11 @@ abstract class Process extends WireData implements Module {
 	public function setViewFile($file) {
 		if(strpos($file, '..') !== false) throw new WireException("Invalid view file (relative paths not allowed)"); 
 		$config = $this->wire()->config;
-		if(strpos($file, $config->paths->root) === 0 && is_file($file)) {
+		if(strpos($file, (string) $config->paths->root) === 0 && is_file($file)) {
 			// full path filename already specified, nothing to auto-determine
 		} else {
 			$path = $config->paths($this->className());
-			if($path && strpos($file, $path) !== 0) $file = $path . ltrim($file, '/\\');
+			if($path && strpos($file, (string) $path) !== 0) $file = $path . ltrim($file, '/\\');
 			if(!is_file($file)) throw new WireException("View file '$file' does not exist");
 		}
 		$this->_viewFile = $file;

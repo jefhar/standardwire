@@ -1088,7 +1088,7 @@ class Template extends WireData implements Saveable, Exportable {
 			} else if(strpos($filename, '/') === false) {
 				// value is basename
 				$filename = $path . $filename;
-			} else if(strpos($filename, $config->paths->root) !== 0) {
+			} else if(strpos($filename, (string) $config->paths->root) !== 0) {
 				// value is path outside of our installation root, which we do not accept
 				$filename = $path . basename($filename);
 			}

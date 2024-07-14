@@ -1019,7 +1019,7 @@ class WireCache extends Wire {
 			if(count($exclude)) {
 				$skip = false;
 				foreach($exclude as $value) {
-					if(stripos($row['name'], $value) !== 0) continue;
+					if(stripos($row['name'], (string) $value) !== 0) continue;
 					$skip = true;
 					break;
 				}

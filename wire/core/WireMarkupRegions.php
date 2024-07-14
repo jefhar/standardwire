@@ -104,14 +104,14 @@ class WireMarkupRegions extends Wire {
 			// find all the positions where each test appears
 			$positions = [];
 			foreach($tests as $str) {
-				$pos = stripos($markup, $str, $startPos);
+				$pos = stripos($markup, (string) $str, $startPos);
 				if($pos === false) continue;
 				if($selector === '.pw-*') {
 					// extra validation for .pw-* selectors to confirm they match a pw-[action] (legacy support)
 					$testAction = '';
 					$testPW = substr($markup, $pos, 20);
 					foreach($this->actions as $testAction) {
-						if(strpos($testPW, $testAction) !== false) {
+						if(strpos($testPW, (string) $testAction) !== false) {
 							$testAction = true;
 							break;
 						}
@@ -246,7 +246,7 @@ class WireMarkupRegions extends Wire {
 		if(!empty($options['leftover'])) {
 			if(!empty($leftover)) {
 				foreach($regions as $region) {
-					if(strpos($leftover, $region['html']) !== false) {
+					if(strpos($leftover, (string) $region['html']) !== false) {
 						$leftover = str_replace($region['html'], '', $leftover);	
 					}
 				}
@@ -476,7 +476,7 @@ class WireMarkupRegions extends Wire {
 			
 		} else if($closeQty === 1) {
 			// just one close tag present, making our job easy
-			$region = substr($region, 0, strrpos($region, $tagInfo['close']));
+			$region = substr($region, 0, strrpos($region, (string) $tagInfo['close']));
 			if($verbose) $verboseRegion['details'] = "Only 1 possible closing tag: $tagInfo[close]";
 
 		} else {
@@ -490,7 +490,7 @@ class WireMarkupRegions extends Wire {
 			
 			do {
 				$doCnt++;
-				$testPos = stripos($region, $tagInfo['close'], $testStart);
+				$testPos = stripos($region, (string) $tagInfo['close'], $testStart);
 				if($testPos === false) {
 					$fail = true;
 					break;
@@ -809,7 +809,7 @@ class WireMarkupRegions extends Wire {
 			if(strpos($markup, " $attrName") === false) continue;
 			$regions = $this->find($attrName, $markup, ['verbose' => true]);
 			foreach($regions as $region) {
-				$pos = strpos($markup, $region['html']);
+				$pos = strpos($markup, (string) $region['html']);
 				if($pos === false) continue;
 				$content = trim($region['region']);
 				if(strpos($content, 'pw-optional') && $level < 10) {
@@ -1002,7 +1002,7 @@ class WireMarkupRegions extends Wire {
 			if($pos !== false) break;
 		}
 		
-		if($pos === false && stripos($html, $name) !== false && stripos($html, $value) !== false) {
+		if($pos === false && stripos($html, $name) !== false && stripos($html, (string) $value) !== false) {
 			// maybe doesn't appear due to some whitespace difference, check again using a regex
 			if($name == 'id') {
 				$names = '(id|pw-id|data-pw-id)';

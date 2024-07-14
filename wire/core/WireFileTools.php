@@ -688,7 +688,7 @@ class WireFileTools extends Wire {
 			return $this->filesError(__FUNCTION__, 'pathname may not contain double slash “//”', $throw);
 		}
 
-		if($limitPath !== false && strpos($pathname, $limitPath) !== 0) {
+		if($limitPath !== false && strpos($pathname, (string) $limitPath) !== 0) {
 			// disallow paths that do not begin with limitPath (i.e. /path/to/public_html/site/assets/)
 			return $this->filesError(__FUNCTION__, "Given pathname is not within $limitPath (limitPath)", $throw);
 		}
@@ -801,7 +801,7 @@ class WireFileTools extends Wire {
 			if($file->isDir()) {
 				$dir = $this->unixDirName($file->getPathname());
 				if($options['allowDirs']) {
-					if($options['returnRelative'] && strpos($dir, $options['_startPath']) === 0) {
+					if($options['returnRelative'] && strpos($dir, (string) $options['_startPath']) === 0) {
 						$dir = substr($dir, strlen($options['_startPath']));
 					}
 					$files[$dir] = $dir;
@@ -816,7 +816,7 @@ class WireFileTools extends Wire {
 			if(!empty($options['excludeExtensions']) && in_array($ext, $options['excludeExtensions'])) continue;
 
 			$filename = $this->unixFileName($file->getPathname());
-			if($options['returnRelative'] && strpos($filename, $options['_startPath']) === 0) {
+			if($options['returnRelative'] && strpos($filename, (string) $options['_startPath']) === 0) {
 				$filename = substr($filename, strlen($options['_startPath']));
 			}
 				
@@ -1425,7 +1425,7 @@ class WireFileTools extends Wire {
 			// filename is absolute, make sure it's in a location we consider safe
 			$allowed = false;
 			foreach($options['allowedPaths'] as $path) {
-				if(strpos($filename, $path) === 0) {
+				if(strpos($filename, (string) $path) === 0) {
 					$allowed = true;
 					break;
 				}

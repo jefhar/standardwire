@@ -399,7 +399,7 @@ class WireInputDataCookie extends WireInputData {
 
 		// set the cookie
 		if(PHP_VERSION_ID < 70300) {
-			$result = setcookie($key, $value, $expires, "$path; SameSite=$samesite", $domain, $secure, $httponly);
+			$result = setcookie($key, $value, ['expires' => $expires, 'path' => "$path; SameSite=$samesite", 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly]);
 		} else {
 			$result = setcookie($key, $value, ['expires' => $expires, 'path' => $path, 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly, 'samesite' => $samesite]);
 		}

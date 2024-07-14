@@ -158,7 +158,7 @@ abstract class AdminThemeFramework extends AdminTheme {
 		$config = $this->wire()->config;
 		$initFile = $this->path() . 'init.php';
 		if(file_exists($initFile)) {
-			if(strpos($initFile, $config->paths->site) === 0) {
+			if(strpos($initFile, (string) $config->paths->site) === 0) {
 				// admin themes in /site/modules/ may be compiled
 				$initFile = $this->wire()->files->compile($initFile);
 			}

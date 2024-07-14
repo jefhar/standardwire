@@ -377,7 +377,7 @@ class WireClassLoader {
 				if($name === $fix || empty($fix)) continue; 
 				
 				// determine where the prefix/suffix appears in the class name
-				$pos = strpos($name, $fix);
+				$pos = strpos($name, (string) $fix);
 				
 				// prefix/suffix does not appear in class name
 				if($pos === false) continue; 

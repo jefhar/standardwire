@@ -362,7 +362,7 @@ class ModulesInstaller extends ModulesClass {
 
 		foreach($this->modules->getPaths() as $key => $modulesPath) {
 			if($key === 0) continue; // skip core modules path
-			if(strpos("$parentPath/", $modulesPath) === 0) $inPath = true;
+			if(strpos("$parentPath/", (string) $modulesPath) === 0) $inPath = true;
 			if($modulesPath === $path) $inRoot = true;
 		}
 

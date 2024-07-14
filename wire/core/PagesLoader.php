@@ -1661,7 +1661,7 @@ class PagesLoader extends Wire {
 		$homepageID = (int) $config->rootPageID;
 		$rootUrl = $this->wire()->config->urls->root;
 
-		if($options['allowUrl'] && $rootUrl !== '/' && strpos($path, $rootUrl) === 0) {
+		if($options['allowUrl'] && $rootUrl !== '/' && strpos($path, (string) $rootUrl) === 0) {
 			// root URL is subdirectory and path has that subdirectory
 			$rootName = trim($rootUrl, '/');
 			if(strpos($rootName, '/')) {

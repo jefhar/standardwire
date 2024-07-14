@@ -1467,7 +1467,7 @@ class WireInput extends Wire {
 	
 		// if query string exceeds max allowed length then truncate it
 		if($options['maxLength'] && strlen($queryString) > $options['maxLength']) { 
-			while(strlen($queryString) > $options['maxLength'] && strpos($queryString, $separator)) {
+			while(strlen($queryString) > $options['maxLength'] && strpos($queryString, (string) $separator)) {
 				$a = explode($separator, $queryString);
 				array_pop($a);
 				$queryString = implode($separator, $a);
