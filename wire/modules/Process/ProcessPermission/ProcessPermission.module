@@ -1,5 +1,6 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
 use ProcessWire\Interfaces\LanguagesValueInterface;
 
 /**

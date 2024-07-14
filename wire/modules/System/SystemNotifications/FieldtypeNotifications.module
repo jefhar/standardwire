@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * A field that stores notifications 
  *
@@ -270,4 +272,3 @@ class FieldtypeNotifications extends FieldtypeMulti {
 
 
 }
-

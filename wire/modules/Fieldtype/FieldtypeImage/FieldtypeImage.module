@@ -2,6 +2,7 @@
 
 use ProcessWire\Interfaces\FieldtypeHasFiles;
 use ProcessWire\Interfaces\FieldtypeHasPageimages;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * ProcessWire Image Fieldtype

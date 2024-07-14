@@ -1,7 +1,5 @@
 <?php namespace ProcessWire\Interfaces;
 
-use ProcessWire\InputfieldWrapper;
-
 /**
  * ProcessWire ConfigurableModule and ConfigModule Interfaces
  *

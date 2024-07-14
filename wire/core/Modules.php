@@ -4,6 +4,7 @@ use Exception;
 use Override;
 use PDO;
 use ProcessWire\Interfaces\_Module;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * ProcessWire Modules

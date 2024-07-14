@@ -2,6 +2,7 @@
 
 use ProcessWire\Interfaces\ConfigurableModule;
 use ProcessWire\Interfaces\FieldtypeHasPageimages;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * ProcessWire Image Select + Edit Process

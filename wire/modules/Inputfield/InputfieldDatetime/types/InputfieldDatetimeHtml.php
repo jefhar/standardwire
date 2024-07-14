@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * HTML5 date/time input types
  * 

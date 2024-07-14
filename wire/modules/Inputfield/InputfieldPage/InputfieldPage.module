@@ -7,6 +7,7 @@ use ProcessWire\Interfaces\InputfieldHasSortableValue;
 use ProcessWire\Interfaces\InputfieldPageListSelection;
 use ProcessWire\Interfaces\InputfieldSupportsArrayValue;
 use ProcessWire\Interfaces\InputfieldSupportsPageSelector;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * An Inputfield for handling relational Page inputs

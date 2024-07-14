@@ -2,6 +2,7 @@
 
 use ProcessWire\Interfaces\InputfieldHasSelectableOptions;
 use ProcessWire\Interfaces\InputfieldHasSortableValue;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * ProcessWire Select Options Fieldtype

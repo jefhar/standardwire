@@ -1,6 +1,7 @@
 <?php namespace ProcessWire;
 
 use ProcessWire\Interfaces\FieldtypeLanguageInterface;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * Multi-language support fields module

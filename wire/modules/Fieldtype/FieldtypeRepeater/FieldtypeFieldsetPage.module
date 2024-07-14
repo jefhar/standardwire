@@ -1,6 +1,7 @@
 <?php namespace ProcessWire;
 
 use ProcessWire\Interfaces\ConfigurableModule;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 require_once(dirname(__FILE__) . '/FieldtypeRepeater.module');
 

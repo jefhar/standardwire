@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 abstract class InputfieldDatetimeType extends WireData {
 
 	/**

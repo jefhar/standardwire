@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * Text date input types with optional jQuery UI datepicker
  *

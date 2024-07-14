@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * ProcessWire Float Fieldtype
  *
@@ -238,4 +240,3 @@ class FieldtypeFloat extends Fieldtype {
 
 
 }
-

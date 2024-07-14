@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * This init file is called before ProcessWire starts rendering the page or executing the process
  *

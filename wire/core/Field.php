@@ -3,6 +3,7 @@
 use Exception;
 use Override;
 use ProcessWire\Interfaces\Exportable;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * ProcessWire Field

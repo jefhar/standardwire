@@ -1,7 +1,5 @@
 <?php namespace ProcessWire\Interfaces;
 
-use ProcessWire\InputfieldWrapper;
-
 /**
  * Standard module interface with all methods. 
  * 

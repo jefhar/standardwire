@@ -2,6 +2,7 @@
 
 use Override;
 use ProcessWire\Interfaces\ConfigurableModule;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * ImageSizer Engine Module (Abstract)

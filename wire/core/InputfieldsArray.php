@@ -1,6 +1,8 @@
 <?php namespace ProcessWire;
 
 use Override;
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * A WireArray of Inputfield instances, as used by InputfieldWrapper. 
  *

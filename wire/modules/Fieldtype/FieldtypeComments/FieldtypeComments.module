@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * ProcessWire Comments Fieldtype
  *
@@ -2555,4 +2557,3 @@ class FieldtypeComments extends FieldtypeMulti {
 	}
 	
 }
-

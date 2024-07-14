@@ -1,9 +1,11 @@
 <?php namespace ProcessWire;
 
+use ArrayObject;
 use Countable;
 use Override;
+use ProcessWire\Interfaces\InputfieldWrapper;
 use ReturnTypeWillChange;
-use ArrayObject;
+
 /**
  * ProcessWire Page
  *

@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * ProcessWire E-Mail Fieldtype
  *
@@ -117,5 +119,3 @@ class FieldtypeEmail extends FieldtypeText {
 	}
 	
 }
-
-

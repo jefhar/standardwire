@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * Intended just for outputting markup as help or commentary among other Inputfields
  * 
@@ -181,4 +183,3 @@ class InputfieldMarkup extends InputfieldWrapper {
 	}
 	
 }
-

@@ -2,6 +2,7 @@
 
 use ProcessWire\Interfaces\InputfieldHasArrayValue;
 use ProcessWire\Interfaces\InputfieldHasSelectableOptions;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * Base for selection form inputs, which by default behaves as a regular <select>

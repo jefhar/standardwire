@@ -3,6 +3,7 @@
 use Override;
 use ProcessWire\Interfaces\Exportable;
 use ProcessWire\Interfaces\HasLookupItems;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * ProcessWire Fieldgroup

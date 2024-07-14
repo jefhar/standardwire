@@ -1,6 +1,7 @@
 <?php namespace ProcessWire;
 
 use ProcessWire\Interfaces\ConfigurableModule;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 class AdminThemeReno extends AdminTheme implements Module, ConfigurableModule {
 

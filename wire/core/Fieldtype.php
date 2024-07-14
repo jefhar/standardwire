@@ -1,9 +1,11 @@
 <?php namespace ProcessWire;
 
 use Exception;
+use Override;
 use PDO;
 use PDOException;
-use Override;
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * ProcessWire Fieldtype Base
  *
@@ -1656,4 +1658,3 @@ abstract class Fieldtype extends WireData implements Module {
 
 	
 }
-

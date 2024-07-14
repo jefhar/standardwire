@@ -2,6 +2,7 @@
 
 use ProcessWire\Interfaces\InputfieldHasArrayValue;
 use ProcessWire\Interfaces\InputfieldHasSortableValue;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * AsmSelect is a sortable multiple-select Inputfield

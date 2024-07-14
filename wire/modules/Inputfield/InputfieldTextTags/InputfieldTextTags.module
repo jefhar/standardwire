@@ -5,6 +5,7 @@ use ProcessWire\Interfaces\InputfieldHasSortableValue;
 use ProcessWire\Interfaces\InputfieldHasTextValue;
 use ProcessWire\Interfaces\InputfieldSupportsArrayValue;
 use ProcessWire\Interfaces\InputfieldSupportsPageSelector;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * An Inputfield for handling predefined or user input tags

@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * AdminThemeUikit initialization file
  * 
@@ -161,4 +163,3 @@ if($adminTheme->ukGrid) {
 } else {
 	$config->InputfieldWrapper('useColumnWidth', 2); // 2=use both style='width:%' and data-colwidth attributes
 }
-

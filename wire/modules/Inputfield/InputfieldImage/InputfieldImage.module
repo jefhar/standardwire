@@ -2,6 +2,7 @@
 
 use ProcessWire\Interfaces\InputfieldHasSortableValue;
 use ProcessWire\Interfaces\InputfieldItemList;
+use ProcessWire\Interfaces\InputfieldWrapper;
 
 /**
  * Class InputfieldImage

@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * ProcessWire Integer Fieldtype
  *
@@ -232,4 +234,3 @@ class FieldtypeInteger extends Fieldtype {
 	}
 
 }
-

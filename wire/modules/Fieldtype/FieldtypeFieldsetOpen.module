@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * ProcessWire FieldtypeFieldsetOpen and InputfieldFieldsetOpen
  *
@@ -354,5 +356,3 @@ class FieldtypeFieldsetOpen extends Fieldtype {
 		parent::___renamedField($field, $prevName); 
 	}
 }
-
-

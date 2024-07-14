@@ -1,6 +1,9 @@
 <?php namespace ProcessWire;
 
-use ProcessWire\Interfaces\ConfigurableModule;/**
+use ProcessWire\Interfaces\ConfigurableModule;
+use ProcessWire\Interfaces\InputfieldWrapper;
+
+/**
  * ProcessWire Markdown Textformatter
  *
  * ProcessWire 3.x, Copyright 2021 by Ryan Cramer

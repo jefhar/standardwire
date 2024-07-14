@@ -1,9 +1,11 @@
 <?php namespace ProcessWire;
 
+use Exception;
 use Override;
 use PDO;
-use Exception;
 use PDOException;
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * ProcessWire FieldtypeMulti
  *
@@ -1050,5 +1052,3 @@ abstract class FieldtypeMulti extends Fieldtype {
 	}
 
 }
-
-

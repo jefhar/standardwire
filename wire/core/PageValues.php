@@ -1,7 +1,9 @@
 <?php namespace ProcessWire;
 
-use Traversable;
 use ArrayAccess;
+use ProcessWire\Interfaces\InputfieldWrapper;
+use Traversable;
+
 /**
  * ProcessWire Page Values
  *

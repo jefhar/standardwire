@@ -1,5 +1,7 @@
 <?php namespace ProcessWire;
 
+use ProcessWire\Interfaces\InputfieldWrapper;
+
 /**
  * ProcessWire Page Export and Import
  *
@@ -1169,4 +1171,3 @@ class ProcessPagesExportImport extends Process {
 	}
 	
 }
-
