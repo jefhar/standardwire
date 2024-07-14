@@ -747,7 +747,7 @@ class WireCache extends Wire {
 	 * @return bool True on success, false on failure
 	 *
 	 */
-	public function deleteFor($ns, $name = '') {
+	public function deleteFor($ns, $name = ''): bool {
 		if(is_object($ns)) $ns = wireClassName($ns, false);
 		if(!strlen($name)) $name = "*";
 		return $this->delete($ns . "__$name");
@@ -766,7 +766,7 @@ class WireCache extends Wire {
 	 * @return bool
 	 *
 	 */
-	public function maintenance($obj = null) {
+	public function maintenance($obj = null): bool {
 		
 		static $done = false;
 		

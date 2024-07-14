@@ -305,7 +305,7 @@ class FileCompiler extends Wire {
 	 * @return bool 
 	 * 
 	 */
-	protected function allowCompile(&$filename, &$basename) {
+	protected function allowCompile(&$filename, &$basename): bool {
 		
 		if($this->globalOptions['siteOnly']) {
 			// only files in /site/ are allowed for compilation
@@ -699,7 +699,7 @@ class FileCompiler extends Wire {
 	 * @return bool Returns true if valid, false if not
 	 * 
 	 */
-	protected function compileIncludesValidLineOpen($open) {
+	protected function compileIncludesValidLineOpen($open): bool {
 		if(!strlen($open)) return true;
 		$skipMatch = false;
 		$test = $open;
@@ -1055,7 +1055,7 @@ class FileCompiler extends Wire {
 	 * @return bool Whether or not it was necessary to run maintenance
 	 * 
 	 */
-	public function maintenance($interval = 86400) {
+	public function maintenance($interval = 86400): bool {
 		
 		$this->init();
 		$this->initTargetPath();
@@ -1139,7 +1139,7 @@ class FileCompiler extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function optionsToString(array $options) {
+	protected function optionsToString(array $options): string {
 		$str = "array(";
 		foreach($options as $key => $value) {
 			if(is_bool($value)) {
@@ -1177,7 +1177,7 @@ class FileCompiler extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function touch($filename, $time = null) {
+	protected function touch($filename, $time = null): bool {
 		if($time === null) {
 			$result = @touch($filename); 
 		} else {

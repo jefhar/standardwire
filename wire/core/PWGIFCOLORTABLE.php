@@ -32,7 +32,7 @@ class PWGIFCOLORTABLE {
 		}
 		return true;
 	}
-	public function toString() {
+	public function toString(): string {
 		$ret = '';
 		for($i = 0; $i < $this->m_nColors; $i++) {
 			$ret .=
@@ -42,7 +42,7 @@ class PWGIFCOLORTABLE {
 		}
 		return $ret;
 	}
-	public function toRGBQuad() {
+	public function toRGBQuad(): string {
 		$ret = '';
 		for($i = 0; $i < $this->m_nColors; $i++) {
 			$ret .=

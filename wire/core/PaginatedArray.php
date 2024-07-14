@@ -262,7 +262,7 @@ class PaginatedArray extends WireArray implements WirePaginatable {
 	 * @return string Formatted string
 	 * 
 	 */
-	public function getPaginationString($label = '', $usePageNum = false) {
+	public function getPaginationString($label = '', $usePageNum = false): string {
 		
 		$options = ['label' => is_string($label) ? $label : '', 'zeroLabel' => '', 'usePageNum' => is_bool($usePageNum) ? $usePageNum : false, 'count' => -1, 'start' => -1, 'limit' => -1, 'total' => -1];
 		

@@ -816,7 +816,7 @@ class PageTraversal {
 	 * @return string URL for editing this page
 	 *
 	 */
-	public function editUrl(Page $page, $options = []) {
+	public function editUrl(Page $page, $options = []): string {
 
 		$config = $page->wire()->config;
 		$adminTemplate = $page->wire()->templates->get('admin'); /** @var Template $adminTemplate */
@@ -883,7 +883,7 @@ class PageTraversal {
 	 * @see Page::url(), Page::localHttpUrl()
 	 *
 	 */
-	public function httpUrl(Page $page, $options = []) {
+	public function httpUrl(Page $page, $options = []): string {
 
 		$template = $page->template();
 		if(!$template) return '';

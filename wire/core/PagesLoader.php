@@ -2055,7 +2055,7 @@ class PagesLoader extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function isNativeColumn($columnName) {
+	public function isNativeColumn($columnName): bool {
 		$nativeColumns = $this->getNativeColumns();
 		return isset($nativeColumns[$columnName]);
 	}

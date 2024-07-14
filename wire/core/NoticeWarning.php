@@ -7,7 +7,7 @@ use Override;
  */
 class NoticeWarning extends Notice {
 	#[Override]
- public function getName() {
+ public function getName(): string {
 		return 'warnings';
 	}
 }

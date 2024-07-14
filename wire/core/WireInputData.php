@@ -515,7 +515,7 @@ class WireInputData extends Wire implements ArrayAccess, IteratorAggregate, Coun
 	 * @since 3.0.163
 	 * 
 	 */
-	public function queryString($overrides = [], $separator = '&') {
+	public function queryString($overrides = [], $separator = '&'): string {
 		return http_build_query(array_merge($this->getArray(), $overrides), '', $separator); 
 	}
 

@@ -7,7 +7,7 @@ use Override;
  */
 class SelectorContains extends Selector { 
 	#[Override]
- public static function getOperator() { return '*='; }
+ public static function getOperator(): string { return '*='; }
 	#[Override]
  public static function getCompareType(): int { 
 		return 
@@ -33,7 +33,7 @@ class SelectorContains extends Selector {
 	 * @return string
 	 * 
 	 */
-	public static function buildDescription($keys) {
+	public static function buildDescription($keys): string {
 		$a = [];
 		if(!is_array($keys)) $keys = explode(' ', $keys);
 		foreach($keys as $key) {

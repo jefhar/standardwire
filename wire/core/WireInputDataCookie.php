@@ -352,7 +352,7 @@ class WireInputDataCookie extends WireInputData {
 	 * @since 3.0.159
 	 *
 	 */
-	public function setCookie($key, $value, array $options) {
+	public function setCookie($key, $value, array $options): bool {
 		
 		$config = $this->wire()->config;
 		$options = array_merge($this->defaultOptions, $config->cookieOptions, $this->options, $options);

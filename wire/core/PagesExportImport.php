@@ -34,7 +34,7 @@ class PagesExportImport extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function getExportPath($subdir = '') {
+	public function getExportPath($subdir = ''): string {
 	
 		/** @var WireFileTools $files */
 		$files = $this->wire('files');
@@ -115,7 +115,7 @@ class PagesExportImport extends Wire {
 	 * @return string|bool Path+filename to ZIP file or boolean false on failure
 	 * 
 	 */
-	public function exportZIP(PageArray $items, array $options = []) {
+	public function exportZIP(PageArray $items, array $options = []): string {
 		
 		/** @var WireFileTools $files */
 		$files = $this->wire('files');

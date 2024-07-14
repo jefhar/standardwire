@@ -64,7 +64,7 @@ class WireFileTools extends Wire {
 	 * @return bool True on success, false on failure
 	 *
 	 */
-	public function mkdir($path, $recursive = false, $chmod = null) {
+	public function mkdir($path, $recursive = false, $chmod = null): bool {
 		if(!strlen("$path")) return false;
 		
 		if(is_string($recursive) && strlen($recursive) > 2) {
@@ -383,7 +383,7 @@ class WireFileTools extends Wire {
 	 * @since 3.0.118
 	 * 
 	 */
-	public function rename($oldName, $newName, $options = []) {
+	public function rename($oldName, $newName, $options = []): bool {
 		
 		$defaults = ['limitPath' => false, 'throw' => false, 'chmod' => true, 'copy' => false, 'retry' => true];
 		
@@ -522,7 +522,7 @@ class WireFileTools extends Wire {
 	 * 
 	 * 
 	 */
-	public function exists($filename, $options = '') {
+	public function exists($filename, $options = ''): bool {
 		
 		$defaults = ['type' => '', 'readable' => false, 'writable' => false, 'writeable' => false];
 	
@@ -1593,7 +1593,7 @@ class WireFileTools extends Wire {
 	 * @return string Actual found namespace or "\" (root namespace) if none found
 	 *
 	 */
-	public function getNamespace($file, $fileIsContents = false) {
+	public function getNamespace($file, $fileIsContents = false): string {
 
 		$namespace = "\\"; // root namespace, if no namespace found
 		
@@ -1840,7 +1840,7 @@ class WireFileTools extends Wire {
 	 * @return string Adjusted directory name
 	 * 
 	 */
-	public function unixDirName($dir, $trailingSlash = true) {
+	public function unixDirName($dir, $trailingSlash = true): string {
 		if(DIRECTORY_SEPARATOR != '/' && str_contains($dir, DIRECTORY_SEPARATOR)) {
 			$dir = str_replace(DIRECTORY_SEPARATOR, '/', $dir);
 		}

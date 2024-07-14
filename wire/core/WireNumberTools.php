@@ -173,7 +173,7 @@ class WireNumberTools extends Wire {
 	 * @since 3.0.214 All versions can also use the wireBytesStr() function
 	 *
 	 */
-	public function bytesToStr($bytes, $options = []) {
+	public function bytesToStr($bytes, $options = []): string {
 		
 		$defaults = ['type' => '', 'small' => false, 'decimals' => null, 'decimal_point' => null, 'thousands_sep' => null, 'labels' => []];
 

@@ -1432,7 +1432,7 @@ class Installer {
 	 * @return string
 	 * 
 	 */
-	public function icon($name, $fw = true) {
+	public function icon($name, $fw = true): string {
 		if(str_starts_with($name, 'icon-') || str_starts_with($name, 'fa-')) {
 			[, $name] = explode('-', $name, 2);
 		}
@@ -1761,7 +1761,7 @@ class Installer {
 	 * @return bool
 	 *
 	 */
-	public function mkdir($path, $showNote = true, $block = false) {
+	public function mkdir($path, $showNote = true, $block = false): bool {
 		if(self::TEST_MODE) return true;
 		$path = rtrim($path, '/') . '/';
 		$isDir = is_dir($path);

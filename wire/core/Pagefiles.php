@@ -786,7 +786,7 @@ class Pagefiles extends WireArray implements PageFieldValueInterface {
 	 * @return bool
 	 *
 	 */
-	public function isTemp(Pagefile $pagefile, $set = null) {
+	public function isTemp(Pagefile $pagefile, $set = null): bool {
 
 		$isTemp = Pagefile::createdTemp == $pagefile->created;
 		$checkDeletable = ($set === 'deletable' || $set === 'deleteable');

@@ -7,7 +7,7 @@ use Override;
  */
 class SelectorContainsAnyWordsExpand extends SelectorContainsAnyWords {
 	#[Override]
- public static function getOperator() { return '~|+='; }
+ public static function getOperator(): string { return '~|+='; }
 	#[Override]
  public static function getCompareType(): int { 
 		return 

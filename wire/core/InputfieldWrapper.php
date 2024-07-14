@@ -1104,7 +1104,7 @@ class InputfieldWrapper extends Inputfield implements Countable, IteratorAggrega
 	 * @return string
 	 * 
 	 */
-	protected function renderInputfieldAjaxPlaceholder(Inputfield $inputfield, $renderValueMode) {
+	protected function renderInputfieldAjaxPlaceholder(Inputfield $inputfield, $renderValueMode): string {
 	
 		$input = $this->wire()->input;
 		$sanitizer = $this->wire()->sanitizer;
@@ -1272,7 +1272,7 @@ class InputfieldWrapper extends Inputfield implements Countable, IteratorAggrega
 	 * 
 	 */
 	#[Override]
- public function isEmpty() {
+ public function isEmpty(): bool {
 		$empty = true; 
 		foreach($this->children() as $child) {
 			/** @var Inputfield $child */

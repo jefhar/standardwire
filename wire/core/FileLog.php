@@ -299,7 +299,7 @@ class FileLog extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function filename() {
+	public function filename(): string {
 		return basename($this->logFilename);
 	}
 
@@ -373,7 +373,7 @@ class FileLog extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function getChunk($chunkNum = 1, $chunkSize = 0, $reverse = true, $clean = true) {
+	protected function getChunk($chunkNum = 1, $chunkSize = 0, $reverse = true, $clean = true): string {
 
 		if($chunkSize < 1) $chunkSize = $this->chunkSize;
 	

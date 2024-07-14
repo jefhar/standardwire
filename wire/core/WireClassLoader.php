@@ -103,7 +103,7 @@ class WireClassLoader {
 	 * @since 3.0.152
 	 * 
 	 */
-	protected function path($path) {
+	protected function path($path): string {
 		if(DIRECTORY_SEPARATOR !== '/') $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
 		return rtrim($path, '/') . '/';
 	}
@@ -190,7 +190,7 @@ class WireClassLoader {
 	 * @return bool
 	 * 
 	 */
-	public function hasNamespace($namespace) {
+	public function hasNamespace($namespace): bool {
 		return isset(self::$namespaces[$namespace]);
 	}
 
@@ -218,7 +218,7 @@ class WireClassLoader {
 	 * @since 3.0.152
 	 *
 	 */
-	public function findClassFile($className) {
+	public function findClassFile($className): bool {
 		$this->findFile = true;
 		$this->loadClass($className);
 		$file = is_string($this->findFile) ? $this->findFile : false;

@@ -21,7 +21,7 @@ class PWPNG {
 	public function __construct(protected $extended = false)
  {
  }
-	public function loadFile($lpszFileName) {
+	public function loadFile($lpszFileName): bool {
 		// READ FILE
 		if(!($fh = @fopen($lpszFileName, 'rb'))) {
 			$this->Error('Can\'t open image file: '.basename((string) $lpszFileName));
@@ -112,7 +112,7 @@ class PWPNG {
 		return true;
 	}
 
-	protected function _readstream($f, $n) {
+	protected function _readstream($f, $n): string {
 		// Read n bytes from stream
 		$res = '';
 		while($n > 0 && !feof($f)) {

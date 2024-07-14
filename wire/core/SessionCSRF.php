@@ -135,7 +135,7 @@ class SessionCSRF extends Wire {
 	 * @return bool
 	 *
 	 */
-	public function hasValidToken($id = '', $reset = null) {
+	public function hasValidToken($id = '', $reset = null): bool {
 	
 		$session = $this->wire()->session;
 		$config = $this->wire()->config;
@@ -226,7 +226,7 @@ class SessionCSRF extends Wire {
 	 * @return string
 	 *
 	 */
-	public function renderInput($id = '') {
+	public function renderInput($id = ''): string {
 		$tokenName = $this->getTokenName($id);
 		$tokenValue = $this->getTokenValue($id);
 		return "<input type='hidden' name='$tokenName' value='$tokenValue' class='_post_token' />";

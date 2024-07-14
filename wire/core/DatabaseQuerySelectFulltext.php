@@ -180,7 +180,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function tableField() {
+	protected function tableField(): string {
 		$fieldName = $this->fieldName;
 		if(!$fieldName) $fieldName = 'data';
 		return "$this->tableName.$fieldName";
@@ -216,7 +216,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function matchType() {
+	protected function matchType(): string {
 		return "\n  " . ($this->not ? 'NOT MATCH' : 'MATCH');
 	}
 
@@ -1149,7 +1149,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function getBooleanModeCommands($value) {
+	protected function getBooleanModeCommands($value): string {
 		$booleanValues = [];
 		$value = str_replace(['“', '”'], '"', $value);
 		/** @var SelectorContainsAdvanced $selector */
@@ -1330,7 +1330,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @since 3.0.160
 	 * 
 	 */
-	protected function getScoreFieldName() {
+	protected function getScoreFieldName(): string {
 		$key = $this->tableName . '_' . $this->fieldName;
 		self::$scoreCnts[$key] = isset(self::$scoreCnts[$key]) ? self::$scoreCnts[$key] + 1 : 0;
 		return '_score_' . $key . self::$scoreCnts[$key];
@@ -1369,7 +1369,7 @@ class DatabaseQuerySelectFulltext extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function getWordRoot($word) {
+	protected function getWordRoot($word): string {
 		if($word) {}
 		return '';
 	}

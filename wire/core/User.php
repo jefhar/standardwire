@@ -333,7 +333,7 @@ class User extends Page {
 	 * @throws WireException
 	 *
 	 */
-	protected function ___hasTemplatePermission($name, $template) {
+	protected function ___hasTemplatePermission($name, $template): bool {
 		
 		if($this->isSuperuser()) return true;
 
@@ -440,7 +440,7 @@ class User extends Page {
 	 * @return bool
 	 *
 	 */
-	public function isSuperuser() {
+	public function isSuperuser(): bool {
 		if(is_bool($this->isSuperuser)) return $this->isSuperuser;
 		$config = $this->wire()->config;
 		if($this->id === $config->superUserPageID) {

@@ -400,7 +400,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @throws WireException
 	 *
 	 */
-	public function isValidUserCode(User $user, $code, array $settings) {
+	public function isValidUserCode(User $user, $code, array $settings): bool {
 		if($code && $settings) throw new WireException('Modules should not call this method');
 		$value = false;
 		/** @var bool|int $value */
@@ -436,7 +436,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @return bool
 	 * 
 	 */
-	public function enabledForUser(User $user, array $settings) {
+	public function enabledForUser(User $user, array $settings): bool {
 		$enabled = empty($settings['enabled']) ? false : true;
 		return $enabled;
 	}
@@ -1174,7 +1174,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @since 3.0.160
 	 * 
 	 */
-	protected function getUserPash(User $user) {
+	protected function getUserPash(User $user): string {
 		$config = $this->wire()->config;
 		$salt1 = substr($config->userAuthSalt, -10);
 		$salt2 = $config->installed;
@@ -1192,7 +1192,7 @@ class Tfa extends WireData implements Module, ConfigurableModule {
 	 * @since 3.0.160
 	 *
 	 */
-	protected function getUserCodeHash(User $user, $code) {
+	protected function getUserCodeHash(User $user, $code): string {
 		$config = $this->wire()->config;
 		$salt = substr($config->userAuthSalt, 0, 9);
 		return sha1($code . $user->id . $salt);

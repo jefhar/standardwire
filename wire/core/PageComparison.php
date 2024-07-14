@@ -34,7 +34,7 @@ class PageComparison {
 	 * @return bool
 	 *
 	 */
-	public function is(Page $page, $status) {
+	public function is(Page $page, $status): bool {
 	
 		$is = false;
 		
@@ -200,7 +200,7 @@ class PageComparison {
 	 * @return bool
 	 *
 	 */
-	public function matches(Page $page, $s, array $options = []) {
+	public function matches(Page $page, $s, array $options = []): bool {
 	
 		$selectors = [];
 
@@ -392,7 +392,7 @@ class PageComparison {
   * @return bool
   *
   */
- public function isEqual(Page $page, $key, mixed $value1, mixed $value2) {
+ public function isEqual(Page $page, $key, mixed $value1, mixed $value2): bool {
 
 		$isEqual = $value1 === $value2;
 

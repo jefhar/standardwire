@@ -40,7 +40,7 @@ class NullPage extends Page implements WireNull {
 	 * 
 	 */
 	#[Override]
- public function path() { return ''; }
+ public function path(): string { return ''; }
 
 	/**
 	 * #pw-internal
@@ -50,7 +50,7 @@ class NullPage extends Page implements WireNull {
 	 * 
 	 */
 	#[Override]
- public function url($options = []) { return ''; }
+ public function url($options = []): string { return ''; }
 
 	/**
 	 * #pw-internal

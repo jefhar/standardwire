@@ -828,7 +828,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return string
 	 * 
 	 */
-	public function ___noCacheURL($http = false) {
+	public function ___noCacheURL($http = false): string {
 		return ($http ? $this->httpUrl() : $this->url()) . '?nc=' . $this->filemtime();
 	}
 
@@ -887,7 +887,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return string
 	 *
 	 */
-	protected function ___url() {
+	protected function ___url(): string {
 		return $this->pagefiles->url . $this->basename;
 	}
 	
@@ -898,7 +898,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @see Pagefile::url()
 	 *
 	 */
-	public function ___httpUrl() {
+	public function ___httpUrl(): string {
 		$page = $this->pagefiles->getPage();
 		$url = substr($page->httpUrl(), 0, -1 * strlen($page->url())); 
 		return $url . $this->url(); 
@@ -921,7 +921,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * Hookable version of filename() method
 	 *
 	 */
-	protected function ___filename() {
+	protected function ___filename(): string {
 		return $this->pagefiles->path . $this->basename;
 	}
 
@@ -1225,7 +1225,7 @@ class Pagefile extends WireData implements WireArrayItem {
 	 * @return string
 	 *
 	 */
-	public function ext() {
+	public function ext(): string {
 		return substr($this->basename(), strrpos($this->basename(), '.')+1);
 	}
 

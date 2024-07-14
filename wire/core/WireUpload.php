@@ -370,7 +370,7 @@ class WireUpload extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function isValidUpload($name, $size, $error) { 
+	protected function isValidUpload($name, $size, $error): bool { 
 		
 		$fname = $this->wire()->sanitizer->name($name); 
 
@@ -871,7 +871,7 @@ class WireUpload extends Wire {
 	 * @since 3.0.131
 	 * 
 	 */
-	public static function isAjaxUploading() {
+	public static function isAjaxUploading(): bool {
 		return !empty($_SERVER['HTTP_X_FILENAME']);
 	}
 }

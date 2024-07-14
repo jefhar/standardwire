@@ -228,7 +228,7 @@ class PagesType extends Wire implements IteratorAggregate, Countable {
 	 * @since 3.0.128
 	 * 
 	 */
-	public function hasValidTemplate(Page $page) {
+	public function hasValidTemplate(Page $page): bool {
 		$tid = (int) $page->templates_id;
 		if($this->template && count($this->templates) === 1) {
 			return $this->template->id === $tid;
@@ -252,7 +252,7 @@ class PagesType extends Wire implements IteratorAggregate, Countable {
 	 * @since 3.0.128
 	 *
 	 */
-	public function hasValidParent(Page $page) {
+	public function hasValidParent(Page $page): bool {
 		$parent_id = (int) $page->parent_id; 
 		if($this->parent_id && $this->parent_id === $parent_id) return true;
 		$valid = false;
@@ -274,7 +274,7 @@ class PagesType extends Wire implements IteratorAggregate, Countable {
 	 * @since 3.0.128
 	 *
 	 */
-	public function hasValidClass(Page $page) {
+	public function hasValidClass(Page $page): bool {
 		$pageClass = $page->className();
 		if($this->pageClass && $pageClass === $this->pageClass) return true;
 		$valid = false;

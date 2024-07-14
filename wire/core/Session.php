@@ -233,7 +233,7 @@ class Session extends Wire implements IteratorAggregate {
 	 * @return bool Returns true if session cookie present, false if not. 
 	 * 
 	 */
-	public function hasCookie($checkLogin = false) {
+	public function hasCookie($checkLogin = false): bool {
 		if($this->config->https && $this->config->sessionCookieSecure) {
 			$name = $this->config->sessionNameSecure;
 			if(!$name) $name = $this->config->sessionName . 's';
@@ -348,7 +348,7 @@ class Session extends Wire implements IteratorAggregate {
 	 * @return bool
 	 *
 	 */
-	protected function ___isValidSession($userID) {
+	protected function ___isValidSession($userID): bool {
 
 		$valid = true; 
 		$reason = '';
@@ -1119,7 +1119,7 @@ class Session extends Wire implements IteratorAggregate {
 	 * @return bool True if allowed to login, false if not (hooks may modify this)
 	 *
 	 */
-	public function ___allowLogin($name, $user = null) {
+	public function ___allowLogin($name, $user = null): bool {
 		$allow = true; 
 		if(!strlen($name)) return false;
 		if(!$user instanceof User) {
@@ -1283,7 +1283,7 @@ class Session extends Wire implements IteratorAggregate {
 	 * @since 3.0.178
 	 * 
 	 */
-	protected function sessionCookieSameSite($value = null) {
+	protected function sessionCookieSameSite($value = null): string {
 		$samesite = $value ?? $this->config->sessionCookieSameSite;
 		$samesite = empty($samesite) ? 'Lax' : ucfirst(strtolower((string) $samesite));
 		if(!in_array($samesite, ['Strict', 'Lax', 'None'], true)) $samesite = 'Lax';

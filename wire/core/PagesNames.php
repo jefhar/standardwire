@@ -663,7 +663,7 @@ class PagesNames extends Wire {
 	 * @return string
 	 *
 	 */
-	public function uniqueRandomPageName($options = []) {
+	public function uniqueRandomPageName($options = []): string {
 
 		$defaults = ['page' => null, 'length' => 0, 'min' => 6, 'max' => 0, 'alpha' => true, 'numeric' => true, 'confirm' => true, 'parent' => 0, 'prefix' => '', 'suffix' => ''];
 

@@ -331,7 +331,7 @@ class ModulesInstaller extends ModulesClass {
 	 * @throws WireException If module can't be deleted, exception will be thrown containing reason.
 	 *
 	 */
-	public function delete($class) {
+	public function delete($class): bool {
 
 		$config = $this->wire()->config;
 		$fileTools = $this->wire()->files;

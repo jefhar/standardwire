@@ -527,7 +527,7 @@ class Sanitizer extends Wire {
 	 * @since 3.0.133
 	 * 
 	 */
-	public function attrName($value, $maxLength = 255) {
+	public function attrName($value, $maxLength = 255): string {
 	
 		$value = $this->string($value);
 		$value = trim($value); // force as trimmed string
@@ -578,7 +578,7 @@ class Sanitizer extends Wire {
 	 * @since 3.0.212
 	 * 
 	 */
-	public function htmlClass($value) {
+	public function htmlClass($value): string {
 		$value = trim("$value");
 		if(empty($value)) return '';
 		$extras = ['-', '_', ':', '@'];
@@ -1433,7 +1433,7 @@ class Sanitizer extends Wire {
 	 * @return string
 	 *
 	 */ 
-	public function emailHeader($value, $headerName = false) {
+	public function emailHeader($value, $headerName = false): string {
 		if(!is_string($value)) return '';
 		$a = ["\n", "\r", "<CR>", "<LF>", "0x0A", "0x0D", "%0A", "%0D"]; // newlines
 		$value = trim(str_ireplace($a, ' ', stripslashes($value)));
@@ -2663,7 +2663,7 @@ class Sanitizer extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function selectorValueV1($value, $options = []) {
+	protected function selectorValueV1($value, $options = []): string {
 
 		$defaults = ['maxLength' => 100, 'useQuotes' => true];
 
@@ -2783,7 +2783,7 @@ class Sanitizer extends Wire {
 	 * @see Sanitizer::entities1(), Sanitizer::unentities()
 	 *
 	 */
-	public function entities($str, $flags = ENT_QUOTES, $encoding = 'UTF-8', $doubleEncode = true) {
+	public function entities($str, $flags = ENT_QUOTES, $encoding = 'UTF-8', $doubleEncode = true): string {
 		if(!is_string($str)) $str = $this->string($str);
 		return htmlentities($str, $flags, $encoding, $doubleEncode); 
 	}
@@ -2801,7 +2801,7 @@ class Sanitizer extends Wire {
 	 * 
 	 *
 	 */
-	public function entities1($str, $flags = ENT_QUOTES, $encoding = 'UTF-8') {
+	public function entities1($str, $flags = ENT_QUOTES, $encoding = 'UTF-8'): string {
 		if(!is_string($str)) $str = $this->string($str);
 		return htmlentities($str, $flags, $encoding, false);
 	}
@@ -3590,7 +3590,7 @@ class Sanitizer extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function hyphenCase($value, array $options = []) {
+	public function hyphenCase($value, array $options = []): string {
 		
 		$defaults = ['hyphen' => '-', 'allow' => 'a-z0-9', 'allowUnderscore' => false];
 
@@ -3730,7 +3730,7 @@ class Sanitizer extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function pascalCase($value, array $options = []) {
+	public function pascalCase($value, array $options = []): string {
 		$options['startLowercase'] = false;
 		$value = $this->camelCase($value, $options);
 		return ucfirst($value);
@@ -3823,7 +3823,7 @@ class Sanitizer extends Wire {
 	 * @return string
 	 *
 	 */
-	public function string($value, $sanitizer = null) {
+	public function string($value, $sanitizer = null): string {
 		if(is_string($value)) {
 			if($sanitizer === null) return $value;
 		} else if(is_object($value)) {
@@ -3929,7 +3929,7 @@ class Sanitizer extends Wire {
 	 * @since 3.0.181
 	 * 
 	 */
-	public function textdomain($value) {
+	public function textdomain($value): string {
 		
 		$value = $this->line($value, 1024); 
 		$value = trim(strtolower($value));
@@ -4967,7 +4967,7 @@ class Sanitizer extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function bool($value) {
+	public function bool($value): bool {
 		if(is_string($value)) {
 			$value = trim(strtolower($value));
 			$length = strlen($value);
@@ -5464,7 +5464,7 @@ class Sanitizer extends Wire {
 	 * @since 3.0.125
 	 * 
 	 */
-	public function methodExists($name, $allowCombos = true) {
+	public function methodExists($name, $allowCombos = true): bool {
 		$exists = method_exists($this, $name) || method_exists($this, "___$name") || $this->hasHook($name);
 		if(!$exists && $allowCombos) {
 			$methods = $this->parseMethod($name, '_');

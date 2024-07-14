@@ -68,7 +68,7 @@ class WireTempDir extends Wire {
 	 * @return string Returns the root of the temporary directory. Use the get() method to get a dir for use. 
 	 *
 	 */
-	public function init($name = '', $basePath = '') {
+	public function init($name = '', $basePath = ''): string {
 
 		if(!is_null($this->tempDirRoot)) throw new WireException("Temp dir has already been created");
 		if(empty($name)) $name = $this->createName();
@@ -91,7 +91,7 @@ class WireTempDir extends Wire {
 	 * @since 3.0.175
 	 * 
 	 */
-	protected function classRootPath($createIfNotExists = false, $basePath = '') {
+	protected function classRootPath($createIfNotExists = false, $basePath = ''): string {
 		if($basePath) {
 			// they provide base path
 			$basePath = rtrim($basePath, '/') . '/'; // ensure it ends with trailing slash
@@ -114,7 +114,7 @@ class WireTempDir extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function createName($prefix = '') {
+	public function createName($prefix = ''): string {
 		$random = new WireRandom();
 		$len = $random->integer(10, 20);
 		$name = $prefix . str_replace(' ', 'T', microtime()) . 'R' . $random->alphanumeric($len);
@@ -223,7 +223,7 @@ class WireTempDir extends Wire {
 	 * @return bool 
 	 *
 	 */
-	public function remove() {
+	public function remove(): bool {
 		
 		$errorMessage = 'Unable to remove temp dir';
 		$success = true; 
@@ -270,7 +270,7 @@ class WireTempDir extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function removeExpiredDirs($path, $maxAge) {
+	protected function removeExpiredDirs($path, $maxAge): bool {
 		
 		if(!is_dir($path)) return false;
 		if(!is_int($maxAge)) $maxAge = $this->tempDirMaxAge;

@@ -215,7 +215,7 @@ class WireDataDB extends WireData implements Countable {
   * @throws WireException
   *
   */
- protected function save($name, mixed $value, $recursive = false) {
+ protected function save($name, mixed $value, $recursive = false): bool {
 		if(is_object($value)) return false; // we do not currently save objects
 		$data = json_encode($value);
 		$table = $this->table();

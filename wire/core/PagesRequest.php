@@ -953,7 +953,7 @@ class PagesRequest extends Wire {
 	 * @since 3.0.166
 	 *
 	 */
-	protected function pagefileSecurePossibleUrl($url) {
+	protected function pagefileSecurePossibleUrl($url): bool {
 		$config = $this->config;
 
 		// if URL does not start from root, prepend root
@@ -1196,7 +1196,7 @@ class PagesRequest extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function getResponseMessage() {
+	public function getResponseMessage(): string {
 		$code = $this->getResponseCode();
 		$value = $this->getResponseCodeName();
 		if(empty($value)) $value = "unknown";

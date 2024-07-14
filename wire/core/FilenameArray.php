@@ -44,7 +44,7 @@ class FilenameArray extends Wire implements IteratorAggregate, Countable {
 	 * @return string
 	 * 
 	 */
-	protected function getKey($filename) {
+	protected function getKey($filename): string {
 		$filename = (string) $filename;
 		$pos = strpos($filename, '?'); 
 		$key = $pos ? substr($filename, 0, $pos) : $filename;

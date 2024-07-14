@@ -116,7 +116,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 *
 	 */
 	#[Override]
- public function getTable() {
+ public function getTable(): string {
 		return 'fieldgroups';
 	}
 
@@ -127,7 +127,7 @@ class Fieldgroups extends WireSaveableItemsLookup {
 	 *
 	 */
 	#[Override]
- public function getLookupTable() {
+ public function getLookupTable(): string {
 		return 'fieldgroups_fields';
 	}
 

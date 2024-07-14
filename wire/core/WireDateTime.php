@@ -369,7 +369,7 @@ class WireDateTime extends Wire {
 	 * @return string
 	 *
 	 */
-	public function convertDateFormat($format, $type) {
+	public function convertDateFormat($format, $type): string {
 
 		$newFormat = '';
 		$lastc = '';
@@ -565,7 +565,7 @@ class WireDateTime extends Wire {
 	 * @since 3.0.197
 	 * 
 	 */
-	protected function strftimeToDateFormat($format) {
+	protected function strftimeToDateFormat($format): string {
 		
 		// replacements, in addition to those specified in self::$dateConversion
 		// strftime format => date format

@@ -916,7 +916,7 @@ class WireMarkupRegions extends Wire {
 	 * @return string
 	 *
 	 */
-	public function renderAttributes(array $attrs, $encode = true, $quote = '"') {
+	public function renderAttributes(array $attrs, $encode = true, $quote = '"'): string {
 	
 		$sanitizer = $this->wire()->sanitizer;
 		$str = '';
@@ -1448,7 +1448,7 @@ class WireMarkupRegions extends Wire {
 	 * @return bool True if tags or attributes were removed, false if not
 	 * 
 	 */
-	public function removeRegionTags(&$html) {
+	public function removeRegionTags(&$html): bool {
 		
 		$updated = false;
 		
@@ -1486,7 +1486,7 @@ class WireMarkupRegions extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function hasRegionActions(&$html) {
+	public function hasRegionActions(&$html): bool {
 		$has = false;
 		foreach($this->actions as $action) {
 			if(str_contains($html, "pw-$action")) {
@@ -1500,14 +1500,14 @@ class WireMarkupRegions extends Wire {
 		return $has;
 	}
 	
-	protected function debugNoteStr($str, $maxLength = 0) {
+	protected function debugNoteStr($str, $maxLength = 0): string {
 		$str = str_replace(["\r", "\n", "\t"], ' ', $str);
 		while(str_contains($str, '  ')) $str= str_replace('  ', ' ', $str);
 		if($maxLength) $str  = substr($str, 0, $maxLength);
 		return trim($str);
 	}
 
-	protected function renderDebugNotes(array $debugNotes, $debugTimer = null) {
+	protected function renderDebugNotes(array $debugNotes, $debugTimer = null): string {
 		if(!count($debugNotes)) $debugNotes[] = "Nothing found";
 		if($debugTimer !== null) $debugNotes[] = '[sm]' . Debug::timer($debugTimer) . ' seconds[/sm]';
 		$out = "• " . implode("\n• ", $debugNotes);

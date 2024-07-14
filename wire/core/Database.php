@@ -265,7 +265,7 @@ class Database extends mysqli implements WireDatabase {
 	 * @return string
 	 *
 	 */
-	public function escapeLike($like) {
+	public function escapeLike($like): string {
 		$like = $this->escape_string($like); 
 		return addcslashes($like, '%_'); 
 	}

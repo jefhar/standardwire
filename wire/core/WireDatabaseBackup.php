@@ -1286,7 +1286,7 @@ class WireDatabaseBackup {
 	 * @return string
 	 *
 	 */
-	protected function sanitizePath($path) {
+	protected function sanitizePath($path): string {
 		if(DIRECTORY_SEPARATOR != '/') $path = str_replace(DIRECTORY_SEPARATOR, '/', $path); 
 		$path = rtrim((string) $path, '/') . '/'; // ensure it ends with trailing slash
 		return $path; 

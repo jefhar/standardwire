@@ -1525,7 +1525,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 * @since 3.0.176
 	 *
 	 */
-	public function hasTag($tag) {
+	public function hasTag($tag): bool {
 		$tags = $this->getTags();
 		return isset($tags[$tag]); 
 	}
@@ -1651,7 +1651,7 @@ class Template extends WireData implements Saveable, Exportable {
 	 * @since 3.0.170
 	 * 
 	 */
-	public function editUrl($http = false) {
+	public function editUrl($http = false): string {
 		return $this->wire()->config->urls($http ? 'httpAdmin' : 'admin') . "setup/template/edit?id=$this->id";
 	}
 

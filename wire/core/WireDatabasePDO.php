@@ -308,7 +308,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @since 3.0.175
 	 *
 	 */
-	static public function dsn(array $options) {
+	static public function dsn(array $options): string {
 		$defaults = ['type' => 'mysql', 'socket' => '', 'name' => '', 'host' => '', 'port' => ''];
 		$options = array_merge($defaults, $options);
 		if($options['socket']) {
@@ -715,7 +715,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @link http://php.net/manual/en/pdo.intransaction.php
 	 * 
 	 */
-	public function inTransaction() {
+	public function inTransaction(): bool {
 		return (bool) $this->pdoWriter()->inTransaction();
 	}
 
@@ -1129,7 +1129,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @since 3.0.133
 	 * 
 	 */
-	public function tableExists($table) {
+	public function tableExists($table): bool {
 		$query = $this->prepare('SHOW TABLES LIKE ?');
 		$query->execute([$table]);
 		$result = $query->fetchColumn();
@@ -1365,7 +1365,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @since 3.0.160
 	 * 
 	 */
-	public function isStopword($word, $engine = '') {
+	public function isStopword($word, $engine = ''): bool {
 		$engine = $engine === '' ? $this->engine : strtolower($engine);
 		if($engine === 'myisam') return DatabaseStopwords::has($word);
 		if($this->stopwordCache === null) $this->getStopwords($engine, true);
@@ -1478,7 +1478,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @return string
 	 *
 	 */
-	public function escapeStr($str) {
+	public function escapeStr($str): string {
 		return substr($this->quote($str), 1, -1);
 	}
 
@@ -1522,7 +1522,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @return string
 	 *
 	 */
-	public function escapeLike($like) {
+	public function escapeLike($like): string {
 		$like = $this->escapeStr($like); 
 		return addcslashes($like, '%_'); 
 	}
@@ -1656,7 +1656,7 @@ class WireDatabasePDO extends Wire implements WireDatabase {
 	 * @todo this will need to be updated when/if MariaDB adds version that uses ICU engine
 	 * 
 	 */
-	public function getRegexEngine() {
+	public function getRegexEngine(): string {
 		$version = $this->getVersion();
 		$name = 'MySQL';
 		if(strpos($version, '-')) [$version, $name] = explode('-', $version, 2);

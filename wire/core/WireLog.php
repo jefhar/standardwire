@@ -261,7 +261,7 @@ class WireLog extends Wire {
 	 * @throws WireException If given invalid log name
 	 * 
 	 */
-	public function getFilename($name) {
+	public function getFilename($name): string {
 		$name = strtolower($name); 
 		if($name !== $this->wire()->sanitizer->pageName($name)) {
 			throw new WireException("Log name must contain only [-_.a-z0-9] with no extension");

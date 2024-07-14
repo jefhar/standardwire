@@ -372,7 +372,7 @@ class PagesPathFinder extends Wire {
 	 * @return string Path string
 	 * 
 	 */
-	protected function applyPagesRow(array $parts, $row) {
+	protected function applyPagesRow(array $parts, $row): string {
 		
 		$maxUrlSegmentLength = $this->wire()->config->maxUrlSegmentLength;
 		$result = &$this->result;
@@ -609,7 +609,7 @@ class PagesPathFinder extends Wire {
 	 * @return bool
 	 *
 	 */
-	protected function applyResultTemplate($path) {
+	protected function applyResultTemplate($path): bool {
 
 		$config = $this->wire()->config;
 		$fail = false;
@@ -1266,7 +1266,7 @@ class PagesPathFinder extends Wire {
 	 * @return string
 	 *
 	 */
-	protected function pageNumUrlSegment($pageNum, $langName = 'default') {
+	protected function pageNumUrlSegment($pageNum, $langName = 'default'): string {
 		$pageNum = (int) $pageNum;
 		if($pageNum < 2) return '';
 		$a = $this->pageNumUrlPrefixes();
@@ -1297,7 +1297,7 @@ class PagesPathFinder extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function isHomePath($path) {
+	protected function isHomePath($path): bool {
 		$path = trim($path, '/');
 		if($path === '') return true;
 		$isHomePath = false;
@@ -1881,7 +1881,7 @@ class PagesPathFinder extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function addLanguageSegment($path, $language) {
+	protected function addLanguageSegment($path, $language): string {
 		if(!str_starts_with($path, '/')) $path = "/$path";
 		$segment = $this->languageSegment($language);
 		if(!strlen($segment)) return $path;
@@ -1897,7 +1897,7 @@ class PagesPathFinder extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function removeLanguageSegment($path) {
+	protected function removeLanguageSegment($path): string {
 		if(!str_starts_with($path, '/')) $path = "/$path";
 		if($path === '/') return $path;
 		$segments = $this->languageSegments();

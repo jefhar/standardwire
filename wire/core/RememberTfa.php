@@ -298,7 +298,7 @@ class RememberTfa extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function cookiePrefix() {
+	protected function cookiePrefix(): string {
 		$config = $this->wire()->config;
 		$cookiePrefix = $config->https ? $config->sessionNameSecure : $config->sessionName;
 		if(empty($cookiePrefix)) $cookiePrefix = 'wire';
@@ -342,7 +342,7 @@ class RememberTfa extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function serverValue($cookieValue, User $user = null) {
+	protected function serverValue($cookieValue, User $user = null): string {
 		if($user === null) $user = $this->user;
 		return sha1(
 			$user->id . $user->name . $user->email . 
@@ -400,7 +400,7 @@ class RememberTfa extends Wire {
 	 * @return string
 	 *
 	 */
-	public function getFingerprintString(array $types = null) {
+	public function getFingerprintString(array $types = null): string {
 		if($types === null) $types = $this->fingerprints;
 		return implode(',', $types) . ':' . sha1(implode("\n", $this->getFingerprintArray())); 
 	}

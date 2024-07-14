@@ -298,7 +298,7 @@ class Fieldgroup extends WireArray implements Saveable, Exportable, HasLookupIte
 	 * @return bool True if additional context information is available, false if not. 
 	 * 
 	 */
-	public function hasFieldContext($field, $namespace = '') {
+	public function hasFieldContext($field, $namespace = ''): bool {
 		if($field instanceof Field) $field = $field->id;
 		if(is_string($field) && !ctype_digit($field)) {
 			$field = $this->wire()->fields->get($field);

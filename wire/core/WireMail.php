@@ -153,7 +153,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @throws WireException
 	 * 
 	 */
-	protected function sanitizeEmail($email) {
+	protected function sanitizeEmail($email): string {
 		$email = (string) $email;
 		if(!strlen($email)) return '';
 		$email = strtolower(trim($email)); 
@@ -643,7 +643,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return string
 	 * 
 	 */
-	protected function renderMailHeader() {
+	protected function renderMailHeader(): string {
 		
 		$config = $this->wire()->config;
 		$settings = $config->wireMail;
@@ -684,7 +684,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return string
 	 * 
 	 */
-	protected function renderMailBody() {
+	protected function renderMailBody(): string {
 		
 		$boundary = $this->multipartBoundary(); 
 		$subboundary = $this->multipartBoundary('alt');
@@ -757,7 +757,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return string
 	 * 
 	 */
-	protected function renderMailAttachments() {
+	protected function renderMailAttachments(): string {
 		$body = '';
 		$boundary = $this->multipartBoundary();
 		$sanitizer = $this->wire()->sanitizer;
@@ -832,7 +832,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return string
 	 *
 	 */
-	public function encodeSubject($subject) {
+	public function encodeSubject($subject): string {
 		
 		$boundary = $this->multipartBoundary();
 		$subject = $this->strReplace($subject, $boundary);
@@ -905,7 +905,7 @@ class WireMail extends WireData implements WireMailInterface {
 	 * @return string
 	 *
 	 */
-	public function quotedPrintableString($text) {
+	public function quotedPrintableString($text): string {
 		return '=?utf-8?Q?' . quoted_printable_encode($text) . '?=';
 	}
 

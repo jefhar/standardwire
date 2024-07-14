@@ -234,7 +234,7 @@ class Pageimages extends Pagefiles {
 	 * @since 3.0.126
 	 *
 	 */
-	public function ___render($markup = '', $options = []) {
+	public function ___render($markup = '', $options = []): string {
 		$out = '';
 		$limit = 0;
 		$n = 0;

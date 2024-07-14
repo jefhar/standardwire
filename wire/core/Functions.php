@@ -609,7 +609,7 @@ function wireDate($format = '', $ts = null) {
  * @return string
  * 
  */
-function wireIconMarkup($icon, $class = '') {
+function wireIconMarkup($icon, $class = ''): string {
 	if(empty($icon)) return '';
 	if(str_starts_with($icon, 'icon-')) $icon = str_replace('icon-', 'fa-', $icon); 
 	if(!str_starts_with($icon, 'fa-')) $icon = "fa-$icon";
@@ -899,7 +899,7 @@ function wireClassExists($className, $autoload = true): bool {
  * @return bool
  *
  */
-function wireMethodExists($className, $method, $hookable = false) {
+function wireMethodExists($className, $method, $hookable = false): bool {
 	if(!is_object($className)) $className = wireClassName($className, true);
 	$exists = method_exists($className, $method);
 	if(!$exists && $hookable) $exists = method_exists($className, "___$method"); 
@@ -1087,7 +1087,7 @@ function wireIsCallable($var, $syntaxOnly = false, &$callableName = ''): bool {
  * @return int
  *
  */
-function wireCount(mixed $value) {
+function wireCount(mixed $value): int {
 	if($value === null) return 0; 
 	if(is_array($value)) return count($value); 
 	if($value instanceof Countable) return count($value);

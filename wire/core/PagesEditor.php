@@ -231,7 +231,7 @@ class PagesEditor extends Wire {
 	 * @return bool
 	 * 
 	 */
-	public function isMoveable(Page $page, Page $oldParent, Page $newParent, &$reason) {
+	public function isMoveable(Page $page, Page $oldParent, Page $newParent, &$reason): bool {
 		
 		if($oldParent->id == $newParent->id) return true; 
 		
@@ -430,7 +430,7 @@ class PagesEditor extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	public function save(Page $page, $options = []) {
+	public function save(Page $page, $options = []): bool {
 
 		$defaultOptions = ['uncacheAll' => true, 'resetTrackChanges' => true, 'adjustName' => true, 'forceID' => 0, 'ignoreFamily' => false, 'noHooks' => false, 'noFields' => false];
 
@@ -836,7 +836,7 @@ class PagesEditor extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	public function saveField(Page $page, $field, $options = []) {
+	public function saveField(Page $page, $field, $options = []): bool {
 
 		$reason = '';
 		if(is_string($options)) $options = Selectors::keyValueStringToArray($options);

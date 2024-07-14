@@ -321,7 +321,7 @@ class WireHooks implements Stringable {
 	 * @return bool
 	 * 
 	 */
-	protected function isHookedOrParents($class, $method, $type = 'either') {
+	protected function isHookedOrParents($class, $method, $type = 'either'): bool {
 		
 		$property = '';
 		if(is_object($class)) {
@@ -438,7 +438,7 @@ class WireHooks implements Stringable {
 	 * @todo differentiate between "method()" and "property"
 	 *
 	 */
-	public function hasHook(Wire $object, $method) {
+	public function hasHook(Wire $object, $method): bool {
 
 		$hooked = false;
 		if(str_contains($method, '::')) {
@@ -736,7 +736,7 @@ class WireHooks implements Stringable {
 	 * @since 3.0.137
 	 *
 	 */
-	protected function addHooks(Wire $object, $methods, $toObject, $toMethod = null, $options = []) {
+	protected function addHooks(Wire $object, $methods, $toObject, $toMethod = null, $options = []): string {
 		
 		if(!is_array($methods)) {
 			// potentially multiple methods defined in a CSV string
@@ -1209,7 +1209,7 @@ class WireHooks implements Stringable {
 	 * @return string
 	 * 
 	 */
-	protected function hookTimer($object, $method, $arguments) {
+	protected function hookTimer($object, $method, $arguments): string {
 		$timerName = $object->className() . "::$method";
 		$notes = [];
 		foreach($arguments as $argument) {

@@ -99,7 +99,7 @@ class CacheFile extends Wire {
 	 * @return string
 	 *
 	 */
-	protected function buildFilename() {
+	protected function buildFilename(): string {
 		$filename = $this->path; 
 		if($this->secondaryID) {
 			$filename .= $this->secondaryID;
@@ -211,7 +211,7 @@ class CacheFile extends Wire {
 	 * If any secondaryIDs were used, those are removed too
 	 *
 	 */
-	public function remove() {
+	public function remove(): bool {
 
 		$dir = new DirectoryIterator($this->path); 
 		foreach($dir as $file) {

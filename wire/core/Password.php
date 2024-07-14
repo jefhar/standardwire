@@ -37,7 +37,7 @@ class Password extends Wire {
 	 * @return bool
 	 *
 	 */
-	public function matches($pass) {
+	public function matches($pass): bool {
 
 		if(!strlen($pass)) return false;
 		$hash = $this->hash($pass); 
@@ -148,7 +148,7 @@ class Password extends Wire {
 	 * @return string
 	 *
 	 */
-	protected function salt() {
+	protected function salt(): string {
 
 		// if system doesn't support blowfish, return old style salt
 		if(!$this->supportsBlowfish()) return md5($this->randomBase64String(44)); 
@@ -217,7 +217,7 @@ class Password extends Wire {
 	 * @throws WireException
 	 *
 	 */
-	protected function hash($pass) {
+	protected function hash($pass): string {
 		
 		$config = $this->wire()->config;
 
@@ -274,7 +274,7 @@ class Password extends Wire {
 	 * @deprecated use WireRandom::alpha() instead
 	 *
 	 */
-	public function randomAlpha($qty = 1, $alphanumeric = false, $disallow = []) {
+	public function randomAlpha($qty = 1, $alphanumeric = false, $disallow = []): string {
 		$letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$digits = '0123456789';
 		if($alphanumeric) $letters .= $digits;

@@ -235,7 +235,7 @@ class PagesLoaderCache extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function optionsArrayToString(array $options) {
+	protected function optionsArrayToString(array $options): string {
 		$str = '';
 		ksort($options);
 		foreach($options as $key => $value) {

@@ -800,7 +800,7 @@ class Config extends WireData {
 	 * @since 3.0.166
 	 * 
 	 */
-	protected function serverProtocol() {
+	protected function serverProtocol(): string {
 		$protos = ['HTTP/1.1', 'HTTP/1.0', 'HTTP/2', 'HTTP/2.0'];
 		$proto = $_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
 		return $protos[(int) array_search($proto, $protos, true)];

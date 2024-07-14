@@ -70,7 +70,7 @@ class Punycode {
 	 *
 	 * @return string Punycode representation in ASCII
 	 */
-	public function encode($input) {
+	public function encode($input): string {
 		$input = mb_strtolower($input, $this->encoding);
 		$parts = explode('.', $input);
 		foreach($parts as &$part) {
@@ -86,7 +86,7 @@ class Punycode {
 	 *
 	 * @return string Punycode representation of a domain part
 	 */
-	protected function encodePart($input) {
+	protected function encodePart($input): string {
 		$codePoints = $this->listCodePoints($input);
 		$n = static::INITIAL_N;
 		$bias = static::INITIAL_BIAS;
@@ -144,7 +144,7 @@ class Punycode {
 	 *
 	 * @return string Unicode domain name
 	 */
-	public function decode($input) {
+	public function decode($input): string {
 		$input = strtolower($input);
 		$parts = explode('.', $input);
 		foreach($parts as &$part) {
@@ -164,7 +164,7 @@ class Punycode {
 	 *
 	 * @return string Unicode domain part
 	 */
-	protected function decodePart($input) {
+	protected function decodePart($input): string {
 		$n = static::INITIAL_N;
 		$i = 0;
 		$bias = static::INITIAL_BIAS;

@@ -1003,7 +1003,7 @@ class WireHttp extends Wire {
 	 * @return bool True if successful false if not
 	 *
 	 */
-	protected function downloadFopen($fromURL, $fp, array $options) {
+	protected function downloadFopen($fromURL, $fp, array $options): bool {
 		
 		$this->resetResponse();
 

@@ -549,7 +549,7 @@ class ImageSizer extends Wire {
 	 * @return bool|null
 	 *
 	 */
-	static public function imageIsRotated(mixed $image, mixed &$correctionArray = null) {
+	static public function imageIsRotated(mixed $image, mixed &$correctionArray = null): ?bool {
 		if($image instanceof Pageimage) {
 			$filename = $image->filename;
 		} else if(is_readable($image)) {
@@ -590,7 +590,7 @@ class ImageSizer extends Wire {
 	 * @return bool|null
 	 *
 	 */
-	static public function imageIsAnimatedGif(mixed $image) {
+	static public function imageIsAnimatedGif(mixed $image): ?bool {
 		if($image instanceof Pageimage) {
 			$filename = $image->filename;
 		} elseif(is_readable($image)) {
@@ -624,7 +624,7 @@ class ImageSizer extends Wire {
 	 * @return null|bool
 	 *
 	 */
-	static public function imageResetIPTC(mixed $image) {
+	static public function imageResetIPTC(mixed $image): ?bool {
 		$wire = null;
 		if($image instanceof Pageimage) {
 			$wire = $image;

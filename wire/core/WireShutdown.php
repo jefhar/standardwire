@@ -154,7 +154,7 @@ class WireShutdown extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function getErrorMessage(array $error) {
+	protected function getErrorMessage(array $error): string {
 		
 		$type = $error['type'];
 		
@@ -328,7 +328,7 @@ class WireShutdown extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function seasonErrorMessage($message) {
+	protected function seasonErrorMessage($message): string {
 		
 		$spices = $this->fatalErrorResponse['words']; 
 		
@@ -405,7 +405,7 @@ class WireShutdown extends Wire {
 	 * @return bool Returns true if there was existing output, false if not
 	 * 
 	 */
-	protected function sendExistingOutput() {
+	protected function sendExistingOutput(): bool {
 	
 		/*
 		$files = TemplateFile::getRenderStack();
@@ -624,7 +624,7 @@ class WireShutdown extends Wire {
 	 * @return bool
 	 * 
 	 */
-	protected function sendFatalEmail($url, $userName, $message) {
+	protected function sendFatalEmail($url, $userName, $message): bool {
 		
 		$settings = $this->config ? $this->config->wireMail : []; 
 		$options = [];

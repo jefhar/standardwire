@@ -184,7 +184,7 @@ class Templates extends WireSaveableItems {
 	 *
 	 */
 	#[Override]
- public function getTable() {
+ public function getTable(): string {
 		return 'templates';
 	}
 
@@ -195,7 +195,7 @@ class Templates extends WireSaveableItems {
 	 *
 	 */
 	#[Override]
- public function getSort() {
+ public function getSort(): string {
 		return $this->getTable() . ".name";
 	}
 
@@ -940,7 +940,7 @@ class Templates extends WireSaveableItems {
 	 * @throws WireException If given unknown Role or Permission
 	 *
 	 */
-	public function setTemplatePermissionByRole(Template $template, $permission, $role, $revoke = false, $test = false) {
+	public function setTemplatePermissionByRole(Template $template, $permission, $role, $revoke = false, $test = false): bool {
 
 		if(!$template->useRoles) throw new WireException("Template $template does not have access control enabled"); 
 

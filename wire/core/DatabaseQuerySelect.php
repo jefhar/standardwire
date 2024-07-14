@@ -77,7 +77,7 @@ class DatabaseQuerySelect extends DatabaseQuery {
  	 *
 	 */
 	#[Override]
- public function getQuery() {
+ public function getQuery(): string {
 
 		$sql = trim(	
 			$this->getQueryMethod('select') . 
@@ -142,7 +142,7 @@ class DatabaseQuerySelect extends DatabaseQuery {
 	 * @return string
 	 * 
 	 */
-	protected function getQuerySelect() {
+	protected function getQuerySelect(): string {
 		
 		if(self::$dbCache === null) {
 			self::$dbCache = $this->wire()->config->dbCache === false ? false : true;
@@ -168,7 +168,7 @@ class DatabaseQuerySelect extends DatabaseQuery {
 	 * @return string
 	 * 
 	 */
-	protected function getQueryGroupby() {
+	protected function getQueryGroupby(): string {
 		if(!count($this->groupby)) return '';
 		$sql = "\nGROUP BY ";
 		$having = [];
@@ -200,7 +200,7 @@ class DatabaseQuerySelect extends DatabaseQuery {
 	 * @return string
 	 * 
 	 */
-	protected function getQueryLimit() {
+	protected function getQueryLimit(): string {
 		if(!count($this->limit)) return '';
 		$limit = $this->limit; 
 		$limit = reset($limit);

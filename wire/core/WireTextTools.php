@@ -64,7 +64,7 @@ class WireTextTools extends Wire {
 	 * @see Sanitizer::markupToText()
 	 *
 	 */
-	public function markupToText($str, array $options = []) {
+	public function markupToText($str, array $options = []): string {
 		
 		$sanitizer = $this->wire()->sanitizer;
 		

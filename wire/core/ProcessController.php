@@ -241,7 +241,7 @@ class ProcessController extends Wire {
 	 * @throws ProcessControllerPermissionException
 	 * 
 	 */
-	protected function hasUrlSegmentPermission($urlSegment, $throw = true) {
+	protected function hasUrlSegmentPermission($urlSegment, $throw = true): bool {
 	
 		if(empty($this->processInfo['nav']) || $this->wire()->user->isSuperuser()) return true;
 		$hasPermission = true;

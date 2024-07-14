@@ -135,7 +135,7 @@ class ModulesLoader extends ModulesClass {
   * @return bool True on success, false on fail
   * @throws Exception Only if the `throw` option is true.
   */
- public function initModule(Module $module, array $options = []) {
+ public function initModule(Module $module, array $options = []): bool {
 
 		$result = true;
 		$debugKey = null;
@@ -197,7 +197,7 @@ class ModulesLoader extends ModulesClass {
 	 * @return bool
 	 *
 	 */
-	public function readyModule(Module $module) {
+	public function readyModule(Module $module): bool {
 		$result = true;
 		if(method_exists($module, 'ready')) {
 			$debugKey = $this->debug ? $this->modules->debugTimerStart("readyModule(" . $module->className() . ")") : null;

@@ -2920,7 +2920,7 @@ class PageFinder extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function getIncludeSelector($selectors) {
+	protected function getIncludeSelector($selectors): string {
 		
 		if(!$selectors instanceof Selectors) $selectors = new Selectors($selectors);
 		$a = [];

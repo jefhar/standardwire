@@ -132,7 +132,7 @@ class PagefileExtra extends WireData {
 	 * @return string
 	 * 
 	 */
-	public function filename() {
+	public function filename(): string {
 		$pathinfo = pathinfo($this->pagefile->filename());
 		$ext = '.' . $this->extension;
 		if($this->useSrcExt) $ext = '.' . $pathinfo['extension'] . $ext; 
@@ -147,7 +147,7 @@ class PagefileExtra extends WireData {
 	 * @return string
 	 * 
 	 */
-	public function basename() {
+	public function basename(): string {
 		return basename($this->filename()); 
 	}
 

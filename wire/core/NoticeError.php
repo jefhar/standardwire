@@ -7,7 +7,7 @@ use Override;
  */
 class NoticeError extends Notice { 
 	#[Override]
- public function getName() {
+ public function getName(): string {
 		return 'errors';
 	}
 }

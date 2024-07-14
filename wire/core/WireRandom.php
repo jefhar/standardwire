@@ -161,7 +161,7 @@ class WireRandom extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function string1($length, $allowed, array $options) {
+	protected function string1($length, $allowed, array $options): string {
 		$defaults = ['noRepeat' => false];
 		$options = array_merge($defaults, $options);
 		$value = '';
@@ -189,7 +189,7 @@ class WireRandom extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function string2($length, $allowed, array $options) {
+	protected function string2($length, $allowed, array $options): string {
 		
 		$defaults = ['extras' => [], 'alpha' => true, 'lower' => true, 'upper' => true, 'noRepeat' => false];
 		
@@ -689,7 +689,7 @@ class WireRandom extends Wire {
 	 * @return string
 	 * 
 	 */
-	protected function passTrunc($value, array $options) {
+	protected function passTrunc($value, array $options): string {
 		
 		$chars = ['minLower' => [], 'minUpper' => [], 'minDigits' => [], 'minSymbols' => []];
 
@@ -859,7 +859,7 @@ class WireRandom extends Wire {
 	 * @return string
 	 *
 	 */
-	protected function randomBufferToSalt($buffer, $requiredLength) {
+	protected function randomBufferToSalt($buffer, $requiredLength): string {
 		$c1 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'; // base64
 		$c2 = './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; // bcrypt64
 		$salt = rtrim(base64_encode($buffer), '=');

@@ -18,7 +18,7 @@ use Override;
  */
 class SelectorContainsAdvanced extends SelectorContains {
 	#[Override]
- public static function getOperator() { return '#='; }
+ public static function getOperator(): string { return '#='; }
 	#[Override]
  public static function getCompareType(): int { 
 		return 
@@ -32,7 +32,7 @@ class SelectorContainsAdvanced extends SelectorContains {
 	#[Override]
  public static function getLabel() { return __('Advanced text search', __FILE__); }
 	#[Override]
- public static function getDescription() {
+ public static function getDescription(): string {
 		return 
 			__('Match values with commands: +Word MUST appear, -Word MUST NOT appear, and unprefixed Word may appear.', __FILE__) . ' ' . 
 			__('Add asterisk for partial match: Bar* or +Bar* matches bar, barn, barge; while -Bar* prevents matching them.') . ' ' . 

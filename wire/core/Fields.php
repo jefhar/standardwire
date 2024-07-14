@@ -243,7 +243,7 @@ class Fields extends WireSaveableItems {
 	 *
 	 */
 	#[Override]
- public function getTable() {
+ public function getTable(): string {
 		return "fields";
 	}
 
@@ -254,7 +254,7 @@ class Fields extends WireSaveableItems {
 	 *
 	 */
 	#[Override]
- public function getSort() {
+ public function getSort(): string {
 		return $this->getTable() . ".name";
 	}
 
@@ -701,7 +701,7 @@ class Fields extends WireSaveableItems {
 	 * @throws WireException when given a situation where deletion is not allowed
 	 *
 	 */
-	public function ___deleteFieldDataByTemplate(Field $field, Template $template) {
+	public function ___deleteFieldDataByTemplate(Field $field, Template $template): bool {
 
 		// first we need to determine if the $field->type module has its own
 		// deletePageField method separate from base: Fieldtype/FieldtypeMulti

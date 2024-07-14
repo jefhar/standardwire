@@ -181,7 +181,7 @@ class ModulesInfo extends ModulesClass {
 	 * @return bool
 	 * 
 	 */
-	public function moduleInfoCacheHas($moduleID) {
+	public function moduleInfoCacheHas($moduleID): bool {
 		return isset($this->moduleInfoCache[$moduleID]);
 	}
 	

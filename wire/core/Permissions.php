@@ -65,7 +65,7 @@ class Permissions extends PagesType {
 	 * @return bool True if system has a permission with this name, or false if not. 
 	 * 
 	 */
-	public function has($name) {
+	public function has($name): bool {
 		if($name == 'page-add' || $name == 'page-create') return true; // runtime only permissions
 		$a = $this->getPermissionNameIds();
 		return isset($a[$name]);
@@ -281,7 +281,7 @@ class Permissions extends PagesType {
 	 * @since 3.0.223
 	 * 
 	 */
-	public function getDelegatedMethod($name, $context) {
+	public function getDelegatedMethod($name, $context): string {
 		if($this->has($name)) return '';
 		if($context instanceof Page) {
 			// page-edit-images needs to delegate to $page->editable() method

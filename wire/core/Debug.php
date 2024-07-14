@@ -117,7 +117,7 @@ class Debug {
 	 * @return string
 	 * 
 	 */
-	static public function startTimer($key = '') {
+	static public function startTimer($key = ''): string {
 		
 		if(self::$timerSettings['useHrtime'] === null) {
 			self::$timerSettings['useHrtime'] = function_exists("\\hrtime");
@@ -231,7 +231,7 @@ class Debug {
 	 * @return string Blank if timer not recognized
 	 *
 	 */
-	static public function getSavedTimer($key) {
+	static public function getSavedTimer($key): string {
 		$value = self::$savedTimers[$key] ?? null;	
 		if(!is_null($value) && isset(self::$savedTimerNotes[$key])) $value = "$value - " . self::$savedTimerNotes[$key];
 		return (string) $value; 

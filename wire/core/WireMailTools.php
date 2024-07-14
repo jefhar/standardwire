@@ -329,7 +329,7 @@ class WireMailTools extends Wire {
 	 * @since 3.0.109
 	 * 
 	 */
-	public function mailHTML($to, $subject, $messageHTML, $headers = []) {
+	public function mailHTML($to, $subject, $messageHTML, $headers = []): bool {
 		if(is_array($messageHTML)) {
 			$options = $messageHTML;
 			if(!empty($headers) && empty($options['headers'])) $options['headers'] = $headers;

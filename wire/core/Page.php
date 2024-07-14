@@ -2643,7 +2643,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * #pw-internal
 	 *
 	 */
-	protected function ___path() {
+	protected function ___path(): string {
 		if($this->id === 1) return '/';
 		$path = '';
 		$parents = $this->parents();
@@ -3124,7 +3124,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * @see Page::addStatus(), Page::removeStatus(), Page::isHidden(), Page::isUnpublished(), Page::isLocked()
 	 * 
 	 */
-	public function hasStatus($status) {
+	public function hasStatus($status): bool {
 		if(is_string($status) && isset(PageProperties::$statuses[$status])) {
 			$status = PageProperties::$statuses[$status];
 		}
@@ -3566,7 +3566,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * @since 3.0.166
 	 *
 	 */
-	public function secureFiles() {
+	public function secureFiles(): ?bool {
 		if($this->wire()->config->pagefileSecure && !$this->isPublic()) return true;
 		$template = $this->getAccessTemplate();
 		if(!$template) return null;
@@ -3588,7 +3588,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * @see hasFiles(), filesManager()
 	 * 
 	 */
-	public function hasFilesPath() {
+	public function hasFilesPath(): bool {
 		return PagefilesManager::hasPath($this);
 	}
 
@@ -3887,7 +3887,7 @@ class Page extends WireData implements Countable, WireMatchable {
 	 * @since 3.0.206
 	 * 
 	 */
-	public function getPageListLabel() {
+	public function getPageListLabel(): string {
 		return '';
 	}
 	

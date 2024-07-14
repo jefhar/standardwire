@@ -364,7 +364,7 @@ class PagefilesManager extends Wire {
 	 * @return bool True on success, false on error (since 3.0.17, previous versions had no return value). 
 	 *
 	 */
-	public function emptyAllPaths() {
+	public function emptyAllPaths(): bool {
 		return $this->emptyPath(true); 
 	}
 
@@ -499,7 +499,7 @@ class PagefilesManager extends Wire {
 	 * @return bool True if $page has a path and files
 	 *
 	 */
-	static public function hasFiles(Page $page) {
+	static public function hasFiles(Page $page): bool {
 		if(!self::hasPath($page)) return false;
 		$dir = opendir(self::_path($page));
 		if(!$dir) return false; 
@@ -698,7 +698,7 @@ class PagefilesManager extends Wire {
 	 * @return string
 	 *
 	 */
-	static public function _dirExtended($id, $securePrefix = '') {
+	static public function _dirExtended($id, $securePrefix = ''): string {
 
 		$len = strlen($id);
 

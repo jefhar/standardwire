@@ -280,7 +280,7 @@ class ModulesFiles extends ModulesClass {
 	 * @return bool
 	 *
 	 */
-	public function includeModuleFile($file, $moduleName) {
+	public function includeModuleFile($file, $moduleName): bool {
 
 		$wire1 = ProcessWire::getCurrentInstance();
 		$wire2 = $this->wire();
@@ -559,7 +559,7 @@ class ModulesFiles extends ModulesClass {
 	 * @return string Includes leading and trailing backslashes where applicable
 	 *
 	 */
-	public function getFileNamespace($file) {
+	public function getFileNamespace($file): string {
 		$namespace = $this->wire()->files->getNamespace($file);
 		if($namespace !== "\\") $namespace = "\\" . trim((string) $namespace, "\\") . "\\";
 		return $namespace;

@@ -758,7 +758,7 @@ class WireInput extends Wire {
 	 * @see WireInput::urlSegment()
 	 *
 	 */
-	public function urlSegmentStr($verbose = false, array $options = []) {
+	public function urlSegmentStr($verbose = false, array $options = []): string {
 		
 		if(is_array($verbose)) {
 			$options = $verbose;
@@ -844,7 +844,7 @@ class WireInput extends Wire {
 	 * @since 3.0.106
 	 * 
 	 */
-	public function pageNumStr($pageNum = 0) {
+	public function pageNumStr($pageNum = 0): string {
 		$pageNumStr = '';
 		$pageNum = (int) $pageNum;
 		if($pageNum < 1) $pageNum = $this->pageNum();
@@ -1041,7 +1041,7 @@ class WireInput extends Wire {
 	 * @see WireInput::url(), Page::httpUrl()
 	 * 
 	 */
-	public function httpUrl($options = []) {
+	public function httpUrl($options = []): string {
 		return $this->httpHostUrl() . $this->url($options);
 	}
 
@@ -1059,7 +1059,7 @@ class WireInput extends Wire {
 	 * @see WireInput::httpUrl()
 	 * 
 	 */
-	public function httpsUrl($options = []) {
+	public function httpsUrl($options = []): string {
 		return $this->httpHostUrl(true) . $this->url($options);
 	}
 
@@ -1080,7 +1080,7 @@ class WireInput extends Wire {
 	 * @return string
 	 * 
 	 */
-	public function httpHostUrl($scheme = null, $httpHost = '') {
+	public function httpHostUrl($scheme = null, $httpHost = ''): string {
 		if(empty($httpHost)) {
 			$httpHost = $this->wire()->config->httpHost;
 		}

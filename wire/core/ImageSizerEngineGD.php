@@ -868,7 +868,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @return bool|null if a calculation was possible (true|false), or null if the calculation could not be done
 	 *
 	 */
-	static public function checkMemoryForImage($sourceDimensions, $targetDimensions = false, $factor = 1) {
+	static public function checkMemoryForImage($sourceDimensions, $targetDimensions = false, $factor = 1): ?bool {
 
 		// with this static we only once need to read from php.ini and calculate phpMaxMem,
 		// regardless how often this function is called in a request
@@ -974,7 +974,7 @@ class ImageSizerEngineGD extends ImageSizerEngine {
 	 * @throws WireException
 	 *
 	 */
-	private function processAction($srcFilename, $dstFilename, $action, $value) {
+	private function processAction($srcFilename, $dstFilename, $action, $value): bool {
 
 		$action = strtolower($action);
 		$ext = strtolower(pathinfo($srcFilename, PATHINFO_EXTENSION));

@@ -282,7 +282,7 @@ class MarkupFieldtype extends WireData implements Module {
 	 * @return string
 	 * 
 	 */
-	protected function arrayToString($value, $encode = true) {
+	protected function arrayToString($value, $encode = true): string {
 		if(!count($value)) return '';
 		$out = "<ul class='MarkupFieldtype'>";
 		foreach($value as $v) {

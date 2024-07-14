@@ -1904,7 +1904,7 @@ class Modules extends WireArray {
 	 * @return bool
 	 * 
 	 */
-	public function isModule($moduleName) {
+	public function isModule($moduleName): bool {
 		
 		if(!is_string($moduleName)) {
 			if(is_object($moduleName)) {
@@ -2115,7 +2115,7 @@ class Modules extends WireArray {
 	 * @since 3.0.170
 	 * 
 	 */
-	public function removeModuleEntry($class) {
+	public function removeModuleEntry($class): bool {
 		$database = $this->wire()->database;
 		if(ctype_digit("$class")) {
 			$query = $database->prepare('DELETE FROM modules WHERE id=:id LIMIT 1'); 
@@ -2383,7 +2383,7 @@ class Modules extends WireArray {
 	 * @return int|null Returns a key for the debug timer
 	 *
 	 */
-	public function debugTimerStart($note) {
+	public function debugTimerStart($note): ?int {
 		if(!$this->debug) return null;
 		$key = count($this->debugLog);
 		while(isset($this->debugLog[$key])) $key++;

@@ -745,7 +745,7 @@ class WireArray extends Wire implements IteratorAggregate, ArrayAccess, Countabl
 	 * @return bool True if the item exists, false if not. 
 	 * 
 	 */ 
-	public function has($key) {
+	public function has($key): bool {
 
 		if(is_object($key)) {
 			/** @var object|Wire $key */
@@ -2163,7 +2163,7 @@ class WireArray extends Wire implements IteratorAggregate, ArrayAccess, Countabl
 	 * @see WireArray::each(), WireArray::explode()
 	 *
 	 */
-	public function implode($delimiter, $property = '', array $options = []) {
+	public function implode($delimiter, $property = '', array $options = []): string {
 
 		$defaults = ['skipEmpty' => true, 'prepend' => '', 'append' => ''];
 

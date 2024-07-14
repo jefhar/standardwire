@@ -138,7 +138,7 @@ class Fuel implements IteratorAggregate {
 		return $this->data; 
 	}
 	
-	public static function isCommon($name) {
+	public static function isCommon($name): bool {
 		return isset(self::$commonNames[$name]); 
 	}
 }

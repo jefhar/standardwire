@@ -461,7 +461,7 @@ class Notices extends WireArray {
 	 * @since 3.0.149
 	 * 
 	 */
-	protected function noticeToStr(Notice $item) {
+	protected function noticeToStr(Notice $item): string {
 		$type = str_replace('Notice', '', $item->className());
 		$a = ['type' => $type, 'flags' => $item->flags, 'timestamp' => $item->timestamp, 'class' => $item->class, 'icon' => $item->icon, 'text' => $item->text];
 		return implode(';', $a);

@@ -1521,7 +1521,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @since 3.0.106
 	 * 
 	 */
-	public function hasTag($tag) {
+	public function hasTag($tag): bool {
 		$textTools = $this->wire()->sanitizer->getTextTools();
 		$tagList = $this->getTags();
 		return isset($tagList[$textTools->strtolower(trim(ltrim($tag, '-')))]);
@@ -1554,7 +1554,7 @@ class Field extends WireData implements Saveable, Exportable {
 	 * @since 3.0.151
 	 * 
 	 */
-	public function editUrl($options = []) {
+	public function editUrl($options = []): string {
 		if(is_string($options)) $options = ['find' => $options];
 		if(is_bool($options)) $options = ['http' => $options];
 		if(!is_array($options)) $options = [];

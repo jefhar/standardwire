@@ -335,7 +335,7 @@ class Selectors extends WireArray {
 	 * @todo this method can be removed once confirmed nothing else uses it
 	 *
 	 */
-	protected function extractOperator(&$str, array $operatorChars) {
+	protected function extractOperator(&$str, array $operatorChars): string {
 		$n = 0;
 		$operator = '';
 		$lastOperator = '';
@@ -653,7 +653,7 @@ class Selectors extends WireArray {
 	 * @return null|string Returns null if it doesn't resolve to anything or a string of the value it resolves to
 	 *
 	 */
-	public function parseValue($value) {
+	public function parseValue($value): ?string {
 		if(!preg_match('/^\$?[_a-zA-Z0-9]+(?:\.[_a-zA-Z0-9]+)?$/', $value)) return null;
 		$property = '';
 		if(strpos($value, '.')) [$value, $property] = explode('.', $value); 
@@ -688,7 +688,7 @@ class Selectors extends WireArray {
 	 * @return bool
 	 * 
 	 */
-	public function selectorHasVar(Selector $selector) {
+	public function selectorHasVar(Selector $selector): bool {
 		if($selector->quote != '[') return false; 
 		$has = false;
 		foreach($selector->values as $value) {
@@ -813,7 +813,7 @@ class Selectors extends WireArray {
 	 * @return string
 	 * 
 	 */
-	protected function getSelectorArrayType($data) {
+	protected function getSelectorArrayType($data): string {
 		$dataType = '';
 		if(is_int($data)) {
 			$dataType = 'int';
@@ -1791,7 +1791,7 @@ class Selectors extends WireArray {
 	 * @return string
 	 *
 	 */
-	static public function arrayToKeyValueString($a) {
+	static public function arrayToKeyValueString($a): string {
 		$s = '';
 		foreach($a as $key => $value) {
 			if(str_contains((string) $value, ',')) $value = str_replace([',,', ','], ',,', $value);
