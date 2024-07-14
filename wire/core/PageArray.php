@@ -222,7 +222,7 @@ class PageArray extends PaginatedArray implements WirePaginatable {
 	 * @return bool True if the index or Page exists here, false if not. 
 	 */  
 	#[Override]
- public function has($key) {
+	public function has($key): bool {
 		if($key instanceof Page) {
 			return $this->getItemKey($key) !== null;
 		}
