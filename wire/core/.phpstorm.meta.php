@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * ProcessWire PhpStorm Meta
  *
@@ -8,72 +8,70 @@
  * @see https://confluence.jetbrains.com/display/PhpStorm/PhpStorm+Advanced+Metadata
  */
 
-
 namespace PHPSTORM_META {
 
-	$STATIC_METHOD_TYPES = [
-		\wire('') => [
-			'' == '@',
-			'config' instanceof \ProcessWire\Config,
-			'cache' instanceof \ProcessWire\WireCache,
-			'wire' instanceof \ProcessWire\ProcessWire,
-			'log' instanceof \ProcessWire\WireLog,
-			'notices' instanceof \ProcessWire\Notices,
-			'sanitizer' instanceof \ProcessWire\Sanitizer,
-			'database' instanceof \ProcessWire\WireDatabasePDO,
-			'db' instanceof \ProcessWire\DatabaseMysqli,
-			'cache' instanceof \ProcessWire\MarkupCache,
-			'modules' instanceof \ProcessWire\Modules,
-			'procache' instanceof \ProCache,
-			'fieldtypes' instanceof \ProcessWire\Fieldtypes,
-			'fields' instanceof \ProcessWire\Fields,
-			'fieldgroups' instanceof \ProcessWire\Fieldgroups,
-			'templates' instanceof \ProcessWire\Templates,
-			'pages' instanceof \ProcessWire\Pages,
-			'permissions' instanceof \ProcessWire\Permissions,
-			'roles' instanceof \ProcessWire\Roles,
-			'users' instanceof \ProcessWire\Users,
-			'user' instanceof \ProcessWire\User,
-			'session' instanceof \ProcessWire\Session,
-			'input' instanceof \ProcessWire\WireInput,
-			'languages' instanceof \ProcessWire\Languages,
-			'page' instanceof \ProcessWire\Page,
-			'hooks' instanceof \ProcessWire\WireHooks,
-			'files' instanceof \ProcessWire\WireFileTools,
-			'datetime' instanceof \ProcessWire\WireDateTime,
-			'mail' instanceof \ProcessWire\WireMailTools
-		],
-		\Wire::wire('') => [ 
-			// this one does not appear to work, leaving in case someone knows how to make it work
-			'' == '@',
-			'config' instanceof \ProcessWire\Config,
-			'cache' instanceof \ProcessWire\WireCache,
-			'wire' instanceof \ProcessWire\ProcessWire,
-			'log' instanceof \ProcessWire\WireLog,
-			'notices' instanceof \ProcessWire\Notices,
-			'sanitizer' instanceof \ProcessWire\Sanitizer,
-			'database' instanceof \ProcessWire\WireDatabasePDO,
-			'db' instanceof \ProcessWire\DatabaseMysqli,
-			'cache' instanceof \ProcessWire\MarkupCache,
-			'modules' instanceof \ProcessWire\Modules,
-			'procache' instanceof \ProCache,
-			'fieldtypes' instanceof \ProcessWire\Fieldtypes,
-			'fields' instanceof \ProcessWire\Fields,
-			'fieldgroups' instanceof \ProcessWire\Fieldgroups,
-			'templates' instanceof \ProcessWire\Templates,
-			'pages' instanceof \ProcessWire\Pages,
-			'permissions' instanceof \ProcessWire\Permissions,
-			'roles' instanceof \ProcessWire\Roles,
-			'users' instanceof \ProcessWire\Users,
-			'user' instanceof \ProcessWire\User,
-			'session' instanceof \ProcessWire\Session,
-			'input' instanceof \ProcessWire\WireInput,
-			'languages' instanceof \ProcessWire\Languages,
-			'page' instanceof \ProcessWire\Page,
-			'hooks' instanceof \ProcessWire\WireHooks,
-			'files' instanceof \ProcessWire\WireFileTools,
-			'datetime' instanceof \ProcessWire\WireDateTime,
-			'mail' instanceof \ProcessWire\WireMailTools
-		]
-	];
+	registerArgumentsSet(
+		'WIRE_ARGUMENTS',
+		'',
+		'cache',
+		'config',
+		'database',
+		'datetime',
+		'db',
+		'fieldgroups',
+		'fields',
+		'fieldtypes',
+		'files',
+		'hooks',
+		'input',
+		'languages',
+		'log',
+		'mail',
+		'modules',
+		'notices',
+		'page',
+		'pages',
+		'permissions',
+		'procache',
+		'roles',
+		'sanitizer',
+		'session',
+		'templates',
+		'user',
+		'users',
+		'wire',
+	);
+
+	expectedArguments(\Processwire\wire(), 0, argumentsSet('WIRE_ARGUMENTS'));
+
+	override(\Processwire\wire(0), map([
+		'' => \ProcessWire\ProcessWire::class,
+		'cache' => \ProcessWire\WireCache::class,
+		'config' => \ProcessWire\Config::class,
+		'database' => \ProcessWire\WireDatabasePDO::class,
+		'datetime' => \ProcessWire\WireDateTime::class,
+		'db' => \ProcessWire\DatabaseMysqli::class,
+		'fieldgroups' => \ProcessWire\Fieldgroups::class,
+		'fields' => \ProcessWire\Fields::class,
+		'fieldtypes' => \ProcessWire\Fieldtypes::class,
+		'files' => \ProcessWire\WireFileTools::class,
+		'hooks' => \ProcessWire\WireHooks::class,
+		'input' => \ProcessWire\WireInput::class,
+		'languages' => \ProcessWire\WireLanguages::class,
+		'log' => \ProcessWire\WireLog::class,
+		'mail' => \ProcessWire\WireMailTools::class,
+		'modules' => \ProcessWire\Modules::class,
+		'notices' => \ProcessWire\Notices::class,
+		'page' => \ProcessWire\Page::class,
+		'pages' => \ProcessWire\Pages::class,
+		'permissions' => \ProcessWire\Permissions::class,
+		'procache' => \Procache::class,
+		'roles' => \ProcessWire\Roles::class,
+		'sanitizer' => \ProcessWire\Sanitizer::class,
+		'session' => \ProcessWire\Session::class,
+		'templates' => \ProcessWire\Templates::class,
+		'user' => \App\Bracketfire\Models\User::class,
+		'users' => \ProcessWire\Users::class,
+		'wire' => \ProcessWire\ProcessWire::class,
+	]));
 }
